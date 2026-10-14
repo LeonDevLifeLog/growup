@@ -128,6 +128,18 @@ export function openDatabase(dbPath, demo, now) {
     );
   }
   migrateIdentity(db);
+  // Staff close a support request with a reply the student can read.
+  const requestColumns = db
+    .prepare("PRAGMA table_info(service_requests)")
+    .all()
+    .map((column) => column.name);
+  for (const [name, type] of [
+    ["reply", "TEXT"],
+    ["handled_at", "TEXT"],
+    ["handled_by", "TEXT REFERENCES users(id)"],
+  ])
+    if (!requestColumns.includes(name))
+      db.exec(`ALTER TABLE service_requests ADD COLUMN ${name} ${type}`);
   // Passwords set by someone else must be replaced by their owner at next sign-in.
   if (
     !db

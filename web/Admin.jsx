@@ -18,6 +18,7 @@ import {
   Badge,
   ConfirmDialog,
   Empty,
+  FormDialog,
   ListHeader,
   ResourceState,
   SectionTitle,
@@ -671,6 +672,15 @@ export function AdminServices() {
                   </h3>
                   <p className="preserve-lines">{row.message}</p>
                   <small className="muted">{shortDate(row.createdAt)}</small>
+                  {row.reply && (
+                    <div className="service-reply">
+                      <strong>
+                        处理说明 · {row.handlerName} ·{" "}
+                        {shortDate(row.handledAt)}
+                      </strong>
+                      <p className="preserve-lines">{row.reply}</p>
+                    </div>
+                  )}
                 </div>
                 {row.status === "handled" ? (
                   <span className="badge green">
@@ -707,25 +717,45 @@ export function AdminServices() {
 
 function HandleDialog({ row, onClose }) {
   const { busy, error, run } = useMutation();
+  const [reply, setReply] = useState("");
   return (
-    <ConfirmDialog
+    <FormDialog
       title="确认已完成跟进？"
-      confirmLabel="确认已跟进"
+      submitLabel="确认已跟进"
       busy={busy}
       error={error}
+      disabled={!reply.trim()}
       onSubmit={async () => {
         const result = await run(`/admin/service-requests/${row.id}`, {
-          body: { status: "handled" },
-          success: "需求已标记为已跟进。",
+          body: { status: "handled", reply },
+          success: "需求已标记为已跟进，学生可看到处理说明。",
         });
         if (result) onClose();
       }}
       onClose={onClose}
+      description={
+        <>
+          <p>
+            {row.userName}（{row.schoolName}）· {row.type}
+          </p>
+          <p className="preserve-lines moderation-quote">{row.message}</p>
+          <p>请在实际联系并提供支持后再标记。标记后不能撤回。</p>
+        </>
+      }
     >
-      <p>
-        {row.userName}（{row.schoolName}）· {row.type}
-      </p>
-      <p>请在实际联系并提供支持后再标记。标记后不能撤回。</p>
-    </ConfirmDialog>
+      <label>
+        处理说明（学生可见）
+        <textarea
+          value={reply}
+          onChange={(e) => setReply(e.target.value)}
+          required
+          rows={4}
+          maxLength={1000}
+          autoFocus
+          placeholder="例如：已与你和家长电话沟通，下周二安排一次面谈。"
+          disabled={busy}
+        />
+      </label>
+    </FormDialog>
   );
 }

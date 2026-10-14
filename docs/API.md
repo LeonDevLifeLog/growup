@@ -79,7 +79,7 @@ Base `/api`；JSON；失败 `{error: '中文原因'}`；身份为 `Authorization
 - `POST /posts/:id/replies` * `{nickname,content}` → `{ok:true,status:'pending'}`
 - `POST /posts/:id/report` * `{reason}` → `{ok:true}`；隐藏帖子待审。
 - `POST /service-requests` * `{type,message}` → `{request}`；type 见内容模块，自由文本限长。
-- `GET /service-requests` * → `{requests:[...]}`；本人。
+- `GET /service-requests` * → `{requests:[{id,type,message,status,createdAt,reply,handledAt}]}`；本人。`reply` 为工作人员的处理说明，不返回处理人身份。
 
 ## 大区与学校关怀管理员
 
@@ -92,8 +92,8 @@ Base `/api`；JSON；失败 `{error: '中文原因'}`；身份为 `Authorization
 - `GET /admin/posts?status=pending` * → `{posts:[Post]}`，Post 与公共字段一致，额外 `reports:[{reason,createdAt}]`，无作者身份；回复含 status，可审核。
 - `POST /admin/posts/:id/moderate` * `{status:'approved'|'rejected'}` → `{ok:true}`
 - `POST /admin/replies/:id/moderate` * `{status:'approved'|'rejected'}` → `{ok:true}`
-- `GET /admin/service-requests` * → `{requests:[{id,type,message,status,createdAt,userName,schoolName}]}`
-- `POST /admin/service-requests/:id` * `{status:'handled'}` → `{ok:true}`
+- `GET /admin/service-requests` * → `{requests:[{id,type,message,status,createdAt,userName,schoolName,reply,handledAt,handlerName}]}`
+- `POST /admin/service-requests/:id` * `{status:'handled',reply}` → `{ok:true}`；`reply` 必填（1–1000字），学生可见；已跟进的需求再次提交返回409。
 
 学生打卡、日记、匿名树洞和个人工具只允许 student；结构化校园表单另允许大区/学校管理员本人填写，见后文。跨区对象统一 404。会话过期 7 天，密码不返回，所有 SQL 用参数绑定。
 

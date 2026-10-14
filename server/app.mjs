@@ -666,7 +666,7 @@ export function createApp({
     if (path === "/service-requests" && method === "GET") {
       const requests = db
         .prepare(
-          "SELECT id, type, message, status, created_at createdAt FROM service_requests WHERE user_id = ? ORDER BY created_at DESC, rowid DESC",
+          "SELECT id, type, message, status, created_at createdAt, reply, handled_at handledAt FROM service_requests WHERE user_id = ? ORDER BY created_at DESC, rowid DESC",
         )
         .all(user.id);
       return json(res, 200, { requests });
@@ -828,8 +828,10 @@ export function createApp({
       const scope = careScope(user, "sr");
       const requests = db
         .prepare(
-          `SELECT sr.id, sr.type, sr.message, sr.status, sr.created_at createdAt, u.name userName, s.name schoolName
+          `SELECT sr.id, sr.type, sr.message, sr.status, sr.created_at createdAt, u.name userName, s.name schoolName,
+        sr.reply, sr.handled_at handledAt, h.name handlerName
         FROM service_requests sr JOIN users u ON u.id = sr.user_id LEFT JOIN schools s ON s.id = sr.school_id
+        LEFT JOIN users h ON h.id = sr.handled_by
         WHERE ${scope.sql} ORDER BY sr.created_at DESC, sr.rowid DESC`,
         )
         .all(...scope.args);
@@ -840,15 +842,19 @@ export function createApp({
       const scope = careScope(user, "sr");
       const request = db
         .prepare(
-          `SELECT sr.id FROM service_requests sr JOIN users u ON u.id=sr.user_id WHERE sr.id = ? AND ${scope.sql}`,
+          `SELECT sr.id, sr.status FROM service_requests sr JOIN users u ON u.id=sr.user_id WHERE sr.id = ? AND ${scope.sql}`,
         )
         .get(requestMatch[1], ...scope.args);
       if (!request) throw new ApiError(404, "申请不存在");
       const body = await readBody(req);
       choice(body.status, ["handled"], "处理状态");
+      if (request.status === "handled")
+        throw new ApiError(409, "该需求已标记为已跟进");
+      // The reply is what the student sees; it closes the loop.
+      const reply = requiredText(body.reply, "处理说明", 1000);
       db.prepare(
-        "UPDATE service_requests SET status = 'handled' WHERE id = ?",
-      ).run(request.id);
+        "UPDATE service_requests SET status = 'handled', reply = ?, handled_at = ?, handled_by = ? WHERE id = ?",
+      ).run(reply, stamp(), user.id, request.id);
       return json(res, 200, { ok: true });
     }
     throw new ApiError(404, "接口不存在");

@@ -227,9 +227,16 @@ try {
     assert.equal(service.data.tab, 'records', '提交后切换到我的申请查看状态');
   }
   assert.equal(service.data.requests.length, service.data.forms.length);
+  const adminLogin = await fetch(base + '/auth/login', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ account: 'hainan.admin', password: 'Growup123!', regionId: 'hainan' }) }).then(r => r.json());
+  const pendingId = service.data.requests[0].id;
+  const handled = await fetch(base + '/admin/service-requests/' + pendingId, { method: 'POST', headers: { 'content-type': 'application/json', Authorization: 'Bearer ' + adminLogin.token }, body: JSON.stringify({ status: 'handled', reply: '已安排老师本周联系你。' }) });
+  assert.equal(handled.status, 200);
   const records = page('service');
   await records.onLoad({ tab: 'records' });
   assert.equal(records.data.tab, 'records', '从“我的”进入时直接显示申请状态');
+  const answered = records.data.requests.find(item => item.id === pendingId);
+  assert.equal(answered.statusText, '已跟进');
+  assert.equal(answered.reply, '已安排老师本周联系你。', '学生在小程序看到工作人员回复');
   await toolPage.selectTool(toolPage.data.tools[0]);
   modalTitles.length = 0;
   await toolPage.profileChange({ detail: { value: '0' } });
@@ -238,7 +245,7 @@ try {
   toolPage.updateField(firstField.id, firstField.type === 'multi' ? [] : '1');
   toolPage.profileChange({ detail: { value: '0' } });
   assert.deepEqual(modalTitles, ['切换后将清空填写'], '已填写时切换版本先确认');
-  console.log(`原生页面事件到临时 API 联调通过：${toolPage.data.tools.length} 工具/${profiles} 个版本保存与月报、tracker回填修订保留ID/数量、历史删除与刷新持久化、日记心情/标签/目标、搜索与星图、仅心情保存、4份结构化服务表单及提交后查看状态、日记底部弹层与放弃确认、工具切换前确认；无JSON转移入口。`);
+  console.log(`原生页面事件到临时 API 联调通过：${toolPage.data.tools.length} 工具/${profiles} 个版本保存与月报、tracker回填修订保留ID/数量、历史删除与刷新持久化、日记心情/标签/目标、搜索与星图、仅心情保存、4份结构化服务表单及提交后查看状态与工作人员回复、日记底部弹层与放弃确认、工具切换前确认；无JSON转移入口。`);
   console.log('范围：Node内执行真实Page事件和隔离API，不代替微信运行或真机。');
   console.log('报告竞态：真实HTTP响应延迟乱序下，10月晚于9月返回、旧请求失败、切工具三种场景均保持当前报告与加载状态；qcd全部亲子版本指导/题目提示及suipian全部版本说明保留。');
 } finally {

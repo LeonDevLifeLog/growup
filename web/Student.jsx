@@ -1210,8 +1210,14 @@ export function Profile() {
               <div key={row.id} className="service-row">
                 <div>
                   <h3>{row.type}</h3>
-                  <p>{row.message}</p>
+                  <p className="preserve-lines">{row.message}</p>
                   <small>{shortDate(row.createdAt)}</small>
+                  {row.reply && (
+                    <div className="service-reply">
+                      <strong>工作人员回复 · {shortDate(row.handledAt)}</strong>
+                      <p className="preserve-lines">{row.reply}</p>
+                    </div>
+                  )}
                 </div>
                 <span
                   className={`badge ${row.status === "handled" ? "green" : "yellow"}`}

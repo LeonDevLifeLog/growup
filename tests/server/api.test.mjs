@@ -879,7 +879,7 @@ test("report hides public post immediately and exposes reason only to regional m
   assert.equal("reports" in visible, false);
 });
 
-test("service request is private to owner and regional admins, can be marked handled", async (t) => {
+test("service request is private to owner and regional admins, and is closed with a reply the student can read", async (t) => {
   const f = await fixture(t);
   const student = await f.login();
   const admin = await f.login("hainan.admin");
@@ -907,22 +907,32 @@ test("service request is private to owner and regional admins, can be marked han
     await f.request("/admin/service-requests", { token: admin.token })
   ).body.requests.find((entry) => entry.id === result.body.request.id);
   assert.equal(managed.userName, "林小满");
+  const handle = (body) =>
+    f.request(`/admin/service-requests/${managed.id}`, {
+      method: "POST",
+      token: admin.token,
+      body: { status: "handled", ...body },
+    });
+  assert.equal((await handle({})).status, 400);
+  assert.equal((await handle({ reply: "   " })).status, 400);
   assert.equal(
-    (
-      await f.request(`/admin/service-requests/${managed.id}`, {
-        method: "POST",
-        token: admin.token,
-        body: { status: "handled" },
-      })
-    ).status,
+    (await handle({ reply: "已电话联系家长，下周二安排亲子沟通活动。" }))
+      .status,
     200,
   );
-  assert.equal(
-    (
-      await f.request("/service-requests", { token: student.token })
-    ).body.requests.find((entry) => entry.id === managed.id).status,
-    "handled",
-  );
+  assert.equal((await handle({ reply: "重复处理" })).status, 409);
+  const mine = (
+    await f.request("/service-requests", { token: student.token })
+  ).body.requests.find((entry) => entry.id === managed.id);
+  assert.equal(mine.status, "handled");
+  assert.equal(mine.reply, "已电话联系家长，下周二安排亲子沟通活动。");
+  assert.ok(mine.handledAt);
+  assert.equal(mine.handlerName, undefined);
+  const handled = (
+    await f.request("/admin/service-requests", { token: admin.token })
+  ).body.requests.find((entry) => entry.id === managed.id);
+  assert.equal(handled.reply, mine.reply);
+  assert.equal(handled.handlerName, "陈老师");
 });
 
 test("request input validation rejects invalid JSON, score, enums, long content and malformed account", async (t) => {

@@ -321,14 +321,30 @@ try {
   await service
     .getByRole("button", { name: "标记已跟进", exact: true })
     .click();
-  await admin
-    .getByRole("dialog", { name: "确认已完成跟进？", exact: true })
-    .getByRole("button", { name: "确认已跟进", exact: true })
-    .click();
+  const handle = admin.getByRole("dialog", {
+    name: "确认已完成跟进？",
+    exact: true,
+  });
+  await expect(
+    handle.getByRole("button", { name: "确认已跟进", exact: true }),
+  ).toBeDisabled();
+  await handle
+    .getByLabel("处理说明（学生可见）")
+    .fill("已与家长沟通，周末亲子活动名额已为你预留。");
+  await handle.getByRole("button", { name: "确认已跟进", exact: true }).click();
   await expect(service).toHaveCount(0);
   await admin.getByRole("tab", { name: /已跟进/ }).click();
   await expect(service).toContainText("已跟进");
-  record("举报即时隐藏；支持需求默认显示待跟进，确认后转入已跟进");
+  await expect(service).toContainText("周末亲子活动名额已为你预留");
+  await student.goto(`${base}/#profile`);
+  await expect(
+    student
+      .locator(".service-reply")
+      .filter({ hasText: "周末亲子活动名额已为你预留" }),
+  ).toBeVisible();
+  record(
+    "举报即时隐藏；支持需求默认显示待跟进，填写处理说明后转入已跟进，学生在“我的”中看到回复",
+  );
 
   await student.setViewportSize({ width: 375, height: 812 });
   for (const name of ["首页", "心情", "探索", "星图", "树洞"]) {

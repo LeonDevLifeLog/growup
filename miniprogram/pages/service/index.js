@@ -20,7 +20,7 @@ Page({
       if (this.formId && !form) throw new Error('没有找到这份调查表，请稍后重新进入');
       this.setData({ forms: formsData.forms, form });
       if (form) this.setData({ fields: withValues(form.profiles[0].fields, this.data.answers) });
-      this.setData({ requests: data.requests.map(item => ({ ...item, displayTime: localTime(item.createdAt), statusText: item.status === 'handled' ? '已处理' : '待查看' })) });
+      this.setData({ requests: data.requests.map(item => ({ ...item, displayTime: localTime(item.createdAt), handledTime: localTime(item.handledAt), statusText: item.status === 'handled' ? '已跟进' : '待跟进' })) });
     } catch (error) { this.setData({ error: error.message }); }
     finally { this.setData({ loading: false }); }
   },
