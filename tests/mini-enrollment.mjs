@@ -88,6 +88,14 @@ try {
   });
   await page.checkInvite();
   assert.equal(page.data.invitation.schoolId, schoolA.id);
+  // Step 2 shows the confirmed school; "重新填写" returns to step 1.
+  page.resetInvite();
+  assert.equal(page.data.invitation, null);
+  page.togglePassword();
+  assert.equal(page.data.showPassword, true);
+  page.togglePassword();
+  await page.checkInvite();
+  assert.equal(page.data.invitation.schoolName, "西南第一学校");
   page.selectRegion({ detail: { value: "1" } });
   assert.equal(page.data.regionIndex, 1);
   assert.equal(page.data.regionId, regionB.id);
@@ -109,7 +117,7 @@ try {
   assert.equal(page.data.password, "");
   assert.equal(page.data.confirmPassword, "");
   record(
-    "原生选择器事件读取动态大区、切区清除学校核对、确认密码后注册并进入首页",
+    "注册分两步：核对学校后才显示账号设置，可“重新填写”退回；切区清除学校核对、确认密码后注册并进入首页",
   );
   const uses = await f.ok(`/admin/invites/${invite.id}`, {
     token: schoolAdminA.token,

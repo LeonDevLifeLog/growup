@@ -2,7 +2,7 @@ const { request, saveSession, clearSession } = require('../../utils/api');
 Page({
   data: {
     regions: [], regionIndex: 0, regionId: '', mode: 'login', account: '', password: '', name: '', inviteCode: '',
-    loading: true, submitting: false, error: '', invitation: null, checking: false, confirmPassword: ''
+    loading: true, submitting: false, error: '', invitation: null, checking: false, confirmPassword: '', showPassword: false
   },
   async onLoad() {
     const storedUser = wx.getStorageSync('growup.user');
@@ -28,6 +28,9 @@ Page({
     const region = this.data.regions[regionIndex];
     if (region) this.setData({ regionIndex, regionId: region.id, invitation: null, error: '' });
   },
+  togglePassword() { this.setData({ showPassword: !this.data.showPassword }); },
+  // Back to step 1 of registration when the confirmed school is not the right one.
+  resetInvite() { if (!this.data.submitting) this.setData({ invitation: null, error: '' }); },
   changeMode(event) { if (!this.data.submitting && !this.data.checking) this.setData({ mode: event.currentTarget.dataset.mode, error: '' }); },
   input(event) {
     const field = event.currentTarget.dataset.field;

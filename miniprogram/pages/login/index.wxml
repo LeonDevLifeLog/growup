@@ -1,33 +1,85 @@
 <view class="page login-page">
-  <view class="brand-mark">✺</view>
-  <view class="eyebrow">GROW A LITTLE, EVERY DAY</view>
-  <view class="title">成长健研社</view>
-  <view class="small">青少年身心健康成长服务品牌</view>
-  <view class="subtitle">每一种心情，都值得被看见。<text>{{'\n'}}</text>在这里，慢慢长成自己的样子。</view>
-  <view class="section-title">选择你的区域</view>
-  <view wx:if="{{loading}}" class="state">正在连接成长空间…</view>
-  <picker wx:else mode="selector" range="{{regions}}" range-key="name" value="{{regionIndex}}" bindchange="selectRegion" disabled="{{submitting || checking || !regions.length}}" aria-label="选择你的大区">
-    <view class="field row region-picker"><text>{{regions.length ? regions[regionIndex].name : '暂未开通大区'}}</text><text class="small">选择 ⌄</text></view>
-  </picker>
-  <view wx:if="{{!loading && !regions.length}}" class="state">暂未开通大区，请联系平台管理员。</view>
-  <view class="small">账号随学校邀请码绑定区域，请选择学校所在区域。</view>
-  <view class="auth-tabs spaced">
-    <view class="auth-tab {{mode === 'login' ? 'selected-tab' : ''}}" data-mode="login" bindtap="changeMode">账号登录</view>
-    <view class="auth-tab {{mode === 'register' ? 'selected-tab' : ''}}" data-mode="register" bindtap="changeMode">邀请码注册</view>
+  <view class="login-head">
+    <view class="brand-mark">✺</view>
+    <view>
+      <view class="login-title">成长健研社</view>
+      <view class="small">每一种心情，都值得被看见</view>
+    </view>
   </view>
-  <block wx:if="{{mode === 'register'}}">
-    <text class="label">学校邀请码</text><input class="field" value="{{inviteCode}}" data-field="inviteCode" bindinput="input" placeholder="向学校老师获取" maxlength="40" disabled="{{submitting || checking}}"/>
-    <view class="small">没有邀请码？请向所在学校工作人员申请。</view>
-    <button class="button-outline spaced" bindtap="checkInvite" loading="{{checking}}" disabled="{{submitting || checking || !inviteCode}}">核对学校</button>
-    <view wx:if="{{invitation}}" class="safe-note">将加入：{{invitation.regionName}} · {{invitation.schoolName}}。请确认是自己的学校，再设置账号和密码。</view>
-    <text class="label">你的称呼</text><input class="field" value="{{name}}" data-field="name" bindinput="input" placeholder="用于自己的成长空间" maxlength="40" disabled="{{submitting}}"/>
-  </block>
-  <text class="label">账号</text><input class="field" value="{{account}}" data-field="account" bindinput="input" placeholder="3–40 位字母、数字、点、下划线或短横线" maxlength="40" disabled="{{submitting}}"/>
-  <text class="label">密码</text><input class="field" value="{{password}}" data-field="password" bindinput="input" password placeholder="{{mode === 'register' ? '8–128 个字符' : '请输入密码'}}" maxlength="128" disabled="{{submitting}}"/>
-  <block wx:if="{{mode === 'register'}}"><text class="label">确认密码</text><input class="field" value="{{confirmPassword}}" data-field="confirmPassword" bindinput="input" password placeholder="再输入一次密码" maxlength="128" disabled="{{submitting}}"/></block>
-  <view wx:if="{{mode === 'login'}}" class="small spaced">忘记密码？请联系本校老师在后台重置，首次登录后再设置自己的新密码。</view>
-  <view wx:if="{{error}}" class="error" role="alert">{{error}}</view>
-  <button class="spaced" bindtap="submit" loading="{{submitting}}" disabled="{{submitting || checking || loading || !regions.length || (mode === 'register' && !invitation)}}">{{mode === 'login' ? '进入我的成长空间' : '创建我的成长空间'}} →</button>
-  <button wx:if="{{!loading && !regions.length}}" class="button-outline spaced" bindtap="load">重新连接</button>
-  <view class="safe-note">日记与心情备注仅本人可见；区域老师可查看心情分数用于关怀。未成年人请与监护人共同了解学校的数据使用安排。</view>
+
+  <view wx:if="{{loading}}" class="card state">正在连接成长空间…</view>
+  <view wx:elif="{{!regions.length}}" class="card state">
+    <view class="state-title">暂未开通大区</view>
+    <view>请联系学校老师或平台管理员。</view>
+    <view wx:if="{{error}}" class="error spaced">{{error}}</view>
+    <button class="button-outline spaced" bindtap="load">重新连接</button>
+  </view>
+
+  <view wx:else class="card login-card">
+    <view class="segmented">
+      <view class="segment {{mode === 'login' ? 'segment-on' : ''}}" data-mode="login" bindtap="changeMode">登录</view>
+      <view class="segment {{mode === 'register' ? 'segment-on' : ''}}" data-mode="register" bindtap="changeMode">邀请码注册</view>
+    </view>
+
+    <block wx:if="{{mode === 'login'}}">
+      <view class="field-label">所在大区</view>
+      <picker mode="selector" range="{{regions}}" range-key="name" value="{{regionIndex}}" bindchange="selectRegion" disabled="{{submitting}}">
+        <view class="field row"><text>{{regions[regionIndex].name}}</text><text class="small">更换 ⌄</text></view>
+      </picker>
+      <view class="field-label">账号</view>
+      <input class="field" value="{{account}}" data-field="account" bindinput="input" placeholder="请输入账号" maxlength="40" disabled="{{submitting}}"/>
+      <view class="field-label">密码</view>
+      <view class="field row password-field">
+        <input class="password-input" value="{{password}}" data-field="password" bindinput="input" password="{{!showPassword}}" placeholder="请输入密码" maxlength="128" disabled="{{submitting}}"/>
+        <text class="link" bindtap="togglePassword">{{showPassword ? '隐藏' : '显示'}}</text>
+      </view>
+      <view wx:if="{{error}}" class="error" role="alert">{{error}}</view>
+      <button class="spaced" bindtap="submit" loading="{{submitting}}" disabled="{{submitting || !account || !password}}">进入我的成长空间 →</button>
+      <view class="small hint">忘记密码？请联系本校老师在后台重置。还没有账号？切换到“邀请码注册”。</view>
+    </block>
+
+    <block wx:else>
+      <view class="steps">
+        <view class="step {{invitation ? 'step-done' : 'step-on'}}"><text class="step-num">{{invitation ? '✓' : '1'}}</text>核对学校</view>
+        <view class="step-line"></view>
+        <view class="step {{invitation ? 'step-on' : ''}}"><text class="step-num">2</text>设置账号</view>
+      </view>
+
+      <block wx:if="{{!invitation}}">
+        <view class="field-label">学校所在大区</view>
+        <picker mode="selector" range="{{regions}}" range-key="name" value="{{regionIndex}}" bindchange="selectRegion" disabled="{{checking}}">
+          <view class="field row"><text>{{regions[regionIndex].name}}</text><text class="small">更换 ⌄</text></view>
+        </picker>
+        <view class="field-label">学校邀请码</view>
+        <input class="field code-field" value="{{inviteCode}}" data-field="inviteCode" bindinput="input" placeholder="向本校老师索取" maxlength="40" disabled="{{checking}}"/>
+        <view wx:if="{{error}}" class="error" role="alert">{{error}}</view>
+        <button class="spaced" bindtap="checkInvite" loading="{{checking}}" disabled="{{checking || !inviteCode}}">核对学校 →</button>
+        <view class="small hint">邀请码决定你加入哪所学校，请向本校老师索取。</view>
+      </block>
+
+      <block wx:else>
+        <view class="school-confirm">
+          <view class="small">将加入</view>
+          <view class="school-name">{{invitation.schoolName}}</view>
+          <view class="small">{{invitation.regionName}}</view>
+          <text class="link" bindtap="resetInvite">不是我的学校？重新填写</text>
+        </view>
+        <view class="field-label">怎么称呼你</view>
+        <input class="field" value="{{name}}" data-field="name" bindinput="input" placeholder="用于自己的成长空间" maxlength="40" disabled="{{submitting}}"/>
+        <view class="field-label">设置账号</view>
+        <input class="field" value="{{account}}" data-field="account" bindinput="input" placeholder="3–40 位字母、数字、点、下划线或短横线" maxlength="40" disabled="{{submitting}}"/>
+        <view class="field-label">设置密码</view>
+        <view class="field row password-field">
+          <input class="password-input" value="{{password}}" data-field="password" bindinput="input" password="{{!showPassword}}" placeholder="至少 8 位" maxlength="128" disabled="{{submitting}}"/>
+          <text class="link" bindtap="togglePassword">{{showPassword ? '隐藏' : '显示'}}</text>
+        </view>
+        <view class="field-label">确认密码</view>
+        <input class="field" value="{{confirmPassword}}" data-field="confirmPassword" bindinput="input" password="{{!showPassword}}" placeholder="再输入一次密码" maxlength="128" disabled="{{submitting}}"/>
+        <view wx:if="{{error}}" class="error" role="alert">{{error}}</view>
+        <button class="spaced" bindtap="submit" loading="{{submitting}}" disabled="{{submitting || !name || !account || !password || !confirmPassword}}">创建我的成长空间 →</button>
+      </block>
+    </block>
+  </view>
+
+  <view class="safe-note">日记与心情备注仅本人可见；老师可查看心情分数用于关怀。<text>{{'\n'}}</text>未成年人请与监护人共同了解学校的数据使用安排。</view>
 </view>
