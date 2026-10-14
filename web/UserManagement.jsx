@@ -68,7 +68,8 @@ export default function UserManagement() {
             school_admin: "school-users",
           }[user.role]
         }
-        description={scopeText[user.role]}
+        description="管理你权限范围内的账号资料与状态。"
+        tip={scopeText[user.role]}
       />
       <section className="panel" aria-label="用户列表">
         <ListHeader title="用户列表" count={data?.total} unit=" 位">
@@ -324,10 +325,10 @@ function CreateUserDialog({ schools, onClose, onCreated }) {
   return (
     <FormDialog
       title="新增工作人员"
-      description={
+      tip={
         user.role === "platform_admin"
-          ? "新账号为待授权状态，在平台管理中任命后才能登录。请通过受控渠道告知本人初始凭据。"
-          : `新账号建立在${user.schoolName || user.regionName}，待上级任命后方可登录。请通过受控渠道告知本人初始凭据。`
+          ? "新账号为待授权状态，在平台管理中任命后才能登录；首次登录需本人修改初始密码。请通过受控渠道告知本人初始凭据。"
+          : `新账号建立在${user.schoolName || user.regionName}，待上级任命后方可登录；首次登录需本人修改初始密码。请通过受控渠道告知本人初始凭据。`
       }
       submitLabel="创建用户"
       busy={busy}
@@ -403,6 +404,7 @@ function EditUserDialog({ row, onClose }) {
   return (
     <FormDialog
       title={`编辑用户 · ${row.account}`}
+      tip="登录账号不可修改；用户类型与归属通过任命调整。"
       submitLabel="保存用户资料"
       busy={busy}
       error={error}
@@ -427,7 +429,6 @@ function EditUserDialog({ row, onClose }) {
           disabled={busy}
         />
       </label>
-      <small>登录账号不可修改；类型与归属通过任命调整。</small>
     </FormDialog>
   );
 }

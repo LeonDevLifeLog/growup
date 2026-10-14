@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef } from "react";
+import { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
 import {
   ArrowUpRight,
   X,
@@ -47,12 +47,15 @@ export function Icon({ name, ...props }) {
     }[name] || Sprout;
   return <Item size={24} strokeWidth={1.7} {...props} />;
 }
-export function SectionTitle({ eyebrow, title, action, onAction }) {
+export function SectionTitle({ eyebrow, title, action, onAction, tip }) {
   return (
     <div className="section-heading">
       <div>
         {eyebrow && <span className="eyebrow">{eyebrow}</span>}
-        <h2>{title}</h2>
+        <div className="title-with-tip">
+          <h2>{title}</h2>
+          {tip && <InfoTip label={`${title}说明`}>{tip}</InfoTip>}
+        </div>
       </div>
       {action && (
         <button className="text-button" onClick={onAction}>
@@ -133,7 +136,7 @@ export function Locked({
     />
   );
 }
-export function Modal({ title, children, wide = false, onClose }) {
+export function Modal({ title, children, wide = false, onClose, tip }) {
   const ref = useRef(null);
   const titleId = useId();
   useEffect(() => {
@@ -158,7 +161,11 @@ export function Modal({ title, children, wide = false, onClose }) {
     >
       <div className="modal-inner">
         <div className="modal-heading">
-          <h2 id={titleId}>{title}</h2>
+          {/* The tip sits beside the title so it is not part of the dialog's name. */}
+          <div className="title-with-tip">
+            <h2 id={titleId}>{title}</h2>
+            {tip && <InfoTip label="说明">{tip}</InfoTip>}
+          </div>
           <button
             className="icon-button"
             onClick={onClose}
@@ -172,12 +179,81 @@ export function Modal({ title, children, wide = false, onClose }) {
     </dialog>
   );
 }
-export function PrivateNote({ children }) {
+/** A short privacy label; the full explanation opens from its help button. */
+export function PrivateNote({ label = "谁能看到？", children }) {
   return (
     <p className="privacy-note">
       <LockKeyhole size={14} />
-      {children}
+      {label}
+      <InfoTip label="隐私说明">{children}</InfoTip>
     </p>
+  );
+}
+
+/**
+ * Secondary explanations stay out of the layout until asked for: a small
+ * circled question mark opens a bubble, closed by a second tap, Esc or a tap elsewhere.
+ */
+export function InfoTip({ label = "说明", children }) {
+  const [open, setOpen] = useState(false);
+  const id = useId();
+  const root = useRef(null);
+  const bubble = useRef(null);
+  useEffect(() => {
+    if (!open) return;
+    const outside = (event) => {
+      if (!root.current?.contains(event.target)) setOpen(false);
+    };
+    const escape = (event) => {
+      if (event.key !== "Escape") return;
+      // Close only the bubble, not a dialog it sits in.
+      event.preventDefault();
+      event.stopPropagation();
+      setOpen(false);
+    };
+    document.addEventListener("pointerdown", outside);
+    document.addEventListener("keydown", escape, true);
+    return () => {
+      document.removeEventListener("pointerdown", outside);
+      document.removeEventListener("keydown", escape, true);
+    };
+  }, [open]);
+  useLayoutEffect(() => {
+    // Keep the bubble inside the viewport on narrow screens.
+    const element = bubble.current;
+    if (!open || !element) return;
+    element.style.transform = "";
+    const rect = element.getBoundingClientRect();
+    const shift =
+      rect.right > innerWidth - 12
+        ? innerWidth - 12 - rect.right
+        : rect.left < 12
+          ? 12 - rect.left
+          : 0;
+    element.style.transform = `translateX(${shift}px)`;
+  }, [open]);
+  return (
+    <span className="info-tip" ref={root}>
+      <button
+        type="button"
+        className="info-tip-button"
+        aria-label={`查看${label}`}
+        aria-expanded={open}
+        aria-controls={open ? id : undefined}
+        onClick={(event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          setOpen(!open);
+        }}
+      >
+        <CircleHelp size={15} />
+      </button>
+      {open && (
+        <span id={id} role="note" className="info-tip-bubble" ref={bubble}>
+          {children}
+        </span>
+      )}
+    </span>
   );
 }
 
@@ -185,6 +261,7 @@ export function PrivateNote({ children }) {
 // Errors stay inside the dialog, next to the fields that caused them.
 export function FormDialog({
   title,
+  tip,
   description,
   error,
   busy,
@@ -198,7 +275,7 @@ export function FormDialog({
 }) {
   const close = () => !busy && onClose();
   return (
-    <Modal title={title} wide={wide} onClose={close}>
+    <Modal title={title} wide={wide} onClose={close} tip={tip}>
       <form
         className="form-stack dialog-form"
         onSubmit={(event) => {

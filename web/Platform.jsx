@@ -632,7 +632,7 @@ function AppointDialog({ row, regions, schools, onClose }) {
   return (
     <FormDialog
       title={row ? `调整权限 · ${row.name}` : "任命管理员"}
-      description="任命沿用已有账号和密码；调整后该账号需要重新登录。"
+      tip="任命沿用已有账号和密码；调整后该账号需要重新登录。大区与学校管理员只能管理所选范围。"
       submitLabel="保存任命"
       busy={busy}
       error={error}

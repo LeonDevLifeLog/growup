@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { useApp, useDirty, useMutation, useResource } from "./context.jsx";
 import {
+  InfoTip,
   Badge,
   ConfirmDialog,
   Empty,
@@ -98,10 +99,8 @@ export function AdminOverview() {
               title="此刻，需要多一点关怀"
               action="查看全部学生"
               onAction={() => setView("admin-students")}
+              tip="由学生的连续心情记录自动提示，具体情况需要结合实际交流了解。"
             />
-            <p className="section-sub">
-              由连续记录自动提示，具体情况需结合交流了解。
-            </p>
             {attention.length ? (
               <StudentTable students={attention.slice(0, 6)} />
             ) : (
@@ -306,6 +305,7 @@ export function AdminStudents() {
         eyebrow="A LITTLE MORE CARE"
         title="学生关怀，每一次靠近都有意义"
         help="school-care"
+        tip="只显示你管理范围内的学生。分数与连续天数是关怀线索，不是诊断；学生的日记和心情备注不向管理端开放。"
         description="留意变化，先理解情境，再给予合适的支持。"
       />
       <section className="panel">
@@ -354,9 +354,6 @@ export function AdminStudents() {
           )}
         </ResourceState>
       </section>
-      <p className="source-note">
-        本页仅显示所属大区数据。分数与连续天数是关怀线索，不是诊断；日记和心情备注不向管理端开放。
-      </p>
     </>
   );
 }
@@ -401,9 +398,12 @@ export function StudentDetail({ id }) {
             <Badge student={student} />
           </div>
           <div className="info-box">
-            连续低落 {student.lowDays}{" "}
-            天。提示根据日历日计算；请结合实际交流了解情况。
-            {!student.lastCheckin && "目前还没有打卡记录。"}
+            连续低落 {student.lowDays} 天
+            {!student.lastCheckin && " · 目前还没有打卡记录"}
+            <InfoTip label="计算方式">
+              按北京时间的自然日计算连续低落（1–2
+              分）天数；当天更新不增加天数，中断一天重新计算。请结合实际交流了解情况。
+            </InfoTip>
           </div>
           <h3 className="detail-subtitle">最近的心情记录</h3>
           <div className="student-timeline">
@@ -498,6 +498,7 @@ export function AdminPosts() {
         eyebrow="LISTEN WITH KINDNESS"
         title="守护树洞，让善意安心抵达"
         help="school-posts"
+        tip="审核列表只展示化名与内容，不公开学生身份。被举报的内容会先隐藏，需重新人工审核。"
         description="先审核，再发布。保护匿名表达，也守护每一位读到纸条的人。"
       />
       <div className="filter-row admin-post-filters">
@@ -632,9 +633,6 @@ export function AdminPosts() {
       {rejecting && (
         <RejectDialog item={rejecting} onClose={() => setRejecting(null)} />
       )}
-      <p className="source-note">
-        审核列表仅展示化名与内容，不向审核人员公开学生身份。被举报内容隐藏后需重新人工审核。
-      </p>
     </>
   );
 }

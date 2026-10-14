@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { useApp } from "./context.jsx";
 import { isAdmin } from "./api.js";
-import { HelpLink, Mark } from "./components.jsx";
+import { InfoTip, HelpLink, Mark } from "./components.jsx";
 
 export default function Auth({ purpose = "student" }) {
   const { region, regions, authenticate, close, call } = useApp();
@@ -179,7 +179,12 @@ export default function Auth({ purpose = "student" }) {
         {register && (
           <>
             <label>
-              学校邀请码
+              <span>
+                学校邀请码
+                <InfoTip label="邀请码说明">
+                  邀请码决定你加入哪所学校，请向本校老师索取。核对学校后再设置账号和密码。
+                </InfoTip>
+              </span>
               <input
                 aria-label="学校邀请码"
                 value={invite}
@@ -193,7 +198,6 @@ export default function Auth({ purpose = "student" }) {
                 disabled={busy || checking}
                 autoComplete="off"
               />
-              <small>没有邀请码？请向所在学校工作人员申请。</small>
             </label>
             <button
               type="button"
@@ -325,18 +329,18 @@ export default function Auth({ purpose = "student" }) {
           >
             {register ? "直接登录" : "邀请码注册"}
           </button>
-          {!register && <small>邀请码请向本校老师索取</small>}
         </p>
       )}
-      <p className="privacy-note">
-        <ShieldCheck size={15} />
-        {platform
-          ? "平台管理员负责组织与管理账号，学生个人记录保持私密"
-          : "账号仅可登录所属大区，学校账号只管理本校"}
-      </p>
       <p className="auth-help">
-        登录遇到问题？
-        <HelpLink anchor="faq" label="查看常见问题" />
+        <ShieldCheck size={14} />
+        账号与隐私
+        <InfoTip label="账号与隐私说明">
+          {platform
+            ? "平台管理员负责组织与管理账号，看不到学生的个人记录。"
+            : "账号只能登录所属大区；学校账号只管理本校。日记与心情备注仅本人可见，老师只能看到心情分数。"}
+        </InfoTip>
+        <span aria-hidden="true">·</span>
+        <HelpLink anchor="faq" label="登录遇到问题" />
       </p>
     </div>
   );

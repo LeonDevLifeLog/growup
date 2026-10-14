@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { useApp, useDirty, useResource } from "./context.jsx";
 import {
+  InfoTip,
   HelpLink,
   Empty,
   Icon,
@@ -389,7 +390,7 @@ export function MoodPage() {
       <section className="panel records">
         <SectionTitle title="我的心情记录" />
         <PrivateNote>
-          心情分数供学校授权人员关怀参考；具体心事只对你自己可见。
+          心情分数供学校授权的老师关怀参考；你写下的备注和心事只对你自己可见。
         </PrivateNote>
         <ResourceState {...resource}>
           {rows.length ? (
@@ -493,6 +494,7 @@ export function PageTitle({
   action,
   onAction,
   help,
+  tip,
 }) {
   return (
     <div className="page-intro">
@@ -501,6 +503,7 @@ export function PageTitle({
         <h1>{title}</h1>
         <p>
           {description}
+          {tip && <InfoTip label="页面说明">{tip}</InfoTip>}
           {help && (
             <>
               {" "}
@@ -1119,9 +1122,12 @@ export function PostForm({ post, report = false }) {
         </small>
       </label>
       {!report && (
-        <div className="info-box">
-          对同学匿名，平台保留审核所需的账号关联。纸条与回复均先审后发。
-        </div>
+        <p className="privacy-note">
+          对同学匿名 · 先审后发
+          <InfoTip label="匿名说明">
+            同学只能看到你的化名。平台保留审核所需的账号关联，纸条与回复都由老师审核后才公开。
+          </InfoTip>
+        </p>
       )}
       {error && (
         <p role="alert" className="form-error">
@@ -1231,7 +1237,9 @@ export function ServiceForm({ service = "成长支持" }) {
           placeholder="可以描述希望了解的服务或需要的帮助，不必填写联系方式等额外敏感信息。"
         />
       </label>
-      <PrivateNote>仅由所属大区的工作人员查看和跟进。</PrivateNote>
+      <PrivateNote>
+        只有你自己和所属大区的工作人员可以看到这条需求，并由他们跟进。
+      </PrivateNote>
       {error && (
         <p role="alert" className="form-error">
           {error}

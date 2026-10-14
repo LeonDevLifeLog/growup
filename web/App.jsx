@@ -29,7 +29,14 @@ import {
   roleAbilities,
   roleNames,
 } from "./api.js";
-import { ConfirmDialog, HelpLink, Locked, Mark, Modal } from "./components.jsx";
+import {
+  InfoTip,
+  ConfirmDialog,
+  HelpLink,
+  Locked,
+  Mark,
+  Modal,
+} from "./components.jsx";
 import Auth from "./Auth.jsx";
 import Enrollment from "./Enrollment.jsx";
 import Platform, { ChangePassword } from "./Platform.jsx";
@@ -732,9 +739,12 @@ function ModalBody({ modal: m }) {
         {m.article.paragraphs.map((p, i) => (
           <p key={i}>{p}</p>
         ))}
-        <div className="info-box">
-          这些日常练习帮助你留意感受，不能替代专业帮助。如果感到持续难受，请告诉信任的成人或专业人员。
-        </div>
+        <p className="privacy-note">
+          日常练习，不能替代专业帮助
+          <InfoTip label="使用说明">
+            这些练习帮助你留意自己的感受。如果感到持续难受，请告诉信任的成人或专业人员。
+          </InfoTip>
+        </p>
       </article>
     );
   if (m.type === "region")

@@ -85,7 +85,9 @@ export function StarMap() {
           <h3>不需要惊天动地，也值得被记录。</h3>
           <p>点选一颗话题星星，看看它在生活中留下的轨迹。</p>
         </div>
-        <PrivateNote>日记仅自己可见</PrivateNote>
+        <PrivateNote label="仅自己可见">
+          日记、标签和星图只对你自己开放，老师和同学都看不到。
+        </PrivateNote>
       </div>
       <ResourceState {...map}>
         {stats && (
@@ -411,7 +413,9 @@ export function StarMapForm() {
   }
   return (
     <form onSubmit={submit} className="form-stack">
-      <PrivateNote>这片小小宇宙，只对自己开放。</PrivateNote>
+      <PrivateNote label="仅自己可见">
+        这片小小宇宙只对你自己开放，老师和同学都看不到。
+      </PrivateNote>
       <div className="tool-tabs" aria-label="记录方式">
         {[
           ["full", "完整记录"],

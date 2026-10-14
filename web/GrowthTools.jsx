@@ -7,7 +7,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { useApp, useDirty, useResource } from "./context.jsx";
-import { Empty, PrivateNote, ResourceState } from "./components.jsx";
+import { InfoTip, Empty, PrivateNote, ResourceState } from "./components.jsx";
 
 const localDate = () =>
   new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Shanghai" });
@@ -33,13 +33,15 @@ export function SchemaFields({ fields, answers, onChange }) {
               <h3 className="schema-section">{field.section}</h3>
             )}
             {field.type === "single" || field.type === "multi" ? (
-              <fieldset>
-                <legend>{title}</legend>
-                {(field.description || field.help) && (
-                  <p className="field-hint">
-                    {field.description || field.help}
-                  </p>
-                )}
+              <fieldset aria-label={field.label}>
+                <legend>
+                  {title}
+                  {(field.description || field.help) && (
+                    <InfoTip label="填写说明">
+                      {field.description || field.help}
+                    </InfoTip>
+                  )}
+                </legend>
                 <div className="schema-options">
                   {field.options.map((option, i) => {
                     const selected =
@@ -78,9 +80,17 @@ export function SchemaFields({ fields, answers, onChange }) {
               </fieldset>
             ) : (
               <label>
-                {title}
+                <span>
+                  {title}
+                  {(field.description || field.help) && (
+                    <InfoTip label="填写说明">
+                      {field.description || field.help}
+                    </InfoTip>
+                  )}
+                </span>
                 {field.type === "textarea" ? (
                   <textarea
+                    aria-label={field.label}
                     rows={3}
                     maxLength={field.maxLength || field.max || 1000}
                     value={value ?? ""}
@@ -90,6 +100,7 @@ export function SchemaFields({ fields, answers, onChange }) {
                   />
                 ) : (
                   <input
+                    aria-label={field.label}
                     type={
                       ["number", "date", "time"].includes(field.type)
                         ? field.type
@@ -119,12 +130,8 @@ export function SchemaFields({ fields, answers, onChange }) {
                     }
                   />
                 )}
-                {(field.unit || field.description || field.help) && (
-                  <small className="field-hint">
-                    {[field.unit, field.description || field.help]
-                      .filter(Boolean)
-                      .join(" · ")}
-                  </small>
+                {field.unit && (
+                  <small className="field-hint">单位：{field.unit}</small>
                 )}
               </label>
             )}
@@ -384,7 +391,9 @@ function ToolWorkspace({ tool }) {
         全部成长工具
       </button>
       <p className="dialog-lead">{tool.description}</p>
-      <PrivateNote>回答与记录仅自己可见，保存在你的账号中。</PrivateNote>
+      <PrivateNote label="仅自己可见">
+        回答与记录保存在你的账号中，只有你自己能看到；结果不作为心理或医学诊断。
+      </PrivateNote>
       <div className="tool-tabs" role="tablist" aria-label="工具功能">
         {[
           ["write", isTracker ? "填写记录" : "开始作答"],
@@ -614,7 +623,7 @@ export function StructuredServiceForm({ formId }) {
         <form className="form-stack" onSubmit={submit}>
           <p className="dialog-lead">{form.description}</p>
           <PrivateNote>
-            由你的账号提交，仅自己与所属大区工作人员可见。
+            由你的账号提交，只有你自己和所属大区的工作人员可以看到。
           </PrivateNote>
           <SchemaFields
             fields={form.profiles[0].fields}

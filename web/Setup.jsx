@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { ArrowLeft, ArrowRight, Check, ShieldCheck } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check } from "lucide-react";
 import { request } from "./api.js";
-import { Mark } from "./components.jsx";
+import { InfoTip, Mark } from "./components.jsx";
 
 const steps = ["开始", "平台管理员", "第一个组织"];
 const accountPattern = /^[A-Za-z0-9._-]{3,40}$/;
@@ -97,21 +97,21 @@ export default function Setup({ tokenRequired, onDone }) {
             <>
               <h1 id="setup-title">欢迎使用成长健研社</h1>
               <p className="dialog-lead">
-                这是系统第一次启动。接下来创建平台管理员账号，并可顺手开通第一个大区和学校。完成后，此初始化页面将永久关闭。
+                第一次启动：创建平台管理员，可顺手开通第一个大区和学校。完成后此页面永久关闭。
+                <InfoTip label="初始化说明">
+                  平台管理员负责维护大区、学校和各级管理员，不查看学生关怀记录。大区、学校管理员和学生账号在初始化后从管理后台开通。数据保存在本服务器，请按部署文档定期备份。
+                </InfoTip>
               </p>
-              <ul className="setup-list">
-                <li>
-                  平台管理员负责维护大区、学校和各级管理员，不查看学生关怀记录。
-                </li>
-                <li>
-                  大区、学校管理员和学生账号都在初始化完成后，从管理后台开通。
-                </li>
-                <li>数据保存在本服务器，请按部署文档定期备份数据目录。</li>
-              </ul>
               {tokenRequired && (
                 <label>
-                  初始化口令
+                  <span>
+                    初始化口令
+                    <InfoTip label="口令说明">
+                      此服务器设置了初始化口令（SETUP_TOKEN），请向部署人员索取。
+                    </InfoTip>
+                  </span>
                   <input
+                    aria-label="初始化口令"
                     type="password"
                     {...field("setupToken")}
                     required
@@ -119,7 +119,6 @@ export default function Setup({ tokenRequired, onDone }) {
                     autoFocus
                     placeholder="部署时设置的 SETUP_TOKEN"
                   />
-                  <small>此服务器设置了初始化口令，请向部署人员索取。</small>
                 </label>
               )}
             </>
@@ -247,10 +246,6 @@ export default function Setup({ tokenRequired, onDone }) {
             </button>
           </div>
         </form>
-        <p className="privacy-note">
-          <ShieldCheck size={14} />
-          初始化只能完成一次，之后此页面不再开放。
-        </p>
       </section>
     </main>
   );

@@ -218,7 +218,7 @@ function CreateInviteDialog({ schools, onClose }) {
   return (
     <FormDialog
       title="生成学生邀请码"
-      description="学生凭邀请码自行设置账号密码，只能加入所选学校，不能用于管理员注册。"
+      tip="学生凭邀请码自行设置账号和密码，只能加入所选学校，不能用于管理员注册。完整邀请码只在生成后显示一次。"
       submitLabel="生成邀请码"
       busy={busy}
       error={error}
