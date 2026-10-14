@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ArrowRight, MapPin, ShieldCheck, Eye, EyeOff } from "lucide-react";
 import { useApp } from "./context.jsx";
-import { regions } from "./api.js";
+import { isAdmin } from "./api.js";
 import { Mark } from "./components.jsx";
 
 export default function Auth({ purpose = "student" }) {
-  const { region, demo, authenticate, close, call } = useApp();
+  const { region, regions, demo, authenticate, close, call } = useApp();
+  const [platform, setPlatform] = useState(false);
   const [register, setRegister] = useState(false);
   const [selected, setSelected] = useState(region);
   const [account, setAccount] = useState("");
@@ -13,23 +14,60 @@ export default function Auth({ purpose = "student" }) {
   const [show, setShow] = useState(false);
   const [name, setName] = useState("");
   const [invite, setInvite] = useState("");
+  const [invitation, setInvitation] = useState(null);
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [checking, setChecking] = useState(false);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  useEffect(() => {
+    if (!regions.some((item) => item.id === selected)) {
+      setSelected(regions[0]?.id || "");
+      setInvitation(null);
+    }
+  }, [regions, selected]);
+  async function checkInvite() {
+    setChecking(true);
+    setError("");
+    setInvitation(null);
+    try {
+      const result = await call("/auth/invite", {
+        method: "POST",
+        body: { regionId: selected, inviteCode: invite },
+      });
+      setInvitation(result.invitation);
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setChecking(false);
+    }
+  }
   async function submit(event) {
     event.preventDefault();
     setError("");
+    if (register && !invitation) {
+      setError("请先核对学校邀请码");
+      return;
+    }
+    if (register && password !== confirmPassword) {
+      setError("两次输入的密码不一致");
+      return;
+    }
     setBusy(true);
     try {
       const result = await call(`/auth/${register ? "register" : "login"}`, {
         method: "POST",
         body: {
-          regionId: selected,
+          regionId: platform ? null : selected,
           account,
           password,
           ...(register ? { name, inviteCode: invite } : {}),
         },
       });
-      if (result.user.role !== purpose) {
+      if (
+        purpose === "admin"
+          ? !isAdmin(result.user)
+          : result.user.role !== "student"
+      ) {
         await call("/auth/logout", { method: "POST", token: result.token });
         throw new Error(
           purpose === "admin"
@@ -61,28 +99,99 @@ export default function Auth({ purpose = "student" }) {
         </p>
       </div>
       <form onSubmit={submit} className="form-stack">
-        <fieldset className="region-field">
-          <legend>
-            <MapPin size={15} />
-            选择你的大区
-          </legend>
-          <div className="region-options">
-            {regions.map((item) => (
-              <button
-                key={item.id}
-                type="button"
-                className={selected === item.id ? "selected" : ""}
-                onClick={() => {
-                  setSelected(item.id);
-                  setError("");
-                }}
-                aria-pressed={selected === item.id}
-              >
-                {item.name}
-              </button>
-            ))}
+        {purpose === "admin" && (
+          <div className="filter-tabs">
+            <button
+              type="button"
+              className={!platform ? "selected" : ""}
+              disabled={busy}
+              onClick={() => {
+                setPlatform(false);
+                setError("");
+              }}
+            >
+              大区 / 学校登录
+            </button>
+            <button
+              type="button"
+              className={platform ? "selected" : ""}
+              disabled={busy}
+              onClick={() => {
+                setPlatform(true);
+                setError("");
+              }}
+            >
+              平台管理员登录
+            </button>
           </div>
-        </fieldset>
+        )}
+        {!platform && (
+          <fieldset className="region-field">
+            <legend>
+              <MapPin size={15} />
+              选择你的大区
+            </legend>
+            <div className="region-options">
+              {regions.map((item) => (
+                <button
+                  key={item.id}
+                  type="button"
+                  className={selected === item.id ? "selected" : ""}
+                  onClick={() => {
+                    setSelected(item.id);
+                    setInvitation(null);
+                    setError("");
+                  }}
+                  disabled={busy || checking}
+                  aria-pressed={selected === item.id}
+                >
+                  {item.name}
+                </button>
+              ))}
+            </div>
+            {!regions.length && (
+              <p className="muted">暂未开通大区，请联系平台管理员。</p>
+            )}
+          </fieldset>
+        )}
+        {register && (
+          <>
+            <label>
+              学校邀请码
+              <input
+                aria-label="学校邀请码"
+                value={invite}
+                onChange={(e) => {
+                  setInvite(e.target.value);
+                  setInvitation(null);
+                }}
+                required
+                maxLength={40}
+                placeholder="向学校老师获取邀请码"
+                disabled={busy || checking}
+                autoComplete="off"
+              />
+              <small>没有邀请码？请向所在学校工作人员申请。</small>
+            </label>
+            <button
+              type="button"
+              className="button secondary full"
+              onClick={checkInvite}
+              disabled={busy || checking || !invite.trim()}
+            >
+              {checking ? "正在核对…" : "核对学校"}
+            </button>
+            {invitation && (
+              <div className="info-box" role="status">
+                将加入：
+                <strong>
+                  {invitation.regionName} · {invitation.schoolName}
+                </strong>
+                <p>请确认是自己的学校，再设置账号和密码。</p>
+              </div>
+            )}
+          </>
+        )}
         {register && (
           <label>
             怎么称呼你
@@ -102,7 +211,11 @@ export default function Auth({ purpose = "student" }) {
             value={account}
             onChange={(e) => setAccount(e.target.value)}
             required
-            placeholder="输入学校提供的账号"
+            placeholder={
+              register
+                ? "自己设置 3–40 位字母、数字、点、下划线或短横线"
+                : "输入你的账号"
+            }
             autoComplete="username"
             maxLength={40}
           />
@@ -132,15 +245,17 @@ export default function Auth({ purpose = "student" }) {
         </label>
         {register && (
           <label>
-            学校邀请码
+            确认密码
             <input
-              value={invite}
-              onChange={(e) => setInvite(e.target.value)}
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
               required
-              maxLength={40}
-              placeholder="向学校老师获取邀请码"
+              minLength={8}
+              maxLength={128}
+              autoComplete="new-password"
+              placeholder="再输入一次密码"
             />
-            <small>邀请码绑定大区和学校，注册后不能自行跨区。</small>
           </label>
         )}
         {error && (
@@ -148,7 +263,15 @@ export default function Auth({ purpose = "student" }) {
             {error}
           </p>
         )}
-        <button className="button primary full" disabled={busy}>
+        <button
+          className="button primary full"
+          disabled={
+            busy ||
+            checking ||
+            (!platform && !selected) ||
+            (register && !invitation)
+          }
+        >
           {busy
             ? "正在连接…"
             : register
@@ -164,6 +287,7 @@ export default function Auth({ purpose = "student" }) {
           {register ? "已经有账号？" : "还没有账号？"}
           <button
             className="text-button"
+            disabled={busy || checking}
             onClick={() => {
               setRegister(!register);
               setError("");
@@ -173,7 +297,7 @@ export default function Auth({ purpose = "student" }) {
           </button>
         </p>
       )}
-      {demo && !register && (
+      {demo && !register && !platform && (
         <div className="demo-credentials">
           <span>本地演示 · 虚构账号</span>
           <button
@@ -193,7 +317,9 @@ export default function Auth({ purpose = "student" }) {
       )}
       <p className="privacy-note">
         <ShieldCheck size={15} />
-        账号仅可登录注册时所属的大区
+        {platform
+          ? "平台管理员负责组织与管理账号，学生个人记录保持私密"
+          : "账号仅可登录所属大区，学校账号只管理本校"}
       </p>
     </div>
   );

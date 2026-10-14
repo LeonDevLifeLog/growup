@@ -3,6 +3,8 @@ import { mkdirSync } from "node:fs";
 import { dirname } from "node:path";
 import { randomBytes, scryptSync, timingSafeEqual } from "node:crypto";
 import { shanghaiDate, shiftDate } from "./mood.mjs";
+import { migrateInvites, issueInvite } from "./enrollment.mjs";
+import { migrateIdentity } from "./permissions.mjs";
 
 export function hashPassword(password) {
   const salt = randomBytes(16).toString("hex");
@@ -106,16 +108,6 @@ export function openDatabase(dbPath, demo, now) {
     if (!journalColumns.has(name))
       db.exec(`ALTER TABLE journals ADD COLUMN ${name} ${definition}`);
   }
-  const region = db.prepare("INSERT OR IGNORE INTO regions VALUES (?, ?)");
-  const school = db.prepare("INSERT OR IGNORE INTO schools VALUES (?, ?, ?)");
-  for (const [id, name, schoolName] of [
-    ["hainan", "海南大区", "海口向阳实验学校"],
-    ["shandong", "山东大区", "济南向阳实验学校"],
-    ["guangdong", "广东大区", "广州向阳实验学校"],
-  ]) {
-    region.run(id, name);
-    school.run(`${id}-school`, id, schoolName);
-  }
   const seeded = db
     .prepare("SELECT value FROM settings WHERE key='demo_seeded'")
     .get();
@@ -125,13 +117,35 @@ export function openDatabase(dbPath, demo, now) {
       "此数据库包含演示账号，正式模式请使用单独的 DATA_PATH；演示库只能在 DEMO_MODE=1 下打开",
     );
   }
-  if (demo && !seeded) {
-    if (db.prepare("SELECT COUNT(*) count FROM users").get().count) {
-      db.close();
-      throw new Error(
-        "已有正式账号的数据库不能导入演示数据，请为演示模式使用单独的 DATA_PATH",
-      );
+  if (
+    demo &&
+    !seeded &&
+    db.prepare("SELECT COUNT(*) count FROM users").get().count
+  ) {
+    db.close();
+    throw new Error(
+      "已有正式账号的数据库不能导入演示数据，请为演示模式使用单独的 DATA_PATH",
+    );
+  }
+  migrateIdentity(db);
+  const region = db.prepare(
+    "INSERT OR IGNORE INTO regions (id,name) VALUES (?, ?)",
+  );
+  const school = db.prepare(
+    "INSERT OR IGNORE INTO schools (id,region_id,name) VALUES (?, ?, ?)",
+  );
+  for (const [id, name, schoolName] of [
+    ["hainan", "海南大区", "海口向阳实验学校"],
+    ["shandong", "山东大区", "济南向阳实验学校"],
+    ["guangdong", "广东大区", "广州向阳实验学校"],
+  ]) {
+    if (demo) {
+      region.run(id, name);
+      school.run(`${id}-school`, id, schoolName);
     }
+  }
+  migrateInvites(db, now);
+  if (demo && !seeded) {
     seedDemo(db, now);
   }
   return db;
@@ -143,7 +157,7 @@ function seedDemo(db, now) {
   db.exec("BEGIN");
   try {
     const insertUser = db.prepare(
-      "INSERT OR IGNORE INTO users VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+      "INSERT OR IGNORE INTO users (id,account,password_hash,name,role,region_id,school_id,created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
     );
     const users = [
       ["student-hainan", "hainan.student", "林小满", "student", "hainan"],
@@ -170,9 +184,9 @@ function seedDemo(db, now) {
         account,
         hashPassword("Growup123!"),
         name,
-        role,
+        role === "admin" ? "region_admin" : role,
         regionId,
-        `${regionId}-school`,
+        role === "admin" ? null : `${regionId}-school`,
         stamp,
       );
     }
@@ -181,10 +195,14 @@ function seedDemo(db, now) {
       ["SD2026", "shandong"],
       ["GD2026", "guangdong"],
     ]) {
-      db.prepare("INSERT OR IGNORE INTO invites VALUES (?, ?, 1)").run(
+      issueInvite(db, {
         code,
-        `${regionId}-school`,
-      );
+        schoolId: `${regionId}-school`,
+        now,
+        days: 365,
+        maxUses: 10000,
+        note: "本地演示邀请",
+      });
     }
     const checkin = db.prepare(
       "INSERT OR IGNORE INTO checkins VALUES (?, ?, ?, ?, ?, ?)",

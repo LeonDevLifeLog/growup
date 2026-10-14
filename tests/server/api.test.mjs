@@ -135,7 +135,7 @@ test("production creates no demo accounts/invites; explicit demo adds stable fic
     production.app.db.prepare("SELECT COUNT(*) count FROM invites").get().count,
     0,
   );
-  assert.equal((await production.request("/regions")).body.regions.length, 3);
+  assert.equal((await production.request("/regions")).body.regions.length, 0);
   assert.equal(
     (
       await production.request("/auth/login", {
@@ -164,39 +164,36 @@ test("production creates no demo accounts/invites; explicit demo adds stable fic
   });
 });
 
-test("local bootstrap enables real admin and invite registration without exposing passwords or overwriting accounts", async (t) => {
+test("local bootstrap provisions only the first platform administrator without demo organizations", async (t) => {
   const directory = mkdtempSync(join(tmpdir(), "growup-bootstrap-"));
   t.after(() => rmSync(directory, { recursive: true, force: true }));
   const dbPath = join(directory, "production.sqlite");
   const input = {
-    regionId: "hainan",
     account: "official.admin",
     password: PASSWORD,
-    name: "正式管理员",
-    inviteCode: "SCHOOL2026",
-    schoolName: "正式测试学校",
+    name: "平台管理员",
   };
   const provisioned = bootstrap(input, { dbPath });
-  assert.equal(provisioned.created, true);
+  assert.equal(provisioned.role, "platform_admin");
   assert.equal(JSON.stringify(provisioned).includes(PASSWORD), false);
-  assert.throws(() => bootstrap(input, { dbPath }), /已存在/);
+  assert.throws(
+    () => bootstrap({ ...input, account: "another.admin" }, { dbPath }),
+    /已存在/,
+  );
   assert.throws(() => createApp({ dbPath, demo: true }), /正式账号/);
   const f = await fixture(t, { dbPath, demo: false });
-  const admin = await f.login("official.admin");
-  assert.equal(admin.user.role, "admin");
-  assert.equal(admin.user.schoolName, "正式测试学校");
-  const student = await f.request("/auth/register", {
-    method: "POST",
-    body: {
-      regionId: "hainan",
-      inviteCode: "SCHOOL2026",
-      account: "official.student",
-      password: PASSWORD,
-      name: "正式测试同学",
-    },
-  });
-  assert.equal(student.status, 201);
-  assert.equal(student.body.user.schoolName, "正式测试学校");
+  const admin = await f.login("official.admin", null);
+  assert.equal(admin.user.role, "platform_admin");
+  assert.equal(admin.user.regionId, null);
+  assert.equal((await f.request("/regions")).body.regions.length, 0);
+  assert.equal(
+    (await f.request("/admin/overview", { token: admin.token })).status,
+    403,
+  );
+  assert.equal(
+    (await f.request("/platform/organizations", { token: admin.token })).status,
+    200,
+  );
 });
 
 test("login binds region; account/password, role and token fields never leak secrets", async (t) => {

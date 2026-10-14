@@ -12,6 +12,8 @@
     "test": "node --test tests/server/*.test.mjs",
     "test:ui": "node tests/browser.mjs",
     "test:ui:migration": "node tests/migration-browser.mjs",
+    "test:ui:enrollment": "node tests/enrollment-browser.mjs",
+    "test:mini:enrollment": "node tests/mini-enrollment.mjs",
     "test:docker": "node tests/docker-smoke.mjs",
     "check:mini": "node miniprogram/validate.mjs",
     "check": "npm run build && npm test && npm run check:mini",

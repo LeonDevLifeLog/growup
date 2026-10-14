@@ -21,9 +21,11 @@ import {
   X,
 } from "lucide-react";
 import { AppContext, useApp } from "./context.jsx";
-import { request, regions } from "./api.js";
+import { request, isAdmin, roleNames } from "./api.js";
 import { Locked, Mark, Modal } from "./components.jsx";
 import Auth from "./Auth.jsx";
+import Enrollment from "./Enrollment.jsx";
+import Platform, { ChangePassword } from "./Platform.jsx";
 import {
   GrowthTool,
   ToolCatalog,
@@ -63,6 +65,7 @@ const adminNav = [
   { id: "admin-students", label: "学生关怀", icon: Users },
   { id: "admin-posts", label: "树洞审核", icon: MessageCircle },
   { id: "admin-services", label: "支持需求", icon: HeartHandshake },
+  { id: "admin-enrollment", label: "学校与邀请", icon: Users },
 ];
 const allowedViews = new Set(
   [...studentNav, ...adminNav, { id: "profile" }].map((n) => n.id),
@@ -73,7 +76,8 @@ export default function App() {
     () => sessionStorage.getItem("growup-token") || "",
   );
   const [user, setUser] = useState(null);
-  const [region, setRegion] = useState("hainan");
+  const [region, setRegion] = useState("");
+  const [regions, setRegions] = useState([]);
   const [view, changeView] = useState(() =>
     allowedViews.has(location.hash.slice(1)) ? location.hash.slice(1) : "home",
   );
@@ -115,6 +119,23 @@ export default function App() {
   }, []);
   useEffect(() => {
     let active = true;
+    request("/regions")
+      .then((data) => {
+        if (!active) return;
+        setRegions(data.regions);
+        setRegion((current) =>
+          data.regions.some((item) => item.id === current)
+            ? current
+            : data.regions[0]?.id || "",
+        );
+      })
+      .catch((error) => notify(error.message, "error"));
+    return () => {
+      active = false;
+    };
+  }, [refresh, notify]);
+  useEffect(() => {
+    let active = true;
     if (!token) {
       setReady(true);
       return;
@@ -123,7 +144,7 @@ export default function App() {
       .then((data) => {
         if (active) {
           setUser(data.user);
-          setRegion(data.user.regionId);
+          setRegion(data.user.regionId || "");
         }
       })
       .catch((e) => {
@@ -159,9 +180,9 @@ export default function App() {
     sessionStorage.setItem("growup-token", result.token);
     setToken(result.token);
     setUser(result.user);
-    setRegion(result.user.regionId);
+    setRegion(result.user.regionId || "");
     bump();
-    setView(result.user.role === "admin" ? "admin" : "home");
+    setView(isAdmin(result.user) ? "admin" : "home");
   }
   async function logout() {
     try {
@@ -186,6 +207,7 @@ export default function App() {
     token,
     user,
     region,
+    regions,
     setRegion,
     demo,
     view,
@@ -200,10 +222,14 @@ export default function App() {
     logout,
     requireStudent,
   };
-  const nav = adminView ? adminNav : studentNav;
+  const nav = adminView
+    ? user?.role === "platform_admin"
+      ? [{ id: "admin", label: "平台管理", icon: LayoutDashboard }]
+      : adminNav
+    : studentNav;
   let content;
   if (!ready) content = <div className="loading">正在打开成长空间…</div>;
-  else if (adminView && user?.role !== "admin")
+  else if (adminView && !isAdmin(user))
     content = (
       <Locked
         purpose="admin"
@@ -211,7 +237,8 @@ export default function App() {
         description="请使用学校授权的本大区管理账号登录。"
       />
     );
-  else if (!adminView && user?.role === "admin")
+  else if (adminView && user?.role === "platform_admin") content = <Platform />;
+  else if (!adminView && isAdmin(user))
     content = (
       <div className="panel admin-student-gate">
         <ShieldCheck size={36} />
@@ -238,6 +265,7 @@ export default function App() {
       "admin-students": <AdminStudents />,
       "admin-posts": <AdminPosts />,
       "admin-services": <AdminServices />,
+      "admin-enrollment": <Enrollment />,
     }[view] || <Home />;
   return (
     <AppContext.Provider value={context}>
@@ -346,7 +374,11 @@ export default function App() {
                 onClick={() => open({ type: "region" })}
               >
                 <MapPin size={15} />
-                <span>{regions.find((r) => r.id === region)?.name}</span>
+                <span>
+                  {user?.role === "platform_admin"
+                    ? "平台管理"
+                    : regions.find((r) => r.id === region)?.name || "选择大区"}
+                </span>
                 <ChevronDown size={13} />
               </button>
               {demo && <span className="demo-pill">演示空间</span>}
@@ -480,7 +512,8 @@ function modalTitle(m) {
 }
 
 function ModalBody({ modal: m }) {
-  const { user, region, setRegion, close, open, logout, notify } = useApp();
+  const { user, region, regions, setRegion, close, open, logout, notify } =
+    useApp();
   if (m.type === "auth") return <Auth purpose={m.purpose || "student"} />;
   if (m.type === "checkin") return <CheckinForm initialScore={m.score} />;
   if (m.type === "module") return <ModuleDetail item={m.item} />;
@@ -651,9 +684,11 @@ function ModalBody({ modal: m }) {
       <div className="prose">
         <h3>{user.name}</h3>
         <p>
-          {user.regionName} · {user.schoolName}
+          {roleNames[user.role]} · {user.regionName || "全部大区"}
+          {user.schoolName ? ` · ${user.schoolName}` : ""}
         </p>
         <p>{user.account}</p>
+        <ChangePassword />
         <button className="button secondary full" onClick={logout}>
           <LogOut size={16} />
           退出当前管理账号

@@ -56,9 +56,7 @@ try {
 
   const password = randomBytes(24).toString("base64url");
   const input = {
-    regionId: "hainan",
-    schoolName: "容器验收学校",
-    name: "容器验收管理员",
+    name: "容器平台管理员",
     account: "container.admin",
     password,
   };
@@ -71,11 +69,68 @@ try {
   assert.equal(provisioned.created, true);
   assert.equal(JSON.stringify(provisioned).includes(password), false);
   const login = await request("/auth/login", {
-    body: { regionId: input.regionId, account: input.account, password },
+    body: { regionId: null, account: input.account, password },
   });
   assert.equal(login.status, 200, JSON.stringify(login.body));
-  assert.equal(login.body.user.schoolName, input.schoolName);
+  assert.equal(login.body.user.role, "platform_admin");
   record("容器标准输入初始化真实管理员，账号可登录且密码不进入输出");
+  const region = await request("/platform/regions", {
+    token: login.body.token,
+    body: { name: "容器验证大区" },
+  });
+  assert.equal(region.status, 201);
+  const regionId = region.body.id;
+  const school = await request("/platform/schools", {
+    token: login.body.token,
+    body: { name: "容器验证学校", regionId },
+  });
+  assert.equal(school.status, 201);
+  const schoolId = school.body.id;
+  assert.equal(
+    (
+      await request("/platform/admins", {
+        token: login.body.token,
+        body: {
+          role: "school_admin",
+          regionId,
+          schoolId,
+          account: "container.school",
+          password,
+          name: "学校负责人",
+        },
+      })
+    ).status,
+    201,
+  );
+  const teacher = await request("/auth/login", {
+    body: { regionId, account: "container.school", password },
+  });
+  assert.equal(teacher.status, 200);
+  const invitation = await request("/admin/invites", {
+    token: teacher.body.token,
+    body: { schoolId, days: 7, maxUses: 2, note: "容器注册验证" },
+  });
+  assert.equal(invitation.status, 201);
+  const student = await request("/auth/register", {
+    body: {
+      regionId,
+      inviteCode: invitation.body.invite.code,
+      account: "container.student",
+      password,
+      name: "容器同学",
+    },
+  });
+  assert.equal(student.status, 201);
+  assert.equal(
+    (
+      await request("/checkins", {
+        token: student.body.token,
+        body: { score: 4, note: "持久化记录" },
+      })
+    ).status,
+    200,
+  );
+  record("容器内新增大区、学校及校级账号，学校生成邀请，学生真实注册并打卡");
   compose([
     "up",
     "-d",
@@ -89,7 +144,17 @@ try {
   const me = await request("/auth/me", { token: login.body.token });
   assert.equal(me.status, 200);
   assert.equal(me.body.user.account, input.account);
-  record("重建容器后账号和会话仍在，命名卷持久化通过");
+  const detail = await request(`/admin/invites/${invitation.body.invite.id}`, {
+    token: teacher.body.token,
+  });
+  assert.equal(detail.status, 200);
+  assert.equal(detail.body.invite.usedCount, 1);
+  assert.equal(detail.body.uses[0].account, "container.student");
+  const checkins = await request("/checkins", { token: student.body.token });
+  assert.equal(checkins.body.checkins[0].score, 4);
+  record(
+    "重建容器后账号、会话、邀请码用量、注册记录与打卡仍在，命名卷持久化通过",
+  );
   mkdirSync("docs/verification", { recursive: true });
   writeFileSync(
     "docs/verification/docker-result.json",

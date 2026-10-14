@@ -10,6 +10,9 @@ import {
   ownJournals as getOwnJournals,
 } from "./personal.mjs";
 import { serviceForms, formatServiceForm } from "./service-forms.mjs";
+import { createEnrollmentApi, findInvite } from "./enrollment.mjs";
+import { createManagementApi } from "./management.mjs";
+import { isCareAdmin, inCareScope, careScope } from "./permissions.mjs";
 
 const TOPICS = ["成长烦恼", "校园日常", "家庭关系", "小小确幸"];
 const SESSION_MS = 7 * 86400000;
@@ -111,6 +114,24 @@ export function createApp({
 } = {}) {
   const clock = () => new Date(typeof now === "function" ? now() : now);
   const db = openDatabase(dbPath, demo, clock());
+  const managementApi = createManagementApi({
+    db,
+    clock,
+    readBody,
+    requiredText,
+    accountText,
+    passwordText,
+    ApiError,
+    json,
+  });
+  const enrollmentApi = createEnrollmentApi({
+    db,
+    clock,
+    readBody,
+    requiredText,
+    ApiError,
+    json,
+  });
   const personalApi = createPersonalApi({
     db,
     clock,
@@ -119,8 +140,8 @@ export function createApp({
     ApiError,
   });
   const queryUser =
-    db.prepare(`SELECT u.*, r.name region_name, s.name school_name
-    FROM users u JOIN regions r ON r.id = u.region_id JOIN schools s ON s.id = u.school_id WHERE u.id = ?`);
+    db.prepare(`SELECT u.*, r.name region_name, s.name school_name,r.active region_active,s.active school_active
+    FROM users u LEFT JOIN regions r ON r.id = u.region_id LEFT JOIN schools s ON s.id = u.school_id WHERE u.id = ?`);
   const publicUser = (user) => ({
     id: user.id,
     account: user.account,
@@ -131,6 +152,20 @@ export function createApp({
     schoolId: user.school_id,
     schoolName: user.school_name,
   });
+  const enabledUser = (user) =>
+    user &&
+    user.active === 1 &&
+    (user.role === "platform_admin" ||
+      (user.region_active === 1 &&
+        (user.role === "region_admin" || user.school_active === 1)));
+  function regionIdText(value) {
+    if (
+      typeof value !== "string" ||
+      !db.prepare("SELECT 1 FROM regions WHERE id=? AND active=1").get(value)
+    )
+      throw new ApiError(400, "请选择有效的大区");
+    return value;
+  }
   const stamp = () => clock().toISOString();
   const today = () => shanghaiDate(clock());
   const authAttempts = new Map();
@@ -160,7 +195,8 @@ export function createApp({
       .get(tokenHash(match[1]), clock().getTime());
     if (!found) throw new ApiError(401, "登录已过期，请重新登录");
     const user = queryUser.get(found.user_id);
-    if (!user) throw new ApiError(401, "登录已失效，请重新登录");
+    if (!enabledUser(user))
+      throw new ApiError(401, "账号或所属机构已停用，请联系管理员");
     return user;
   }
 
@@ -230,13 +266,14 @@ export function createApp({
     };
   }
 
-  function students(regionId) {
+  function students(user) {
+    const scope = careScope(user);
     const rows = db
       .prepare(
         `SELECT u.id, u.name, u.account, s.name school_name FROM users u
-      JOIN schools s ON s.id = u.school_id WHERE u.region_id = ? AND u.role = 'student' ORDER BY u.name`,
+      JOIN schools s ON s.id = u.school_id WHERE ${scope.sql} AND u.role = 'student' ORDER BY u.name`,
       )
-      .all(regionId);
+      .all(...scope.args);
     const order = { red: 0, yellow: 1, gray: 2, green: 3 };
     return rows
       .map(studentData)
@@ -249,20 +286,22 @@ export function createApp({
 
   function regionStudent(user, id) {
     const found = queryUser.get(id);
-    if (
-      !found ||
-      found.region_id !== user.region_id ||
-      found.role !== "student"
-    )
+    if (!found || !inCareScope(user, found) || found.role !== "student")
       throw new ApiError(404, "学生不存在");
     return found;
   }
 
   function regionPost(user, id, approved = false) {
     const found = db
-      .prepare("SELECT * FROM posts WHERE id = ? AND region_id = ?")
+      .prepare(
+        "SELECT p.*,u.school_id FROM posts p JOIN users u ON u.id=p.user_id WHERE p.id = ? AND p.region_id = ?",
+      )
       .get(id, user.region_id);
-    if (!found || (approved && found.status !== "approved"))
+    if (
+      !found ||
+      (isCareAdmin(user) && !inCareScope(user, found)) ||
+      (approved && found.status !== "approved")
+    )
       throw new ApiError(404, "纸条不存在或暂未公开");
     return found;
   }
@@ -271,9 +310,13 @@ export function createApp({
     const replies = db
       .prepare(
         `SELECT id, nickname, content, created_at createdAt${admin ? ", status" : ""}
-      FROM replies WHERE post_id = ? ${admin ? "" : "AND status = 'approved'"} ORDER BY created_at, rowid`,
+    FROM replies WHERE post_id = ? ${admin ? (user.role === "school_admin" ? "AND user_id IN (SELECT id FROM users WHERE school_id=?)" : "") : "AND status = 'approved'"} ORDER BY created_at, rowid`,
       )
-      .all(post.id);
+      .all(
+        ...(admin && user.role === "school_admin"
+          ? [post.id, user.school_id]
+          : [post.id]),
+      );
     const warmCount = db
       .prepare("SELECT COUNT(*) count FROM warms WHERE post_id = ?")
       .get(post.id).count;
@@ -311,27 +354,44 @@ export function createApp({
       return json(res, 200, { ok: true, demo });
     if (method === "GET" && path === "/regions") {
       const regions = db
-        .prepare("SELECT id, name FROM regions ORDER BY rowid")
+        .prepare("SELECT id, name FROM regions WHERE active=1 ORDER BY rowid")
         .all()
         .map((region) => ({
           ...region,
           schools: db
             .prepare(
-              "SELECT id, name FROM schools WHERE region_id = ? ORDER BY name",
+              "SELECT id, name FROM schools WHERE region_id = ? AND active=1 ORDER BY name",
             )
             .all(region.id),
         }));
       return json(res, 200, { regions });
     }
+    if (method === "POST" && path === "/auth/invite") {
+      const body = await readBody(req);
+      const clearAttempts = limitedAuth(req, "invite-check", path);
+      const regionId = regionIdText(body.regionId);
+      const invite = findInvite(
+        db,
+        requiredText(body.inviteCode, "学校邀请码", 40),
+        regionId,
+        clock(),
+        ApiError,
+      );
+      clearAttempts();
+      return json(res, 200, {
+        invitation: {
+          regionId: invite.region_id,
+          regionName: invite.region_name,
+          schoolId: invite.school_id,
+          schoolName: invite.school_name,
+          expiresAt: invite.expires_at,
+        },
+      });
+    }
     if (method === "POST" && ["/auth/login", "/auth/register"].includes(path)) {
       const body = await readBody(req);
       const account = accountText(body.account);
       const password = passwordText(body.password);
-      const regionId = choice(
-        body.regionId,
-        ["hainan", "shandong", "guangdong"],
-        "区域",
-      );
       const clearAttempts = limitedAuth(req, account, path);
       if (path === "/auth/login") {
         const row = db
@@ -340,43 +400,63 @@ export function createApp({
         if (!row || !verifyPassword(password, row.password_hash))
           throw new ApiError(401, "账号或密码不正确");
         const user = queryUser.get(row.id);
-        if (user.region_id !== regionId)
+        if (!enabledUser(user))
+          throw new ApiError(403, "账号或所属机构已停用，请联系平台管理员");
+        if (user.role !== "platform_admin") regionIdText(body.regionId);
+        if (
+          user.role === "platform_admin"
+            ? body.regionId != null
+            : user.region_id !== body.regionId
+        )
           throw new ApiError(403, "该账号不属于所选区域，请选择学校所属大区");
         clearAttempts();
         return json(res, 200, session(user));
       }
+      const regionId = regionIdText(body.regionId);
       const inviteCode = requiredText(
         body.inviteCode,
         "学校邀请码",
         40,
       ).toUpperCase();
-      const invite = db
-        .prepare(
-          `SELECT i.school_id, s.region_id FROM invites i JOIN schools s ON s.id = i.school_id
-        WHERE i.code = ? AND i.active = 1`,
-        )
-        .get(inviteCode);
-      if (!invite || invite.region_id !== regionId)
-        throw new ApiError(400, "邀请码无效或不属于所选区域");
       const name = requiredText(body.name, "姓名", 40);
-      if (db.prepare("SELECT 1 FROM users WHERE account = ?").get(account))
-        throw new ApiError(409, "该账号已被使用");
-      const id = randomUUID();
-      db.prepare("INSERT INTO users VALUES (?, ?, ?, ?, ?, ?, ?, ?)").run(
-        id,
-        account,
-        hashPassword(password),
-        name,
-        "student",
-        invite.region_id,
-        invite.school_id,
-        stamp(),
-      );
+      const passwordHash = hashPassword(password);
+      let result;
+      db.exec("BEGIN IMMEDIATE");
+      try {
+        const invite = findInvite(db, inviteCode, regionId, clock(), ApiError);
+        if (db.prepare("SELECT 1 FROM users WHERE account = ?").get(account))
+          throw new ApiError(409, "该账号已被使用");
+        const id = randomUUID();
+        db.prepare(
+          "INSERT INTO users (id,account,password_hash,name,role,region_id,school_id,created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+        ).run(
+          id,
+          account,
+          passwordHash,
+          name,
+          "student",
+          invite.region_id,
+          invite.school_id,
+          stamp(),
+        );
+        db.prepare("UPDATE invites SET used_count=used_count+1 WHERE id=?").run(
+          invite.id,
+        );
+        db.prepare(
+          "INSERT INTO invite_uses (invite_id,user_id,created_at) VALUES (?,?,?)",
+        ).run(invite.id, id, stamp());
+        result = session(queryUser.get(id));
+        db.exec("COMMIT");
+      } catch (error) {
+        db.exec("ROLLBACK");
+        throw error;
+      }
       clearAttempts();
-      return json(res, 201, session(queryUser.get(id)));
+      return json(res, 201, result);
     }
 
     const user = requireUser(req);
+    if (await managementApi(req, res, path, user)) return;
     if (method === "GET" && path === "/auth/me")
       return json(res, 200, { user: publicUser(user) });
     if (method === "POST" && path === "/auth/logout") {
@@ -385,8 +465,33 @@ export function createApp({
       );
       return json(res, 200, { ok: true });
     }
+    if (method === "POST" && path === "/auth/password") {
+      const body = await readBody(req);
+      const clearAttempts = limitedAuth(req, user.account, path);
+      if (
+        !verifyPassword(passwordText(body.currentPassword), user.password_hash)
+      )
+        throw new ApiError(400, "当前密码不正确");
+      const digest = hashPassword(passwordText(body.password));
+      db.exec("BEGIN IMMEDIATE");
+      try {
+        db.prepare("UPDATE users SET password_hash=? WHERE id=?").run(
+          digest,
+          user.id,
+        );
+        db.prepare("DELETE FROM sessions WHERE user_id=?").run(user.id);
+        const result = session(user);
+        db.exec("COMMIT");
+        clearAttempts();
+        return json(res, 200, result);
+      } catch (error) {
+        db.exec("ROLLBACK");
+        throw error;
+      }
+    }
     if (await personalApi(req, res, path, url, user)) return;
     if (method === "GET" && path === "/dashboard") {
+      role(user, "student");
       const date = today();
       const checkins = ownCheckins(user.id);
       const journals = ownJournals(user.id);
@@ -436,6 +541,7 @@ export function createApp({
       });
     }
     if (method === "GET" && path === "/posts") {
+      role(user, "student");
       const mine = url.searchParams.get("mine") === "1";
       const topic = url.searchParams.get("topic") ?? "all";
       if (topic !== "all") choice(topic, TOPICS, "纸条主题");
@@ -535,6 +641,8 @@ export function createApp({
       return json(res, 200, { requests });
     }
     if (path === "/service-requests" && method === "POST") {
+      if (user.role === "platform_admin")
+        throw new ApiError(403, "平台账号不提交校园服务申请");
       const body = await readBody(req, 131072);
       let type, message;
       if (body.formId !== undefined) {
@@ -570,37 +678,44 @@ export function createApp({
       return json(res, 201, { request });
     }
 
-    if (path.startsWith("/admin/")) role(user, "admin");
+    if (path.startsWith("/admin/") && !isCareAdmin(user))
+      throw new ApiError(403, "需要大区或学校管理员权限");
+    if (
+      path.startsWith("/admin/") &&
+      (await enrollmentApi(req, res, path, user))
+    )
+      return;
     if (method === "GET" && path === "/admin/overview") {
-      const list = students(user.region_id);
+      const list = students(user);
+      const scope = careScope(user);
       const pendingPosts = db
         .prepare(
-          `SELECT p.* FROM posts p WHERE p.region_id = ? AND
-        (p.status = 'pending' OR EXISTS(SELECT 1 FROM replies r WHERE r.post_id = p.id AND r.status = 'pending')) ORDER BY p.created_at DESC, p.rowid DESC`,
+          `SELECT p.* FROM posts p JOIN users u ON u.id=p.user_id WHERE ${scope.sql} AND
+        (p.status = 'pending' OR EXISTS(SELECT 1 FROM replies r JOIN users ru ON ru.id=r.user_id WHERE r.post_id = p.id AND r.status = 'pending' ${user.role === "school_admin" ? "AND ru.school_id=u.school_id" : ""})) ORDER BY p.created_at DESC, p.rowid DESC`,
         )
-        .all(user.region_id)
+        .all(...scope.args)
         .map((post) => postData(post, user, true));
       const stats = {
         students: list.length,
         todayCheckins: db
           .prepare(
-            `SELECT COUNT(*) count FROM checkins c JOIN users u ON u.id = c.user_id WHERE u.region_id = ? AND u.role = 'student' AND c.date = ?`,
+            `SELECT COUNT(*) count FROM checkins c JOIN users u ON u.id = c.user_id WHERE ${scope.sql} AND u.role = 'student' AND c.date = ?`,
           )
-          .get(user.region_id, today()).count,
+          .get(...scope.args, today()).count,
         red: list.filter((entry) => entry.status === "red").length,
         yellow: list.filter((entry) => entry.status === "yellow").length,
         green: list.filter((entry) => entry.status === "green").length,
         pendingPosts: pendingPosts.length,
         requests: db
           .prepare(
-            "SELECT COUNT(*) count FROM service_requests WHERE region_id = ? AND status = 'pending'",
+            `SELECT COUNT(*) count FROM service_requests sr JOIN users u ON u.id=sr.user_id WHERE ${scope.sql} AND sr.status = 'pending'`,
           )
-          .get(user.region_id).count,
+          .get(...scope.args).count,
       };
       return json(res, 200, { stats, students: list, pendingPosts });
     }
     if (method === "GET" && path === "/admin/students")
-      return json(res, 200, { students: students(user.region_id) });
+      return json(res, 200, { students: students(user) });
     const studentMatch = /^\/admin\/students\/([^/]+)(\/followups)?$/.exec(
       path,
     );
@@ -628,6 +743,7 @@ export function createApp({
       }
     }
     if (method === "GET" && path === "/admin/posts") {
+      const scope = careScope(user);
       const status = url.searchParams.get("status") ?? "pending";
       choice(status, ["all", "pending", "approved", "rejected"], "审核状态");
       // Include parents of pending replies so replies have a visible review queue.
@@ -635,13 +751,13 @@ export function createApp({
         status === "all"
           ? ""
           : status === "pending"
-            ? "AND (p.status = 'pending' OR EXISTS(SELECT 1 FROM replies r WHERE r.post_id = p.id AND r.status = 'pending'))"
+            ? `AND (p.status = 'pending' OR EXISTS(SELECT 1 FROM replies r JOIN users ru ON ru.id=r.user_id WHERE r.post_id = p.id AND r.status = 'pending' ${user.role === "school_admin" ? "AND ru.school_id=u.school_id" : ""}))`
             : "AND p.status = ?";
-      const args = [user.region_id];
+      const args = [...scope.args];
       if (status !== "all" && status !== "pending") args.push(status);
       const posts = db
         .prepare(
-          `SELECT p.* FROM posts p WHERE p.region_id = ? ${condition} ORDER BY p.created_at DESC, p.rowid DESC`,
+          `SELECT p.* FROM posts p JOIN users u ON u.id=p.user_id WHERE ${scope.sql} ${condition} ORDER BY p.created_at DESC, p.rowid DESC`,
         )
         .all(...args)
         .map((post) => postData(post, user, true));
@@ -660,11 +776,13 @@ export function createApp({
     }
     const moderateReply = /^\/admin\/replies\/([^/]+)\/moderate$/.exec(path);
     if (method === "POST" && moderateReply) {
+      const scope = careScope(user);
       const reply = db
         .prepare(
-          "SELECT r.id FROM replies r JOIN posts p ON p.id = r.post_id WHERE r.id = ? AND p.region_id = ?",
+          `SELECT r.id FROM replies r JOIN posts p ON p.id = r.post_id JOIN users u ON u.id=p.user_id
+          JOIN users ru ON ru.id=r.user_id WHERE r.id = ? AND ${scope.sql} ${user.role === "school_admin" ? "AND ru.school_id=u.school_id" : ""}`,
         )
-        .get(moderateReply[1], user.region_id);
+        .get(moderateReply[1], ...scope.args);
       if (!reply) throw new ApiError(404, "回复不存在");
       const body = await readBody(req);
       const status = choice(body.status, ["approved", "rejected"], "审核状态");
@@ -675,22 +793,24 @@ export function createApp({
       return json(res, 200, { ok: true });
     }
     if (method === "GET" && path === "/admin/service-requests") {
+      const scope = careScope(user);
       const requests = db
         .prepare(
           `SELECT sr.id, sr.type, sr.message, sr.status, sr.created_at createdAt, u.name userName, s.name schoolName
-        FROM service_requests sr JOIN users u ON u.id = sr.user_id JOIN schools s ON s.id = u.school_id
-        WHERE sr.region_id = ? ORDER BY sr.created_at DESC, sr.rowid DESC`,
+        FROM service_requests sr JOIN users u ON u.id = sr.user_id LEFT JOIN schools s ON s.id = u.school_id
+        WHERE ${scope.sql} ORDER BY sr.created_at DESC, sr.rowid DESC`,
         )
-        .all(user.region_id);
+        .all(...scope.args);
       return json(res, 200, { requests });
     }
     const requestMatch = /^\/admin\/service-requests\/([^/]+)$/.exec(path);
     if (method === "POST" && requestMatch) {
+      const scope = careScope(user);
       const request = db
         .prepare(
-          "SELECT id FROM service_requests WHERE id = ? AND region_id = ?",
+          `SELECT sr.id FROM service_requests sr JOIN users u ON u.id=sr.user_id WHERE sr.id = ? AND ${scope.sql}`,
         )
-        .get(requestMatch[1], user.region_id);
+        .get(requestMatch[1], ...scope.args);
       if (!request) throw new ApiError(404, "申请不存在");
       const body = await readBody(req);
       choice(body.status, ["handled"], "处理状态");

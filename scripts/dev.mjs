@@ -5,7 +5,7 @@ const root = fileURLToPath(new URL("..", import.meta.url));
 const processes = [
   spawn(process.execPath, ["server/index.mjs"], {
     cwd: root,
-    env: { ...process.env, DEMO_MODE: process.env.DEMO_MODE ?? "1" },
+    env: { ...process.env, DEMO_MODE: process.env.DEMO_MODE ?? "0" },
     stdio: "inherit",
   }),
   spawn(

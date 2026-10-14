@@ -4,7 +4,7 @@
 
 面向校园的青少年成长陪伴应用。包含原生微信小程序、可在浏览器体验的学生端、独立网页管理后台，以及真实 SQLite API。区域账号隔离、每日心情记录、红黄绿关怀提示、私人日记、匿名树洞审核与服务跟进均在本地服务运行。
 
-## 快速体验
+## 本地运行
 
 需要 Node.js 22.13+（建议 24+；本次验证 26.8.1）、npm。浏览器测试还需本机 Google Chrome。
 
@@ -17,7 +17,9 @@ npm run dev
 - 关怀后台：<http://127.0.0.1:5173/#admin>
 - API：<http://127.0.0.1:8787/api/health>
 
-`npm run dev` 默认明确开启本地演示模式，数据保存于 `data/demo.sqlite`。演示数据全部虚构。`npm start` 默认关闭演示模式且使用独立的 `data/growup.sqlite`；两类数据库拒绝混用。
+`npm run dev` 与 `npm start` 默认均为正式模式，使用 `data/growup.sqlite`，新库不预置组织、账号或邀请码。先按下文初始化首位平台管理员，再在网页后台开通大区、学校和管理员。大区从API动态加载。
+
+如需独立虚构数据体验，显式运行 `DEMO_MODE=1 npm run dev`，使用 `data/demo.sqlite`；两类数据库拒绝混用。以下账号与固定区域仅用于演示：
 
 | 大区 | 学生账号 | 管理员账号 | 学校邀请码 |
 | --- | --- | --- | --- |
@@ -29,13 +31,13 @@ npm run dev
 
 ## 微信小程序
 
-在微信开发者工具中导入 `miniprogram/`。原生 WXML/WXSS/JS，10 个页面、5 个 Tab。API 配置见 `miniprogram/config.js`；本地占位 AppID 为 `touristappid`。详细导入和真机网络说明见 [小程序说明](miniprogram/README.md)。
+在微信开发者工具中导入 `miniprogram/`。原生 WXML/WXSS/JS，10 个页面、5 个 Tab。API 配置见 `miniprogram/config.js`；AppID由微信项目配置管理。详细导入和真机网络说明见 [小程序说明](miniprogram/README.md)。
 
 当前已完成源码和静态结构检查，全部 10 个页面通过开发者工具内置 `wcc` 的独立 WXML 编译；CLI 被“服务端口已关闭”阻止，尚未取得 IDE 完整项目编译或真机结果。实际发布需要微信 AppID、HTTPS API 与合法域名配置。成长工具通过原生页面填写与生成结果，不依赖外站业务域名、复制链接或外站跳转。
 
 ## 本地功能
 
-- 学校邀请码决定注册区域和学校；令牌授权区域与角色，禁止跨区访问对象或越权审核。
+- 平台维护动态大区、学校与三类管理员；大区管理员仅本区，学校管理员仅本校。学校生成限时限额邀请码，学生核对学校并自设账号密码注册；后台可查使用记录并停用邀请。
 - 1–5 级心情，每个上海自然日一条，可更新；连续低落 3–4 天黄色、≥5 天红色、最近连续 7 天均≥3 分绿色；断签及样本不足独立说明。
 - 学生端不展示风险标签。管理端提供当前提示、分数日期和人工跟进记录；不读取私人日记、心情备注和标签。
 - 区域内化名树洞，先审后发、回复审核、每日一次温暖、举报立即隐藏、本人查看审核状态。
@@ -57,6 +59,8 @@ Star-Track、STARMAP、抗碎片化成长观察及需求反馈均可在应用内
 ```sh
 npm run check       # 构建、API测试、小程序结构检查与本机可用的WXML编译
 npm run test:ui     # 原有业务闭环；独立内存库
+npm run test:ui:enrollment # 正式空库、平台开通、学校发邀请、学生注册重登与使用记录
+npm run test:mini:enrollment # 小程序注册Page事件与真实API
 npm run test:ui:migration # 19工具/报告/备份/星图/4表单的真实Chrome闭环
 node miniprogram/api-smoke.mjs # 原生Page事件与真实API联调，不代替微信运行
 node scripts/extract-questionnaires.mjs --verify # 公开问答算法1600案例对照
@@ -77,12 +81,9 @@ DEMO_MODE=1 npm start     # 本地构建产物＋独立演示库，8787端口
 
 ```json
 {
-  "regionId": "hainan",
-  "account": "school.admin",
+  "account": "platform.owner",
   "password": "替换为实际的强密码",
-  "name": "学校管理员",
-  "inviteCode": "替换为实际学校邀请码",
-  "schoolName": "实际学校名称"
+  "name": "平台负责人"
 }
 ```
 
@@ -92,7 +93,7 @@ rm operator.json
 npm start
 ```
 
-仅本机 bootstrap 可创建管理员，对外不开放管理员注册。它不会覆盖已有账号/邀请码。默认每个区域有一个占位学校，正式初始化可设置实际学校名。当前支持三个固定区域、每区一个学校；更多区域、多学校及细分校级权限属于后续扩展，不能用来声称已经覆盖所有学校结构。
+`bootstrap` 只初始化首位平台管理员；已有平台管理员则拒绝，不覆盖账号。访问后台选择“平台管理员登录”，新增大区、学校并创建大区/学校管理员。学校管理员登录后在“学校与邀请”生成本校邀请码；学生在网页或小程序核对学校、自设账号密码完成注册。完整邀请码只在生成时显示，后台保留尾号、状态、名额和使用记录。区域与学校数量由平台配置。容器内初始化命令及升级说明见 [Docker 部署](docs/DEPLOYMENT.md)。
 
 环境变量：`PORT`（8787）、`HOST`（127.0.0.1）、`DATA_PATH`（数据库路径）、`DEMO_MODE`（仅 `1` 开启）。真机局域网联调可显式 `HOST=0.0.0.0 DEMO_MODE=1 npm start`，小程序 API 使用电脑局域网地址；不要把手机 `127.0.0.1` 当作电脑地址。
 

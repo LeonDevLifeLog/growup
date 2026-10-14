@@ -1071,6 +1071,107 @@ textarea {
   font-weight: 500;
   line-height: 1.6;
 }
+.enrollment-forms {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+.platform-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  margin-bottom: 24px;
+}
+.platform-grid .panel {
+  min-width: 0;
+}
+.platform-grid .form-stack {
+  margin-top: 20px;
+}
+.platform-admin-table {
+  min-width: 800px;
+}
+.platform-admin-table td small {
+  display: block;
+  margin-top: 6px;
+}
+.audit-list {
+  list-style: none;
+  padding: 0;
+}
+.audit-list li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+.audit-list small {
+  color: var(--muted);
+  margin-left: auto;
+}
+@media (max-width: 1100px) {
+  .platform-grid {
+    grid-template-columns: 1fr;
+  }
+}
+.enrollment-forms h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+.enrollment-numbers {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.school-list {
+  padding: 0;
+  list-style: none;
+  margin-top: 24px;
+}
+.school-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+.school-list small {
+  white-space: nowrap;
+  color: var(--muted);
+}
+.invitation-created {
+  margin-bottom: 24px;
+}
+.invitation-created code {
+  display: block;
+  font-size: clamp(18px, 3vw, 26px);
+  letter-spacing: 2px;
+  color: var(--green);
+  margin: 16px 0;
+  overflow-wrap: anywhere;
+}
+.invitation-table {
+  min-width: 850px;
+}
+.invitation-table td small {
+  display: block;
+  margin-top: 6px;
+  color: var(--muted);
+}
+.invite-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+@media (max-width: 900px) {
+  .enrollment-forms {
+    grid-template-columns: 1fr;
+  }
+}
 .form-stack input,
 .form-stack textarea,
 .form-stack select {

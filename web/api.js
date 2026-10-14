@@ -31,11 +31,15 @@ export async function request(path, { token, method = "GET", body } = {}) {
   return data;
 }
 
-export const regions = [
-  { id: "hainan", name: "海南大区" },
-  { id: "shandong", name: "山东大区" },
-  { id: "guangdong", name: "广东大区" },
-];
+export const roleNames = {
+  platform_admin: "平台管理员",
+  region_admin: "大区管理员",
+  school_admin: "学校管理员",
+  student: "学生",
+};
+export const isAdmin = (user) =>
+  !!user &&
+  ["platform_admin", "region_admin", "school_admin"].includes(user.role);
 export const topics = ["成长烦恼", "校园日常", "家庭关系", "小小确幸"];
 export const moodNames = ["很低落", "有点低落", "还不错", "很开心", "超开心"];
 export const statusMeta = {

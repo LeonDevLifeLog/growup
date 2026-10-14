@@ -1,0 +1,553 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import { DatabaseSync } from "node:sqlite";
+import { mkdtempSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { createHash } from "node:crypto";
+import { productionFixture } from "../helpers/enrollment.mjs";
+import { openDatabase, hashPassword } from "../../server/db.mjs";
+
+async function fixture(t) {
+  const f = await productionFixture();
+  t.after(f.close);
+  return { ...f, ...(await f.setup()) };
+}
+
+test("platform owns dynamic organizations and admin lifecycle; lower roles cannot change hierarchy", async (t) => {
+  const f = await fixture(t);
+  const regions = await f.ok("/regions");
+  assert.equal(regions.regions.length, 2);
+  assert.equal(
+    regions.regions.some((row) => row.id === "hainan"),
+    false,
+  );
+  assert.equal(regions.regions[0].schools.length, 2);
+  for (const manager of [f.areaA, f.schoolAdminA]) {
+    for (const path of ["/platform/organizations", "/platform/audit"])
+      assert.equal(
+        (await f.request(path, { token: manager.token })).status,
+        403,
+      );
+    assert.equal(
+      (
+        await f.request("/platform/regions", {
+          method: "POST",
+          token: manager.token,
+          body: { name: "越权大区" },
+        })
+      ).status,
+      403,
+    );
+    assert.equal(
+      (
+        await f.request("/platform/admins", {
+          method: "POST",
+          token: manager.token,
+          body: {
+            account: "attack",
+            role: "platform_admin",
+            password: f.password,
+            name: "越权",
+          },
+        })
+      ).status,
+      403,
+    );
+    assert.equal(
+      (
+        await f.request("/admin/schools", {
+          method: "POST",
+          token: manager.token,
+          body: { name: "越权学校" },
+        })
+      ).status,
+      403,
+    );
+  }
+  assert.equal(
+    (
+      await f.request("/platform/admins", {
+        method: "POST",
+        token: f.owner.token,
+        body: {
+          role: "school_admin",
+          regionId: f.regionB.id,
+          schoolId: f.schoolA.id,
+          account: "mismatch",
+          password: f.password,
+          name: "错误归属",
+        },
+      })
+    ).status,
+    400,
+  );
+  assert.equal(
+    (
+      await f.request(`/platform/admins/${f.owner.user.id}`, {
+        method: "PATCH",
+        token: f.owner.token,
+        body: { active: false },
+      })
+    ).status,
+    400,
+  );
+  const all = await f.ok("/platform/organizations", { token: f.owner.token });
+  assert.equal(all.admins.length, 6);
+  assert.equal(JSON.stringify(all).includes("password"), false);
+  assert.equal(
+    (await f.ok("/admin/schools", { token: f.areaA.token })).schools.length,
+    2,
+  );
+  assert.deepEqual(
+    (await f.ok("/admin/schools", { token: f.schoolAdminA.token })).schools.map(
+      (row) => row.id,
+    ),
+    [f.schoolA.id],
+  );
+  assert.equal(
+    (await f.request("/admin/overview", { token: f.owner.token })).status,
+    403,
+  );
+});
+
+test("school invitation closes registration, stores only hash, records use and rejects role and school injection", async (t) => {
+  const f = await fixture(t);
+  for (const manager of [f.areaA, f.areaB, f.owner])
+    assert.equal(
+      (
+        await f.request("/admin/invites", {
+          method: "POST",
+          token: manager.token,
+          body: { schoolId: f.schoolA.id, days: 30, maxUses: 3 },
+        })
+      ).status,
+      403,
+    );
+  assert.equal(
+    (
+      await f.request("/admin/invites", {
+        method: "POST",
+        token: f.schoolAdminA.token,
+        body: { schoolId: f.schoolA2.id, days: 30, maxUses: 3 },
+      })
+    ).status,
+    404,
+  );
+  const invitation = await f.invite(f.schoolA.id, f.schoolAdminA.token, {
+    maxUses: 3,
+  });
+  assert.match(invitation.code, /^[A-F0-9]{24}$/);
+  assert.notEqual(
+    f.app.db.prepare("SELECT code FROM invites WHERE id=?").get(invitation.id)
+      .code,
+    invitation.code,
+  );
+  const preview = await f.ok("/auth/invite", {
+    method: "POST",
+    body: { regionId: f.regionA.id, inviteCode: invitation.code.toLowerCase() },
+  });
+  assert.equal(preview.invitation.schoolName, "西南第一学校");
+  const result = await f.register(
+    "real.student",
+    f.regionA.id,
+    invitation.code,
+    { role: "platform_admin", schoolId: f.schoolB.id, userId: f.owner.user.id },
+  );
+  assert.equal(result.status, 201);
+  assert.equal(result.body.user.role, "student");
+  assert.equal(result.body.user.schoolId, f.schoolA.id);
+  assert.equal(
+    (await f.request("/admin/invites", { token: result.body.token })).status,
+    403,
+  );
+  assert.equal(
+    (await f.request("/platform/organizations", { token: result.body.token }))
+      .status,
+    403,
+  );
+  const uses = await f.ok(`/admin/invites/${invitation.id}`, {
+    token: f.schoolAdminA.token,
+  });
+  assert.equal(uses.invite.usedCount, 1);
+  assert.equal(uses.uses[0].account, "real.student");
+  assert.equal(JSON.stringify(uses).includes(invitation.code), false);
+  for (const manager of [f.schoolAdminA2, f.schoolAdminB, f.areaB])
+    assert.equal(
+      (
+        await f.request(`/admin/invites/${invitation.id}`, {
+          token: manager.token,
+        })
+      ).status,
+      404,
+    );
+  assert.equal(
+    (await f.ok("/admin/invites", { token: f.areaA.token })).invites.length,
+    1,
+  );
+  await f.ok("/auth/logout", { method: "POST", token: result.body.token });
+  assert.equal(
+    (await f.login("real.student", f.regionA.id)).user.schoolId,
+    f.schoolA.id,
+  );
+});
+
+test("expiry, revocation, wrong region and failed registration cannot consume quota; concurrent last seats never exceed limit", async (t) => {
+  const f = await fixture(t);
+  const invite = await f.invite(f.schoolA.id, f.schoolAdminA.token, {
+    maxUses: 2,
+  });
+  assert.equal(
+    (await f.register("wrong.region", f.regionB.id, invite.code)).status,
+    400,
+  );
+  assert.equal(
+    (await f.register("school.a", f.regionA.id, invite.code)).status,
+    409,
+  );
+  assert.equal(
+    f.app.db.prepare("SELECT used_count FROM invites WHERE id=?").get(invite.id)
+      .used_count,
+    0,
+  );
+  const results = await Promise.all(
+    Array.from({ length: 8 }, (_, i) =>
+      f.register(`seat.${i}`, f.regionA.id, invite.code),
+    ),
+  );
+  assert.equal(results.filter((result) => result.status === 201).length, 2);
+  assert.equal(results.filter((result) => result.status === 400).length, 6);
+  assert.equal(
+    (await f.ok(`/admin/invites/${invite.id}`, { token: f.schoolAdminA.token }))
+      .uses.length,
+    2,
+  );
+  const revoked = await f.invite(f.schoolA.id, f.schoolAdminA.token);
+  await f.ok("/auth/invite", {
+    method: "POST",
+    body: { regionId: f.regionA.id, inviteCode: revoked.code },
+  });
+  assert.equal(
+    (
+      await f.request(`/admin/invites/${revoked.id}/revoke`, {
+        method: "POST",
+        token: f.areaA.token,
+      })
+    ).status,
+    403,
+  );
+  await f.ok(`/admin/invites/${revoked.id}/revoke`, {
+    method: "POST",
+    token: f.schoolAdminA.token,
+  });
+  assert.equal(
+    (await f.register("revoked.student", f.regionA.id, revoked.code)).status,
+    400,
+  );
+  const expiring = await f.invite(f.schoolA.id, f.schoolAdminA.token, {
+    days: 1,
+  });
+  f.setNow(expiring.expiresAt);
+  assert.equal(
+    (await f.register("expired.student", f.regionA.id, expiring.code)).status,
+    400,
+  );
+  assert.equal(
+    (
+      await f.request("/auth/invite", {
+        method: "POST",
+        body: { regionId: f.regionA.id, inviteCode: expiring.code },
+      })
+    ).status,
+    400,
+  );
+  assert.equal(
+    f.app.db
+      .prepare("SELECT used_count FROM invites WHERE id=?")
+      .get(expiring.id).used_count,
+    0,
+  );
+});
+
+test("school and region boundaries apply to statistics, student details, followups, moderation and service requests", async (t) => {
+  const f = await fixture(t),
+    students = [];
+  for (const [i, school, manager, region] of [
+    [1, f.schoolA, f.schoolAdminA, f.regionA],
+    [2, f.schoolA2, f.schoolAdminA2, f.regionA],
+    [3, f.schoolB, f.schoolAdminB, f.regionB],
+  ]) {
+    const invite = await f.invite(school.id, manager.token);
+    const result = await f.register(`student.${i}`, region.id, invite.code);
+    assert.equal(result.status, 201);
+    const student = result.body;
+    await f.ok("/checkins", {
+      method: "POST",
+      token: student.token,
+      body: { score: 2, note: "私密备注", tags: ["私密标签"] },
+    });
+    const post = await f.create(
+      "/posts",
+      { nickname: "匿名同学", topic: "成长烦恼", content: `学校${i}的纸条` },
+      student.token,
+    );
+    const service = await f.create(
+      "/service-requests",
+      { type: "校园成长服务", message: `学校${i}的需求` },
+      student.token,
+    );
+    students.push({ ...student, post: post.post, service: service.request });
+  }
+  assert.equal(
+    (await f.ok("/admin/overview", { token: f.schoolAdminA.token })).stats
+      .students,
+    1,
+  );
+  assert.equal(
+    (await f.ok("/admin/overview", { token: f.areaA.token })).stats.students,
+    2,
+  );
+  assert.equal(
+    (await f.ok("/admin/overview", { token: f.schoolAdminA.token })).stats
+      .todayCheckins,
+    1,
+  );
+  const own = students[0],
+    other = students[1],
+    outside = students[2];
+  for (const target of [other, outside]) {
+    for (const [path, method, body] of [
+      [`/admin/students/${target.user.id}`, "GET"],
+      [`/admin/students/${target.user.id}/followups`, "POST", { note: "越权" }],
+      [
+        `/admin/posts/${target.post.id}/moderate`,
+        "POST",
+        { status: "approved" },
+      ],
+      [
+        `/admin/service-requests/${target.service.id}`,
+        "POST",
+        { status: "handled" },
+      ],
+    ])
+      assert.equal(
+        (await f.request(path, { token: f.schoolAdminA.token, method, body }))
+          .status,
+        404,
+        path,
+      );
+  }
+  assert.equal(
+    (
+      await f.request(`/admin/students/${outside.user.id}`, {
+        token: f.areaA.token,
+      })
+    ).status,
+    404,
+  );
+  assert.equal(
+    (await f.ok("/admin/posts?status=all", { token: f.schoolAdminA.token }))
+      .posts.length,
+    1,
+  );
+  assert.equal(
+    (await f.ok("/admin/posts?status=all", { token: f.areaA.token })).posts
+      .length,
+    2,
+  );
+  assert.equal(
+    (await f.ok("/admin/service-requests", { token: f.schoolAdminA.token }))
+      .requests.length,
+    1,
+  );
+  assert.equal(
+    (await f.ok("/admin/service-requests", { token: f.areaA.token })).requests
+      .length,
+    2,
+  );
+  await f.create(
+    `/admin/students/${own.user.id}/followups`,
+    { note: "本校跟进" },
+    f.schoolAdminA.token,
+  );
+  await f.ok(`/admin/posts/${own.post.id}/moderate`, {
+    method: "POST",
+    token: f.schoolAdminA.token,
+    body: { status: "approved" },
+  });
+  await f
+    .create(
+      `/posts/${own.post.id}/replies`,
+      { nickname: "外校同学", content: "同区回应" },
+      other.token,
+    )
+    .catch((error) => {
+      throw error;
+    });
+  const reply = f.app.db
+    .prepare("SELECT id FROM replies WHERE post_id=?")
+    .get(own.post.id);
+  assert.equal(
+    (
+      await f.request(`/admin/replies/${reply.id}/moderate`, {
+        method: "POST",
+        token: f.schoolAdminA.token,
+        body: { status: "approved" },
+      })
+    ).status,
+    404,
+  );
+  await f.ok(`/admin/replies/${reply.id}/moderate`, {
+    method: "POST",
+    token: f.areaA.token,
+    body: { status: "approved" },
+  });
+  const managed = await f.ok(`/admin/students/${own.user.id}`, {
+    token: f.schoolAdminA.token,
+  });
+  assert.equal(JSON.stringify(managed).includes("私密备注"), false);
+  assert.equal(JSON.stringify(managed).includes("私密标签"), false);
+});
+
+test("organization and account disable invalidate sessions; password reset and self change revoke old tokens without audit secrets", async (t) => {
+  const f = await fixture(t);
+  const patch = (kind, id, body) =>
+    f.ok(`/platform/${kind}/${id}`, {
+      method: "PATCH",
+      token: f.owner.token,
+      body,
+    });
+  const invite = await f.invite(f.schoolA.id, f.schoolAdminA.token);
+  await patch("schools", f.schoolA.id, { active: false });
+  assert.equal(
+    (await f.request("/admin/overview", { token: f.schoolAdminA.token }))
+      .status,
+    401,
+  );
+  assert.equal(
+    (await f.register("disabled.school", f.regionA.id, invite.code)).status,
+    400,
+  );
+  await patch("schools", f.schoolA.id, { active: true, name: "已更名学校" });
+  assert.equal(
+    (await f.request("/auth/me", { token: f.schoolAdminA.token })).status,
+    401,
+  );
+  const manager = await f.login("school.a", f.regionA.id);
+  assert.equal(manager.user.schoolName, "已更名学校");
+  await patch("admins", manager.user.id, { active: false });
+  assert.equal(
+    (await f.request("/auth/me", { token: manager.token })).status,
+    401,
+  );
+  const newPassword = "New-Secret-For-Account-93821";
+  await patch("admins", manager.user.id, {
+    active: true,
+    password: newPassword,
+  });
+  assert.equal(
+    (
+      await f.request("/auth/login", {
+        method: "POST",
+        body: {
+          regionId: f.regionA.id,
+          account: "school.a",
+          password: f.password,
+        },
+      })
+    ).status,
+    401,
+  );
+  const reset = await f.login("school.a", f.regionA.id, newPassword);
+  const changed = await f.ok("/auth/password", {
+    method: "POST",
+    token: reset.token,
+    body: { currentPassword: newPassword, password: f.password },
+  });
+  assert.equal(
+    (await f.request("/auth/me", { token: reset.token })).status,
+    401,
+  );
+  assert.equal(
+    (await f.ok("/auth/me", { token: changed.token })).user.id,
+    manager.user.id,
+  );
+  const events = await f.ok("/platform/audit", { token: f.owner.token });
+  assert.equal(JSON.stringify(events).includes(newPassword), false);
+  await patch("regions", f.regionA.id, { active: false });
+  assert.equal(
+    (await f.request("/admin/students", { token: f.areaA.token })).status,
+    401,
+  );
+  assert.equal(
+    (await f.ok("/regions")).regions.some((row) => row.id === f.regionA.id),
+    false,
+  );
+  assert.equal(
+    (await f.register("disabled.area", f.regionA.id, invite.code)).status,
+    400,
+  );
+});
+
+test("legacy database upgrade preserves referenced data and maps admin to region scope without creating demo data", () => {
+  const directory = mkdtempSync(join(tmpdir(), "growup-legacy-"));
+  const path = join(directory, "legacy.sqlite");
+  try {
+    const legacy = new DatabaseSync(path);
+    legacy.exec(`PRAGMA foreign_keys=ON;
+      CREATE TABLE regions(id TEXT PRIMARY KEY,name TEXT NOT NULL);
+      CREATE TABLE schools(id TEXT PRIMARY KEY,region_id TEXT NOT NULL REFERENCES regions(id),name TEXT NOT NULL);
+      CREATE TABLE users(id TEXT PRIMARY KEY,account TEXT NOT NULL UNIQUE COLLATE NOCASE,password_hash TEXT NOT NULL,name TEXT NOT NULL,role TEXT NOT NULL CHECK(role IN ('student','admin')),region_id TEXT NOT NULL REFERENCES regions(id),school_id TEXT NOT NULL REFERENCES schools(id),created_at TEXT NOT NULL);
+      CREATE TABLE invites(code TEXT PRIMARY KEY,school_id TEXT NOT NULL REFERENCES schools(id),active INTEGER NOT NULL DEFAULT 1);
+      INSERT INTO regions VALUES('legacy-area','旧大区'); INSERT INTO schools VALUES('legacy-school','legacy-area','真实旧学校');
+      INSERT INTO invites VALUES('LEGACYCODE','legacy-school',1);`);
+    legacy
+      .prepare("INSERT INTO users VALUES(?,?,?,?,?,?,?,?)")
+      .run(
+        "legacy-admin",
+        "old.admin",
+        hashPassword("Existing-Password"),
+        "旧管理员",
+        "admin",
+        "legacy-area",
+        "legacy-school",
+        "2026-01-01T00:00:00.000Z",
+      );
+    legacy.exec(`CREATE TABLE sessions(token_hash TEXT PRIMARY KEY,user_id TEXT NOT NULL REFERENCES users(id),expires_at TEXT NOT NULL);
+      INSERT INTO sessions VALUES('preserved-session','legacy-admin','2026-12-01T00:00:00.000Z');`);
+    legacy.close();
+    const db = openDatabase(path, false, new Date("2026-10-14T00:00:00Z"));
+    try {
+      const user = db.prepare("SELECT * FROM users").get();
+      assert.equal(user.role, "region_admin");
+      assert.equal(user.school_id, null);
+      assert.equal(db.prepare("SELECT COUNT(*) n FROM regions").get().n, 1);
+      assert.equal(
+        db.prepare("SELECT name FROM schools").get().name,
+        "真实旧学校",
+      );
+      assert.equal(db.prepare("PRAGMA foreign_key_check").all().length, 0);
+      assert.equal(
+        db
+          .prepare(
+            "SELECT user_id FROM sessions WHERE token_hash='preserved-session'",
+          )
+          .get().user_id,
+        "legacy-admin",
+      );
+      const invite = db.prepare("SELECT * FROM invites").get();
+      assert.equal(
+        invite.code,
+        createHash("sha256").update("LEGACYCODE").digest("hex"),
+      );
+      assert.equal(invite.active, 1);
+      assert.equal(invite.used_count, 0);
+    } finally {
+      db.close();
+    }
+    const reopened = openDatabase(path, false, new Date());
+    reopened.close();
+  } finally {
+    rmSync(directory, { recursive: true, force: true });
+  }
+});
