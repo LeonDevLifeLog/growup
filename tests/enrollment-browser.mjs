@@ -250,11 +250,19 @@ try {
   );
   await school.locator(".scope-chip").click();
   const account = school.getByRole("dialog", { name: "当前管理账号" });
-  await expect(account).toContainText("我能做什么");
-  await expect(account).toContainText("不能任命管理员");
+  await expect(account).toContainText("school.manager");
+  await expect(account.getByText("不能任命管理员")).toBeHidden();
+  await account.getByText("我能做什么").click();
+  await expect(account.getByText("不能任命管理员")).toBeVisible();
   await expect(
     account.getByRole("link", { name: /查看完整使用指南/ }),
   ).toHaveAttribute("href", "/guide/#school");
+  await account.getByRole("button", { name: /修改密码/ }).click();
+  await expect(account.getByLabel("当前密码", { exact: true })).toBeVisible();
+  await account.getByRole("button", { name: /返回账号信息/ }).click();
+  await expect(
+    account.getByRole("button", { name: /退出当前管理账号/ }),
+  ).toBeVisible();
   await account.getByRole("button", { name: "关闭弹窗" }).click();
   const todo = school.getByRole("region", { name: "今天先做这几件事" });
   await expect(todo).toContainText("还没有学生注册");
@@ -294,7 +302,7 @@ try {
     "管理员代设的初始密码在首次登录时必须改为本人新密码（不可沿用原密码），之后才能进入后台",
   );
   record(
-    "学校管理员右上角显示身份与范围，点击可看“我能做什么”；概览“今天先做这几件事”引导生成邀请码，各页“使用帮助”指向指南对应章节",
+    "学校管理员右上角显示身份与范围，账号弹窗“我能做什么”默认收起、修改密码在独立视图中完成；概览“今天先做这几件事”引导生成邀请码，各页“使用帮助”指向指南对应章节",
   );
   record("学校管理员登录后只能选择本校，生成限时限额邀请码并获得一次性完整值");
 
@@ -304,11 +312,30 @@ try {
     .getByRole("button", { name: "登录 / 注册", exact: true })
     .click();
   let dialog = student.getByRole("dialog");
+  await expect(dialog.getByLabel("怎么称呼你")).toHaveCount(0);
   await dialog.getByRole("button", { name: "邀请码注册", exact: true }).click();
+  await expect(
+    dialog.getByRole("button", { name: "邀请码注册", exact: true }),
+  ).toHaveAttribute("aria-pressed", "true");
   await expect(
     dialog.getByRole("combobox", { name: "选择你的大区", exact: true }),
   ).toContainText("华东试点大区");
+  // Step 1 only asks for the code; the help bubble closes on Esc without closing the dialog.
+  await expect(dialog.getByLabel("账号", { exact: true })).toHaveCount(0);
+  await dialog.getByRole("button", { name: "查看邀请码说明" }).click();
+  await expect(dialog.getByRole("note")).toContainText(
+    "邀请码决定你加入哪所学校",
+  );
+  await student.keyboard.press("Escape");
+  await expect(dialog.getByRole("note")).toHaveCount(0);
+  await expect(dialog).toBeVisible();
   await dialog.getByLabel("学校邀请码", { exact: true }).fill(code);
+  await dialog.getByRole("button", { name: "核对学校", exact: true }).click();
+  await expect(dialog.getByRole("status")).toContainText("成长试点第一学校");
+  await dialog.getByRole("button", { name: "不是我的学校？重新填写" }).click();
+  await expect(dialog.getByLabel("学校邀请码", { exact: true })).toHaveValue(
+    code,
+  );
   await dialog.getByRole("button", { name: "核对学校", exact: true }).click();
   await expect(dialog.getByRole("status")).toContainText("成长试点第一学校");
   await dialog.getByLabel("怎么称呼你", { exact: true }).fill("新注册同学");
@@ -375,7 +402,7 @@ try {
     .click();
   await expect(checkin).toHaveCount(0);
   record(
-    "手机网页学生核对学校、确认密码后自行注册，首页显示“从这里开始”且可永久关闭，退出重登成功且无演示入口",
+    "手机网页学生注册分两步：先核对学校（可重新填写）再设置账号，问号说明按 Esc 只关闭提示；确认密码后自行注册，首页显示“从这里开始”且可永久关闭，退出重登成功且无演示入口",
   );
   record("填写中的弹窗被 Esc 或关闭按钮关闭前会先确认，取消后内容保留");
   await student.goto(fixture.base + "/#profile");

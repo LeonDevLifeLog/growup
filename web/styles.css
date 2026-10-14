@@ -1039,22 +1039,6 @@ textarea {
 .icon-button:hover {
   background: #eef2e6;
 }
-.auth-intro {
-  text-align: center;
-}
-.auth-intro .brand-mark {
-  margin-bottom: 12px;
-}
-.auth-intro h3 {
-  font-weight: 500;
-  font-size: 18px;
-}
-.auth-intro p {
-  font-size: 11px;
-  color: #8e9685;
-  margin-top: 9px;
-  line-height: 1.8;
-}
 .form-stack {
   display: flex;
   flex-direction: column;
@@ -1157,16 +1141,6 @@ textarea {
   position: absolute;
   right: 5px;
   top: 5px;
-}
-.auth-switch {
-  text-align: center;
-  font-size: 11px;
-  color: #89957c;
-  margin-top: 14px;
-}
-.auth-switch .text-button {
-  font-size: 11px;
-  margin-left: 9px;
 }
 .privacy-note {
   display: flex;
@@ -4878,22 +4852,6 @@ td .text-button {
   background: var(--green);
   color: white;
 }
-.forgot-password {
-  font-size: 11px;
-  color: #7d8873;
-}
-.forgot-password summary {
-  cursor: pointer;
-  color: #5e7854;
-  width: fit-content;
-}
-.forgot-password p {
-  margin-top: 8px;
-  line-height: 1.8;
-  padding: 10px 12px;
-  border-radius: 7px;
-  background: #f5f7f0;
-}
 .service-reply {
   margin-top: 10px;
   padding: 10px 12px;
@@ -4962,26 +4920,6 @@ td .text-button {
 .mobile-nav button {
   position: relative;
 }
-.abilities {
-  margin: 16px 0;
-  padding: 14px 16px;
-  border-radius: 10px;
-  background: #f4f7ee;
-}
-.abilities h4 {
-  font-size: 13px;
-  margin-bottom: 6px;
-}
-.abilities ul {
-  padding-left: 18px;
-  font-size: 12px;
-  line-height: 1.9;
-  margin-bottom: 6px;
-}
-.abilities .muted {
-  font-size: 11px;
-  margin-bottom: 8px;
-}
 .nav-badge + .nav-dot {
   margin-left: 8px;
 }
@@ -5034,11 +4972,6 @@ td .text-button {
 }
 .welcome-card .muted {
   font-size: 11px;
-}
-.auth-switch small {
-  display: block;
-  font-size: 10px;
-  color: #9aa58c;
 }
 .auth-help {
   text-align: center;
@@ -5177,4 +5110,236 @@ td .text-button {
   justify-content: center;
   gap: 4px;
   flex-wrap: wrap;
+}
+
+/* Sign-in dialog: compact header, mode switch, two-step signup */
+.auth-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+.auth-head .brand-mark {
+  flex: none;
+}
+.auth-head h3 {
+  font-size: 16px;
+  font-weight: 550;
+  line-height: 1.5;
+}
+.auth-head p {
+  font-size: 11px;
+  color: #8e9685;
+  margin-top: 2px;
+}
+.auth-switch-tabs {
+  display: flex;
+  padding: 4px;
+  border-radius: 10px;
+  background: #eef2e8;
+  margin-bottom: 18px;
+}
+.auth-switch-tabs button {
+  flex: 1;
+  min-height: 40px;
+  border-radius: 8px;
+  font-size: 13px;
+  color: #6f7b6a;
+}
+.auth-switch-tabs button.selected {
+  background: white;
+  color: var(--green);
+  font-weight: 600;
+  box-shadow: 0 2px 8px #245c4520;
+}
+.auth-body .login-modes {
+  margin-bottom: 18px;
+}
+.auth-steps {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 16px;
+  font-size: 12px;
+  color: #9aa494;
+}
+.auth-steps li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.auth-steps li + li::before {
+  content: "";
+  width: 36px;
+  height: 1px;
+  background: #dfe5d8;
+  margin-right: 4px;
+}
+.auth-steps span {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #e8ede2;
+  font-size: 10px;
+}
+.auth-steps li.current {
+  color: var(--green);
+  font-weight: 600;
+}
+.auth-steps li.current span,
+.auth-steps li.done span {
+  background: var(--green);
+  color: white;
+}
+.auth-steps li.done {
+  color: #6c8a5c;
+}
+.school-confirm {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: #eef5e6;
+  border: 1px solid #cfe0bd;
+}
+.school-confirm small {
+  font-size: 11px;
+  color: #7d8a78;
+}
+.school-confirm strong {
+  font-size: 15px;
+  color: var(--green);
+}
+.school-confirm .text-button {
+  font-size: 11px;
+  min-height: 24px;
+}
+
+/* Account dialog */
+.account-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.account-panel > .text-button {
+  align-self: flex-start;
+  font-size: 12px;
+}
+.account-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px;
+  border-radius: 12px;
+  background: #f4f7ee;
+}
+.account-avatar {
+  width: 48px;
+  height: 48px;
+  flex: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--green);
+  color: white;
+  font-size: 18px;
+}
+.account-card strong {
+  display: block;
+  font-size: 16px;
+  font-weight: 600;
+}
+.account-card small {
+  display: block;
+  font-size: 11px;
+  color: #8a9480;
+}
+.account-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+.account-tags span {
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: white;
+  border: 1px solid #dfe5d6;
+  color: #5e7854;
+}
+.account-section {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0 14px;
+}
+.account-section summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 46px;
+  cursor: pointer;
+  list-style: none;
+  font-size: 13px;
+}
+.account-section summary::-webkit-details-marker {
+  display: none;
+}
+.account-chevron {
+  margin-left: auto;
+  color: #9aa58c;
+  transition: transform 0.15s;
+}
+.account-section[open] .account-chevron {
+  transform: rotate(180deg);
+}
+.account-section ul {
+  padding-left: 18px;
+  font-size: 12px;
+  line-height: 1.9;
+}
+.account-section .muted {
+  font-size: 11px;
+  margin: 6px 0 8px;
+}
+.account-section .help-link {
+  margin-bottom: 14px;
+}
+.account-actions {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.account-actions button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 0 14px;
+  font-size: 13px;
+  color: var(--ink);
+  text-align: left;
+}
+.account-actions button + button {
+  border-top: 1px solid var(--border);
+}
+.account-actions button:hover {
+  background: #f6f8f1;
+}
+.account-actions button svg:last-child:not(:first-child) {
+  margin-left: auto;
+  color: #9aa58c;
+}
+.account-actions .danger {
+  color: #a85349;
 }

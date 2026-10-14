@@ -359,7 +359,7 @@ export function Tabs({ label, tabs, value, onChange }) {
 }
 
 // Each guide section matches one page, so help opens exactly where it is needed.
-export function HelpLink({ anchor, label = "使用帮助" }) {
+export function HelpLink({ anchor, label = "使用帮助", icon = true }) {
   return (
     <a
       className="help-link"
@@ -367,7 +367,7 @@ export function HelpLink({ anchor, label = "使用帮助" }) {
       target="_blank"
       rel="noopener"
     >
-      <CircleHelp size={15} />
+      {icon && <CircleHelp size={15} />}
       {label}
     </a>
   );

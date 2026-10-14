@@ -79,5 +79,5 @@
     </block>
   </view>
 
-  <view class="tip-line login-privacy">日记与心情备注仅本人可见<text class="tip-btn" data-tip="loginPrivacy" bindtap="showTip">?</text></view>
+  <view class="tip-line login-privacy">账号与隐私<text class="tip-btn" data-tip="loginPrivacy" bindtap="showTip">?</text></view>
 </view>

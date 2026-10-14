@@ -20,6 +20,9 @@ import {
   UserCog,
   Users,
   X,
+  ArrowLeft,
+  ChevronRight,
+  KeyRound,
 } from "lucide-react";
 import { AppContext, useApp } from "./context.jsx";
 import {
@@ -857,35 +860,7 @@ function ModalBody({ modal: m }) {
       </div>
     );
   if (m.type === "password") return <ChangePassword title="" />;
-  if (m.type === "account")
-    return (
-      <div className="prose">
-        <h3>{user.name}</h3>
-        <p>
-          {roleNames[user.role]} · {user.regionName || "全部大区"}
-          {user.schoolName ? ` · ${user.schoolName}` : ""}
-        </p>
-        <p>{user.account}</p>
-        <div className="abilities">
-          <h4>我能做什么</h4>
-          <ul>
-            {roleAbilities[user.role].can.map((item) => (
-              <li key={item}>{item}</li>
-            ))}
-          </ul>
-          <p className="muted">{roleAbilities[user.role].cannot}</p>
-          <HelpLink
-            anchor={roleAbilities[user.role].guide}
-            label="查看完整使用指南"
-          />
-        </div>
-        <ChangePassword />
-        <button className="button secondary full" onClick={logout}>
-          <LogOut size={16} />
-          退出当前管理账号
-        </button>
-      </div>
-    );
+  if (m.type === "account") return <AccountPanel />;
   if (m.type === "privacy")
     return (
       <div className="prose">
@@ -921,6 +896,63 @@ function ModalBody({ modal: m }) {
         在 Star-Track 中观察成长，在 STARMAP
         中收藏日常，在匿名树洞里表达心声。需要支持时，也可以向所在区域的工作人员提交需求。
       </p>
+    </div>
+  );
+}
+
+/** Account dialog: who I am at a glance, details and actions one step away. */
+function AccountPanel() {
+  const { user, logout } = useApp();
+  const [view, setView] = useState("main");
+  const abilities = roleAbilities[user.role];
+  if (view === "password")
+    return (
+      <div className="account-panel">
+        <button className="text-button" onClick={() => setView("main")}>
+          <ArrowLeft size={15} />
+          返回账号信息
+        </button>
+        <ChangePassword title="修改我的密码" />
+      </div>
+    );
+  return (
+    <div className="account-panel">
+      <div className="account-card">
+        <span className="account-avatar">{user.name.slice(-1)}</span>
+        <div>
+          <strong>{user.name}</strong>
+          <small>{user.account}</small>
+          <div className="account-tags">
+            <span>{roleNames[user.role]}</span>
+            <span>{user.schoolName || user.regionName || "全平台"}</span>
+          </div>
+        </div>
+      </div>
+      <details className="account-section">
+        <summary>
+          <ShieldCheck size={16} />
+          我能做什么
+          <ChevronDown size={15} className="account-chevron" />
+        </summary>
+        <ul>
+          {abilities.can.map((item) => (
+            <li key={item}>{item}</li>
+          ))}
+        </ul>
+        <p className="muted">{abilities.cannot}</p>
+        <HelpLink anchor={abilities.guide} label="查看完整使用指南" />
+      </details>
+      <div className="account-actions">
+        <button onClick={() => setView("password")}>
+          <KeyRound size={16} />
+          修改密码
+          <ChevronRight size={15} />
+        </button>
+        <button className="danger" onClick={logout}>
+          <LogOut size={16} />
+          退出当前管理账号
+        </button>
+      </div>
     </div>
   );
 }
