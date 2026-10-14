@@ -1,5 +1,14 @@
 import { useEffect, useState } from "react";
-import { ArrowRight, MapPin, ShieldCheck, Eye, EyeOff } from "lucide-react";
+import {
+  ArrowRight,
+  Building2,
+  Check,
+  MapPin,
+  School,
+  ShieldCheck,
+  Eye,
+  EyeOff,
+} from "lucide-react";
 import { useApp } from "./context.jsx";
 import { isAdmin } from "./api.js";
 import { HelpLink, Mark } from "./components.jsx";
@@ -100,37 +109,45 @@ export default function Auth({ purpose = "student" }) {
       </div>
       <form onSubmit={submit} className="form-stack">
         {purpose === "admin" && (
-          <div className="filter-tabs">
-            <button
-              type="button"
-              className={!platform ? "selected" : ""}
-              disabled={busy}
-              onClick={() => {
-                setPlatform(false);
-                setError("");
-              }}
-            >
-              大区 / 学校登录
-            </button>
-            <button
-              type="button"
-              className={platform ? "selected" : ""}
-              disabled={busy}
-              onClick={() => {
-                setPlatform(true);
-                setError("");
-              }}
-            >
-              平台管理员登录
-            </button>
+          <div className="login-modes" role="group" aria-label="选择登录方式">
+            {[
+              {
+                id: false,
+                title: "大区 / 学校登录",
+                hint: "大区、学校管理员 · 需选择所属大区",
+                icon: School,
+              },
+              {
+                id: true,
+                title: "平台管理员登录",
+                hint: "维护组织与账号 · 无需选择大区",
+                icon: Building2,
+              },
+            ].map((mode) => (
+              <button
+                key={mode.title}
+                type="button"
+                className={`login-mode ${platform === mode.id ? "selected" : ""}`}
+                aria-label={mode.title}
+                aria-pressed={platform === mode.id}
+                aria-describedby={`login-mode-${mode.id}`}
+                disabled={busy}
+                onClick={() => {
+                  setPlatform(mode.id);
+                  setError("");
+                }}
+              >
+                <mode.icon size={20} strokeWidth={1.8} />
+                <span>
+                  <strong>{mode.title}</strong>
+                  <small id={`login-mode-${mode.id}`}>{mode.hint}</small>
+                </span>
+                {platform === mode.id && (
+                  <Check className="login-mode-check" size={16} />
+                )}
+              </button>
+            ))}
           </div>
-        )}
-        {purpose === "admin" && (
-          <small className="auth-hint">
-            {platform
-              ? "平台管理员不需要选择大区，直接输入账号和密码。"
-              : "大区管理员和学校管理员：先选择账号所属的大区。账号由上级管理员开通。"}
-          </small>
         )}
         {!platform && (
           <label>
