@@ -105,7 +105,7 @@ export default function Platform() {
   const [candidateQuery, setCandidateQuery] = useState("");
   const [userId, setUserId] = useState("");
   const candidates = useResource(
-    "/platform/users?assignable=1&q=" + encodeURIComponent(candidateQuery),
+    "/users?assignable=1&q=" + encodeURIComponent(candidateQuery),
   );
   const [busy, setBusy] = useState(false),
     [error, setError] = useState("");
@@ -246,7 +246,7 @@ export default function Platform() {
               onSubmit={(e) => {
                 e.preventDefault();
                 mutate(
-                  "/platform/admins",
+                  "/admins",
                   {
                     userId,
                     role,
@@ -395,7 +395,7 @@ export default function Platform() {
                 onClick={() =>
                   mutate(
                     confirmation.kind === "revoke"
-                      ? `/platform/admins/${confirmation.row.id}/revoke`
+                      ? `/admins/${confirmation.row.id}/revoke`
                       : `/platform/${confirmation.kind}/${confirmation.row.id}`,
                     confirmation.kind === "revoke"
                       ? {}

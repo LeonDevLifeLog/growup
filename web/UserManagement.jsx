@@ -4,8 +4,30 @@ import { ResourceState } from "./components.jsx";
 import { PageTitle } from "./Student.jsx";
 import { roleNames } from "./api.js";
 
+// Mirrors the server directory scope: each administrator sees lower roles only.
+const visibleRoles = {
+  platform_admin: Object.keys(roleNames),
+  region_admin: ["user", "student", "school_admin"],
+  school_admin: ["user", "student"],
+};
+const scopeText = {
+  platform_admin:
+    "统一维护全部账号资料与状态。工作人员建档后，可在平台管理中被任命为管理员；学生通过学校邀请码注册。",
+  region_admin:
+    "维护本大区的学生、学校管理员与待授权工作人员，可将本区工作人员任命为学校管理员。",
+  school_admin:
+    "维护本校学生与待授权工作人员的资料和状态。管理员任命由大区或平台管理员负责。",
+};
+
 export default function UserManagement() {
   const { user, call, bump, notify } = useApp();
+  const isRegion = user.role === "region_admin";
+  const schools = useResource("/admin/schools", isRegion);
+  const activeSchools = (schools.data?.schools || []).filter(
+    (row) => row.active,
+  );
+  const [school, setSchool] = useState(""),
+    [appointment, setAppointment] = useState(null);
   const [query, setQuery] = useState(""),
     [search, setSearch] = useState("");
   const [role, setRole] = useState(""),
@@ -18,7 +40,7 @@ export default function UserManagement() {
   const [busy, setBusy] = useState(false),
     [error, setError] = useState("");
   const resource = useResource(
-    `/platform/users?q=${encodeURIComponent(search)}&role=${role}&page=${page}`,
+    `/users?q=${encodeURIComponent(search)}&role=${role}&page=${page}`,
   );
   async function mutate(path, body, method, after = () => {}) {
     if (busy) return;
@@ -40,7 +62,7 @@ export default function UserManagement() {
       <PageTitle
         eyebrow="PEOPLE IN OUR COMMUNITY"
         title="用户管理"
-        description="统一维护账号资料与状态。工作人员建档后，可在平台管理中被任命为管理员；学生通过学校邀请码注册。"
+        description={scopeText[user.role]}
       />
       {error && (
         <p role="alert" className="form-error">
@@ -54,10 +76,16 @@ export default function UserManagement() {
           onSubmit={(event) => {
             event.preventDefault();
             mutate(
-              "/platform/users",
-              { account, name, password },
+              "/users",
+              {
+                account,
+                name,
+                password,
+                ...(school ? { schoolId: school } : {}),
+              },
               "POST",
               () => {
+                setSchool("");
                 setAccount("");
                 setName("");
                 setPassword("");
@@ -103,8 +131,29 @@ export default function UserManagement() {
               disabled={busy}
             />
           </label>
+          {isRegion && (
+            <label>
+              所属学校
+              <select
+                aria-label="所属学校"
+                value={school}
+                onChange={(e) => setSchool(e.target.value)}
+                disabled={busy}
+              >
+                <option value="">本大区（暂不指定学校）</option>
+                {activeSchools.map((row) => (
+                  <option key={row.id} value={row.id}>
+                    {row.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+          )}
           <small>
-            新账号待授权，任命管理员后可登录对应范围。通过受控渠道告知本人初始凭据。
+            {user.role === "platform_admin"
+              ? "新账号待授权，任命管理员后可登录对应范围。"
+              : `新账号建立在${user.schoolName || user.regionName}，待上级任命后方可登录。`}
+            通过受控渠道告知本人初始凭据。
           </small>
           <button className="button primary" disabled={busy}>
             创建用户
@@ -119,7 +168,7 @@ export default function UserManagement() {
             onSubmit={(e) => {
               e.preventDefault();
               mutate(
-                `/platform/users/${editor.id}`,
+                `/users/${editor.id}`,
                 {
                   name: editor.name,
                   ...(editor.password ? { password: editor.password } : {}),
@@ -171,7 +220,91 @@ export default function UserManagement() {
           </form>
         </section>
       )}
-      {confirmation && (
+      {appointment && (
+        <section className="panel" aria-label="任命学校管理员">
+          <h2>任命学校管理员 · {appointment.name}</h2>
+          <form
+            className="form-stack"
+            onSubmit={(e) => {
+              e.preventDefault();
+              mutate(
+                "/admins",
+                {
+                  userId: appointment.id,
+                  role: "school_admin",
+                  schoolId: appointment.schoolId,
+                },
+                "POST",
+                () => setAppointment(null),
+              );
+            }}
+          >
+            <label>
+              管理学校
+              <select
+                aria-label="管理学校"
+                value={appointment.schoolId}
+                onChange={(e) =>
+                  setAppointment({ ...appointment, schoolId: e.target.value })
+                }
+                required
+                disabled={busy}
+              >
+                <option value="">请选择本大区学校</option>
+                {activeSchools.map((row) => (
+                  <option key={row.id} value={row.id}>
+                    {row.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <small>任命后该账号需重新登录，仅能管理所选学校。</small>
+            <div className="invite-actions">
+              <button
+                className="button primary"
+                disabled={busy || !appointment.schoolId}
+              >
+                确认任命
+              </button>
+              <button
+                type="button"
+                className="text-button"
+                disabled={busy}
+                onClick={() => setAppointment(null)}
+              >
+                取消
+              </button>
+            </div>
+          </form>
+        </section>
+      )}
+      {confirmation?.revoke && (
+        <section className="panel" role="alert">
+          <h3>确认撤销“{confirmation.name}”的学校管理员权限？</h3>
+          <p>撤销后该账号保留在本校，成为待授权用户并退出所有会话。</p>
+          <div className="invite-actions">
+            <button
+              className="button secondary"
+              disabled={busy}
+              onClick={() =>
+                mutate(`/admins/${confirmation.id}/revoke`, {}, "POST", () =>
+                  setConfirmation(null),
+                )
+              }
+            >
+              确认撤销
+            </button>
+            <button
+              className="text-button"
+              disabled={busy}
+              onClick={() => setConfirmation(null)}
+            >
+              取消
+            </button>
+          </div>
+        </section>
+      )}
+      {confirmation && !confirmation.revoke && (
         <section className="panel" role="alert">
           <h3>
             确认{confirmation.active ? "停用" : "启用"}“{confirmation.name}”？
@@ -183,7 +316,7 @@ export default function UserManagement() {
               disabled={busy}
               onClick={() =>
                 mutate(
-                  `/platform/users/${confirmation.id}`,
+                  `/users/${confirmation.id}`,
                   { active: !confirmation.active },
                   "PATCH",
                   () => setConfirmation(null),
@@ -231,9 +364,9 @@ export default function UserManagement() {
               }}
             >
               <option value="">全部用户</option>
-              {Object.entries(roleNames).map(([id, label]) => (
+              {visibleRoles[user.role].map((id) => (
                 <option key={id} value={id}>
-                  {label}
+                  {roleNames[id]}
                 </option>
               ))}
             </select>
@@ -287,6 +420,34 @@ export default function UserManagement() {
                             >
                               {row.active ? "停用" : "启用"}
                             </button>
+                            {isRegion &&
+                              row.role === "user" &&
+                              row.active === 1 && (
+                                <button
+                                  className="text-button"
+                                  disabled={busy}
+                                  onClick={() => {
+                                    setAppointment({
+                                      ...row,
+                                      schoolId: row.schoolId || "",
+                                    });
+                                    setError("");
+                                  }}
+                                >
+                                  任命为学校管理员
+                                </button>
+                              )}
+                            {isRegion && row.role === "school_admin" && (
+                              <button
+                                className="text-button"
+                                disabled={busy}
+                                onClick={() =>
+                                  setConfirmation({ ...row, revoke: true })
+                                }
+                              >
+                                撤销管理员
+                              </button>
+                            )}
                           </div>
                         </td>
                       </tr>

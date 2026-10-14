@@ -17,6 +17,7 @@ import {
   Sprout,
   Sun,
   UserRound,
+  UserCog,
   Users,
   X,
 } from "lucide-react";
@@ -234,7 +235,10 @@ export default function App() {
               { id: "admin", label: "平台管理", icon: LayoutDashboard },
               { id: "admin-users", label: "用户管理", icon: Users },
             ]
-          : adminNav
+          : [
+              ...adminNav,
+              { id: "admin-users", label: "用户管理", icon: UserCog },
+            ]
         : studentNav;
   let content;
   if (!ready) content = <div className="loading">正在打开成长空间…</div>;
@@ -276,6 +280,7 @@ export default function App() {
       "admin-posts": <AdminPosts />,
       "admin-services": <AdminServices />,
       "admin-enrollment": <Enrollment />,
+      "admin-users": <UserManagement />,
     }[view] || <Home />;
   return (
     <AppContext.Provider value={context}>

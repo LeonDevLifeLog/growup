@@ -145,7 +145,7 @@ export function createEnrollmentApi({
     if (req.method === "GET" && path === "/admin/schools") {
       const schools = db
         .prepare(
-          `SELECT s.id,s.name,s.region_id regionId,
+          `SELECT s.id,s.name,s.active,s.region_id regionId,
         (SELECT COUNT(*) FROM users u WHERE u.school_id=s.id AND u.role='student') studentCount
         FROM schools s WHERE s.region_id=? ${user.role === "school_admin" ? "AND s.id=?" : ""} ORDER BY s.name`,
         )

@@ -41,7 +41,7 @@ test("platform owns dynamic organizations and admin lifecycle; lower roles canno
     );
     assert.equal(
       (
-        await f.request("/platform/admins", {
+        await f.request("/admins", {
           method: "POST",
           token: manager.token,
           body: {
@@ -67,7 +67,7 @@ test("platform owns dynamic organizations and admin lifecycle; lower roles canno
   }
   assert.equal(
     (
-      await f.request("/platform/admins", {
+      await f.request("/admins", {
         method: "POST",
         token: f.owner.token,
         body: {
@@ -85,7 +85,7 @@ test("platform owns dynamic organizations and admin lifecycle; lower roles canno
   );
   assert.equal(
     (
-      await f.request(`/platform/admins/${f.owner.user.id}`, {
+      await f.request(`/admins/${f.owner.user.id}`, {
         method: "PATCH",
         token: f.owner.token,
         body: { active: false },
@@ -413,7 +413,7 @@ test("school and region boundaries apply to statistics, student details, followu
 test("organization and account disable invalidate sessions; password reset and self change revoke old tokens without audit secrets", async (t) => {
   const f = await fixture(t);
   const patch = (kind, id, body) =>
-    f.ok(`/platform/${kind}/${id}`, {
+    f.ok(kind === "admins" ? `/admins/${id}` : `/platform/${kind}/${id}`, {
       method: "PATCH",
       token: f.owner.token,
       body,
@@ -559,7 +559,7 @@ test("legacy database upgrade preserves referenced data and maps admin to region
 
 test("user directory owns identities and assignments reuse accounts while revoking previous scope", async (t) => {
   const f = await fixture(t);
-  const staff = await f.create("/platform/users", {
+  const staff = await f.create("/users", {
     account: "existing.staff",
     name: "既有工作人员",
     password: f.password,
@@ -585,13 +585,13 @@ test("user directory owns identities and assignments reuse accounts while revoki
     ).status,
     403,
   );
-  const search = await f.ok("/platform/users?q=existing.staff", ownerOptions);
+  const search = await f.ok("/users?q=existing.staff", ownerOptions);
   assert.equal(search.total, 1);
   assert.equal(search.users[0].id, staff.id);
   assert.equal(JSON.stringify(search).includes("password"), false);
   const count = f.app.db.prepare("SELECT COUNT(*) n FROM users").get().n;
   const appoint = (body) =>
-    f.ok("/platform/admins", {
+    f.ok("/admins", {
       method: "POST",
       token: f.owner.token,
       body: { userId: staff.id, ...body },
@@ -659,7 +659,7 @@ test("user directory owns identities and assignments reuse accounts while revoki
     404,
   );
   assert.equal(f.app.db.prepare("SELECT COUNT(*) n FROM users").get().n, count);
-  await f.ok(`/platform/admins/${staff.id}/revoke`, {
+  await f.ok(`/admins/${staff.id}/revoke`, {
     method: "POST",
     token: f.owner.token,
     body: {},
@@ -672,14 +672,14 @@ test("user directory owns identities and assignments reuse accounts while revoki
     f.app.db.prepare("SELECT role FROM users WHERE id=?").get(staff.id).role,
     "user",
   );
-  await f.ok(`/platform/users/${staff.id}`, {
+  await f.ok(`/users/${staff.id}`, {
     method: "PATCH",
     token: f.owner.token,
     body: { active: false },
   });
   assert.equal(
     (
-      await f.request("/platform/admins", {
+      await f.request("/admins", {
         method: "POST",
         token: f.owner.token,
         body: { userId: staff.id, role: "platform_admin" },
@@ -687,14 +687,15 @@ test("user directory owns identities and assignments reuse accounts while revoki
     ).status,
     400,
   );
-  for (const path of ["/platform/users", "/platform/users?assignable=1"])
-    assert.equal(
-      (await f.request(path, { token: f.schoolAdminA.token })).status,
-      403,
-    );
   assert.equal(
     (
-      await f.request("/platform/users", {
+      await f.ok("/users?assignable=1", { token: f.schoolAdminA.token })
+    ).users.some((row) => row.id === staff.id),
+    false,
+  );
+  assert.equal(
+    (
+      await f.request("/users", {
         token: f.owner.token,
         method: "POST",
         body: { account: "existing.staff", name: "重复", password: f.password },
@@ -704,7 +705,7 @@ test("user directory owns identities and assignments reuse accounts while revoki
   );
   assert.equal(
     (
-      await f.request("/platform/admins", {
+      await f.request("/admins", {
         token: f.owner.token,
         method: "POST",
         body: {
@@ -718,7 +719,7 @@ test("user directory owns identities and assignments reuse accounts while revoki
   );
   assert.equal(
     (
-      await f.request(`/platform/admins/${f.owner.user.id}/revoke`, {
+      await f.request(`/admins/${f.owner.user.id}/revoke`, {
         token: f.owner.token,
         method: "POST",
         body: {},
@@ -732,7 +733,7 @@ test("user directory owns identities and assignments reuse accounts while revoki
   ).body;
   assert.equal(
     (
-      await f.request("/platform/admins", {
+      await f.request("/admins", {
         token: f.owner.token,
         method: "POST",
         body: {
@@ -744,7 +745,7 @@ test("user directory owns identities and assignments reuse accounts while revoki
     ).status,
     400,
   );
-  const candidates = await f.ok("/platform/users?assignable=1", ownerOptions);
+  const candidates = await f.ok("/users?assignable=1", ownerOptions);
   assert.equal(
     candidates.users.some((row) => row.id === student.user.id),
     false,
@@ -753,7 +754,7 @@ test("user directory owns identities and assignments reuse accounts while revoki
 
 test("user directory pagination, filters, disable and password reset remain platform-only", async (t) => {
   const f = await fixture(t);
-  const staff = await f.create("/platform/users", {
+  const staff = await f.create("/users", {
     account: "search.person",
     name: "可检索用户",
     password: f.password,
@@ -773,8 +774,8 @@ test("user directory pagination, filters, disable and password reset remain plat
       new Date().toISOString(),
     );
   const options = { token: f.owner.token };
-  const first = await f.ok("/platform/users?role=user", options),
-    second = await f.ok("/platform/users?role=user&page=2", options);
+  const first = await f.ok("/users?role=user", options),
+    second = await f.ok("/users?role=user&page=2", options);
   assert.equal(first.total, 54);
   assert.equal(first.users.length, 50);
   assert.equal(second.users.length, 4);
@@ -782,15 +783,9 @@ test("user directory pagination, filters, disable and password reset remain plat
     new Set([...first.users, ...second.users].map((row) => row.id)).size,
     54,
   );
-  assert.equal(
-    (await f.request("/platform/users?page=Infinity", options)).status,
-    400,
-  );
-  assert.equal(
-    (await f.ok("/platform/users?q=可检索", options)).users[0].id,
-    staff.id,
-  );
-  await f.ok("/platform/admins", {
+  assert.equal((await f.request("/users?page=Infinity", options)).status, 400);
+  assert.equal((await f.ok("/users?q=可检索", options)).users[0].id, staff.id);
+  await f.ok("/admins", {
     method: "POST",
     token: f.owner.token,
     body: {
@@ -801,7 +796,7 @@ test("user directory pagination, filters, disable and password reset remain plat
     },
   });
   const manager = await f.login("search.person", f.regionA.id);
-  await f.ok(`/platform/users/${staff.id}`, {
+  await f.ok(`/users/${staff.id}`, {
     method: "PATCH",
     token: f.owner.token,
     body: { name: "已更名", password: "Reset-For-Staff-92929" },
@@ -816,7 +811,7 @@ test("user directory pagination, filters, disable and password reset remain plat
     "Reset-For-Staff-92929",
   );
   assert.equal(reset.user.name, "已更名");
-  await f.ok(`/platform/users/${staff.id}`, {
+  await f.ok(`/users/${staff.id}`, {
     method: "PATCH",
     token: f.owner.token,
     body: { active: false },
@@ -830,5 +825,253 @@ test("user directory pagination, filters, disable and password reset remain plat
       "Reset-For-Staff-92929",
     ),
     false,
+  );
+});
+
+test("scoped administrators manage only lower roles in their own region or school", async (t) => {
+  const f = await fixture(t);
+  const as = (manager) => ({ token: manager.token });
+  const send = (manager, path, method, body = {}) =>
+    f.request(path, { method, token: manager.token, body });
+  const ids = (list) => list.users.map((row) => row.id);
+  const schoolAInvite = await f.invite(f.schoolA.id, f.schoolAdminA.token);
+  const schoolA2Invite = await f.invite(f.schoolA2.id, f.schoolAdminA2.token);
+  const schoolBInvite = await f.invite(f.schoolB.id, f.schoolAdminB.token);
+  const studentA = (
+    await f.register("scope.student.a", f.regionA.id, schoolAInvite.code)
+  ).body.user;
+  const studentA2 = (
+    await f.register("scope.student.a2", f.regionA.id, schoolA2Invite.code)
+  ).body.user;
+  const studentB = (
+    await f.register("scope.student.b", f.regionB.id, schoolBInvite.code)
+  ).body.user;
+  const unscoped = await f.create("/users", {
+    account: "platform.staff",
+    name: "平台工作人员",
+    password: f.password,
+  });
+
+  const regionList = ids(await f.ok("/users", as(f.areaA)));
+  for (const id of [
+    f.schoolAdminA.user.id,
+    f.schoolAdminA2.user.id,
+    studentA.id,
+    studentA2.id,
+  ])
+    assert.equal(regionList.includes(id), true);
+  for (const id of [
+    f.owner.user.id,
+    f.areaA.user.id,
+    f.areaB.user.id,
+    f.schoolAdminB.user.id,
+    studentB.id,
+    unscoped.id,
+  ])
+    assert.equal(regionList.includes(id), false);
+  assert.deepEqual((await f.ok("/users", as(f.areaA))).assignableRoles, [
+    "school_admin",
+  ]);
+  assert.deepEqual(
+    (await f.ok("/users?role=region_admin", as(f.areaA))).users,
+    [],
+  );
+  const schoolList = await f.ok("/users", as(f.schoolAdminA));
+  assert.deepEqual(ids(schoolList), [studentA.id]);
+  assert.deepEqual(schoolList.assignableRoles, []);
+
+  // Region administrators create staff inside their region and appoint school administrators only.
+  assert.equal(
+    (
+      await send(f.areaA, "/users", "POST", {
+        account: "cross.region",
+        name: "跨区",
+        password: f.password,
+        regionId: f.regionB.id,
+      })
+    ).status,
+    403,
+  );
+  assert.equal(
+    (
+      await send(f.areaA, "/users", "POST", {
+        account: "cross.school",
+        name: "跨区学校",
+        password: f.password,
+        schoolId: f.schoolB.id,
+      })
+    ).status,
+    400,
+  );
+  const teacher = await f.create(
+    "/users",
+    {
+      account: "region.teacher",
+      name: "大区教师",
+      password: f.password,
+      schoolId: f.schoolA2.id,
+    },
+    f.areaA.token,
+  );
+  let row = f.app.db.prepare("SELECT * FROM users WHERE id=?").get(teacher.id);
+  assert.deepEqual(
+    [row.role, row.region_id, row.school_id],
+    ["user", f.regionA.id, f.schoolA2.id],
+  );
+  assert.equal(
+    ids(await f.ok("/users?q=region.teacher", as(f.areaB))).length,
+    0,
+  );
+  for (const [body, status] of [
+    [{ role: "platform_admin" }, 403],
+    [{ role: "region_admin", regionId: f.regionA.id }, 403],
+    [{ role: "school_admin", schoolId: f.schoolB.id }, 400],
+    [
+      { role: "school_admin", regionId: f.regionB.id, schoolId: f.schoolB.id },
+      403,
+    ],
+  ])
+    assert.equal(
+      (await send(f.areaA, "/admins", "POST", { userId: teacher.id, ...body }))
+        .status,
+      status,
+    );
+  for (const userId of [f.areaB.user.id, f.schoolAdminB.user.id, unscoped.id])
+    assert.equal(
+      (
+        await send(f.areaA, "/admins", "POST", {
+          userId,
+          role: "school_admin",
+          schoolId: f.schoolA.id,
+        })
+      ).status,
+      403,
+    );
+  assert.equal(
+    (
+      await send(f.areaA, "/admins", "POST", {
+        userId: studentA.id,
+        role: "school_admin",
+        schoolId: f.schoolA.id,
+      })
+    ).status,
+    400,
+  );
+  await f.ok("/admins", {
+    method: "POST",
+    token: f.areaA.token,
+    body: { userId: teacher.id, role: "school_admin", schoolId: f.schoolA.id },
+  });
+  const teacherSession = await f.login("region.teacher", f.regionA.id);
+  assert.equal(teacherSession.user.role, "school_admin");
+  assert.equal(teacherSession.user.schoolId, f.schoolA.id);
+
+  // Peers, superiors and other regions are outside the directory scope.
+  for (const id of [
+    f.owner.user.id,
+    f.areaA.user.id,
+    f.areaB.user.id,
+    f.schoolAdminB.user.id,
+    studentB.id,
+  ]) {
+    assert.equal(
+      (await send(f.areaA, `/users/${id}`, "PATCH", { active: false })).status,
+      403,
+    );
+    assert.equal(
+      (await send(f.areaA, `/admins/${id}/revoke`, "POST")).status,
+      403,
+    );
+  }
+  await f.ok(`/users/${studentA2.id}`, {
+    method: "PATCH",
+    token: f.areaA.token,
+    body: { name: "大区已更名" },
+  });
+  await f.ok(`/admins/${teacher.id}/revoke`, {
+    method: "POST",
+    token: f.areaA.token,
+    body: {},
+  });
+  assert.equal(
+    (await f.request("/auth/me", { token: teacherSession.token })).status,
+    401,
+  );
+  row = f.app.db.prepare("SELECT * FROM users WHERE id=?").get(teacher.id);
+  assert.deepEqual(
+    [row.role, row.region_id, row.school_id],
+    ["user", f.regionA.id, f.schoolA.id],
+  );
+  assert.equal(
+    ids(await f.ok("/users", as(f.schoolAdminA))).includes(teacher.id),
+    true,
+  );
+
+  // School administrators manage their own school but cannot appoint anyone.
+  for (const role of ["school_admin", "region_admin", "platform_admin"])
+    assert.equal(
+      (
+        await send(f.schoolAdminA, "/admins", "POST", {
+          userId: teacher.id,
+          role,
+          regionId: f.regionA.id,
+          schoolId: f.schoolA.id,
+        })
+      ).status,
+      403,
+    );
+  for (const id of [
+    f.schoolAdminA2.user.id,
+    f.areaA.user.id,
+    studentA2.id,
+    f.schoolAdminA.user.id,
+  ])
+    assert.equal(
+      (await send(f.schoolAdminA, `/users/${id}`, "PATCH", { active: false }))
+        .status,
+      403,
+    );
+  assert.equal(
+    (
+      await send(f.schoolAdminA, "/users", "POST", {
+        account: "other.school",
+        name: "外校",
+        password: f.password,
+        schoolId: f.schoolA2.id,
+      })
+    ).status,
+    403,
+  );
+  const assistant = await f.create(
+    "/users",
+    { account: "school.assistant", name: "学校助理", password: f.password },
+    f.schoolAdminA.token,
+  );
+  row = f.app.db.prepare("SELECT * FROM users WHERE id=?").get(assistant.id);
+  assert.deepEqual(
+    [row.region_id, row.school_id],
+    [f.regionA.id, f.schoolA.id],
+  );
+  const studentSession = await f.login("scope.student.a", f.regionA.id);
+  await f.ok(`/users/${studentA.id}`, {
+    method: "PATCH",
+    token: f.schoolAdminA.token,
+    body: { active: false },
+  });
+  assert.equal(
+    (await f.request("/auth/me", { token: studentSession.token })).status,
+    401,
+  );
+  const learner = await f.login("scope.student.a2", f.regionA.id);
+  assert.equal((await f.request("/users", as(learner))).status, 403);
+  assert.equal(
+    (
+      await send(learner, "/users", "POST", {
+        account: "student.made",
+        name: "越权",
+        password: f.password,
+      })
+    ).status,
+    403,
   );
 });

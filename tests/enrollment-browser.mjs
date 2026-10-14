@@ -261,6 +261,90 @@ try {
   record(
     "大区管理员可查看本区邀请使用情况，界面无学校邀请码生成权限，无未捕获错误",
   );
+  await area
+    .locator(".sidebar")
+    .getByRole("button", { name: "用户管理", exact: true })
+    .click();
+  let areaList = area.getByRole("region", { name: "用户列表", exact: true });
+  await expect(
+    areaList.getByText("school.manager", { exact: true }),
+  ).toBeVisible();
+  await expect(
+    areaList.getByText("web.new.student", { exact: true }),
+  ).toBeVisible();
+  for (const hidden of ["platform.owner", "area.manager"])
+    await expect(areaList.getByText(hidden, { exact: true })).toHaveCount(0);
+  await expect(
+    areaList.getByLabel("用户类型", { exact: true }).locator("option"),
+  ).toHaveCount(4);
+  form = area.getByRole("region", { name: "新增工作人员", exact: true });
+  await form.getByLabel("用户称呼", { exact: true }).fill("学校协管员");
+  await form.getByLabel("登录账号", { exact: true }).fill("school.helper");
+  await form.getByLabel("初始密码", { exact: true }).fill(fixture.password);
+  await form
+    .getByLabel("所属学校", { exact: true })
+    .selectOption({ label: "成长试点第一学校" });
+  await form.getByRole("button", { name: "创建用户", exact: true }).click();
+  let helperRow = area.locator("tr").filter({ hasText: "school.helper" });
+  await expect(helperRow).toContainText("成长试点第一学校");
+  await helperRow
+    .getByRole("button", { name: "任命为学校管理员", exact: true })
+    .click();
+  const appointment = area.getByRole("region", {
+    name: "任命学校管理员",
+    exact: true,
+  });
+  await expect(appointment.getByLabel("管理学校", { exact: true })).toHaveValue(
+    /.+/,
+  );
+  await appointment
+    .getByRole("button", { name: "确认任命", exact: true })
+    .click();
+  await expect(appointment).toHaveCount(0);
+  await expect(helperRow).toContainText("学校管理员");
+  await noOverflow(area);
+  await area.screenshot({
+    path: resolve(artifact, "region-user-management.png"),
+    fullPage: true,
+  });
+  await fixture.login(
+    "school.helper",
+    (await fixture.ok("/regions")).regions[0].id,
+  );
+  await helperRow
+    .getByRole("button", { name: "撤销管理员", exact: true })
+    .click();
+  await area.getByRole("button", { name: "确认撤销", exact: true }).click();
+  await expect(helperRow).toContainText("待授权用户");
+  await expect(helperRow).toContainText("成长试点第一学校");
+  record(
+    "大区管理员仅看到本区下级用户，可在本区学校建档、任命并撤销学校管理员",
+  );
+
+  await school
+    .locator(".sidebar")
+    .getByRole("button", { name: "用户管理", exact: true })
+    .click();
+  const schoolList = school.getByRole("region", {
+    name: "用户列表",
+    exact: true,
+  });
+  await expect(
+    schoolList.getByText("web.new.student", { exact: true }),
+  ).toBeVisible();
+  await expect(
+    schoolList.getByText("school.helper", { exact: true }),
+  ).toBeVisible();
+  for (const hidden of ["school.manager", "area.manager", "platform.owner"])
+    await expect(schoolList.getByText(hidden, { exact: true })).toHaveCount(0);
+  await expect(
+    school.getByRole("button", { name: "任命为学校管理员" }),
+  ).toHaveCount(0);
+  await expect(
+    schoolList.getByLabel("用户类型", { exact: true }).locator("option"),
+  ).toHaveCount(3);
+  await noOverflow(school);
+  record("学校管理员仅看到本校学生与待授权用户，界面无任命管理员入口");
   await platform
     .locator(".sidebar")
     .getByRole("button", { name: "用户管理", exact: true })

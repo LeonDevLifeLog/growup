@@ -15,7 +15,7 @@ Base `/api`；JSON；失败 `{error: '中文原因'}`；身份为 `Authorization
 
 演示学生 `hainan.student` / `Growup123!`；海南管理员 `hainan.admin` / `Growup123!`。演示学校邀请码 `HN2026`、`SD2026`、`GD2026`。仅 DEMO_MODE 创建。
 
-角色为 `user`（待授权工作人员） / `student` / `platform_admin` / `region_admin` / `school_admin`。待授权工作人员不能登录业务入口，任命后获得访问范围。平台管理员登录时 `regionId:null`（或省略），其用户区域和学校字段为null；大区管理员学校字段为null；其他账号必须选择绑定的大区。停用账号、学校或大区不能登录或使用旧会话。账号3–40位ASCII字母/数字/点/下划线/短横线，密码8–128字符。
+角色为 `user`（待授权工作人员） / `student` / `platform_admin` / `region_admin` / `school_admin`。待授权工作人员不能登录业务入口，任命后获得访问范围；其大区/学校归属可为空，仅用于用户目录分级管理。平台管理员登录时 `regionId:null`（或省略），其用户区域和学校字段为null；大区管理员学校字段为null；其他账号必须选择绑定的大区。停用账号、学校或大区不能登录或使用旧会话。账号3–40位ASCII字母/数字/点/下划线/短横线，密码8–128字符。
 
 ## 平台组织管理
 
@@ -25,17 +25,30 @@ Base `/api`；JSON；失败 `{error: '中文原因'}`；身份为 `Authorization
 - `POST /platform/regions` `{name}` → `{id}`，201。生成动态UUID，不设固定区域。
 - `POST /platform/schools` `{name,regionId}` → `{id}`，201；归属启用大区，同区校名唯一。
 - `PATCH /platform/regions/:id` / `/platform/schools/:id` `{name?,active?:boolean}` → `{ok:true}`。不能迁移学校归属，停用撤销对应账号会话。
-- `GET /platform/users?q=&role=&page=1&assignable=1` → `{users:[User],total,page,pageSize:50}`；q按账号或称呼检索，role可选，assignable=1仅返回启用的非学生工作人员。分页从1开始。
-- `POST /platform/users` `{account,name,password}` → `{id}`，201；创建待授权工作人员，忽略注入的角色/归属，不能用此接口创建学生。
-- `PATCH /platform/users/:id` `{name?,active?:boolean,password?}` → `{ok:true}`；所有账号统一维护，不返回密码，停用/重置撤销会话，禁止停用当前平台账号。
-- `POST /platform/admins` `{userId,role,regionId?,schoolId?}` → `{admin}`，200；从既有启用工作人员任命或调整管理范围，保留用户ID、账号、密码，撤销旧会话。拒绝学生、无效归属和调整当前平台账号。role限三类管理员。
-- `POST /platform/admins/:id/revoke` → `{ok:true}`；撤销后保留为待授权工作人员，清空管理范围并退出旧会话，不能撤销当前平台账号。
-- `PATCH /platform/admins/:id` `{name?,active?:boolean,password?}` → `{ok:true}`。用户资料维护的兼容入口；角色/归属通过任命调整，账号不可改，不能停用当前平台账号。
 - `GET /platform/audit` → `{events:[{id,action,targetId,detail,createdAt,actorName}]}`，最近100次组织/管理员变更，不含密码。
 
-`User`含id、account、name、role、active、regionId、regionName、schoolId、schoolName、createdAt；无密码或私人记录字段。
-
 重复名称/账号409，无效归属400，未知对象404。首位平台管理员只通过 `server/bootstrap.mjs` 初始化；已有平台管理员则拒绝重复初始化。
+
+## 用户目录与管理员任命
+
+三类管理员均可调用，按管理范围分级；学生和待授权用户403。管理范围由服务端根据当前账号计算，客户端传入的归属不扩大范围：
+
+| 当前角色 | 可见/可维护的用户 | 可任命的角色 |
+| --- | --- | --- |
+| `platform_admin` | 全部用户 | 三类管理员 |
+| `region_admin` | 本大区的待授权用户、学生、学校管理员 | 本大区学校的 `school_admin` |
+| `school_admin` | 本校的待授权用户、学生 | 无 |
+
+同级（含本人）和上级账号、其他大区或学校的账号不在范围内，操作返回403。
+
+- `GET /users?q=&role=&page=1&assignable=1` → `{users:[User],total,page,pageSize:50,assignableRoles}`；只返回范围内用户，q按账号或称呼检索，role可选，assignable=1仅返回启用的非学生工作人员。分页从1开始。
+- `POST /users` `{account,name,password,regionId?,schoolId?}` → `{id}`，201；创建待授权工作人员，忽略注入的角色。平台可不指定归属或指定启用大区/学校；大区管理员固定本大区，可选本区学校；学校管理员固定本校。指定范围外归属403。不能用此接口创建学生。
+- `PATCH /users/:id` `{name?,active?:boolean,password?}` → `{ok:true}`；不返回密码，停用/重置撤销会话，禁止停用当前账号。
+- `POST /admins` `{userId,role,regionId?,schoolId?}` → `{admin}`，200；从范围内启用工作人员任命或调整管理范围，保留用户ID、账号、密码，撤销旧会话。分配同级或更高角色403；大区管理员只能在本大区任命，`regionId`可省略。拒绝学生、无效归属和调整当前账号。
+- `POST /admins/:id/revoke` → `{ok:true}`；撤销后保留为待授权工作人员并保留原大区/学校归属，仍由同一范围管理，退出旧会话；不能撤销当前账号。
+- `PATCH /admins/:id` `{name?,active?:boolean,password?}` → `{ok:true}`。用户资料维护的兼容入口；角色/归属通过任命调整，账号不可改。
+
+`User`含id、account、name、role、active、regionId、regionName、schoolId、schoolName、createdAt；无密码或私人记录字段。待授权用户可以没有归属，或归属某大区/学校。
 
 ## 学校邀请管理
 

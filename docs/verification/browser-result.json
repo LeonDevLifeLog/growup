@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-10-14T11:29:36.979Z",
+  "checkedAt": "2026-10-14T11:56:46.756Z",
   "source": "built dist served by real local API with isolated in-memory SQLite",
   "checks": [
     "桌面首页实际渲染，无横向溢出",

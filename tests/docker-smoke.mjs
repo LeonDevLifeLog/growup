@@ -86,14 +86,14 @@ try {
   });
   assert.equal(school.status, 201);
   const schoolId = school.body.id;
-  const staff = await request("/platform/users", {
+  const staff = await request("/users", {
     token: login.body.token,
     body: { account: "container.school", password, name: "学校负责人" },
   });
   assert.equal(staff.status, 201);
   assert.equal(
     (
-      await request("/platform/admins", {
+      await request("/admins", {
         token: login.body.token,
         body: {
           userId: staff.body.id,
@@ -136,7 +136,24 @@ try {
     ).status,
     200,
   );
-  record("容器内新增大区、学校及校级账号，学校生成邀请，学生真实注册并打卡");
+  const directory = await request("/users", { token: teacher.body.token });
+  assert.equal(directory.status, 200);
+  assert.deepEqual(
+    directory.body.users.map((row) => row.account),
+    ["container.student"],
+  );
+  assert.equal(
+    (
+      await request("/admins", {
+        token: teacher.body.token,
+        body: { userId: student.body.user.id, role: "school_admin", schoolId },
+      })
+    ).status,
+    403,
+  );
+  record(
+    "容器内新增大区、学校及校级账号，学校生成邀请，学生真实注册并打卡；校级用户管理仅含本校学生且不能任命",
+  );
   compose([
     "up",
     "-d",

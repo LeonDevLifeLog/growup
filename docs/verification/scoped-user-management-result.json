@@ -1,0 +1,39 @@
+{
+  "verifiedAt": "2026-10-14T12:03:13.573Z",
+  "checks": [
+    "升级后的验收容器中，平台看到全部7个账号，华东大区仅看到本区学校管理员与学生，华东一校仅看到本校学生",
+    "华东大区管理员在本区二校建档并任命学校管理员，任命大区/平台角色、外区学校或外区账号均被拒绝",
+    "华东一校管理员不能任命任何管理员，不能修改外区或上级账号",
+    "容器网页中大区管理员侧栏出现用户管理，列表仅含本区下级账号并提供撤销学校管理员入口，无页面错误"
+  ],
+  "errors": [],
+  "docker": {
+    "project": "growup-acceptance-20261014",
+    "url": "http://127.0.0.1:8088",
+    "image": "growup:local",
+    "previousImage": "growup:prev (d1b4cc9)",
+    "existingIdentityPasswordDigestAndScopeUnchanged": true,
+    "scopedUserConstraintApplied": true,
+    "countsBefore": {
+      "regions": 2,
+      "schools": 3,
+      "users": 7,
+      "checkins": 1,
+      "invites": 1,
+      "invite_uses": 1,
+      "sessions": 3,
+      "admin_audit": 14
+    },
+    "countsAfter": {
+      "regions": 2,
+      "schools": 3,
+      "users": 7,
+      "checkins": 1,
+      "invites": 1,
+      "invite_uses": 1,
+      "sessions": 3,
+      "admin_audit": 14
+    },
+    "foreignKeyErrors": 0
+  }
+}
