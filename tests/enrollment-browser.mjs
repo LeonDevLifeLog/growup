@@ -102,7 +102,11 @@ try {
   await expect(
     platform.getByRole("heading", { name: "平台管理", exact: true }),
   ).toBeVisible();
-  await platform.getByRole("button", { name: "新增大区", exact: true }).click();
+  const onboarding = platform.getByRole("region", { name: "开通进度" });
+  await expect(onboarding).toContainText("0 / 6");
+  await onboarding
+    .getByRole("button", { name: "去新增大区", exact: true })
+    .click();
   let form = platform.getByRole("dialog", { name: "新增大区", exact: true });
   await form.getByLabel("大区名称", { exact: true }).fill("华东试点大区");
   await form.getByRole("button", { name: "创建大区", exact: true }).click();
@@ -110,8 +114,14 @@ try {
   await expect(
     platform.locator("td").filter({ hasText: "华东试点大区" }),
   ).toBeVisible();
-  await platform.getByRole("tab", { name: /学校/ }).click();
-  await platform.getByRole("button", { name: "新增学校", exact: true }).click();
+  await expect(onboarding).toContainText("1 / 6");
+  await onboarding
+    .getByRole("button", { name: "去新增学校", exact: true })
+    .click();
+  await expect(platform.getByRole("tab", { name: /学校/ })).toHaveAttribute(
+    "aria-selected",
+    "true",
+  );
   form = platform.getByRole("dialog", { name: "新增学校", exact: true });
   await expect(form.getByLabel("所属大区", { exact: true })).toContainText(
     "华东试点大区",
@@ -170,6 +180,8 @@ try {
       platform.locator("td").filter({ hasText: account }),
     ).toBeVisible();
   }
+  await expect(onboarding).toContainText("4 / 6");
+  await expect(onboarding).toContainText("由学校管理员或学生完成");
   await noOverflow(platform);
   await platform.screenshot({
     path: resolve(artifact, "platform-organizations.png"),
@@ -203,7 +215,7 @@ try {
     fullPage: false,
   });
   record(
-    "空正式库在平台分页签中通过弹窗新增大区、学校，在用户管理建档后从既有用户任命两级管理员，列表不被表单挤占，桌面/375px无页面横向溢出",
+    "空正式库按开通进度引导，在平台分页签中通过弹窗新增大区、学校，在用户管理建档后从既有用户任命两级管理员，列表不被表单挤占，桌面/375px无页面横向溢出",
   );
 
   const school = await newPage();

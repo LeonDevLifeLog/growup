@@ -4829,3 +4829,52 @@ td .text-button {
     width: 100%;
   }
 }
+.onboarding {
+  margin-bottom: 18px;
+}
+.onboarding ol {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 8px 18px;
+}
+.onboarding li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  color: #8a9480;
+  min-height: 36px;
+  flex-wrap: wrap;
+}
+.onboarding li.done {
+  color: #9aa58c;
+  text-decoration: line-through;
+}
+.onboarding li.current {
+  color: var(--ink);
+  font-weight: 550;
+}
+.onboarding li small {
+  font-size: 10px;
+  color: #9aa58c;
+  font-weight: 400;
+}
+.onboarding-mark {
+  width: 22px;
+  height: 22px;
+  flex: none;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  background: #eef2e6;
+  color: #6f8360;
+}
+.onboarding li.done .onboarding-mark,
+.onboarding li.current .onboarding-mark {
+  background: var(--green);
+  color: white;
+}

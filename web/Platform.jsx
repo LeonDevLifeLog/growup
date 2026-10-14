@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus } from "lucide-react";
+import { Check, Plus } from "lucide-react";
 import { useApp, useMutation, useResource } from "./context.jsx";
 import {
   ActiveBadge,
@@ -109,7 +109,7 @@ const dateTime = (value) =>
   });
 
 export default function Platform() {
-  const { user } = useApp();
+  const { user, setView } = useApp();
   const resource = useResource("/platform/organizations");
   const [tab, setTab] = useState("regions");
   const audit = useResource("/platform/audit", tab === "audit");
@@ -141,6 +141,26 @@ export default function Platform() {
         description="维护大区与学校，从已有工作人员中任命管理员。账号资料在用户管理中维护。"
       />
       <ResourceState {...resource}>
+        {resource.data && (
+          <Onboarding
+            regions={regions.length}
+            schools={schools.length}
+            progress={resource.data.progress}
+            onStep={(step) => {
+              if (step === "region") {
+                setTab("regions");
+                setDialog({ type: "region" });
+              } else if (step === "school") {
+                setTab("schools");
+                setDialog({ type: "school" });
+              } else if (step === "staff") setView("admin-users");
+              else if (step === "appoint") {
+                setTab("admins");
+                setDialog({ type: "appoint" });
+              }
+            }}
+          />
+        )}
         <section className="panel">
           <Tabs
             label="平台管理分类"
@@ -429,6 +449,75 @@ export default function Platform() {
         <RevokeDialog row={dialog.row} onClose={close} />
       )}
     </>
+  );
+}
+
+function Onboarding({ regions, schools, progress, onStep }) {
+  const steps = [
+    {
+      id: "region",
+      label: "新增第一个大区",
+      done: regions > 0,
+      action: "去新增大区",
+    },
+    {
+      id: "school",
+      label: "为大区新增学校",
+      done: schools > 0,
+      action: "去新增学校",
+    },
+    {
+      id: "staff",
+      label: "在用户管理中建立工作人员账号",
+      done: progress.staff > 0,
+      action: "去用户管理",
+    },
+    {
+      id: "appoint",
+      label: "任命学校管理员",
+      done: progress.schoolAdmins > 0,
+      action: "去任命",
+    },
+    {
+      id: "invite",
+      label: "学校管理员登录后生成学生邀请码",
+      done: progress.invites > 0,
+    },
+    {
+      id: "student",
+      label: "第一位学生用邀请码注册",
+      done: progress.students > 0,
+    },
+  ];
+  const finished = steps.filter((step) => step.done).length;
+  if (finished === steps.length) return null;
+  // The first unfinished step is the one to act on now.
+  const current = steps.find((step) => !step.done);
+  return (
+    <section className="panel onboarding" aria-label="开通进度">
+      <ListHeader title="开通进度" count={`${finished} / ${steps.length}`} />
+      <ol>
+        {steps.map((step) => (
+          <li
+            key={step.id}
+            className={step.done ? "done" : step === current ? "current" : ""}
+          >
+            <span className="onboarding-mark">
+              {step.done ? <Check size={13} /> : steps.indexOf(step) + 1}
+            </span>
+            <span>{step.label}</span>
+            {step === current && step.action && (
+              <button className="text-button" onClick={() => onStep(step.id)}>
+                {step.action}
+              </button>
+            )}
+            {step === current && !step.action && (
+              <small>由学校管理员或学生完成</small>
+            )}
+          </li>
+        ))}
+      </ol>
+    </section>
   );
 }
 

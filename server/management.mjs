@@ -66,6 +66,16 @@ export function createManagementApi({
           )
           .all(),
         admins: admins(),
+        // Counts only, for the onboarding checklist; no care data.
+        progress: db
+          .prepare(
+            `SELECT
+          (SELECT COUNT(*) FROM users WHERE role IN ('user','region_admin','school_admin')) staff,
+          (SELECT COUNT(*) FROM users WHERE role='school_admin') schoolAdmins,
+          (SELECT COUNT(*) FROM invites) invites,
+          (SELECT COUNT(*) FROM users WHERE role='student') students`,
+          )
+          .get(),
       });
       return true;
     }
