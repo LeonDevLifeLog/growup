@@ -240,6 +240,9 @@ try {
   const guide = page('article');
   await guide.onLoad({ id: 'guide' });
   assert.equal(guide.data.article.title, '学生使用指南', '“我的 → 使用帮助”打开学生指南');
+  modalTitles.length = 0;
+  page('treehole').showTip({ currentTarget: { dataset: { tip: 'treehole' } } });
+  assert.deepEqual(modalTitles, ['树洞说明'], '圆圈问号打开对应提示');
   const home = page('home');
   home.onShow();
   assert.equal(home.data.welcome, true, '首页为新学生显示“从这里开始”');
@@ -255,7 +258,7 @@ try {
   toolPage.updateField(firstField.id, firstField.type === 'multi' ? [] : '1');
   toolPage.profileChange({ detail: { value: '0' } });
   assert.deepEqual(modalTitles, ['切换后将清空填写'], '已填写时切换版本先确认');
-  console.log(`原生页面事件到临时 API 联调通过：${toolPage.data.tools.length} 工具/${profiles} 个版本保存与月报、tracker回填修订保留ID/数量、历史删除与刷新持久化、日记心情/标签/目标、搜索与星图、仅心情保存、4份结构化服务表单及提交后查看状态与工作人员回复、日记底部弹层与放弃确认、工具切换前确认、使用帮助与首页新手指引；无JSON转移入口。`);
+  console.log(`原生页面事件到临时 API 联调通过：${toolPage.data.tools.length} 工具/${profiles} 个版本保存与月报、tracker回填修订保留ID/数量、历史删除与刷新持久化、日记心情/标签/目标、搜索与星图、仅心情保存、4份结构化服务表单及提交后查看状态与工作人员回复、日记底部弹层与放弃确认、工具切换前确认、使用帮助、首页新手指引与问号提示；无JSON转移入口。`);
   console.log('范围：Node内执行真实Page事件和隔离API，不代替微信运行或真机。');
   console.log('报告竞态：真实HTTP响应延迟乱序下，10月晚于9月返回、旧请求失败、切工具三种场景均保持当前报告与加载状态；qcd全部亲子版本指导/题目提示及suipian全部版本说明保留。');
 } finally {

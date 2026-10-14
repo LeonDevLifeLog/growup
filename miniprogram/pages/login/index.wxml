@@ -28,14 +28,13 @@
       </picker>
       <view class="field-label">账号</view>
       <input class="field" value="{{account}}" data-field="account" bindinput="input" placeholder="请输入账号" maxlength="40" disabled="{{submitting}}"/>
-      <view class="field-label">密码</view>
+      <view class="field-label">密码<text class="tip-btn" data-tip="forgotPassword" bindtap="showTip">?</text></view>
       <view class="field row password-field">
         <input class="password-input" value="{{password}}" data-field="password" bindinput="input" password="{{!showPassword}}" placeholder="请输入密码" maxlength="128" disabled="{{submitting}}"/>
         <text class="link" bindtap="togglePassword">{{showPassword ? '隐藏' : '显示'}}</text>
       </view>
       <view wx:if="{{error}}" class="error" role="alert">{{error}}</view>
       <button class="spaced" bindtap="submit" loading="{{submitting}}" disabled="{{submitting || !account || !password}}">进入我的成长空间 →</button>
-      <view class="small hint">忘记密码？请联系本校老师在后台重置。还没有账号？切换到“邀请码注册”。</view>
     </block>
 
     <block wx:else>
@@ -50,11 +49,10 @@
         <picker mode="selector" range="{{regions}}" range-key="name" value="{{regionIndex}}" bindchange="selectRegion" disabled="{{checking}}">
           <view class="field row"><text>{{regions[regionIndex].name}}</text><text class="small">更换 ⌄</text></view>
         </picker>
-        <view class="field-label">学校邀请码</view>
+        <view class="field-label">学校邀请码<text class="tip-btn" data-tip="invite" bindtap="showTip">?</text></view>
         <input class="field code-field" value="{{inviteCode}}" data-field="inviteCode" bindinput="input" placeholder="向本校老师索取" maxlength="40" disabled="{{checking}}"/>
         <view wx:if="{{error}}" class="error" role="alert">{{error}}</view>
         <button class="spaced" bindtap="checkInvite" loading="{{checking}}" disabled="{{checking || !inviteCode}}">核对学校 →</button>
-        <view class="small hint">邀请码决定你加入哪所学校，请向本校老师索取。</view>
       </block>
 
       <block wx:else>
@@ -81,5 +79,5 @@
     </block>
   </view>
 
-  <view class="safe-note">日记与心情备注仅本人可见；老师可查看心情分数用于关怀。<text>{{'\n'}}</text>未成年人请与监护人共同了解学校的数据使用安排。</view>
+  <view class="tip-line login-privacy">日记与心情备注仅本人可见<text class="tip-btn" data-tip="loginPrivacy" bindtap="showTip">?</text></view>
 </view>

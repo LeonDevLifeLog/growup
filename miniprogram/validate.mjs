@@ -73,6 +73,7 @@ function loadModule(file) {
 }
 
 const nativeTags = new Set(['view', 'text', 'button', 'input', 'textarea', 'picker', 'scroll-view', 'block', 'checkbox-group', 'checkbox', 'label', 'canvas']);
+const tipCopy = loadModule(join(root, 'utils/tips.js')).tips;
 let bindingCount = 0;
 for (const page of app.pages) {
   const definition = loadModule(join(root, page + '.js'));
@@ -88,6 +89,8 @@ for (const page of app.pages) {
     assert.equal(typeof definition[match[1]], 'function', `${page} 缺少事件处理器 ${match[1]}`);
     bindingCount++;
   }
+  for (const match of wxml.matchAll(/data-tip="([^"]+)"/g))
+    assert.ok(tipCopy[match[1]], `${page} 引用了不存在的提示 ${match[1]}`);
   assert.ok(!/\{\{[^}]*\.[A-Za-z]+\(/.test(wxml), `${page} WXML 不允许直接调用 JS 方法`);
   const tags = wxml.replace(/\{\{[\s\S]*?\}\}/g, '').matchAll(/<\/?([a-z][a-z\d-]*)\b[^>]*>/g);
   const stack = [];

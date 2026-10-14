@@ -1,7 +1,9 @@
 const { request, requireStudent, localTime } = require('../../utils/api');
 const { withValues, validate, reportView } = require('../../utils/forms');
 
+const { showTip } = require('../../utils/tips');
 Page({
+  showTip,
   data: {
     tool: null, tools: [], toolIndex: 0, profileIndex: 0, profileNames: [], profileDescription: '', fields: [], answers: {},
     today: '', date: '', month: '', tab: 'entry', loading: true, saving: false, deleting: false,

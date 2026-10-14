@@ -1,7 +1,6 @@
 <view class="page">
-  <view class="row"><view class="eyebrow">A SOFT PLACE TO LAND</view><text class="pill">{{user.regionName}}的树洞</text></view>
+  <view class="row"><view class="eyebrow">A SOFT PLACE TO LAND</view><view class="tip-line"><text class="pill">{{user.regionName}}的树洞</text><text class="tip-btn" data-tip="treehole" bindtap="showTip">?</text></view></view>
   <view class="title">有些心事，<text>{{'\n'}}</text>可以轻轻放在这里。</view><view class="subtitle">没有姓名，只有一颗愿意倾听的心。<text>{{'\n'}}</text>送一份温暖，也接住别人的小情绪。</view>
-  <view class="notice">对同区域同学展示化名；平台保存关联以供审核追溯。投稿与回复先审后发，请勿留下姓名、学校、电话等个人信息。</view>
   <button bindtap="compose">＋ 写一张匿名纸条</button>
   <view class="tree-tabs"><text class="{{!mine ? 'selected-tab' : ''}}" data-mine="no" bindtap="setMine">树洞广场</text><text class="{{mine ? 'selected-tab' : ''}}" data-mine="yes" bindtap="setMine">我的纸条</text></view>
   <scroll-view scroll-x class="filters"><view class="filter-line"><text wx:for="{{filters}}" wx:key="*this" data-topic="{{item}}" bindtap="filter" class="chip {{topic === item ? 'active' : ''}}">{{item}}</text></view></scroll-view>

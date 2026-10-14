@@ -1,5 +1,7 @@
 const { request, saveSession, clearSession } = require('../../utils/api');
+const { showTip } = require('../../utils/tips');
 Page({
+  showTip,
   data: {
     regions: [], regionIndex: 0, regionId: '', mode: 'login', account: '', password: '', name: '', inviteCode: '',
     loading: true, submitting: false, error: '', invitation: null, checking: false, confirmPassword: '', showPassword: false

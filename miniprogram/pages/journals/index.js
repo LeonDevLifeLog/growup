@@ -1,6 +1,8 @@
 const { request, requireStudent, localTime, moods } = require('../../utils/api');
 
+const { showTip } = require('../../utils/tips');
 Page({
+  showTip,
   data: {
     tab: 'map', journals: [], visibleJournals: [], checkins: [], loading: true, submitting: false,
     error: '', sheetError: '', success: '', editor: false, title: '', content: '', moodIndex: 0, intensityIndex: 1,

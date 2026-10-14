@@ -1,6 +1,8 @@
 const { modules, helpArticles } = require('../../data/content');
 const { request, requireStudent } = require('../../utils/api');
+const { showTip } = require('../../utils/tips');
 Page({
+  showTip,
   data: { article: null, groups: [], loading: false, error: '' },
   async onLoad(options) {
     if (!requireStudent()) return;

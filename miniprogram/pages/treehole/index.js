@@ -1,7 +1,9 @@
 const { request, requireStudent, localTime } = require('../../utils/api');
 const topics = ['成长烦恼', '校园日常', '家庭关系', '小小确幸'];
 const statuses = { pending: '等待审核', approved: '已公开', rejected: '未通过审核', reported: '等待复核' };
+const { showTip } = require('../../utils/tips');
 Page({
+  showTip,
   data: {
     user: {}, topics, filters: ['全部', ...topics], topic: '全部', mine: false, posts: [], loading: true,
     error: '', sheet: '', selectedPost: null, nickname: '一棵小树', topicIndex: 0, content: '',

@@ -1,6 +1,8 @@
 const { modules } = require('../../data/content');
 const { requireStudent } = require('../../utils/api');
+const { showTip } = require('../../utils/tips');
 Page({
+  showTip,
   data: { categories: ['全部', '成长支持', '核心理念', '成长共研室', '了解更多'], category: '全部', modules },
   onShow() { requireStudent(); },
   filter(event) {

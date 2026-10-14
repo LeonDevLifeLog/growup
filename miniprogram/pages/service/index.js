@@ -1,7 +1,9 @@
 const { serviceTypes } = require('../../data/content');
 const { request, requireStudent, localTime } = require('../../utils/api');
 const { withValues, validate } = require('../../utils/forms');
+const { showTip } = require('../../utils/tips');
 Page({
+  showTip,
   data: { serviceTypes, typeIndex: 0, message: '', requests: [], loading: true, submitting: false, error: '', success: false, tab: 'new', forms: [], form: null, fields: [], answers: {} },
   async onLoad(options) {
     if (!requireStudent()) return;

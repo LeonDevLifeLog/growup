@@ -1,9 +1,8 @@
 <view class="page">
-  <view class="eyebrow">EXPLORE YOUR OWN WAY</view>
+  <view class="row"><view class="eyebrow">EXPLORE YOUR OWN WAY</view><text class="tip-btn" data-tip="explore" bindtap="showTip">?</text></view>
   <view class="title">成长，有很多种方式。</view>
   <view class="subtitle">发现自己，也学习与世界相处。<text>{{'\n'}}</text>每一次小小的探索，都算数。</view>
   <view class="explore-banner spaced"><text class="banner-icon">✧</text><view><view class="section-title">发现成长 · 理解成长</view><view class="small">成长健研社 · 青少年身心健康成长服务</view></view></view>
   <scroll-view class="filters" scroll-x><view class="filter-line"><text wx:for="{{categories}}" wx:key="*this" data-category="{{item}}" bindtap="filter" class="chip {{category === item ? 'active' : ''}}">{{item}}</text></view></scroll-view>
   <view class="module card" wx:for="{{modules}}" wx:key="id" data-id="{{item.id}}" bindtap="open"><view class="module-icon">{{item.icon}}</view><view class="module-text"><view class="module-title">{{item.title}}</view><view class="small">{{item.subtitle}}</view></view><text class="module-arrow">↗</text></view>
-  <view class="safe-note">观察记录、成长现状自评和需求反馈均可在应用内完成。<text>{{'\n'}}</text>回顾用于了解自己，不作为心理或医学诊断。</view>
 </view>

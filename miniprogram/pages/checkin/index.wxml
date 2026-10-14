@@ -1,5 +1,5 @@
 <view class="page">
-  <view class="eyebrow">A MOMENT FOR YOURSELF · {{today}}</view>
+  <view class="row"><view class="eyebrow">A MOMENT FOR YOURSELF · {{today}}</view><text class="tip-btn" data-tip="checkin" bindtap="showTip">?</text></view>
   <view class="title">停一停，<text>{{'\n'}}</text>听听自己的心情。</view>
   <view class="subtitle">没有标准答案。选一个最接近此刻的你。</view>
   <view wx:if="{{loading}}" class="state">正在读取今日记录…</view>
@@ -15,6 +15,5 @@
     <view wx:if="{{saved}}" class="notice">心情已保存。{{score < 3 ? '愿意记录下来，已经是照顾自己的一步。可以找一个信任的人聊聊。' : '谢谢你认真感受今天，愿这份小小的能量陪着你。'}}</view>
     <button class="spaced" bindtap="submit" loading="{{submitting}}" disabled="{{submitting || !score || !today}}">{{saved ? '更新今天的记录' : '把今天轻轻记下'}} →</button>
     <button wx:if="{{saved}}" class="button-light spaced" bindtap="back">返回今日</button>
-    <view class="safe-note">每天一份记录，再次提交会更新今天的心情。<text>{{'\n'}}</text>备注仅自己可见；心情分数与日期可供区域老师进行关怀。</view>
   </view>
 </view>

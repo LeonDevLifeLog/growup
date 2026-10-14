@@ -293,3 +293,28 @@ button[disabled] {
 .bottom-space {
   height:30rpx;
 }
+
+/* Circled question mark that opens a tip */
+.tip-btn {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:36rpx;
+  height:36rpx;
+  margin-left:10rpx;
+  border-radius:50%;
+  border:2rpx solid #b8c8ab;
+  color:#5f7e52;
+  font-size:22rpx;
+  font-weight:700;
+  line-height:1;
+  vertical-align:middle;
+}
+
+.tip-line {
+  display:flex;
+  align-items:center;
+  font-size:24rpx;
+  color:#7b8577;
+  margin:16rpx 0;
+}

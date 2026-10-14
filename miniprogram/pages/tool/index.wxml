@@ -1,5 +1,5 @@
 <view class="page">
-  <view class="eyebrow">STAR-TRACK · 我的成长观察</view>
+  <view class="row"><view class="eyebrow">STAR-TRACK · 我的成长观察</view><text class="tip-btn" data-tip="tool" bindtap="showTip">?</text></view>
   <view class="title">{{tool ? tool.name : '成长观察工具'}}</view>
   <view wx:if="{{loading}}" class="state">正在准备观察内容…</view>
   <block wx:else>
@@ -31,5 +31,4 @@
     <block wx:elif="{{tab === 'report'}}"><text class="label">选择月份</text><picker mode="date" fields="month" value="{{month}}" end="{{today}}" bindchange="monthChange"><view class="field row"><text>{{month}}</text><text>⌄</text></view></picker><view wx:if="{{reportLoading}}" class="state">正在整理月度回顾…</view><view wx:elif="{{report}}" class="report card spaced"><view class="section-title">{{report.title}}</view><view class="prewrap muted">{{report.summary}}</view><view class="metrics"><view wx:for="{{report.metrics}}" wx:key="label" class="metric"><text class="small">{{item.label}}</text><view>{{item.value}} <text class="small">{{item.unit}}</text></view><text class="small">{{item.note}}</text></view></view><view wx:for="{{report.sections}}" wx:key="title"><view class="label">{{item.title}}</view><view wx:if="{{item.text}}" class="prewrap muted">{{item.text}}</view><view wx:for="{{item.items}}" wx:for-item="line" wx:key="*this" class="report-item">· {{line}}</view></view><view class="notice">{{report.notice}}</view></view><button wx:else class="button-light spaced" bindtap="loadReport">生成月度回顾</button></block>
   </block>
   <view wx:if="{{error && (tab !== 'entry' || !tool)}}" class="error">{{error}}<button wx:if="{{!tool}}" class="button-outline button-small spaced" bindtap="load">重试</button></view>
-  <view class="safe-note">所有记录与结果仅属于本人，不作为心理或医学诊断。<text>{{'\n'}}</text>需要帮助时，请与可信任的成人或专业人员讨论。</view>
 </view>

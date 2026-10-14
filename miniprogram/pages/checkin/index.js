@@ -1,5 +1,7 @@
 const { request, requireStudent, moods } = require('../../utils/api');
+const { showTip } = require('../../utils/tips');
 Page({
+  showTip,
   data: { moods, score: 0, moodName: '', note: '', tags: [], tagOptions: [], loading: true, submitting: false, error: '', saved: false, today: '' },
   async onLoad() { if (requireStudent()) await this.load(); },
   async load() {

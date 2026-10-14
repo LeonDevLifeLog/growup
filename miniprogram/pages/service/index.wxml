@@ -14,7 +14,7 @@
   <text class="label">想得到怎样的帮助？</text><textarea class="field textarea" value="{{message}}" bindinput="input" placeholder="写下你的需求或使用反馈，请勿填写额外联系方式。" maxlength="1000" disabled="{{submitting}}"/><view class="count">{{message.length}} / 1000</view></block>
   <view wx:if="{{error}}" class="error">{{error}}</view>
   <button bindtap="submit" loading="{{submitting}}" disabled="{{submitting || loading || (!form && !message)}}">{{form ? '提交调查与反馈' : '提交需求'}} →</button>
-  <view class="notice">这里不是即时咨询或紧急救援渠道。面临即时危险时，请立即联系信任的成人与当地紧急服务；提交需求不代表外部机构已接单或预约成功。</view>
+  <view class="tip-line">这里不是紧急求助渠道<text class="tip-btn" data-tip="service" bindtap="showTip">?</text></view>
   </block>
   <block wx:else>
   <view wx:if="{{success}}" class="notice">已提交。工作人员查看并跟进后，这里的状态会更新。</view>
@@ -22,6 +22,6 @@
   <view wx:if="{{loading}}" class="state">正在读取申请…</view>
   <view wx:elif="{{!requests.length}}" class="state"><view class="empty-icon">♡</view><view class="state-title">还没有申请记录</view><view>需要支持时，可以随时提交一份申请。</view><button class="button-light spaced" data-tab="new" bindtap="changeTab">去提交申请</button></view>
   <view class="card" wx:for="{{requests}}" wx:key="id"><view class="row"><text>{{item.type}}</text><text class="pill">{{item.statusText}}</text></view><view class="prewrap spaced muted">{{item.message}}</view><view class="small spaced">{{item.displayTime}}</view><view wx:if="{{item.reply}}" class="notice spaced"><view class="small">工作人员回复 · {{item.handledTime}}</view><view class="prewrap">{{item.reply}}</view></view></view>
-  <view wx:if="{{requests.length}}" class="small spaced">下拉页面可刷新处理状态。</view>
+  <view wx:if="{{requests.length}}" class="tip-line">处理状态说明<text class="tip-btn" data-tip="serviceRecords" bindtap="showTip">?</text></view>
   </block>
 </view>

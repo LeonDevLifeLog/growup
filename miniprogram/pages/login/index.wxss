@@ -151,3 +151,7 @@
   margin-top:12rpx;
   font-size:24rpx;
 }
+
+.login-privacy {
+  justify-content:center;
+}
