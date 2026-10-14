@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { mkdirSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { chromium, expect } from "@playwright/test";
 import { createApp } from "../server/app.mjs";
@@ -178,42 +178,10 @@ try {
   await dialog()
     .getByRole("tab", { name: /历史记录/ })
     .click();
-  const download = page.waitForEvent("download");
-  await dialog().getByRole("button", { name: "导出记录", exact: true }).click();
-  const file = await download;
-  const filePath = await file.path();
-  assert.ok(file.suggestedFilename().endsWith(".json"));
-  await dialog().locator('input[type="file"]').setInputFiles(filePath);
-  await expect(
-    page.getByRole("status").filter({ hasText: "跳过 1 条重复记录" }),
-  ).toBeVisible();
-  const backup = JSON.parse(readFileSync(filePath, "utf8"));
-  const importBatchSizes = [];
-  const recordBatchSize = (request) => {
-    if (
-      request.method() === "POST" &&
-      request.url().endsWith("/tools/sl/import")
-    )
-      importBatchSizes.push(request.postDataJSON().records.length);
-  };
-  page.on("request", recordBatchSize);
-  await dialog()
-    .locator('input[type="file"]')
-    .setInputFiles({
-      name: "large-backup.json",
-      mimeType: "application/json",
-      buffer: Buffer.from(
-        JSON.stringify({
-          ...backup,
-          records: Array(205).fill(backup.records[0]),
-        }),
-      ),
-    });
-  await expect(
-    page.getByRole("status").filter({ hasText: "跳过 205 条重复记录" }),
-  ).toBeVisible();
-  page.off("request", recordBatchSize);
-  assert.deepEqual(importBatchSizes, [100, 100, 5]);
+  await expect(dialog().getByRole("button", { name: /导入|导出/ })).toHaveCount(
+    0,
+  );
+  await expect(dialog().locator('input[type="file"]')).toHaveCount(0);
   await dialog().getByRole("tab", { name: "观察结果" }).click();
   await dialog().getByRole("button", { name: "生成月度回顾" }).click();
   await expect(dialog().locator(".growth-report")).toContainText("睡眠");
@@ -274,7 +242,7 @@ try {
     dialog().getByText("还没有成长记录", { exact: true }),
   ).toBeVisible();
   check(
-    "长期工具编辑、真实JSON下载、205条分批导入去重、月报乱序防覆盖及删除闭环通过",
+    "长期工具编辑、系统内历史、月报乱序防覆盖及删除闭环通过，无手工导入导出入口",
   );
   await dialog().getByRole("button", { name: "关闭弹窗" }).click();
 
@@ -307,18 +275,10 @@ try {
   const journalCard = page
     .locator(".journal-card")
     .filter({ hasText: "星图迁移验收" });
-  await journalCard.getByRole("checkbox").check();
-  const partialDownload = page.waitForEvent("download");
-  await page
-    .getByRole("button", { name: "导出已选 1 篇", exact: true })
-    .click();
-  const partial = await partialDownload;
-  await page
-    .locator('.journal-tools input[type="file"]')
-    .setInputFiles(await partial.path());
+  await expect(journalCard.getByRole("checkbox")).toHaveCount(0);
   await expect(
-    page.getByRole("status").filter({ hasText: "跳过 1 条重复记录" }),
-  ).toBeVisible();
+    page.getByRole("button", { name: /导入备份|导出全部|导出已选/ }),
+  ).toHaveCount(0);
   await page.reload();
   await expect(
     page.locator(".journal-card").filter({ hasText: "星图迁移验收" }),
@@ -336,7 +296,7 @@ try {
   });
   await page.setViewportSize({ width: 1440, height: 1060 });
   check(
-    "星图心情/标签/目标保存、真实共现图、标签搜索、选择导出、备份合并、刷新持久化与375px布局通过",
+    "星图心情/标签/目标保存、真实共现图、标签搜索、系统内刷新持久化与375px布局通过",
   );
 
   await nav("成长探索");

@@ -1,5 +1,4 @@
 const { request, requireStudent, localTime, moods } = require('../../utils/api');
-const { exportJson, pickJson, showExportResult, importBatches } = require('../../utils/files');
 
 Page({
   data: {
@@ -7,7 +6,7 @@ Page({
     error: '', success: '', editor: false, title: '', content: '', moodIndex: 0, intensityIndex: 1,
     moodNames: ['暂不记录心情', ...moods.map(item => item.name)], intensityNames: ['轻轻的 · 1', '比较明显 · 2', '很强烈 · 3'],
     tagsText: '', goal: '', query: '', mapNodes: [], mapEdges: [], connections: [], mapStats: {},
-    fileBusy: false, deleting: false, selectedIds: [], entryMode: 'full', canvasVisible: false, imagePath: '', imageBusy: false
+    deleting: false, entryMode: 'full', canvasVisible: false, imagePath: '', imageBusy: false
   },
   onShow() { if (requireStudent()) this.load(); },
   onPullDownRefresh() { this.load().finally(() => wx.stopPullDownRefresh()); },
@@ -16,7 +15,7 @@ Page({
     try {
       const [journalData, checkinData, mapData] = await Promise.all([request('/journals'), request('/checkins'), request('/journals/map')]);
       this.setData({
-        journals: journalData.journals.map(item => ({ ...item, selected: this.data.selectedIds.includes(item.id), tags: item.tags || [], displayTime: localTime(item.createdAt), moodLabel: item.mood ? moods[item.mood - 1].name : '', intensityLabel: item.mood ? ['轻轻的', '比较明显', '很强烈'][(item.intensity || 2) - 1] : '' })),
+        journals: journalData.journals.map(item => ({ ...item, tags: item.tags || [], displayTime: localTime(item.createdAt), moodLabel: item.mood ? moods[item.mood - 1].name : '', intensityLabel: item.mood ? ['轻轻的', '比较明显', '很强烈'][(item.intensity || 2) - 1] : '' })),
         checkins: checkinData.checkins.slice().reverse().map(item => ({ ...item, moodName: moods[item.score - 1].name, color: moods[item.score - 1].color }))
       });
       this.filterJournals();
@@ -74,44 +73,10 @@ Page({
     wx.showModal({ title: '删除这颗星星？', content: '日记与它的标签关联将删除，无法撤销。心情打卡不受影响。', confirmText: '删除日记', confirmColor: '#a34b38', success: async result => {
       if (!result.confirm) return;
       this.setData({ deleting: true, error: '' });
-      try { await request('/journals/' + encodeURIComponent(id), 'DELETE'); this.setData({ selectedIds: this.data.selectedIds.filter(item => item !== id) }); await this.load(); }
+      try { await request('/journals/' + encodeURIComponent(id), 'DELETE'); await this.load(); }
       catch (error) { this.setData({ error: error.message }); }
       finally { this.setData({ deleting: false }); }
     } });
-  },
-  async exportJournals() {
-    if (this.data.fileBusy) return;
-    this.setData({ fileBusy: true, error: '' });
-    try {
-      const query = this.data.selectedIds.length ? '?ids=' + this.data.selectedIds.map(encodeURIComponent).join(',') : '';
-      const data = await request('/journals/export' + query);
-      showExportResult(await exportJson(data, 'growup-journals-' + data.exportedAt.slice(0, 10) + '.json'));
-    } catch (error) { this.setData({ error: error.message }); }
-    finally { this.setData({ fileBusy: false }); }
-  },
-  async importJournals() {
-    if (this.data.fileBusy) return;
-    this.setData({ fileBusy: true, error: '', success: '' });
-    try {
-      const data = await pickJson();
-      if (!data || !Array.isArray(data.journals)) throw new Error('请选择成长健研社导出的日记 JSON 备份');
-      const result = await importBatches('/journals/import', 'journals', data.journals, progress => this.setData({ success: '导入中：已处理 ' + progress.processed + '/' + progress.total + ' 篇。' }));
-      this.setData({ success: '已导入 ' + result.imported + ' 篇，跳过 ' + result.skipped + ' 篇重复日记。' });
-      await this.load();
-    } catch (error) {
-      if (!error.cancelled) {
-        await this.load();
-        this.setData({ error: error.message, success: '' });
-      }
-    }
-    finally { this.setData({ fileBusy: false }); }
-  },
-  toggleSelected(event) {
-    const id = event.currentTarget.dataset.id;
-    const selectedIds = this.data.selectedIds.filter(item => item !== id);
-    if (event.detail.value.length) selectedIds.push(id);
-    this.setData({ selectedIds, journals: this.data.journals.map(item => ({ ...item, selected: selectedIds.includes(item.id) })) });
-    this.filterJournals();
   },
   async generateImage() {
     if (this.data.imageBusy) return;

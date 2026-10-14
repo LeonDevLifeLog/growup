@@ -3,10 +3,8 @@ import {
   ArrowLeft,
   ArrowRight,
   Check,
-  Download,
   LockKeyhole,
   Trash2,
-  Upload,
 } from "lucide-react";
 import { useApp, useResource } from "./context.jsx";
 import { Empty, PrivateNote, ResourceState } from "./components.jsx";
@@ -18,52 +16,6 @@ const hasValue = (value) =>
   value !== null &&
   value !== "" &&
   (!Array.isArray(value) || value.length > 0);
-export function downloadJson(data, filename) {
-  const url = URL.createObjectURL(
-    new Blob([JSON.stringify(data, null, 2)], {
-      type: "application/json;charset=utf-8",
-    }),
-  );
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = filename;
-  link.click();
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
-}
-
-export async function importInBatches(call, path, key, entries) {
-  let imported = 0,
-    skipped = 0;
-  let batch = [],
-    bytes = 0;
-  const encoder = new TextEncoder();
-  async function flush() {
-    if (!batch.length) return;
-    const result = await call(path, { method: "POST", body: { [key]: batch } });
-    imported += result.imported;
-    skipped += result.skipped;
-    batch = [];
-    bytes = 0;
-  }
-  try {
-    for (const entry of entries) {
-      const length = encoder.encode(JSON.stringify(entry)).length;
-      if (length > 1024 * 1024) throw new Error("单条记录过大，请检查备份文件");
-      if (batch.length >= 100 || bytes + length > 1024 * 1024) await flush();
-      batch.push(entry);
-      bytes += length;
-    }
-    await flush();
-    return { imported, skipped };
-  } catch (error) {
-    if (imported || skipped) {
-      error.partialImport = true;
-      error.message = `已导入 ${imported} 条、跳过 ${skipped} 条；后续导入失败：${error.message}。修正后可重试，已导入项不会重复。`;
-    }
-    throw error;
-  }
-}
-
 export function SchemaFields({ fields, answers, onChange }) {
   return (
     <div className="schema-fields">
@@ -299,7 +251,6 @@ function ToolWorkspace({ tool }) {
   const [historyLoading, setHistoryLoading] = useState(true);
   const [busy, setBusy] = useState(false);
   const [deleteId, setDeleteId] = useState("");
-  const fileInput = useRef(null);
   const workspace = useRef(null);
   const reportRequestId = useRef(0);
   function invalidateReportRequest() {
@@ -420,67 +371,6 @@ function ToolWorkspace({ tool }) {
       setBusy(false);
     }
   }
-  async function exportRecords() {
-    setBusy(true);
-    setError("");
-    try {
-      downloadJson(
-        await call(`/tools/${tool.id}/export`),
-        `成长健研社-${tool.id}-${localDate()}.json`,
-      );
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setBusy(false);
-    }
-  }
-  async function importRecords(event) {
-    const file = event.target.files?.[0];
-    event.target.value = "";
-    if (!file) return;
-    setBusy(true);
-    setError("");
-    try {
-      if (file.size > 50 * 1024 * 1024)
-        throw new Error("每次请选择不超过 50 MB 的备份文件");
-      const data = JSON.parse(await file.text());
-      if (
-        data.version !== 1 ||
-        data.toolId !== tool.id ||
-        !Array.isArray(data.records)
-      )
-        throw new Error("请选择当前工具的成长健研社 v1 备份文件");
-      const result = await importInBatches(
-        call,
-        `/tools/${tool.id}/import`,
-        "records",
-        data.records,
-      );
-      setRecords((await call(`/tools/${tool.id}/records`)).records);
-      setReport(null);
-      setTab("history");
-      notify(
-        `已导入 ${result.imported} 条，跳过 ${result.skipped} 条重复记录。`,
-      );
-    } catch (error) {
-      if (error.partialImport) {
-        try {
-          setRecords((await call(`/tools/${tool.id}/records`)).records);
-          setReport(null);
-          setTab("history");
-        } catch {
-          /* 保留包含已完成条数的导入错误。 */
-        }
-      }
-      setError(
-        error instanceof SyntaxError
-          ? "文件不是有效的 JSON 备份"
-          : error.message,
-      );
-    } finally {
-      setBusy(false);
-    }
-  }
   return (
     <div className="tool-workspace" ref={workspace}>
       <button
@@ -575,31 +465,6 @@ function ToolWorkspace({ tool }) {
       )}
       {tab === "history" && (
         <div className="tool-history">
-          <div className="tool-backup">
-            <button
-              className="button secondary"
-              disabled={busy}
-              onClick={exportRecords}
-            >
-              <Download size={15} />
-              导出记录
-            </button>
-            <button
-              className="button secondary"
-              disabled={busy}
-              onClick={() => fileInput.current.click()}
-            >
-              <Upload size={15} />
-              导入备份
-            </button>
-            <input
-              hidden
-              ref={fileInput}
-              type="file"
-              accept=".json,application/json"
-              onChange={importRecords}
-            />
-          </div>
           {historyLoading ? (
             <p className="loading">正在读取你的记录…</p>
           ) : records.length ? (

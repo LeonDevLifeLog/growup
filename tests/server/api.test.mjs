@@ -1227,7 +1227,7 @@ test("native catalog exposes 19 tools and all age/gender profiles accept valid f
   );
 });
 
-test("trackers upsert by profile/day, questionnaires retain attempts, backup validates atomically and ignores forged identity/results", async (t) => {
+test("trackers upsert by profile/day and questionnaires retain attempts without trusting forged results", async (t) => {
   const f = await fixture(t);
   const { token } = await f.login();
   const write = (path, body) =>
@@ -1268,9 +1268,6 @@ test("trackers upsert by profile/day, questionnaires retain attempts, backup val
     (await f.request("/tools/missing/records", { token })).status,
     404,
   );
-  const backup = (await f.request("/tools/sl/export", { token })).body;
-  assert.equal(backup.version, 1);
-  assert.equal((await write("/tools/sl/import", backup)).body.skipped, 1);
   const fresh = {
     ...data,
     date: "2026-10-13",
@@ -1278,24 +1275,7 @@ test("trackers upsert by profile/day, questionnaires retain attempts, backup val
     userId: "student-shandong",
     result: { title: "forged" },
   };
-  assert.equal(
-    (
-      await write("/tools/sl/import", {
-        records: [fresh, { ...data, date: "bad" }],
-      })
-    ).status,
-    400,
-  );
-  assert.equal(
-    (await write("/tools/sl/import", { records: [null] })).status,
-    400,
-  );
-  assert.equal(
-    (await f.request("/tools/sl/records", { token })).body.records.length,
-    1,
-  );
-  const imported = await write("/tools/sl/import", { records: [fresh, fresh] });
-  assert.deepEqual(imported.body, { imported: 1, skipped: 1 });
+  assert.equal((await write("/tools/sl/records", fresh)).status, 201);
   const saved = (
     await f.request("/tools/sl/records", { token })
   ).body.records.find((row) => row.date === "2026-10-13");
@@ -1319,21 +1299,6 @@ test("trackers upsert by profile/day, questionnaires retain attempts, backup val
   assert.equal(a.status, 201);
   assert.equal(b.status, 201);
   assert.notEqual(a.body.record.id, b.body.record.id);
-  assert.equal(
-    (await write("/tools/ya/import", { records: [attempt] })).body.skipped,
-    1,
-  );
-  const clean = await f.login("shandong.student", "shandong");
-  assert.deepEqual(
-    (
-      await f.request("/tools/ya/import", {
-        token: clean.token,
-        method: "POST",
-        body: { records: [attempt, attempt] },
-      })
-    ).body,
-    { imported: 1, skipped: 1 },
-  );
   const monthly = (await f.request("/tools/sl/report?month=2026-10", { token }))
     .body.report;
   assert.equal(
@@ -1354,7 +1319,7 @@ test("trackers upsert by profile/day, questionnaires retain attempts, backup val
   );
 });
 
-test("STARMAP mood-only entries, co-occurrence, Shanghai streak, private backup merge and owner deletion", async (t) => {
+test("STARMAP mood-only entries, co-occurrence, Shanghai streak, private persistence and owner deletion", async (t) => {
   const f = await fixture(t);
   const { token } = await f.login("hainan.xingchen");
   const other = await f.login("shandong.student", "shandong");
@@ -1389,22 +1354,13 @@ test("STARMAP mood-only entries, co-occurrence, Shanghai streak, private backup 
       userId: other.user.id,
     },
   ];
-  assert.deepEqual(
-    (await write("/journals/import", { journals: incoming })).body,
-    { imported: 2, skipped: 0 },
-  );
-  assert.deepEqual(
-    (await write("/journals/import", { journals: incoming })).body,
-    { imported: 0, skipped: 2 },
-  );
-  assert.equal(
-    (
-      await write("/journals/import", {
-        journals: [{ content: "不得部分导入" }, null],
-      })
-    ).status,
-    400,
-  );
+  for (const item of incoming) {
+    const result = await write("/journals", item);
+    assert.equal(result.status, 201);
+    f.app.db
+      .prepare("UPDATE journals SET created_at=? WHERE id=?")
+      .run(item.createdAt, result.body.journal.id);
+  }
   const map = (await f.request("/journals/map", { token })).body;
   assert.deepEqual(map.stats, {
     total: 3,
@@ -1426,20 +1382,6 @@ test("STARMAP mood-only entries, co-occurrence, Shanghai streak, private backup 
   assert.equal(
     (await f.request("/journals/map", { token: admin.token })).status,
     403,
-  );
-  const backup = (await f.request("/journals/export", { token })).body;
-  assert.equal(backup.version, 1);
-  assert.equal(backup.journals.length, 3);
-  assert.ok(
-    backup.journals.every((entry) => !entry.userId && entry.id !== "forged"),
-  );
-  assert.equal(
-    (
-      await f.request(`/journals/export?ids=${quick.body.journal.id}`, {
-        token,
-      })
-    ).body.journals.length,
-    1,
   );
   for (const bad of [
     {},
@@ -1538,85 +1480,55 @@ test("native service form validation and regional admin teacher submissions use 
   );
 });
 
-test("personal backup accepts more than 200 records and rejects oversized batches before any writes", async (t) => {
+test("manual JSON transfer endpoints are absent and cannot write or expose records", async (t) => {
   const f = await fixture(t);
   const { token } = await f.login("hainan.xingchen");
-  const records = Array.from({ length: 201 }, (_, index) => ({
-    profileId: "daily",
-    date: shiftDate("2025-12-31", -index),
-    answers: { sleepRange: "8-9", quality: 4 },
-  }));
-  const imported = await f.request("/tools/sl/import", {
-    token,
-    method: "POST",
-    body: { records },
-  });
-  assert.deepEqual(imported.body, { imported: 201, skipped: 0 });
+  for (const path of ["/journals/export", "/tools/sl/export"])
+    assert.equal((await f.request(path, { token })).status, 404);
+  for (const path of ["/journals/import", "/tools/sl/import"])
+    assert.equal(
+      (
+        await f.request(path, {
+          token,
+          method: "POST",
+          body: { journals: [{ content: "不可写入" }], records: [] },
+        })
+      ).status,
+      404,
+    );
   assert.equal(
-    (await f.request("/tools/sl/export", { token })).body.records.length,
-    201,
+    (await f.request("/journals", { token })).body.journals.length,
+    0,
   );
-  const sleepTool = (await f.request("/tools", { token })).body.tools.find(
-    (tool) => tool.id === "sl",
+  const tool = (await f.request("/tools", { token })).body.tools.find(
+    (row) => row.id === "sl",
   );
-  const homework = sleepTool.profiles[0].fields.find(
-    (field) => field.id === "homework",
-  ).options[0].value;
-  const borderline = [5, 3, 3, 3, 3, 3, 3, 1, 2].map((quality, index) => ({
-    profileId: "daily",
-    date: shiftDate("2026-09-30", -index),
-    answers: { sleepRange: "8-9", quality, ...(index < 7 ? { homework } : {}) },
-  }));
-  assert.equal(
-    (
-      await f.request("/tools/sl/import", {
-        token,
-        method: "POST",
-        body: { records: borderline },
-      })
-    ).body.imported,
-    9,
-  );
+  const homework = tool.profiles[0].fields.find((row) => row.id === "homework")
+    .options[0].value;
+  for (const [index, quality] of [5, 3, 3, 3, 3, 3, 3, 1, 2].entries())
+    assert.equal(
+      (
+        await f.request("/tools/sl/records", {
+          token,
+          method: "POST",
+          body: {
+            profileId: "daily",
+            date: shiftDate("2026-09-30", -index),
+            answers: {
+              sleepRange: "8-9",
+              quality,
+              ...(index < 7 ? { homework } : {}),
+            },
+          },
+        })
+      ).status,
+      201,
+    );
   const report = (await f.request("/tools/sl/report?month=2026-09", { token }))
     .body.report;
   assert.deepEqual(
     report.sections.find((section) => section.title === "睡眠因素共现线索")
       .items,
     ["目前的记录尚未呈现明显的睡眠因素共现线索，可以继续观察。"],
-  ); // 23/7 - 26/9 < .4: display rounding must not create a finding.
-
-  assert.equal(
-    (
-      await f.request("/tools/sl/import", {
-        token,
-        method: "POST",
-        body: { records: Array(2001).fill(records[0]) },
-      })
-    ).status,
-    400,
-  );
-  assert.equal(
-    (
-      await f.request("/journals/import", {
-        token,
-        method: "POST",
-        body: { journals: Array(2001).fill({ content: "文字" }) },
-      })
-    ).status,
-    400,
-  );
-  assert.equal(
-    (
-      await f.request("/journals/import", {
-        token,
-        method: "POST",
-        body: { journals: [], padding: "x".repeat(2097152) },
-      })
-    ).status,
-    413,
-  );
-  assert.equal(
-    (await f.request("/journals", { token })).body.journals.length,
-    0,
   );
 });

@@ -1,5 +1,5 @@
 // 用 Node 执行原生页面事件并连接独立临时 API；不替代微信运行或真机交互。
-import { readFileSync, writeFileSync, statSync, existsSync, mkdtempSync, rmSync } from 'node:fs';
+import { readFileSync, existsSync, mkdtempSync, rmSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { tmpdir } from 'node:os';
 import { fileURLToPath } from 'node:url';
@@ -16,9 +16,6 @@ const storage = new Map();
 const app = { globalData: {} };
 const notices = [];
 const pendingModals = [];
-let exportedFile = '';
-let importCalls = [];
-let failImportAt = 0;
 let holdReports = false;
 const delayedReports = [];
 const wx = {
@@ -26,10 +23,6 @@ const wx = {
   getStorageSync: key => storage.get(key), setStorageSync: (key, value) => storage.set(key, value),
   removeStorageSync: key => storage.delete(key),
   request(options) {
-    if (options.method === 'POST' && options.url.endsWith('/journals/import')) {
-      importCalls.push({ count: options.data.journals.length, bytes: Buffer.byteLength(JSON.stringify(options.data)) });
-      if (failImportAt && importCalls.length === failImportAt) { options.success({ statusCode: 503, data: { error: '模拟第二批网络中断' } }); return; }
-    }
     let delayed;
     if (holdReports && /\/tools\/[^/]+\/report\?/.test(options.url)) {
       let ready;
@@ -51,14 +44,6 @@ const wx = {
     const operation = options.success && options.success({ confirm: true });
     if (operation) pendingModals.push(Promise.resolve(operation));
   },
-  getFileSystemManager() {
-    return {
-      writeFile(options) { writeFileSync(options.filePath, options.data, options.encoding); options.success(); },
-      readFile(options) { options.success({ data: readFileSync(options.filePath, options.encoding) }); }
-    };
-  },
-  shareFileMessage(options) { exportedFile = options.filePath; options.success(); },
-  chooseMessageFile(options) { options.success({ tempFiles: [{ path: exportedFile, size: statSync(exportedFile).size }] }); },
   reLaunch() {}, switchTab() {}, navigateTo() {}, stopPullDownRefresh() {}
 };
 const cache = new Map();
@@ -192,14 +177,10 @@ try {
   await toolPage.selectTool(toolPage.data.tools[0]);
   toolPage.setData({ answers: requiredAnswers(toolPage.data.fields, toolPage.data.today) });
   await toolPage.save();
-  await toolPage.exportRecords();
-  assert.equal(toolPage.data.error, '');
-  const toolCount = toolPage.data.records.length;
-  await toolPage.remove({ currentTarget: { dataset: { id: toolPage.data.records[0].id } } });
-  await Promise.all(pendingModals.splice(0));
-  await toolPage.importRecords();
-  assert.equal(toolPage.data.error, '');
-  assert.equal(toolPage.data.records.length, toolCount, '工具文件导入应恢复删除记录');
+  assert.equal(toolPage.exportRecords, undefined);
+  const toolCount=toolPage.data.records.length;
+  await toolPage.loadRecords();
+  assert.equal(toolPage.data.records.length,toolCount,'系统保存的工具记录刷新后保留');
   const journals = page('journals');
   await journals.load();
   journals.setData({ title: '原生日记接口验证', content: '只属于本人的成长日常', moodIndex: 4, intensityIndex: 2, tagsText: '成长,朋友', goal: '明天和朋友说声谢谢' });
@@ -210,16 +191,12 @@ try {
   assert.ok(journals.data.mapNodes.some(node => node.id === '朋友'));
   journals.search({ detail: { value: '明天和朋友' } });
   assert.equal(journals.data.visibleJournals.length, 1);
-  journals.toggleSelected({ currentTarget: { dataset: { id: entry.id } }, detail: { value: [entry.id] } });
-  await journals.exportJournals();
-  assert.equal(journals.data.error, '');
-  assert.equal(JSON.parse(readFileSync(exportedFile, 'utf8')).journals.length, 1, '选择片段导出只应包含选中日记');
-  await journals.remove({ currentTarget: { dataset: { id: entry.id } } });
+  assert.equal(journals.exportJournals,undefined);
+  await journals.load();
+  assert.ok(journals.data.journals.some(item=>item.id===entry.id),'日记在系统中刷新后保留');
+  await journals.remove({currentTarget:{dataset:{id:entry.id}}});
   await Promise.all(pendingModals.splice(0));
-  assert.ok(!journals.data.journals.some(item => item.id === entry.id));
-  await journals.importJournals();
-  assert.equal(journals.data.error, '');
-  assert.ok(journals.data.journals.some(item => item.title === '原生日记接口验证'), '日记文件导入应恢复删除记录');
+  assert.ok(!journals.data.journals.some(item=>item.id===entry.id));
   journals.setData({ title: '', content: '', entryMode: 'mood', moodIndex: 3, tagsText: '', goal: '' });
   await journals.submit();
   assert.equal(journals.data.error, '', '仅心情模式应允许没有正文和标题');
@@ -235,28 +212,8 @@ try {
     assert.equal(service.data.error, '', form.id + ' 提交错误：' + service.data.error);
     assert.ok(service.data.success);
   }
-  const longBackup = { version: 1, journals: Array.from({ length: 501 }, (_, index) => ({ title: '大备份-' + index, content: '成'.repeat(5000), mood: 3, intensity: 2, tags: [], goal: '', createdAt: new Date(Date.now() - 1000).toISOString() })) };
-  exportedFile = join(temporary, 'large-backup.json');
-  writeFileSync(exportedFile, JSON.stringify(longBackup));
-  importCalls = [];
-  await journals.importJournals();
-  assert.equal(journals.data.error, '', '501条中文长日记备份应分批恢复');
-  assert.ok(importCalls.length > 5 && importCalls.every(call => call.count <= 100 && call.bytes <= 1048576), '每批必须≤100条且≤1MiB');
-  assert.equal(journals.data.journals.filter(item => item.title.startsWith('大备份-')).length, 501);
-  const retryBackup = { version: 1, journals: Array.from({ length: 250 }, (_, index) => ({ title: '分批失败恢复-' + index, content: '部分失败后重试', createdAt: new Date(Date.now() - 1000).toISOString() })) };
-  writeFileSync(exportedFile, JSON.stringify(retryBackup));
-  importCalls = []; failImportAt = 2;
-  await journals.importJournals();
-  assert.ok(journals.data.error.includes('100/250') && journals.data.error.includes('未完成'), '中途失败应保留准确进度');
-  assert.equal(journals.data.success, '', '中途失败不能展示全量成功');
-  assert.equal(journals.data.journals.filter(item => item.title.startsWith('分批失败恢复-')).length, 100);
-  importCalls = []; failImportAt = 0;
-  await journals.importJournals();
-  assert.equal(journals.data.error, '');
-  assert.equal(journals.data.journals.filter(item => item.title.startsWith('分批失败恢复-')).length, 250, '重试同一备份应去重并恢复剩余记录');
-  console.log(`原生页面事件到临时 API 联调通过：${toolPage.data.tools.length} 工具/${profiles} 个版本保存与月报、tracker回填修订保留ID/数量、历史删除、工具JSON文件导出/导入恢复、日记心情/标签/目标与搜索/星图/删除/选中片段JSON恢复/仅心情保存、4 份结构化服务表单。`);
-  console.log('范围：Node 内执行页面逻辑与真实 API/临时文件；微信文件接口为模拟实现，未验证微信控件、原生文件选择分享或真机。');
-  console.log('备份边界：501条长中文日记按≤100条/≤1MiB分批恢复；第二批故障显示100/250进度，重试去重恢复250条。');
+  console.log(`原生页面事件到临时 API 联调通过：${toolPage.data.tools.length} 工具/${profiles} 个版本保存与月报、tracker回填修订保留ID/数量、历史删除与刷新持久化、日记心情/标签/目标、搜索与星图、仅心情保存、4份结构化服务表单；无JSON转移入口。`);
+  console.log('范围：Node内执行真实Page事件和隔离API，不代替微信运行或真机。');
   console.log('报告竞态：真实HTTP响应延迟乱序下，10月晚于9月返回、旧请求失败、切工具三种场景均保持当前报告与加载状态；qcd全部亲子版本指导/题目提示及suipian全部版本说明保留。');
 } finally {
   await new Promise(resolve => server.close(resolve));

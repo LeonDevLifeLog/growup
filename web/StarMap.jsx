@@ -8,13 +8,11 @@ import {
   Search,
   Sprout,
   Trash2,
-  Upload,
 } from "lucide-react";
 import { useApp, useResource } from "./context.jsx";
 import { Empty, PrivateNote, ResourceState } from "./components.jsx";
 import { MoodFace } from "./Illustrations.jsx";
 import { moodNames, shortDate } from "./api.js";
-import { downloadJson, importInBatches } from "./GrowthTools.jsx";
 
 const suggestedTags = ["学习", "朋友", "家庭", "运动", "兴趣", "发现自己"];
 export function StarMap() {
@@ -22,11 +20,9 @@ export function StarMap() {
   const resource = useResource("/journals", user?.role === "student");
   const map = useResource("/journals/map", user?.role === "student");
   const [query, setQuery] = useState("");
-  const [selected, setSelected] = useState([]);
   const [busy, setBusy] = useState(false);
   const [deleteId, setDeleteId] = useState("");
   const [error, setError] = useState("");
-  const input = useRef(null);
   const chart = useRef(null);
   const journals = resource.data?.journals || [];
   const rows = journals.filter((row) =>
@@ -34,65 +30,12 @@ export function StarMap() {
       query,
     ),
   );
-  async function backup(onlySelected = false) {
-    setBusy(true);
-    setError("");
-    try {
-      const data = await call("/journals/export");
-      if (onlySelected)
-        data.journals = data.journals.filter((row) =>
-          selected.includes(row.id),
-        );
-      downloadJson(
-        data,
-        onlySelected ? "成长健研社-星图片段.json" : "成长健研社-星图备份.json",
-      );
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setBusy(false);
-    }
-  }
-  async function importBackup(event) {
-    const file = event.target.files?.[0];
-    event.target.value = "";
-    if (!file) return;
-    setBusy(true);
-    setError("");
-    try {
-      if (file.size > 50 * 1024 * 1024)
-        throw new Error("每次请选择不超过 50 MB 的备份文件");
-      const data = JSON.parse(await file.text());
-      if (data.version !== 1 || !Array.isArray(data.journals))
-        throw new Error("请选择成长健研社 v1 星图备份");
-      const result = await importInBatches(
-        call,
-        "/journals/import",
-        "journals",
-        data.journals,
-      );
-      bump();
-      notify(
-        `已导入 ${result.imported} 条，跳过 ${result.skipped} 条重复记录。`,
-      );
-    } catch (error) {
-      if (error.partialImport) bump();
-      setError(
-        error instanceof SyntaxError
-          ? "文件不是有效的 JSON 备份"
-          : error.message,
-      );
-    } finally {
-      setBusy(false);
-    }
-  }
   async function remove(id) {
     setBusy(true);
     setError("");
     try {
       await call(`/journals/${id}`, { method: "DELETE" });
       setDeleteId("");
-      setSelected((ids) => ids.filter((item) => item !== id));
       bump();
       notify("这片成长碎片已删除。");
     } catch (error) {
@@ -204,45 +147,6 @@ export function StarMap() {
           />
         </label>
       </div>
-      <div className="journal-tools">
-        <div>
-          <button
-            className="text-button"
-            disabled={busy}
-            onClick={() => backup()}
-          >
-            <Download size={15} />
-            导出全部
-          </button>
-          <button
-            className="text-button"
-            disabled={busy}
-            onClick={() => input.current.click()}
-          >
-            <Upload size={15} />
-            导入备份
-          </button>
-          <input
-            hidden
-            ref={input}
-            type="file"
-            accept=".json,application/json"
-            onChange={importBackup}
-          />
-        </div>
-        <button
-          className="text-button"
-          disabled={busy || !selected.length}
-          onClick={() => backup(true)}
-        >
-          导出已选 {selected.length} 篇
-        </button>
-      </div>
-      {selected.length > 0 && (
-        <p className="field-hint">
-          导出的片段含私人内容，请确认后再自行分享给信任的人。
-        </p>
-      )}
       {error && (
         <p className="form-error" role="alert">
           {error}
@@ -261,21 +165,6 @@ export function StarMap() {
                     <CalendarDays size={14} />
                     {shortDate(row.createdAt)}
                   </span>
-                  <label className="journal-select">
-                    <input
-                      type="checkbox"
-                      aria-label={`选择 ${row.title}`}
-                      checked={selected.includes(row.id)}
-                      onChange={(event) =>
-                        setSelected((ids) =>
-                          event.target.checked
-                            ? [...ids, row.id]
-                            : ids.filter((id) => id !== row.id),
-                        )
-                      }
-                    />
-                    选择
-                  </label>
                 </div>
                 <button
                   className="journal-open"

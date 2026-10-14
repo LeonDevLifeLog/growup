@@ -162,23 +162,6 @@ export function createPersonalApi({ db, clock, readBody, json, ApiError }) {
       status: existing ? 200 : 201,
     };
   };
-  const journalSignature = (row) =>
-    JSON.stringify([
-      row.title,
-      row.content,
-      row.createdAt,
-      row.mood,
-      row.intensity,
-      [...row.tags].sort(),
-      row.goal,
-    ]);
-  const recordSignature = (tool, row) =>
-    JSON.stringify(
-      tool.mode === "tracker"
-        ? [row.profileId, row.date]
-        : [row.profileId, row.date, row.answers],
-    );
-
   return async function personalApi(req, res, path, url, user) {
     const isPersonal =
       path === "/tools" ||
@@ -193,10 +176,9 @@ export function createPersonalApi({ db, clock, readBody, json, ApiError }) {
       return true;
     };
     if (path === "/tools" && method === "GET") return send(200, { tools });
-    const match =
-      /^\/tools\/([^/]+)\/(records|report|export|import)(?:\/([^/]+))?$/.exec(
-        path,
-      );
+    const match = /^\/tools\/([^/]+)\/(records|report)(?:\/([^/]+))?$/.exec(
+      path,
+    );
     if (match) {
       let tool;
       try {
@@ -237,45 +219,6 @@ export function createPersonalApi({ db, clock, readBody, json, ApiError }) {
           ),
         });
       }
-      if (action === "export" && !recordId && method === "GET")
-        return send(200, {
-          version: 1,
-          toolId: tool.id,
-          records: records(user.id, tool.id),
-        });
-      if (action === "import" && !recordId && method === "POST") {
-        const body = await readBody(req, 2097152);
-        if (!Array.isArray(body.records) || body.records.length > 2000)
-          fail(400, "每次可导入最多2000条记录，请分批导入");
-        if (body.toolId !== undefined && body.toolId !== tool.id)
-          fail(400, "备份不属于此工具");
-        const incoming = body.records.map((row) => {
-          if (!row || typeof row !== "object" || Array.isArray(row))
-            fail(400, "记录需为对象");
-          if (row.toolId !== undefined && row.toolId !== tool.id)
-            fail(400, "备份含其他工具的记录");
-          return toolInput(tool, row);
-        });
-        const keys = new Set(
-          records(user.id, tool.id).map((row) => recordSignature(tool, row)),
-        );
-        let imported = 0;
-        db.exec("BEGIN");
-        try {
-          for (const row of incoming) {
-            const key = recordSignature(tool, row);
-            if (keys.has(key)) continue;
-            saveRecord(user.id, tool, row);
-            keys.add(key);
-            imported++;
-          }
-          db.exec("COMMIT");
-        } catch (error) {
-          db.exec("ROLLBACK");
-          throw error;
-        }
-        return send(200, { imported, skipped: incoming.length - imported });
-      }
     }
     if (path === "/journals" && method === "GET")
       return send(200, { journals: ownJournals(db, user.id) });
@@ -283,52 +226,6 @@ export function createPersonalApi({ db, clock, readBody, json, ApiError }) {
       return send(201, {
         journal: insertJournal(user.id, journalInput(await readBody(req))),
       });
-    if (path === "/journals/export" && method === "GET") {
-      const ids = url.searchParams.has("ids")
-        ? new Set(url.searchParams.get("ids").split(","))
-        : null;
-      return send(200, {
-        version: 1,
-        exportedAt: stamp(),
-        journals: ownJournals(db, user.id).filter(
-          (row) => !ids || ids.has(row.id),
-        ),
-      });
-    }
-    if (path === "/journals/import" && method === "POST") {
-      const body = await readBody(req, 2097152);
-      if (!Array.isArray(body.journals) || body.journals.length > 2000)
-        fail(400, "每次可导入最多2000篇日记，请分批导入");
-      const incoming = body.journals.map((row) => {
-        const data = journalInput(row);
-        const createdAt = row.createdAt ?? stamp();
-        if (
-          typeof createdAt !== "string" ||
-          !Number.isFinite(Date.parse(createdAt)) ||
-          new Date(createdAt) > clock() ||
-          new Date(createdAt) < new Date("1900-01-01T00:00:00Z")
-        )
-          fail(400, "日记时间无效");
-        return { ...data, createdAt: new Date(createdAt).toISOString() };
-      });
-      const keys = new Set(ownJournals(db, user.id).map(journalSignature));
-      let imported = 0;
-      db.exec("BEGIN");
-      try {
-        for (const row of incoming) {
-          const key = journalSignature(row);
-          if (keys.has(key)) continue;
-          insertJournal(user.id, row, row.createdAt);
-          keys.add(key);
-          imported++;
-        }
-        db.exec("COMMIT");
-      } catch (error) {
-        db.exec("ROLLBACK");
-        throw error;
-      }
-      return send(200, { imported, skipped: incoming.length - imported });
-    }
     if (path === "/journals/map" && method === "GET") {
       const journals = ownJournals(db, user.id);
       const today = shanghaiDate(clock());

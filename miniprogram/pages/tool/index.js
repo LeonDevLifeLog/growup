@@ -1,12 +1,11 @@
 const { request, requireStudent, localTime } = require('../../utils/api');
 const { withValues, validate, reportView } = require('../../utils/forms');
-const { exportJson, pickJson, showExportResult, importBatches } = require('../../utils/files');
 
 Page({
   data: {
     tool: null, tools: [], toolIndex: 0, profileIndex: 0, profileNames: [], profileDescription: '', fields: [], answers: {},
     today: '', date: '', month: '', tab: 'entry', loading: true, saving: false, deleting: false,
-    records: [], report: null, result: null, error: '', success: '', reportLoading: false, fileBusy: false
+    records: [], report: null, result: null, error: '', success: '', reportLoading: false
   },
   async onLoad(options) {
     if (!requireStudent()) return;
@@ -142,32 +141,5 @@ Page({
       if (isCurrent()) this.setData({ report: reportView(report, '我的月度成长回顾') });
     } catch (error) { if (isCurrent()) this.setData({ error: error.message }); }
     finally { if (isCurrent()) this.setData({ reportLoading: false }); }
-  },
-  async exportRecords() {
-    if (this.data.fileBusy) return;
-    this.setData({ fileBusy: true, error: '' });
-    try {
-      const data = await request('/tools/' + encodeURIComponent(this.data.tool.id) + '/export');
-      showExportResult(await exportJson(data, 'growup-' + this.data.tool.id + '-' + this.data.today + '.json'));
-    } catch (error) { this.setData({ error: error.message }); }
-    finally { this.setData({ fileBusy: false }); }
-  },
-  async importRecords() {
-    if (this.data.fileBusy) return;
-    this.setData({ fileBusy: true, error: '', success: '' });
-    try {
-      const data = await pickJson();
-      if (!data || !Array.isArray(data.records) || data.toolId !== this.data.tool.id) throw new Error('请选择当前工具导出的 JSON 备份');
-      const result = await importBatches('/tools/' + encodeURIComponent(this.data.tool.id) + '/import', 'records', data.records, progress => this.setData({ success: '导入中：已处理 ' + progress.processed + '/' + progress.total + ' 条。' }), { toolId: this.data.tool.id });
-      this.invalidateReport();
-      this.setData({ success: '已导入 ' + result.imported + ' 条，跳过 ' + result.skipped + ' 条重复记录。' });
-      await this.loadRecords();
-    } catch (error) {
-      if (!error.cancelled) {
-        await this.loadRecords().catch(() => {});
-        this.setData({ error: error.message, success: '' });
-      }
-    }
-    finally { this.setData({ fileBusy: false }); }
   }
 });
