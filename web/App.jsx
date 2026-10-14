@@ -28,6 +28,7 @@ import Auth from "./Auth.jsx";
 import Enrollment from "./Enrollment.jsx";
 import Platform, { ChangePassword } from "./Platform.jsx";
 import UserManagement from "./UserManagement.jsx";
+import Setup from "./Setup.jsx";
 import {
   GrowthTool,
   ToolCatalog,
@@ -91,6 +92,8 @@ export default function App() {
   const [refresh, setRefresh] = useState(0);
   const [toast, setToast] = useState(null);
   const [demo, setDemo] = useState(false);
+  // undefined while checking; a fresh install shows the setup wizard instead of the app.
+  const [setup, setSetup] = useState(undefined);
   const [ready, setReady] = useState(!token);
   const adminView = view.startsWith("admin");
   const notify = useCallback(
@@ -120,8 +123,12 @@ export default function App() {
   );
   useEffect(() => {
     request("/health")
-      .then((data) => setDemo(data.demo))
-      .catch(() => {});
+      .then((data) => {
+        setDemo(data.demo);
+        return data.needsSetup ? request("/setup") : null;
+      })
+      .then((data) => setSetup(data?.needsSetup ? data : null))
+      .catch(() => setSetup(null));
   }, []);
   useEffect(() => {
     let active = true;
@@ -258,6 +265,21 @@ export default function App() {
               { id: "admin-users", label: "用户管理", icon: UserCog },
             ]
         : studentNav;
+  if (setup === undefined)
+    return <div className="loading">正在打开成长空间…</div>;
+  if (setup)
+    return (
+      <AppContext.Provider value={context}>
+        <Setup
+          tokenRequired={setup.tokenRequired}
+          onDone={(result) => {
+            setSetup(null);
+            authenticate(result);
+            notify("初始化完成，欢迎开始使用。");
+          }}
+        />
+      </AppContext.Provider>
+    );
   let content;
   if (!ready) content = <div className="loading">正在打开成长空间…</div>;
   else if (adminView && !isAdmin(user))

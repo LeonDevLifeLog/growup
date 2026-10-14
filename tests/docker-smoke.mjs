@@ -6,7 +6,13 @@ import { resolve } from "node:path";
 
 // This test owns a fresh Compose project and removes only its disposable volume.
 const project = `growup-test-${randomBytes(4).toString("hex")}`;
-const env = { ...process.env, APP_PORT: "0", BIND_ADDRESS: "127.0.0.1" };
+const setupToken = randomBytes(12).toString("hex");
+const env = {
+  ...process.env,
+  APP_PORT: "0",
+  BIND_ADDRESS: "127.0.0.1",
+  SETUP_TOKEN: setupToken,
+};
 const checks = [];
 function compose(args, input) {
   return execFileSync("docker", ["compose", "-p", project, ...args], {
@@ -37,7 +43,11 @@ function record(value) {
 try {
   compose(["up", "-d", "--no-build", "--wait", "--wait-timeout", "60"]);
   base = `http://${compose(["port", "app", "8787"])}`;
-  assert.deepEqual((await request("/health")).body, { ok: true, demo: false });
+  assert.deepEqual((await request("/health")).body, {
+    ok: true,
+    demo: false,
+    needsSetup: true,
+  });
   const blank = JSON.parse(
     compose([
       "exec",
@@ -60,20 +70,33 @@ try {
     account: "container.admin",
     password,
   };
-  const provisioned = JSON.parse(
-    compose(
-      ["exec", "-T", "app", "node", "server/bootstrap.mjs"],
-      JSON.stringify(input),
-    ),
+  assert.deepEqual((await request("/setup")).body, {
+    needsSetup: true,
+    tokenRequired: true,
+  });
+  assert.equal(
+    (await request("/setup", { body: { ...input, setupToken: "wrong" } }))
+      .status,
+    403,
   );
-  assert.equal(provisioned.created, true);
-  assert.equal(JSON.stringify(provisioned).includes(password), false);
+  const setup = await request("/setup", { body: { ...input, setupToken } });
+  assert.equal(setup.status, 201, JSON.stringify(setup.body));
+  assert.equal(setup.body.user.role, "platform_admin");
+  assert.equal(
+    (await request("/setup", { body: { ...input, setupToken } })).status,
+    409,
+  );
+  assert.equal((await request("/health")).body.needsSetup, false);
+  const logs = compose(["logs", "app"]);
+  assert.equal(logs.includes(password) || logs.includes(setupToken), false);
   const login = await request("/auth/login", {
     body: { regionId: null, account: input.account, password },
   });
   assert.equal(login.status, 200, JSON.stringify(login.body));
   assert.equal(login.body.user.role, "platform_admin");
-  record("容器标准输入初始化真实管理员，账号可登录且密码不进入输出");
+  record(
+    "容器经网页初始化接口创建首位平台管理员：初始化口令校验、只能完成一次，口令与密码不进入日志",
+  );
   const region = await request("/platform/regions", {
     token: login.body.token,
     body: { name: "容器验证大区" },

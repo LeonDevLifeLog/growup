@@ -5,6 +5,9 @@ Base `/api`；JSON；失败 `{error: '中文原因'}`；身份为 `Authorization
 ## 公共/账号
 
 - `GET /health` → `{ok:true,demo:boolean}`
+- `GET /health` → `{ok,demo,needsSetup}`；`needsSetup` 为 true 表示尚无平台管理员。
+- `GET /setup` → `{needsSetup,tokenRequired}`。
+- `POST /setup` `{setupToken?,name,account,password,regionName?,schoolName?}` → `{token,user}`，201。首次初始化：仅在正式模式且尚无平台管理员时可用，原子创建平台管理员（可选第一个大区和学校）并返回会话；已初始化或演示模式409；配置了 `SETUP_TOKEN` 时口令错误403；填学校未填大区400。操作写入管理审计，不记录密码或口令。
 - `GET /regions` → `{regions:[{id,name,schools:[{id,name}]}]}`。平台配置的动态大区，仅返回启用的大区及学校；正式空库为 `[]`。
 - `POST /auth/login` `{regionId,account,password}` → `{token,user}`；用户 `{id,account,name,role,regionId,regionName,schoolId,schoolName}`。
 - `POST /auth/invite` `{regionId,inviteCode}` → `{invitation:{regionId,regionName,schoolId,schoolName,expiresAt}}`；仅校验并核对，不占名额。
@@ -27,7 +30,7 @@ Base `/api`；JSON；失败 `{error: '中文原因'}`；身份为 `Authorization
 - `PATCH /platform/regions/:id` / `/platform/schools/:id` `{name?,active?:boolean}` → `{ok:true}`。不能迁移学校归属，停用撤销对应账号会话。
 - `GET /platform/audit` → `{events:[{id,action,targetId,detail,createdAt,actorName}]}`，最近100次组织/管理员变更，不含密码。
 
-重复名称/账号409，无效归属400，未知对象404。首位平台管理员只通过 `server/bootstrap.mjs` 初始化；已有平台管理员则拒绝重复初始化。
+重复名称/账号409，无效归属400，未知对象404。首位平台管理员通过下文“首次初始化”接口（网页向导）创建，`server/bootstrap.mjs` 仅作应急；已有平台管理员则拒绝重复初始化。
 
 ## 用户目录与管理员任命
 

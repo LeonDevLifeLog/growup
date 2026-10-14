@@ -12,6 +12,7 @@ import {
 import { serviceForms, formatServiceForm } from "./service-forms.mjs";
 import { createEnrollmentApi, findInvite } from "./enrollment.mjs";
 import { createManagementApi } from "./management.mjs";
+import { createSetupApi, hasPlatformAdmin } from "./setup.mjs";
 import { isCareAdmin, inCareScope, careScope } from "./permissions.mjs";
 
 const TOPICS = ["成长烦恼", "校园日常", "家庭关系", "小小确幸"];
@@ -111,6 +112,7 @@ export function createApp({
   demo = false,
   now = () => new Date(),
   staticPath = resolve(ROOT, "dist"),
+  setupToken = "",
 } = {}) {
   const clock = () => new Date(typeof now === "function" ? now() : now);
   const db = openDatabase(dbPath, demo, clock());
@@ -169,6 +171,20 @@ export function createApp({
   const stamp = () => clock().toISOString();
   const today = () => shanghaiDate(clock());
   const authAttempts = new Map();
+  const setupApi = createSetupApi({
+    db,
+    demo,
+    setupToken,
+    clock,
+    readBody,
+    requiredText,
+    accountText,
+    passwordText,
+    ApiError,
+    json,
+    session,
+    limitedAuth,
+  });
 
   function session(user) {
     const token = randomBytes(32).toString("hex");
@@ -351,7 +367,12 @@ export function createApp({
     const path = url.pathname.slice(4);
     const method = req.method;
     if (method === "GET" && path === "/health")
-      return json(res, 200, { ok: true, demo });
+      return json(res, 200, {
+        ok: true,
+        demo,
+        needsSetup: !demo && !hasPlatformAdmin(db),
+      });
+    if (await setupApi(req, res, path)) return;
     if (method === "GET" && path === "/regions") {
       const regions = db
         .prepare("SELECT id, name FROM regions WHERE active=1 ORDER BY rowid")

@@ -1,8 +1,8 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { randomUUID } from "node:crypto";
-import { openDatabase, hashPassword } from "./db.mjs";
+import { openDatabase } from "./db.mjs";
+import { insertFirstAdmin } from "./setup.mjs";
 
 /** First platform operator only. Credentials enter through stdin. */
 export function bootstrap(
@@ -23,24 +23,21 @@ export function bootstrap(
   try {
     db.exec("BEGIN IMMEDIATE");
     try {
-      if (db.prepare("SELECT 1 FROM users WHERE role='platform_admin'").get())
-        throw new Error("平台管理员已存在，请通过管理后台维护账号");
-      if (
-        db
-          .prepare("SELECT 1 FROM users WHERE account=?")
-          .get(account.toLowerCase())
-      )
-        throw new Error("该账号已存在，初始化不会覆盖已有账号");
-      const id = randomUUID();
-      db.prepare(
-        `INSERT INTO users (id,account,password_hash,name,role,region_id,school_id,created_at)
-        VALUES (?,?,?,?,'platform_admin',NULL,NULL,?)`,
-      ).run(
-        id,
-        account.toLowerCase(),
-        hashPassword(password),
-        name.trim(),
+      insertFirstAdmin(
+        db,
+        {
+          account: account.toLowerCase(),
+          name: name.trim(),
+          password,
+        },
         new Date().toISOString(),
+        (status, message) => {
+          throw new Error(
+            status === 409 && message.startsWith("系统已完成")
+              ? "平台管理员已存在，请通过管理后台维护账号"
+              : message,
+          );
+        },
       );
       db.exec("COMMIT");
       return {

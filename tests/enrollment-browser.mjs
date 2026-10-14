@@ -4,7 +4,7 @@ import { resolve } from "node:path";
 import { chromium, expect } from "@playwright/test";
 import { productionFixture } from "./helpers/enrollment.mjs";
 
-const fixture = await productionFixture();
+const fixture = await productionFixture({ setup: "web" });
 const browser = await chromium.launch({ channel: "chrome", headless: true });
 const errors = [],
   checks = [];
@@ -58,7 +58,47 @@ async function noOverflow(page) {
 }
 try {
   const platform = await newPage();
-  await login(platform, "platform.owner", true);
+  await platform.goto(fixture.base + "/#admin");
+  await expect(
+    platform.getByRole("heading", { name: "欢迎使用成长健研社" }),
+  ).toBeVisible();
+  await expect(platform.locator(".sidebar")).toHaveCount(0);
+  await platform.getByRole("button", { name: /下一步/ }).click();
+  await platform.getByLabel("你的称呼", { exact: true }).fill("平台负责人");
+  await platform.getByLabel("登录账号", { exact: true }).fill("platform.owner");
+  await platform.getByLabel("密码", { exact: true }).fill(fixture.password);
+  await platform
+    .getByLabel("确认密码", { exact: true })
+    .fill(fixture.password + "x");
+  await platform.getByRole("button", { name: /下一步/ }).click();
+  await expect(platform.getByRole("alert")).toContainText(
+    "两次输入的密码不一致",
+  );
+  await platform.getByLabel("确认密码", { exact: true }).fill(fixture.password);
+  await platform.getByRole("button", { name: /下一步/ }).click();
+  await expect(
+    platform.getByRole("heading", { name: "开通第一个组织（可选）" }),
+  ).toBeVisible();
+  await noOverflow(platform);
+  await platform.screenshot({
+    path: resolve(artifact, "setup-wizard.png"),
+    fullPage: true,
+  });
+  await platform.getByRole("button", { name: "跳过，稍后创建" }).click();
+  await expect(
+    platform.getByRole("heading", { name: "平台管理", exact: true }),
+  ).toBeVisible();
+  assert.equal((await fixture.ok("/setup")).needsSetup, false);
+  const late = await newPage();
+  await late.goto(fixture.base);
+  await expect(
+    late.getByRole("heading", { name: "欢迎使用成长健研社" }),
+  ).toHaveCount(0);
+  await late.close();
+  record(
+    "空库首次访问自动进入网页初始化向导，校验确认密码后创建平台管理员并自动登录，完成后向导永久关闭",
+  );
+  await platform.reload();
   await expect(
     platform.getByRole("heading", { name: "平台管理", exact: true }),
   ).toBeVisible();

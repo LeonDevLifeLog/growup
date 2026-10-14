@@ -6,14 +6,20 @@ import { randomBytes } from "node:crypto";
 import { bootstrap } from "../../server/bootstrap.mjs";
 import { createApp } from "../../server/app.mjs";
 
-export async function productionFixture({ now = new Date(), staticPath } = {}) {
+export async function productionFixture({
+  now = new Date(),
+  staticPath,
+  setup = "bootstrap",
+} = {}) {
   const directory = mkdtempSync(join(tmpdir(), "growup-enrollment-"));
   const dbPath = join(directory, "official.sqlite");
   const password = randomBytes(18).toString("base64url");
-  bootstrap(
-    { account: "platform.owner", name: "平台负责人", password },
-    { dbPath },
-  );
+  // setup: "web" leaves an empty database for the browser setup wizard.
+  if (setup === "bootstrap")
+    bootstrap(
+      { account: "platform.owner", name: "平台负责人", password },
+      { dbPath },
+    );
   let current = new Date(now);
   const app = createApp({
     dbPath,
@@ -48,7 +54,7 @@ export async function productionFixture({ now = new Date(), staticPath } = {}) {
       method: "POST",
       body: { account, regionId, password: secret },
     });
-  const owner = await login("platform.owner");
+  const owner = setup === "bootstrap" ? await login("platform.owner") : null;
   async function create(path, body, token = owner.token) {
     return ok(path, { method: "POST", body, token }, 201);
   }

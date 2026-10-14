@@ -17,12 +17,13 @@ const PASSWORD = "Growup123!";
 
 async function fixture(
   t,
-  { demo = true, dbPath = ":memory:", now = NOW } = {},
+  { demo = true, dbPath = ":memory:", now = NOW, setupToken = "" } = {},
 ) {
   let current = new Date(now);
   const app = createApp({
     dbPath,
     demo,
+    setupToken,
     now: () => current,
     staticPath: "/nonexistent-growup-static",
   });
@@ -126,6 +127,7 @@ test("production creates no demo accounts/invites; explicit demo adds stable fic
   assert.deepEqual((await production.request("/health")).body, {
     ok: true,
     demo: false,
+    needsSetup: true,
   });
   assert.equal(
     production.app.db.prepare("SELECT COUNT(*) count FROM users").get().count,
@@ -1530,5 +1532,127 @@ test("manual JSON transfer endpoints are absent and cannot write or expose recor
     report.sections.find((section) => section.title === "睡眠因素共现线索")
       .items,
     ["目前的记录尚未呈现明显的睡眠因素共现线索，可以继续观察。"],
+  );
+});
+
+test("first-run web setup creates one platform administrator and optional organization, then closes", async (t) => {
+  const f = await fixture(t, { demo: false });
+  const strong = "Setup-Owner-Password-2026";
+  assert.deepEqual((await f.request("/setup")).body, {
+    needsSetup: true,
+    tokenRequired: false,
+  });
+  for (const body of [
+    { name: "负责人", account: "owner", password: "short" },
+    { name: "负责人", account: "x", password: strong },
+    {
+      name: "负责人",
+      account: "owner",
+      password: strong,
+      schoolName: "孤立学校",
+    },
+  ])
+    assert.equal(
+      (await f.request("/setup", { method: "POST", body })).status,
+      400,
+    );
+  assert.equal(f.app.db.prepare("SELECT COUNT(*) n FROM users").get().n, 0);
+  const body = {
+    name: "平台负责人",
+    account: "Platform.Owner",
+    password: strong,
+    regionName: "华东大区",
+    schoolName: "第一中学",
+  };
+  const [first, second] = await Promise.all([
+    f.request("/setup", { method: "POST", body }),
+    f.request("/setup", {
+      method: "POST",
+      body: { ...body, account: "racer" },
+    }),
+  ]);
+  assert.deepEqual([first.status, second.status].sort(), [201, 409]);
+  const winner = first.status === 201 ? first : second;
+  assert.equal(winner.body.user.role, "platform_admin");
+  assert.equal(
+    (await f.request("/auth/me", { token: winner.body.token })).body.user.role,
+    "platform_admin",
+  );
+  assert.equal(
+    f.app.db
+      .prepare("SELECT COUNT(*) n FROM users WHERE role='platform_admin'")
+      .get().n,
+    1,
+  );
+  const regions = (await f.request("/regions")).body.regions;
+  assert.deepEqual(
+    regions.map((row) => [row.name, row.schools.map((s) => s.name)]),
+    [["华东大区", ["第一中学"]]],
+  );
+  assert.deepEqual(
+    f.app.db
+      .prepare("SELECT action FROM admin_audit ORDER BY rowid")
+      .all()
+      .map((row) => row.action),
+    ["system.setup", "region.create", "school.create"],
+  );
+  assert.equal(
+    JSON.stringify(
+      f.app.db.prepare("SELECT detail FROM admin_audit").all(),
+    ).includes(strong),
+    false,
+  );
+  assert.deepEqual((await f.request("/setup")).body, {
+    needsSetup: false,
+    tokenRequired: false,
+  });
+  assert.equal((await f.request("/health")).body.needsSetup, false);
+  assert.equal(
+    (
+      await f.request("/setup", {
+        method: "POST",
+        body: { ...body, account: "late.owner" },
+      })
+    ).status,
+    409,
+  );
+});
+
+test("setup token guards first-run setup and demo mode never offers setup", async (t) => {
+  const guarded = await fixture(t, {
+    demo: false,
+    setupToken: "deploy-secret-7788",
+  });
+  assert.equal((await guarded.request("/setup")).body.tokenRequired, true);
+  const body = {
+    name: "负责人",
+    account: "owner",
+    password: "Setup-Owner-Password-2026",
+  };
+  for (const setupToken of [undefined, "", "wrong-secret"])
+    assert.equal(
+      (
+        await guarded.request("/setup", {
+          method: "POST",
+          body: { ...body, setupToken },
+        })
+      ).status,
+      403,
+    );
+  assert.equal(
+    (
+      await guarded.request("/setup", {
+        method: "POST",
+        body: { ...body, setupToken: "deploy-secret-7788" },
+      })
+    ).status,
+    201,
+  );
+  assert.equal((await guarded.request("/setup")).body.tokenRequired, false);
+  const demo = await fixture(t, { demo: true });
+  assert.equal((await demo.request("/setup")).body.needsSetup, false);
+  assert.equal(
+    (await demo.request("/setup", { method: "POST", body })).status,
+    409,
   );
 });

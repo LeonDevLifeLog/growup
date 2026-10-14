@@ -10,6 +10,7 @@ const app = createApp({
     process.env.DATA_PATH ?? (demo ? "data/demo.sqlite" : "data/growup.sqlite"),
   ),
   demo,
+  setupToken: process.env.SETUP_TOKEN || "",
 });
 app.listen(port, process.env.HOST ?? "127.0.0.1", () => {
   console.log(
