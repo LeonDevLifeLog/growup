@@ -2,6 +2,16 @@
 
 服务镜像包含 Node.js API 和构建后的学生端、网页管理后台。需要 Docker Engine 与 Compose v2。默认使用国内 Node 镜像和 npm 源；构建参数可以按所在网络更换。
 
+## 最快上线路径
+
+1. 服务器安装 Docker Engine 与 Compose v2，取得代码。
+2. 公网可访问时先设置初始化口令，再启动：`SETUP_TOKEN='随机字符串' docker compose up -d --build`。
+3. 配置域名 HTTPS 反向代理到 `127.0.0.1:8080`（见下文“HTTPS 反向代理”）。
+4. 浏览器打开 `https://你的域名/`，按“首次安装初始化”向导创建平台管理员，按“开通进度”清单开通大区、学校和管理员。
+5. 配置定时备份（见“备份与恢复”）；如使用小程序，按“微信小程序”一节修改 API 地址并配置合法域名。
+
+全程不需要进入容器执行命令。
+
 ## 启动
 
 ```sh
@@ -56,7 +66,27 @@ docker compose logs --tail=100 app
 
 重新创建容器不会删除命名卷。`docker compose down` 保留数据；不要使用 `down -v`，该参数会删除数据库卷。当前 SQLite 部署采用单实例，不要把同一个数据库文件挂载给多个跨主机实例。
 
-备份应先停止写入，再将完整数据目录保存到受限备份目录；包括 SQLite 的数据库、WAL 和 SHM 文件。恢复时同样先停止服务，将完整目录恢复到数据卷并保持 uid/gid 1000 的写权限，然后启动并核验账号与记录。不要只复制运行中主数据库文件。
+## 备份与恢复
+
+使用 SQLite 在线备份，服务无需停机，得到一份一致的单文件副本：
+
+```sh
+docker compose exec -T app node --input-type=module -e "import { DatabaseSync, backup } from 'node:sqlite'; await backup(new DatabaseSync(process.env.DATA_PATH), '/app/data/backup.sqlite')"
+docker compose cp app:/app/data/backup.sqlite ./growup-$(date +%Y%m%d).sqlite
+```
+
+可将这两行放入宿主机每日定时任务，并把备份文件保存到受限目录或异地存储。备份含学生个人数据，务必控制访问权限。不要只复制运行中的 `growup.sqlite`（WAL 中可能还有未合并的数据）。
+
+恢复时先停止服务，把备份文件放入数据卷，再由应用用户覆盖数据库并删除旧的 `-wal`、`-shm` 文件（这样文件归属保持为容器内的 `node` 用户，否则数据库会变为只读），然后启动并核验账号与记录：
+
+```sh
+docker compose stop app
+docker compose cp ./growup-20261014.sqlite app:/app/data/restore.sqlite
+docker compose run --rm --entrypoint sh app -c "cp /app/data/restore.sqlite /app/data/growup.sqlite && rm -f /app/data/restore.sqlite /app/data/growup.sqlite-wal /app/data/growup.sqlite-shm"
+docker compose start app
+```
+
+以上备份、恢复命令已在临时 Compose 项目中实测：恢复后数据回到备份时状态，账号可正常登录。
 
 ## 旧版本升级
 
@@ -64,9 +94,33 @@ docker compose logs --tail=100 app
 
 升级后若尚无平台管理员，打开站点按向导完成初始化，再由平台为学校创建学校管理员并发放新的限时限额邀请码。既有管理员沿用原账号；可在平台任命表单调整管理员角色和管理范围，调整后旧会话失效。学校组织的区域归属保持固定。本次升级会重建用户表约束，使待授权用户可归属大区/学校，保留用户ID、密码摘要、角色和归属。请先在备份副本验证升级，当前测试覆盖旧结构、身份映射和外键关联保留。
 
-## 微信与公网
+## HTTPS 反向代理
 
-正式环境将域名的 HTTPS 请求反向代理到应用端口，保留 `/api/` 路径。将小程序 `miniprogram/config.js` 的 `apiBase` 配置为 `https://实际域名/api`，在微信后台配置 request 合法域名，并使用真实 AppID。
+应用默认只监听本机 `127.0.0.1:8080`，由同机反向代理提供 HTTPS，保留 `/api/` 路径。Caddy 会自动申请证书：
+
+```
+你的域名 {
+  reverse_proxy 127.0.0.1:8080
+}
+```
+
+使用 Nginx 时（证书自行配置）：
+
+```nginx
+server {
+  listen 443 ssl;
+  server_name 你的域名;
+  client_max_body_size 1m;
+  location / {
+    proxy_pass http://127.0.0.1:8080;
+    proxy_set_header Host $host;
+  }
+}
+```
+
+## 微信小程序
+
+将 `miniprogram/config.js` 的 `apiBase` 改为 `https://你的域名/api`，在微信公众平台“开发管理 → 服务器域名”中把该域名加入 request 合法域名，并使用真实 AppID 上传发布。学生在小程序中选择大区、凭邀请码注册，与网页共用同一账号和数据。
 
 本地容器健康和浏览器验证不表示公网证书、微信白名单或真机发布已经完成；这些步骤需实际域名、服务器和微信账号。
 
