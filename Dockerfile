@@ -3,7 +3,7 @@ FROM ${NODE_IMAGE} AS build
 WORKDIR /app
 ARG NPM_REGISTRY=https://registry.npmmirror.com
 COPY package.json package-lock.json ./
-RUN npm ci --registry=${NPM_REGISTRY}
+RUN npm ci --registry=${NPM_REGISTRY} --replace-registry-host=always
 COPY index.html vite.config.js ./
 COPY web ./web
 COPY docs/guide ./docs/guide

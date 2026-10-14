@@ -12,6 +12,18 @@
 
 全程不需要进入容器执行命令。
 
+## 使用已发布的镜像
+
+CI 会把通过测试的镜像发布到 GitHub Container Registry。服务器上不必构建，直接指定镜像启动（包为私有时先 `docker login ghcr.io`，使用带 `read:packages` 权限的令牌）：
+
+```sh
+export GROWUP_IMAGE=ghcr.io/<owner>/<repo>:latest   # 或固定版本，如 :1.2.3
+docker compose pull
+SETUP_TOKEN='随机字符串' docker compose up -d --no-build
+```
+
+升级时更换标签后重复 `pull` 与 `up -d --no-build`，数据卷保持不变。
+
 ## 启动
 
 ```sh

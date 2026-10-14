@@ -1,6 +1,7 @@
 services:
   app:
-    image: growup:local
+    # Set GROWUP_IMAGE to run a published image, e.g. ghcr.io/<owner>/<repo>:latest
+    image: ${GROWUP_IMAGE:-growup:local}
     build:
       context: .
       args:
