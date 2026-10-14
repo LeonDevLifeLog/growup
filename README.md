@@ -66,6 +66,8 @@ node scripts/extract-questionnaires.mjs --verify # 公开问答算法1600案例�
 
 ## 构建与运行
 
+正式容器部署使用 `docker compose up -d --build`，默认端口 `127.0.0.1:8080`，演示模式关闭，SQLite 保存在持久化命名卷。管理员初始化、域名接入与运维步骤见 [Docker 部署](docs/DEPLOYMENT.md)。镜像构建后可用 `npm run test:docker` 验证正式空库、初始化、非 root 运行和重建后的数据保留；该测试只使用并清理独立临时卷。
+
 ```sh
 npm run build
 DEMO_MODE=1 npm start     # 本地构建产物＋独立演示库，8787端口

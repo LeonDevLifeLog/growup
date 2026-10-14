@@ -12,6 +12,7 @@
     "test": "node --test tests/server/*.test.mjs",
     "test:ui": "node tests/browser.mjs",
     "test:ui:migration": "node tests/migration-browser.mjs",
+    "test:docker": "node tests/docker-smoke.mjs",
     "check:mini": "node miniprogram/validate.mjs",
     "check": "npm run build && npm test && npm run check:mini",
     "format": "prettier --write web server scripts tests vite.config.js package.json"

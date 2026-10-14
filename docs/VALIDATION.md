@@ -69,6 +69,10 @@
 
 本轮构建、26项HTTP测试、11组浏览器业务闭环及10页WXML编译通过。另以真实Chrome检查桌面及手机首页、关于页、8个模块与后台署名，结果见 [品牌检查](verification/brand-review.json)、[桌面首页](verification/brand-home-desktop.png)、[手机关于页](verification/brand-about-mobile.png)。旧报告的读取、月报和导出均显示当前产品说明，已在独立SQLite中验证，答案与数值结果一致。页面检查不代表微信真机交互已经完成。
 
+## Docker 部署验证
+
+实际构建 `growup:local` 镜像，并以独立临时 Compose 项目运行 `node tests/docker-smoke.mjs`：空正式库无演示账号和邀请码；容器 uid 1000、API 健康与网页可用；标准输入初始化管理员后可登录；强制重建容器后账号和会话保留。测试完成仅清理本测试创建的临时数据卷。机器结果见 [Docker 检查](verification/docker-result.json)。未验证公网 HTTPS 或微信真机发布。
+
 ## 尚未验证或接入
 
 - 微信IDE全部业务闭环、真机交互及发布；底部导航已在IDE模拟器验证，当前AppID仍为占位，正式HTTPS和合法域名未配置。
