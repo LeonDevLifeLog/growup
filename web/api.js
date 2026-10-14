@@ -32,6 +32,7 @@ export async function request(path, { token, method = "GET", body } = {}) {
 }
 
 export const roleNames = {
+  user: "待授权用户",
   platform_admin: "平台管理员",
   region_admin: "大区管理员",
   school_admin: "学校管理员",

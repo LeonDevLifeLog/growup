@@ -71,6 +71,7 @@ test("platform owns dynamic organizations and admin lifecycle; lower roles canno
         method: "POST",
         token: f.owner.token,
         body: {
+          userId: f.schoolAdminA.user.id,
           role: "school_admin",
           regionId: f.regionB.id,
           schoolId: f.schoolA.id,
@@ -515,11 +516,15 @@ test("legacy database upgrade preserves referenced data and maps admin to region
       );
     legacy.exec(`CREATE TABLE sessions(token_hash TEXT PRIMARY KEY,user_id TEXT NOT NULL REFERENCES users(id),expires_at TEXT NOT NULL);
       INSERT INTO sessions VALUES('preserved-session','legacy-admin','2026-12-01T00:00:00.000Z');`);
+    legacy.exec(
+      "ALTER TABLE users ADD COLUMN active INTEGER NOT NULL DEFAULT 1; UPDATE users SET active=0 WHERE id='legacy-admin'",
+    );
     legacy.close();
     const db = openDatabase(path, false, new Date("2026-10-14T00:00:00Z"));
     try {
       const user = db.prepare("SELECT * FROM users").get();
       assert.equal(user.role, "region_admin");
+      assert.equal(user.active, 0);
       assert.equal(user.school_id, null);
       assert.equal(db.prepare("SELECT COUNT(*) n FROM regions").get().n, 1);
       assert.equal(
@@ -550,4 +555,280 @@ test("legacy database upgrade preserves referenced data and maps admin to region
   } finally {
     rmSync(directory, { recursive: true, force: true });
   }
+});
+
+test("user directory owns identities and assignments reuse accounts while revoking previous scope", async (t) => {
+  const f = await fixture(t);
+  const staff = await f.create("/platform/users", {
+    account: "existing.staff",
+    name: "既有工作人员",
+    password: f.password,
+    role: "platform_admin",
+  });
+  const ownerOptions = { token: f.owner.token };
+  const target = f.app.db
+    .prepare("SELECT * FROM users WHERE id=?")
+    .get(staff.id);
+  assert.equal(target.role, "user");
+  assert.equal(
+    (
+      await f.ok("/platform/organizations", { token: f.owner.token })
+    ).admins.some((row) => row.id === staff.id),
+    false,
+  );
+  assert.equal(
+    (
+      await f.request("/auth/login", {
+        method: "POST",
+        body: { account: "existing.staff", password: f.password },
+      })
+    ).status,
+    403,
+  );
+  const search = await f.ok("/platform/users?q=existing.staff", ownerOptions);
+  assert.equal(search.total, 1);
+  assert.equal(search.users[0].id, staff.id);
+  assert.equal(JSON.stringify(search).includes("password"), false);
+  const count = f.app.db.prepare("SELECT COUNT(*) n FROM users").get().n;
+  const appoint = (body) =>
+    f.ok("/platform/admins", {
+      method: "POST",
+      token: f.owner.token,
+      body: { userId: staff.id, ...body },
+    });
+  await appoint({
+    role: "school_admin",
+    regionId: f.regionA.id,
+    schoolId: f.schoolA.id,
+  });
+  let manager = await f.login("existing.staff", f.regionA.id);
+  assert.equal(manager.user.id, staff.id);
+  assert.equal(
+    f.app.db.prepare("SELECT password_hash FROM users WHERE id=?").get(staff.id)
+      .password_hash,
+    target.password_hash,
+  );
+  const teacherRequest = await f.create(
+    "/service-requests",
+    {
+      formId: "r22",
+      answers: Object.fromEntries(
+        (await f.ok("/service-forms", { token: manager.token })).forms
+          .find((form) => form.id === "r22")
+          .profiles[0].fields.filter((field) => field.required)
+          .map((field) => [
+            field.id,
+            field.type === "single"
+              ? field.options[0].value
+              : field.type === "multi"
+                ? [field.options[0].value]
+                : field.type === "number"
+                  ? (field.min ?? 1)
+                  : "真实教师需求",
+          ]),
+      ),
+    },
+    manager.token,
+  );
+  await appoint({ role: "region_admin", regionId: f.regionB.id });
+  assert.equal(
+    (await f.request("/auth/me", { token: manager.token })).status,
+    401,
+  );
+  manager = await f.login("existing.staff", f.regionB.id);
+  assert.equal(manager.user.role, "region_admin");
+  assert.equal(manager.user.schoolId, null);
+  assert.equal(
+    (
+      await f.ok("/admin/service-requests", { token: manager.token })
+    ).requests.some((row) => row.id === teacherRequest.request.id),
+    false,
+  );
+  assert.equal(
+    (
+      await f.ok("/admin/service-requests", { token: f.areaA.token })
+    ).requests.some((row) => row.id === teacherRequest.request.id),
+    true,
+  );
+  assert.equal(
+    (
+      await f.request(`/admin/students/${"student-hainan"}`, {
+        token: manager.token,
+      })
+    ).status,
+    404,
+  );
+  assert.equal(f.app.db.prepare("SELECT COUNT(*) n FROM users").get().n, count);
+  await f.ok(`/platform/admins/${staff.id}/revoke`, {
+    method: "POST",
+    token: f.owner.token,
+    body: {},
+  });
+  assert.equal(
+    (await f.request("/auth/me", { token: manager.token })).status,
+    401,
+  );
+  assert.equal(
+    f.app.db.prepare("SELECT role FROM users WHERE id=?").get(staff.id).role,
+    "user",
+  );
+  await f.ok(`/platform/users/${staff.id}`, {
+    method: "PATCH",
+    token: f.owner.token,
+    body: { active: false },
+  });
+  assert.equal(
+    (
+      await f.request("/platform/admins", {
+        method: "POST",
+        token: f.owner.token,
+        body: { userId: staff.id, role: "platform_admin" },
+      })
+    ).status,
+    400,
+  );
+  for (const path of ["/platform/users", "/platform/users?assignable=1"])
+    assert.equal(
+      (await f.request(path, { token: f.schoolAdminA.token })).status,
+      403,
+    );
+  assert.equal(
+    (
+      await f.request("/platform/users", {
+        token: f.owner.token,
+        method: "POST",
+        body: { account: "existing.staff", name: "重复", password: f.password },
+      })
+    ).status,
+    409,
+  );
+  assert.equal(
+    (
+      await f.request("/platform/admins", {
+        token: f.owner.token,
+        method: "POST",
+        body: {
+          userId: f.owner.user.id,
+          role: "region_admin",
+          regionId: f.regionA.id,
+        },
+      })
+    ).status,
+    400,
+  );
+  assert.equal(
+    (
+      await f.request(`/platform/admins/${f.owner.user.id}/revoke`, {
+        token: f.owner.token,
+        method: "POST",
+        body: {},
+      })
+    ).status,
+    400,
+  );
+  const invitation = await f.invite(f.schoolA.id, f.schoolAdminA.token);
+  const student = (
+    await f.register("directory.student", f.regionA.id, invitation.code)
+  ).body;
+  assert.equal(
+    (
+      await f.request("/platform/admins", {
+        token: f.owner.token,
+        method: "POST",
+        body: {
+          userId: student.user.id,
+          role: "region_admin",
+          regionId: f.regionA.id,
+        },
+      })
+    ).status,
+    400,
+  );
+  const candidates = await f.ok("/platform/users?assignable=1", ownerOptions);
+  assert.equal(
+    candidates.users.some((row) => row.id === student.user.id),
+    false,
+  );
+});
+
+test("user directory pagination, filters, disable and password reset remain platform-only", async (t) => {
+  const f = await fixture(t);
+  const staff = await f.create("/platform/users", {
+    account: "search.person",
+    name: "可检索用户",
+    password: f.password,
+  });
+  const digest = f.app.db
+    .prepare("SELECT password_hash FROM users WHERE id=?")
+    .get(staff.id).password_hash;
+  const insert = f.app.db.prepare(
+    "INSERT INTO users (id,account,password_hash,name,role,created_at) VALUES (?,?,?,?,'user',?)",
+  );
+  for (let i = 0; i < 53; i++)
+    insert.run(
+      "list-" + i,
+      "list." + i,
+      digest,
+      "列表用户" + i,
+      new Date().toISOString(),
+    );
+  const options = { token: f.owner.token };
+  const first = await f.ok("/platform/users?role=user", options),
+    second = await f.ok("/platform/users?role=user&page=2", options);
+  assert.equal(first.total, 54);
+  assert.equal(first.users.length, 50);
+  assert.equal(second.users.length, 4);
+  assert.equal(
+    new Set([...first.users, ...second.users].map((row) => row.id)).size,
+    54,
+  );
+  assert.equal(
+    (await f.request("/platform/users?page=Infinity", options)).status,
+    400,
+  );
+  assert.equal(
+    (await f.ok("/platform/users?q=可检索", options)).users[0].id,
+    staff.id,
+  );
+  await f.ok("/platform/admins", {
+    method: "POST",
+    token: f.owner.token,
+    body: {
+      userId: staff.id,
+      role: "school_admin",
+      regionId: f.regionA.id,
+      schoolId: f.schoolA.id,
+    },
+  });
+  const manager = await f.login("search.person", f.regionA.id);
+  await f.ok(`/platform/users/${staff.id}`, {
+    method: "PATCH",
+    token: f.owner.token,
+    body: { name: "已更名", password: "Reset-For-Staff-92929" },
+  });
+  assert.equal(
+    (await f.request("/auth/me", { token: manager.token })).status,
+    401,
+  );
+  const reset = await f.login(
+    "search.person",
+    f.regionA.id,
+    "Reset-For-Staff-92929",
+  );
+  assert.equal(reset.user.name, "已更名");
+  await f.ok(`/platform/users/${staff.id}`, {
+    method: "PATCH",
+    token: f.owner.token,
+    body: { active: false },
+  });
+  assert.equal(
+    (await f.request("/auth/me", { token: reset.token })).status,
+    401,
+  );
+  assert.equal(
+    JSON.stringify(await f.ok("/platform/audit", options)).includes(
+      "Reset-For-Staff-92929",
+    ),
+    false,
+  );
 });

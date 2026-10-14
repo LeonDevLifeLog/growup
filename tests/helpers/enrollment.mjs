@@ -76,13 +76,23 @@ export async function productionFixture({ now = new Date(), staticPath } = {}) {
     ];
     const managers = {};
     for (const [account, role, region, school] of accounts) {
-      await create("/platform/admins", {
+      const target = await create("/platform/users", {
         account,
-        role,
-        regionId: region.id,
-        schoolId: school?.id,
         name: account,
         password,
+      });
+      await ok("/platform/admins", {
+        method: "POST",
+        token: owner.token,
+        body: {
+          userId: target.id,
+          account,
+          role,
+          regionId: region.id,
+          schoolId: school?.id,
+          name: account,
+          password,
+        },
       });
       managers[account] = await login(account, region.id);
     }

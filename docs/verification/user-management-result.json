@@ -1,0 +1,24 @@
+{
+  "verifiedAt": "2026-10-14T11:40:41.580Z",
+  "checks": [
+    "Docker游客首页和后台直达均不显示管理菜单",
+    "原平台账号在更新后的实际容器中可登录，用户管理及已有用户任命正常显示",
+    "平台退出后立即移除管理菜单，恢复普通访客导航"
+  ],
+  "errors": [],
+  "docker": {
+    "project": "growup-acceptance-20261014",
+    "url": "http://127.0.0.1:8080",
+    "health": true,
+    "existingIdentityAndPasswordDigestUnchanged": true,
+    "counts": {
+      "regions": 1,
+      "schools": 1,
+      "users": 2,
+      "checkins": 0,
+      "journals": 0,
+      "tool_records": 0
+    },
+    "foreignKeyErrors": 0
+  }
+}

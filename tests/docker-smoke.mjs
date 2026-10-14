@@ -86,11 +86,17 @@ try {
   });
   assert.equal(school.status, 201);
   const schoolId = school.body.id;
+  const staff = await request("/platform/users", {
+    token: login.body.token,
+    body: { account: "container.school", password, name: "学校负责人" },
+  });
+  assert.equal(staff.status, 201);
   assert.equal(
     (
       await request("/platform/admins", {
         token: login.body.token,
         body: {
+          userId: staff.body.id,
           role: "school_admin",
           regionId,
           schoolId,
@@ -100,7 +106,7 @@ try {
         },
       })
     ).status,
-    201,
+    200,
   );
   const teacher = await request("/auth/login", {
     body: { regionId, account: "container.school", password },

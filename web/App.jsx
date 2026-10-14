@@ -26,6 +26,7 @@ import { Locked, Mark, Modal } from "./components.jsx";
 import Auth from "./Auth.jsx";
 import Enrollment from "./Enrollment.jsx";
 import Platform, { ChangePassword } from "./Platform.jsx";
+import UserManagement from "./UserManagement.jsx";
 import {
   GrowthTool,
   ToolCatalog,
@@ -68,7 +69,9 @@ const adminNav = [
   { id: "admin-enrollment", label: "学校与邀请", icon: Users },
 ];
 const allowedViews = new Set(
-  [...studentNav, ...adminNav, { id: "profile" }].map((n) => n.id),
+  [...studentNav, ...adminNav, { id: "admin-users" }, { id: "profile" }].map(
+    (n) => n.id,
+  ),
 );
 
 export default function App() {
@@ -222,11 +225,17 @@ export default function App() {
     logout,
     requireStudent,
   };
-  const nav = adminView
-    ? user?.role === "platform_admin"
-      ? [{ id: "admin", label: "平台管理", icon: LayoutDashboard }]
-      : adminNav
-    : studentNav;
+  const nav =
+    adminView && !isAdmin(user)
+      ? []
+      : adminView
+        ? user?.role === "platform_admin"
+          ? [
+              { id: "admin", label: "平台管理", icon: LayoutDashboard },
+              { id: "admin-users", label: "用户管理", icon: Users },
+            ]
+          : adminNav
+        : studentNav;
   let content;
   if (!ready) content = <div className="loading">正在打开成长空间…</div>;
   else if (adminView && !isAdmin(user))
@@ -237,7 +246,8 @@ export default function App() {
         description="请使用学校授权的本大区管理账号登录。"
       />
     );
-  else if (adminView && user?.role === "platform_admin") content = <Platform />;
+  else if (adminView && user?.role === "platform_admin")
+    content = view === "admin-users" ? <UserManagement /> : <Platform />;
   else if (!adminView && isAdmin(user))
     content = (
       <div className="panel admin-student-gate">
@@ -335,14 +345,16 @@ export default function App() {
               我想找人聊聊
               <ArrowUpRight size={16} />
             </button>
-            <button
-              className={`nav-item admin-switch ${adminView ? "active-sub" : ""}`}
-              onClick={() => setView(adminView ? "home" : "admin")}
-            >
-              <ShieldCheck size={19} />
-              {adminView ? "返回成长空间" : "成长关怀后台"}
-              <ArrowUpRight size={15} />
-            </button>
+            {isAdmin(user) && (
+              <button
+                className={`nav-item admin-switch ${adminView ? "active-sub" : ""}`}
+                onClick={() => setView(adminView ? "home" : "admin")}
+              >
+                <ShieldCheck size={19} />
+                {adminView ? "返回成长空间" : "成长关怀后台"}
+                <ArrowUpRight size={15} />
+              </button>
+            )}
             <small className="sidebar-copyright">
               © 2026 成长健研社 · 陪伴每一种可能
             </small>
@@ -710,9 +722,7 @@ function ModalBody({ modal: m }) {
           同学和普通审核列表只看到化名与内容。平台为审核与举报保存账号关联，因此不承诺绝对匿名。
         </p>
         <h3>管理自己的记录</h3>
-        <p>
-          你可以在星图和成长工具中导出备份或删除记录。备份包含私人内容，请妥善保管，分享前确认接收对象。
-        </p>
+        <p>日记和成长工具记录按账号保存在系统中，可在对应页面查看和删除。</p>
       </div>
     );
   return (

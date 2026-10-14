@@ -400,6 +400,8 @@ export function createApp({
         if (!row || !verifyPassword(password, row.password_hash))
           throw new ApiError(401, "账号或密码不正确");
         const user = queryUser.get(row.id);
+        if (user.role === "user")
+          throw new ApiError(403, "账号尚未分配访问权限，请联系平台管理员");
         if (!enabledUser(user))
           throw new ApiError(403, "账号或所属机构已停用，请联系平台管理员");
         if (user.role !== "platform_admin") regionIdText(body.regionId);
@@ -665,7 +667,7 @@ export function createApp({
         createdAt: stamp(),
       };
       db.prepare(
-        "INSERT INTO service_requests VALUES (?, ?, ?, ?, ?, ?, ?)",
+        "INSERT INTO service_requests (id,user_id,region_id,type,message,status,created_at,school_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
       ).run(
         request.id,
         user.id,
@@ -674,6 +676,7 @@ export function createApp({
         message,
         request.status,
         request.createdAt,
+        user.school_id,
       );
       return json(res, 201, { request });
     }
@@ -708,7 +711,7 @@ export function createApp({
         pendingPosts: pendingPosts.length,
         requests: db
           .prepare(
-            `SELECT COUNT(*) count FROM service_requests sr JOIN users u ON u.id=sr.user_id WHERE ${scope.sql} AND sr.status = 'pending'`,
+            `SELECT COUNT(*) count FROM service_requests sr WHERE ${careScope(user, "sr").sql} AND sr.status = 'pending'`,
           )
           .get(...scope.args).count,
       };
@@ -793,11 +796,11 @@ export function createApp({
       return json(res, 200, { ok: true });
     }
     if (method === "GET" && path === "/admin/service-requests") {
-      const scope = careScope(user);
+      const scope = careScope(user, "sr");
       const requests = db
         .prepare(
           `SELECT sr.id, sr.type, sr.message, sr.status, sr.created_at createdAt, u.name userName, s.name schoolName
-        FROM service_requests sr JOIN users u ON u.id = sr.user_id LEFT JOIN schools s ON s.id = u.school_id
+        FROM service_requests sr JOIN users u ON u.id = sr.user_id LEFT JOIN schools s ON s.id = sr.school_id
         WHERE ${scope.sql} ORDER BY sr.created_at DESC, sr.rowid DESC`,
         )
         .all(...scope.args);
@@ -805,7 +808,7 @@ export function createApp({
     }
     const requestMatch = /^\/admin\/service-requests\/([^/]+)$/.exec(path);
     if (method === "POST" && requestMatch) {
-      const scope = careScope(user);
+      const scope = careScope(user, "sr");
       const request = db
         .prepare(
           `SELECT sr.id FROM service_requests sr JOIN users u ON u.id=sr.user_id WHERE sr.id = ? AND ${scope.sql}`,

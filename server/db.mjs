@@ -128,6 +128,19 @@ export function openDatabase(dbPath, demo, now) {
     );
   }
   migrateIdentity(db);
+  if (
+    !db
+      .prepare("PRAGMA table_info(service_requests)")
+      .all()
+      .some((column) => column.name === "school_id")
+  ) {
+    db.exec(
+      "ALTER TABLE service_requests ADD COLUMN school_id TEXT REFERENCES schools(id)",
+    );
+    db.exec(
+      "UPDATE service_requests SET school_id=(SELECT school_id FROM users WHERE id=service_requests.user_id)",
+    );
+  }
   const region = db.prepare(
     "INSERT OR IGNORE INTO regions (id,name) VALUES (?, ?)",
   );
@@ -330,7 +343,7 @@ function seedDemo(db, now) {
       stamp,
     );
     db.prepare(
-      "INSERT OR IGNORE INTO service_requests VALUES (?, ?, ?, ?, ?, ?, ?)",
+      "INSERT OR IGNORE INTO service_requests (id,user_id,region_id,type,message,status,created_at,school_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
     ).run(
       "service-demo",
       "student-yellow",
@@ -339,6 +352,7 @@ function seedDemo(db, now) {
       "希望预约一次关于学习压力与同伴关系的成长交流。",
       "pending",
       stamp,
+      "hainan-school",
     );
     db.prepare("INSERT INTO settings VALUES ('demo_seeded', ?)").run(stamp);
     db.exec("COMMIT");

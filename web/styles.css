@@ -1089,6 +1089,23 @@ textarea {
 .platform-grid .form-stack {
   margin-top: 20px;
 }
+.user-create-form {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: end;
+  margin-top: 20px;
+}
+.user-create-form > small {
+  grid-column: 1 / -1;
+}
+.user-create-form > button {
+  justify-self: start;
+}
+@media (max-width: 900px) {
+  .user-create-form {
+    grid-template-columns: 1fr;
+  }
+}
 .platform-admin-table {
   min-width: 800px;
 }

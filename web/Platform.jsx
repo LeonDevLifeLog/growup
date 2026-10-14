@@ -87,8 +87,10 @@ const actionNames = {
   "school.create": "新增学校",
   "regions.update": "更新大区",
   "schools.update": "更新学校",
-  "admin.create": "新增管理员",
-  "admin.update": "更新管理员",
+  "user.create": "新增用户",
+  "user.update": "更新用户",
+  "admin.assign": "任命管理员",
+  "admin.revoke": "撤销管理员权限",
 };
 export default function Platform() {
   const { user, call, bump, notify } = useApp();
@@ -100,9 +102,11 @@ export default function Platform() {
   const [adminRegion, setAdminRegion] = useState(""),
     [adminSchool, setAdminSchool] = useState("");
   const [role, setRole] = useState("region_admin");
-  const [name, setName] = useState(""),
-    [account, setAccount] = useState(""),
-    [password, setPassword] = useState("");
+  const [candidateQuery, setCandidateQuery] = useState("");
+  const [userId, setUserId] = useState("");
+  const candidates = useResource(
+    "/platform/users?assignable=1&q=" + encodeURIComponent(candidateQuery),
+  );
   const [busy, setBusy] = useState(false),
     [error, setError] = useState("");
   const [editor, setEditor] = useState(null),
@@ -141,7 +145,7 @@ export default function Platform() {
     setConfirmation({ kind, row });
   }
   function edit(kind, row) {
-    setEditor({ kind, id: row.id, name: row.name, password: "" });
+    setEditor({ kind, id: row.id, name: row.name });
     setError("");
   }
   return (
@@ -149,7 +153,7 @@ export default function Platform() {
       <PageTitle
         eyebrow="GROWTH COMMUNITY ADMINISTRATION"
         title="平台管理"
-        description="维护大区、学校和管理员账号。区域关怀由大区和学校工作人员按权限开展。"
+        description="维护大区与学校，从已有工作人员中任命管理员。账号资料在用户管理中维护。"
       />
       {error && (
         <p role="alert" className="form-error">
@@ -235,8 +239,8 @@ export default function Platform() {
               </button>
             </form>
           </section>
-          <section className="panel" aria-label="新增管理员">
-            <h2>新增管理员</h2>
+          <section className="panel" aria-label="任命管理员" id="assign-admin">
+            <h2>任命管理员</h2>
             <form
               className="form-stack"
               onSubmit={(e) => {
@@ -244,22 +248,51 @@ export default function Platform() {
                 mutate(
                   "/platform/admins",
                   {
+                    userId,
                     role,
-                    name,
-                    account,
-                    password,
                     regionId: chosenAdminRegion,
                     schoolId: chosenAdminSchool,
                   },
                   "POST",
-                  () => {
-                    setName("");
-                    setAccount("");
-                    setPassword("");
-                  },
                 );
               }}
             >
+              <label>
+                搜索已有用户
+                <input
+                  value={candidateQuery}
+                  onChange={(e) => {
+                    setCandidateQuery(e.target.value);
+                    setUserId("");
+                  }}
+                  placeholder="输入工作人员账号或称呼"
+                  disabled={busy}
+                />
+              </label>
+              <label>
+                选择已有用户
+                <select
+                  aria-label="选择已有用户"
+                  value={userId}
+                  onChange={(e) => setUserId(e.target.value)}
+                  required
+                  disabled={busy || candidates.loading}
+                >
+                  <option value="">请选择工作人员</option>
+                  {(candidates.data?.users || [])
+                    .filter((row) => row.id !== user.id)
+                    .map((row) => (
+                      <option key={row.id} value={row.id}>
+                        {row.name} · {row.account}
+                      </option>
+                    ))}
+                </select>
+              </label>
+              {candidates.error && (
+                <p role="alert" className="form-error">
+                  {candidates.error}
+                </p>
+              )}
               <label>
                 角色
                 <select
@@ -269,7 +302,13 @@ export default function Platform() {
                   disabled={busy}
                 >
                   {Object.entries(roleNames)
-                    .filter(([id]) => id !== "student")
+                    .filter(([id]) =>
+                      [
+                        "platform_admin",
+                        "region_admin",
+                        "school_admin",
+                      ].includes(id),
+                    )
                     .map(([id, label]) => (
                       <option key={id} value={id}>
                         {label}
@@ -317,55 +356,19 @@ export default function Platform() {
                   </select>
                 </label>
               )}
-              <label>
-                管理员称呼
-                <input
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  required
-                  maxLength={40}
-                  disabled={busy}
-                />
-              </label>
-              <label>
-                登录账号
-                <input
-                  value={account}
-                  onChange={(e) => setAccount(e.target.value)}
-                  required
-                  minLength={3}
-                  maxLength={40}
-                  pattern="[A-Za-z0-9._-]+"
-                  autoComplete="off"
-                  placeholder="3–40 位字母、数字、点、下划线或短横线"
-                  disabled={busy}
-                />
-              </label>
-              <label>
-                初始密码
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  minLength={8}
-                  maxLength={128}
-                  autoComplete="new-password"
-                  disabled={busy}
-                />
-              </label>
               <small>
-                通过受控渠道告知本人，首次登录后可在账号中修改密码。角色和归属创建后固定。
+                请先在用户管理中建立工作人员账号。任命沿用已有账号和密码，调整权限后须重新登录。
               </small>
               <button
                 className="button primary"
                 disabled={
                   busy ||
+                  !userId ||
                   (role !== "platform_admin" && !chosenAdminRegion) ||
                   (role === "school_admin" && !chosenAdminSchool)
                 }
               >
-                创建管理员
+                保存任命
               </button>
             </form>
           </section>
@@ -373,23 +376,40 @@ export default function Platform() {
         {confirmation && (
           <section className="panel" role="alert">
             <h3>
-              {confirmation.row.active ? "确认停用" : "确认启用"}“
-              {confirmation.row.name}”？
+              {confirmation.kind === "revoke"
+                ? "确认撤销权限"
+                : confirmation.row.active
+                  ? "确认停用"
+                  : "确认启用"}
+              “{confirmation.row.name}”？
             </h3>
-            <p>停用大区或学校会阻止所属账号访问和新学生注册，历史数据保留。</p>
+            <p>
+              {confirmation.kind === "revoke"
+                ? "撤销后账号保留为待授权用户，所有会话退出。"
+                : "停用大区或学校会阻止所属账号访问和新学生注册，历史数据保留。"}
+            </p>
             <div className="invite-actions">
               <button
                 className="button secondary"
                 disabled={busy}
                 onClick={() =>
                   mutate(
-                    `/platform/${confirmation.kind}/${confirmation.row.id}`,
-                    { active: !confirmation.row.active },
-                    "PATCH",
+                    confirmation.kind === "revoke"
+                      ? `/platform/admins/${confirmation.row.id}/revoke`
+                      : `/platform/${confirmation.kind}/${confirmation.row.id}`,
+                    confirmation.kind === "revoke"
+                      ? {}
+                      : { active: !confirmation.row.active },
+                    confirmation.kind === "revoke" ? "POST" : "PATCH",
                   )
                 }
               >
-                确认{confirmation.row.active ? "停用" : "启用"}
+                确认
+                {confirmation.kind === "revoke"
+                  ? "撤销权限"
+                  : confirmation.row.active
+                    ? "停用"
+                    : "启用"}
               </button>
               <button
                 className="text-button"
@@ -412,7 +432,6 @@ export default function Platform() {
                   `/platform/${editor.kind}/${editor.id}`,
                   {
                     name: editor.name,
-                    ...(editor.password ? { password: editor.password } : {}),
                   },
                   "PATCH",
                   () => setEditor(null),
@@ -430,22 +449,6 @@ export default function Platform() {
                   maxLength={editor.kind === "admins" ? 40 : 80}
                 />
               </label>
-              {editor.kind === "admins" && (
-                <label>
-                  重置密码
-                  <input
-                    type="password"
-                    value={editor.password}
-                    onChange={(e) =>
-                      setEditor({ ...editor, password: e.target.value })
-                    }
-                    minLength={8}
-                    maxLength={128}
-                    autoComplete="new-password"
-                    placeholder="留空表示保留密码；重置后所有旧会话退出"
-                  />
-                </label>
-              )}
               <div className="invite-actions">
                 <button className="button primary" disabled={busy}>
                   保存资料
@@ -576,17 +579,26 @@ export default function Platform() {
                       <div className="invite-actions">
                         <button
                           className="text-button"
-                          disabled={busy}
-                          onClick={() => edit("admins", row)}
+                          disabled={busy || row.id === user.id}
+                          onClick={() => {
+                            setCandidateQuery(row.account);
+                            setUserId(row.id);
+                            setRole(row.role);
+                            setAdminRegion(row.regionId || "");
+                            setAdminSchool(row.schoolId || "");
+                            document
+                              .getElementById("assign-admin")
+                              ?.scrollIntoView({ behavior: "smooth" });
+                          }}
                         >
-                          编辑 / 重置密码
+                          调整权限
                         </button>
                         <button
                           className="text-button"
                           disabled={busy || user.id === row.id}
-                          onClick={() => toggle("admins", row)}
+                          onClick={() => toggle("revoke", row)}
                         >
-                          {row.active ? "停用" : "启用"}
+                          撤销权限
                         </button>
                       </div>
                     </td>

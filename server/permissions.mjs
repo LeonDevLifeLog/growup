@@ -19,22 +19,26 @@ export function careScope(user, alias = "u") {
 
 export function migrateIdentity(db) {
   const columns = db.prepare("PRAGMA table_info(users)").all();
-  if (!columns.some((column) => column.name === "active")) {
+  const hasActive = columns.some((column) => column.name === "active");
+  const schema = db
+    .prepare("SELECT sql FROM sqlite_master WHERE name='users'")
+    .get().sql;
+  if (!hasActive || !schema.includes("'user'")) {
     // Rebuild with foreign keys temporarily disabled; preserve referenced IDs.
     db.exec("PRAGMA foreign_keys=OFF; BEGIN IMMEDIATE");
     try {
       db.exec(`CREATE TABLE users_next (
         id TEXT PRIMARY KEY, account TEXT NOT NULL UNIQUE COLLATE NOCASE, password_hash TEXT NOT NULL,
-        name TEXT NOT NULL, role TEXT NOT NULL CHECK(role IN ('student','platform_admin','region_admin','school_admin')),
+        name TEXT NOT NULL, role TEXT NOT NULL CHECK(role IN ('user','student','platform_admin','region_admin','school_admin')),
         region_id TEXT REFERENCES regions(id), school_id TEXT REFERENCES schools(id), created_at TEXT NOT NULL,
         active INTEGER NOT NULL DEFAULT 1 CHECK(active IN (0,1)),
-        CHECK((role='platform_admin' AND region_id IS NULL AND school_id IS NULL)
+        CHECK((role IN ('user','platform_admin') AND region_id IS NULL AND school_id IS NULL)
           OR (role='region_admin' AND region_id IS NOT NULL AND school_id IS NULL)
           OR (role IN ('student','school_admin') AND region_id IS NOT NULL AND school_id IS NOT NULL))
       );
-      INSERT INTO users_next (id,account,password_hash,name,role,region_id,school_id,created_at)
+      INSERT INTO users_next (id,account,password_hash,name,role,region_id,school_id,created_at,active)
         SELECT id,account,password_hash,name,CASE WHEN role='admin' THEN 'region_admin' ELSE role END,
-          region_id,CASE WHEN role='admin' THEN NULL ELSE school_id END,created_at FROM users;
+          region_id,CASE WHEN role='admin' THEN NULL ELSE school_id END,created_at,${hasActive ? "active" : "1"} FROM users;
       DROP TABLE users;
       ALTER TABLE users_next RENAME TO users;
       CREATE INDEX users_region ON users(region_id,role);

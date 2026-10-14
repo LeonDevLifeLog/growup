@@ -43,7 +43,7 @@ export function createManagementApi({
         `SELECT u.id,u.account,u.name,u.role,u.active,u.region_id regionId,r.name regionName,
       u.school_id schoolId,s.name schoolName,u.created_at createdAt FROM users u
       LEFT JOIN regions r ON r.id=u.region_id LEFT JOIN schools s ON s.id=u.school_id
-      WHERE u.role!='student' ORDER BY u.created_at,u.rowid`,
+      WHERE u.role IN ('platform_admin','region_admin','school_admin') ORDER BY u.created_at,u.rowid`,
       )
       .all();
   }
@@ -143,13 +143,76 @@ export function createManagementApi({
       json(res, 200, { ok: true });
       return true;
     }
+    if (req.method === "GET" && path === "/platform/users") {
+      const params = new URL(req.url, "http://localhost").searchParams;
+      const q = (params.get("q") || "").trim().slice(0, 80);
+      const role = params.get("role") || "";
+      const assignable = params.get("assignable") === "1";
+      if (role && !["user", "student", ...adminRoles].includes(role))
+        throw new ApiError(400, "用户类型无效");
+      const page = Number(params.get("page") || 1);
+      if (!Number.isSafeInteger(page) || page < 1 || page > 1000000)
+        throw new ApiError(400, "页码无效");
+      const where = ["1=1"],
+        args = [];
+      if (q) {
+        where.push("(instr(lower(u.account),lower(?))>0 OR instr(u.name,?)>0)");
+        args.push(q, q);
+      }
+      if (role) {
+        where.push("u.role=?");
+        args.push(role);
+      }
+      if (assignable) where.push("u.active=1 AND u.role!='student'");
+      const condition = where.join(" AND ");
+      const total = db
+        .prepare(`SELECT COUNT(*) n FROM users u WHERE ${condition}`)
+        .get(...args).n;
+      const users = db
+        .prepare(
+          `SELECT u.id,u.account,u.name,u.role,u.active,u.region_id regionId,r.name regionName,
+        u.school_id schoolId,s.name schoolName,u.created_at createdAt FROM users u
+        LEFT JOIN regions r ON r.id=u.region_id LEFT JOIN schools s ON s.id=u.school_id
+        WHERE ${condition} ORDER BY u.created_at DESC,u.rowid DESC LIMIT 50 OFFSET ?`,
+        )
+        .all(...args, (page - 1) * 50);
+      json(res, 200, { users, total, page, pageSize: 50 });
+      return true;
+    }
+    if (req.method === "POST" && path === "/platform/users") {
+      const body = await readBody(req);
+      const account = accountText(body.account),
+        name = requiredText(body.name, "用户称呼", 40);
+      const digest = hashPassword(passwordText(body.password));
+      if (db.prepare("SELECT 1 FROM users WHERE account=?").get(account))
+        throw new ApiError(409, "该账号已被使用");
+      const id = randomUUID();
+      audit(user, "user.create", id, { account, name }, () =>
+        db
+          .prepare(
+            "INSERT INTO users (id,account,password_hash,name,role,region_id,school_id,created_at) VALUES (?,?,?,?,'user',NULL,NULL,?)",
+          )
+          .run(id, account, digest, name, clock().toISOString()),
+      );
+      json(res, 201, { id });
+      return true;
+    }
     if (req.method === "POST" && path === "/platform/admins") {
       const body = await readBody(req);
       if (!adminRoles.includes(body.role))
         throw new ApiError(400, "管理员角色无效");
-      const account = accountText(body.account),
-        name = requiredText(body.name, "管理员称呼", 40);
-      const digest = hashPassword(passwordText(body.password));
+      const target =
+        typeof body.userId === "string" &&
+        db.prepare("SELECT * FROM users WHERE id=?").get(body.userId);
+      if (!target) throw new ApiError(400, "请从已有用户列表选择工作人员");
+      if (target.role === "student")
+        throw new ApiError(
+          400,
+          "学生账号不能任命为管理员，请先在用户管理中建立工作人员账号",
+        );
+      if (!target.active) throw new ApiError(400, "请先启用该用户");
+      if (target.id === user.id)
+        throw new ApiError(400, "不能调整当前平台账号权限");
       let regionId = null,
         schoolId = null;
       if (body.role !== "platform_admin")
@@ -165,39 +228,53 @@ export function createManagementApi({
         if (!school) throw new ApiError(400, "请选择本大区有效学校");
         schoolId = school.id;
       }
-      if (db.prepare("SELECT 1 FROM users WHERE account=?").get(account))
-        throw new ApiError(409, "该账号已被使用");
-      const id = randomUUID();
       audit(
         user,
-        "admin.create",
-        id,
-        { account, role: body.role, regionId, schoolId },
-        () =>
-          db
-            .prepare(
-              `INSERT INTO users (id,account,password_hash,name,role,region_id,school_id,created_at) VALUES (?,?,?,?,?,?,?,?)`,
-            )
-            .run(
-              id,
-              account,
-              digest,
-              name,
-              body.role,
-              regionId,
-              schoolId,
-              clock().toISOString(),
-            ),
+        "admin.assign",
+        target.id,
+        { account: target.account, role: body.role, regionId, schoolId },
+        () => {
+          db.prepare(
+            "UPDATE users SET role=?,region_id=?,school_id=? WHERE id=?",
+          ).run(body.role, regionId, schoolId, target.id);
+          db.prepare("DELETE FROM sessions WHERE user_id=?").run(target.id);
+        },
       );
-      json(res, 201, { admin: admins().find((row) => row.id === id) });
+      json(res, 200, { admin: admins().find((row) => row.id === target.id) });
       return true;
     }
-    const adminMatch = /^\/platform\/admins\/([^/]+)$/.exec(path);
-    if (req.method === "PATCH" && adminMatch) {
+    const revoke = /^\/platform\/admins\/([^/]+)\/revoke$/.exec(path);
+    if (req.method === "POST" && revoke) {
+      const target = db
+        .prepare(
+          "SELECT * FROM users WHERE id=? AND role IN ('platform_admin','region_admin','school_admin')",
+        )
+        .get(revoke[1]);
+      if (!target) throw new ApiError(404, "管理员不存在");
+      if (target.id === user.id)
+        throw new ApiError(400, "不能撤销当前平台账号权限");
+      audit(
+        user,
+        "admin.revoke",
+        target.id,
+        { account: target.account },
+        () => {
+          db.prepare(
+            "UPDATE users SET role='user',region_id=NULL,school_id=NULL WHERE id=?",
+          ).run(target.id);
+          db.prepare("DELETE FROM sessions WHERE user_id=?").run(target.id);
+        },
+      );
+      json(res, 200, { ok: true });
+      return true;
+    }
+    const userMatch = /^\/platform\/(users|admins)\/([^/]+)$/.exec(path);
+    if (req.method === "PATCH" && userMatch) {
       const row = db
-        .prepare("SELECT * FROM users WHERE id=? AND role!='student'")
-        .get(adminMatch[1]);
-      if (!row) throw new ApiError(404, "管理员不存在");
+        .prepare("SELECT * FROM users WHERE id=?")
+        .get(userMatch[2]);
+      if (!row || (userMatch[1] === "admins" && !adminRoles.includes(row.role)))
+        throw new ApiError(404, "用户不存在");
       const body = await readBody(req);
       if (
         ["role", "regionId", "schoolId", "account"].some((key) =>
@@ -206,7 +283,7 @@ export function createManagementApi({
       )
         throw new ApiError(
           400,
-          "账号、角色和归属创建后不可改动，请停用旧账号并新建",
+          "账号不可修改；管理员权限与归属请通过任命功能调整",
         );
       if (body.active !== undefined && typeof body.active !== "boolean")
         throw new ApiError(400, "启用状态无效");
@@ -217,14 +294,14 @@ export function createManagementApi({
       const name =
         body.name === undefined
           ? row.name
-          : requiredText(body.name, "管理员称呼", 40);
+          : requiredText(body.name, "用户称呼", 40);
       const digest =
         body.password === undefined
           ? row.password_hash
           : hashPassword(passwordText(body.password));
       audit(
         user,
-        "admin.update",
+        "user.update",
         row.id,
         { name, active, passwordReset: body.password !== undefined },
         () => {
