@@ -1075,3 +1075,95 @@ test("scoped administrators manage only lower roles in their own region or schoo
     403,
   );
 });
+
+test("passwords set by someone else must be replaced by their owner before using the system", async (t) => {
+  const f = await fixture(t);
+  const initial = "Initial-Issued-Password-1";
+  const own = "Chosen-By-Owner-Password-2";
+  const staff = await f.ok(
+    "/users",
+    {
+      method: "POST",
+      token: f.owner.token,
+      body: { account: "first.login", name: "首次登录", password: initial },
+    },
+    201,
+  );
+  await f.ok("/admins", {
+    method: "POST",
+    token: f.owner.token,
+    body: {
+      userId: staff.id,
+      role: "school_admin",
+      regionId: f.regionA.id,
+      schoolId: f.schoolA.id,
+    },
+  });
+  const first = await f.login("first.login", f.regionA.id, initial);
+  assert.equal(first.user.mustChangePassword, true);
+  const blocked = await f.request("/admin/overview", { token: first.token });
+  assert.equal(blocked.status, 403);
+  assert.match(blocked.body.error, /修改初始密码/);
+  assert.equal(
+    (await f.ok("/auth/me", { token: first.token })).user.mustChangePassword,
+    true,
+  );
+  assert.equal(
+    (
+      await f.request("/auth/password", {
+        method: "POST",
+        token: first.token,
+        body: { currentPassword: initial, password: initial },
+      })
+    ).status,
+    400,
+  );
+  const changed = await f.ok("/auth/password", {
+    method: "POST",
+    token: first.token,
+    body: { currentPassword: initial, password: own },
+  });
+  assert.equal(changed.user.mustChangePassword, false);
+  assert.equal(
+    (await f.request("/auth/me", { token: first.token })).status,
+    401,
+  );
+  await f.ok("/admin/overview", { token: changed.token });
+
+  // A school administrator resetting a student's password forces the same step.
+  const invite = await f.invite(f.schoolA.id, changed.token);
+  const registered = await f.register(
+    "reset.student",
+    f.regionA.id,
+    invite.code,
+  );
+  assert.equal(registered.body.user.mustChangePassword, false);
+  await f.ok(`/users/${registered.body.user.id}`, {
+    method: "PATCH",
+    token: changed.token,
+    body: { password: initial },
+  });
+  const student = await f.login("reset.student", f.regionA.id, initial);
+  assert.equal(student.user.mustChangePassword, true);
+  assert.equal(
+    (await f.request("/dashboard", { token: student.token })).status,
+    403,
+  );
+  const studentChanged = await f.ok("/auth/password", {
+    method: "POST",
+    token: student.token,
+    body: { currentPassword: initial, password: own },
+  });
+  await f.ok("/dashboard", { token: studentChanged.token });
+
+  // Owners changing or resetting their own password are not asked again.
+  await f.ok(`/users/${f.owner.user.id}`, {
+    method: "PATCH",
+    token: f.owner.token,
+    body: { password: own },
+  });
+  assert.equal(
+    (await f.login("platform.owner", null, own)).user.mustChangePassword,
+    false,
+  );
+});

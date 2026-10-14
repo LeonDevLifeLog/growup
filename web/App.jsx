@@ -280,6 +280,37 @@ export default function App() {
         />
       </AppContext.Provider>
     );
+  if (user?.mustChangePassword)
+    return (
+      <AppContext.Provider value={context}>
+        <main className="setup-page">
+          <section className="setup-card" aria-labelledby="password-gate">
+            <div className="setup-brand">
+              <Mark />
+              <div>
+                <strong>成长健研社</strong>
+                <small>
+                  {user.name} · {user.account}
+                </small>
+              </div>
+            </div>
+            <h1 id="password-gate">请先设置你自己的密码</h1>
+            <p className="dialog-lead">
+              当前密码由管理员设置。为保护账号安全，请换成只有你知道的新密码后再继续使用。
+            </p>
+            <ChangePassword title="" />
+            <button className="text-button" onClick={logout}>
+              退出登录
+            </button>
+          </section>
+        </main>
+        {toast && (
+          <div key={toast.key} className={`toast ${toast.type}`} role="status">
+            <span>{toast.message}</span>
+          </div>
+        )}
+      </AppContext.Provider>
+    );
   let content;
   if (!ready) content = <div className="loading">正在打开成长空间…</div>;
   else if (adminView && !isAdmin(user))
@@ -580,6 +611,7 @@ function modalTitle(m) {
       region: "选择你所在的大区",
       rules: "把提示，变成合适的关怀",
       account: "当前管理账号",
+      password: "修改密码",
     }[m.type] || "成长健研社"
   );
 }
@@ -750,6 +782,7 @@ function ModalBody({ modal: m }) {
         </div>
       </div>
     );
+  if (m.type === "password") return <ChangePassword title="" />;
   if (m.type === "account")
     return (
       <div className="prose">

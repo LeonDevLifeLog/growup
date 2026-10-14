@@ -17,6 +17,8 @@ const wx = {
   removeStorageSync: (key) => storage.delete(key),
   switchTab: (options) => navigations.push(options.url),
   reLaunch: (options) => navigations.push(options.url),
+  navigateBack: () => navigations.push("back"),
+  showToast() {},
   request(options) {
     fetch(options.url, {
       method: options.method,
@@ -53,8 +55,8 @@ function load(file) {
   cache.set(file, value);
   return value;
 }
-const makePage = () => {
-  const definition = load(join(root, "pages/login/index.js"));
+const makePage = (path = "pages/login/index.js") => {
+  const definition = load(join(root, path));
   return {
     ...definition,
     data: structuredClone(definition.data),
@@ -124,6 +126,37 @@ try {
   assert.equal(storage.get("growup.user").schoolId, schoolA.id);
   record(
     "原生注册写入真实临时 SQLite 邀请记录，清理会话后可凭自设账号重新登录",
+  );
+  const reset = f.password + "-reset";
+  await f.ok(`/users/${storage.get("growup.user").id}`, {
+    method: "PATCH",
+    token: schoolAdminA.token,
+    body: { password: reset },
+  });
+  storage.clear();
+  const resetLogin = makePage();
+  await resetLogin.onLoad();
+  resetLogin.setData({ account: "mini.new.student", password: reset });
+  await resetLogin.submit();
+  assert.equal(navigations.at(-1), "/pages/password/index?force=1");
+  const api = load(join(root, "utils/api.js"));
+  navigations.length = 0;
+  assert.equal(api.requireStudent(), null);
+  assert.deepEqual(navigations, ["/pages/password/index?force=1"]);
+  const change = makePage("pages/password/index.js");
+  change.onLoad({ force: "1" });
+  assert.equal(change.data.force, true);
+  change.setData({ current: reset, password: reset, confirmation: reset });
+  await change.submit();
+  assert.match(change.data.error, /不能与当前密码相同/);
+  change.setData({ password: f.password, confirmation: f.password });
+  await change.submit();
+  assert.equal(change.data.error, "");
+  assert.equal(storage.get("growup.user").mustChangePassword, false);
+  assert.equal(navigations.at(-1), "/pages/home/index");
+  assert.ok(api.requireStudent());
+  record(
+    "老师重置密码后，学生在小程序登录被引导到修改密码页，设置新密码前其他页面不可进入",
   );
   await f.ok(`/admin/invites/${invite.id}/revoke`, {
     method: "POST",

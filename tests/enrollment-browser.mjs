@@ -4,7 +4,7 @@ import { resolve } from "node:path";
 import { chromium, expect } from "@playwright/test";
 import { productionFixture } from "./helpers/enrollment.mjs";
 
-const fixture = await productionFixture({ setup: "web" });
+const fixture = await productionFixture({ initialize: "web" });
 const browser = await chromium.launch({ channel: "chrome", headless: true });
 const errors = [],
   checks = [];
@@ -26,7 +26,9 @@ async function newPage(width = 1440) {
   page.on("pageerror", (error) => errors.push(error.message));
   return page;
 }
-async function login(page, account, platform = false) {
+// Staff created by an administrator start with this issued password.
+const issued = fixture.password + "-issued";
+async function login(page, account, platform = false, first = false) {
   await page.goto(fixture.base + "/#admin");
   await expect(page.locator(".sidebar nav button")).toHaveCount(0);
   await expect(page.locator(".mobile-nav button")).toHaveCount(0);
@@ -42,11 +44,30 @@ async function login(page, account, platform = false) {
       .getByRole("combobox", { name: "选择你的大区", exact: true })
       .selectOption({ label: "华东试点大区" });
   await dialog.getByLabel("账号", { exact: true }).fill(account);
-  await dialog.getByLabel("密码", { exact: true }).fill(fixture.password);
+  await dialog
+    .getByLabel("密码", { exact: true })
+    .fill(first ? issued : fixture.password);
   await dialog
     .getByRole("button", { name: "进入关怀后台", exact: true })
     .click();
   await expect(dialog).toHaveCount(0);
+  if (!first) return;
+  // An issued password must be replaced before anything else is reachable.
+  await expect(
+    page.getByRole("heading", { name: "请先设置你自己的密码" }),
+  ).toBeVisible();
+  await expect(page.locator(".sidebar")).toHaveCount(0);
+  await page.getByLabel("当前密码", { exact: true }).fill(issued);
+  await page.getByLabel("新密码", { exact: true }).fill(issued);
+  await page.getByLabel("确认新密码", { exact: true }).fill(issued);
+  await page.getByRole("button", { name: "更新我的密码", exact: true }).click();
+  await expect(page.getByRole("alert")).toContainText(
+    "新密码不能与当前密码相同",
+  );
+  await page.getByLabel("新密码", { exact: true }).fill(fixture.password);
+  await page.getByLabel("确认新密码", { exact: true }).fill(fixture.password);
+  await page.getByRole("button", { name: "更新我的密码", exact: true }).click();
+  await expect(page.locator(".sidebar")).toBeVisible();
 }
 async function noOverflow(page) {
   assert.equal(
@@ -146,7 +167,7 @@ try {
     form = platform.getByRole("dialog", { name: "新增工作人员", exact: true });
     await form.getByLabel("用户称呼", { exact: true }).fill(name);
     await form.getByLabel("登录账号", { exact: true }).fill(account);
-    await form.getByLabel("初始密码", { exact: true }).fill(fixture.password);
+    await form.getByLabel("初始密码", { exact: true }).fill(issued);
     await form.getByRole("button", { name: "创建用户", exact: true }).click();
     await expect(form).toHaveCount(0);
     await expect(
@@ -219,7 +240,7 @@ try {
   );
 
   const school = await newPage();
-  await login(school, "school.manager");
+  await login(school, "school.manager", false, true);
   await school
     .locator(".sidebar")
     .getByRole("button", { name: "学校与邀请", exact: true })
@@ -251,6 +272,9 @@ try {
   await expect(inviteDialog).toHaveCount(0);
   await expect(school.getByText("2026秋季开通", { exact: true })).toBeVisible();
   assert.match(code, /^[A-F0-9]{24}$/);
+  record(
+    "管理员代设的初始密码在首次登录时必须改为本人新密码（不可沿用原密码），之后才能进入后台",
+  );
   record("学校管理员登录后只能选择本校，生成限时限额邀请码并获得一次性完整值");
 
   const student = await newPage(375);
@@ -324,6 +348,26 @@ try {
   await expect(checkin).toHaveCount(0);
   record("手机网页学生核对学校、确认密码后自行注册，退出重登成功且无演示入口");
   record("填写中的弹窗被 Esc 或关闭按钮关闭前会先确认，取消后内容保留");
+  await student.goto(fixture.base + "/#profile");
+  await student.getByRole("button", { name: "修改密码", exact: true }).click();
+  const change = student.getByRole("dialog", { name: "修改密码", exact: true });
+  await change.getByLabel("当前密码", { exact: true }).fill(fixture.password);
+  await change
+    .getByLabel("新密码", { exact: true })
+    .fill(fixture.password + "s");
+  await change
+    .getByLabel("确认新密码", { exact: true })
+    .fill(fixture.password + "s");
+  await change
+    .getByRole("button", { name: "更新我的密码", exact: true })
+    .click();
+  await expect(change).toHaveCount(0);
+  await fixture.login(
+    "web.new.student",
+    (await fixture.ok("/regions")).regions[0].id,
+    fixture.password + "s",
+  );
+  record("学生在“我的”中修改自己的密码后，可用新密码登录");
 
   await school.reload();
   await school.getByRole("button", { name: "使用记录", exact: true }).click();
@@ -365,7 +409,7 @@ try {
   );
 
   const area = await newPage();
-  await login(area, "area.manager");
+  await login(area, "area.manager", false, true);
   await expect(area.getByRole("heading", { level: 1 })).toContainText(
     "看见变化",
   );

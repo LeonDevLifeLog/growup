@@ -128,6 +128,16 @@ export function openDatabase(dbPath, demo, now) {
     );
   }
   migrateIdentity(db);
+  // Passwords set by someone else must be replaced by their owner at next sign-in.
+  if (
+    !db
+      .prepare("PRAGMA table_info(users)")
+      .all()
+      .some((column) => column.name === "must_change_password")
+  )
+    db.exec(
+      "ALTER TABLE users ADD COLUMN must_change_password INTEGER NOT NULL DEFAULT 0 CHECK(must_change_password IN (0,1))",
+    );
   if (
     !db
       .prepare("PRAGMA table_info(service_requests)")

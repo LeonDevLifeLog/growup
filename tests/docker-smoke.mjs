@@ -131,10 +131,20 @@ try {
     ).status,
     200,
   );
-  const teacher = await request("/auth/login", {
+  const issued = await request("/auth/login", {
     body: { regionId, account: "container.school", password },
   });
-  assert.equal(teacher.status, 200);
+  assert.equal(issued.status, 200);
+  assert.equal(issued.body.user.mustChangePassword, true);
+  assert.equal(
+    (await request("/admin/invites", { token: issued.body.token })).status,
+    403,
+  );
+  const teacher = await request("/auth/password", {
+    token: issued.body.token,
+    body: { currentPassword: password, password: password + "-own" },
+  });
+  assert.equal(teacher.status, 200, JSON.stringify(teacher.body));
   const invitation = await request("/admin/invites", {
     token: teacher.body.token,
     body: { schoolId, days: 7, maxUses: 2, note: "容器注册验证" },
@@ -175,7 +185,7 @@ try {
     403,
   );
   record(
-    "容器内新增大区、学校及校级账号，学校生成邀请，学生真实注册并打卡；校级用户管理仅含本校学生且不能任命",
+    "容器内新增大区、学校及校级账号，校级账号须先改掉代设密码，再生成邀请，学生真实注册并打卡；校级用户管理仅含本校学生且不能任命",
   );
   compose([
     "up",

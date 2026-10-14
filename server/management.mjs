@@ -280,7 +280,7 @@ export function createManagementApi({
         () =>
           db
             .prepare(
-              "INSERT INTO users (id,account,password_hash,name,role,region_id,school_id,created_at) VALUES (?,?,?,?,'user',?,?,?)",
+              "INSERT INTO users (id,account,password_hash,name,role,region_id,school_id,created_at,must_change_password) VALUES (?,?,?,?,'user',?,?,?,1)",
             )
             .run(
               id,
@@ -405,9 +405,18 @@ export function createManagementApi({
         row.id,
         { name, active, passwordReset: body.password !== undefined },
         () => {
+          // A password set by someone else must be replaced at next sign-in.
           db.prepare(
-            "UPDATE users SET name=?,active=?,password_hash=? WHERE id=?",
-          ).run(name, active, digest, row.id);
+            "UPDATE users SET name=?,active=?,password_hash=?,must_change_password=? WHERE id=?",
+          ).run(
+            name,
+            active,
+            digest,
+            body.password !== undefined && row.id !== user.id
+              ? 1
+              : row.must_change_password,
+            row.id,
+          );
           if (!active || body.password !== undefined)
             db.prepare("DELETE FROM sessions WHERE user_id=?").run(row.id);
         },

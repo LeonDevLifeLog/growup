@@ -9,7 +9,8 @@
     "pages/checkin/index",
     "pages/article/index",
     "pages/service/index",
-    "pages/tool/index"
+    "pages/tool/index",
+    "pages/password/index"
   ],
   "window": {
     "navigationBarTitleText": "成长健研社",

@@ -1,0 +1,12 @@
+<view class="page">
+  <view class="eyebrow">KEEP YOUR SPACE SAFE</view>
+  <view class="title">{{force ? '请先设置你自己的密码' : '修改我的密码'}}</view>
+  <view class="subtitle">{{force ? '当前密码由老师设置。换成只有你知道的新密码后，就可以继续使用成长空间。' : '修改后，其他设备上的登录会退出。'}}</view>
+  <text class="label">当前密码</text><input class="field" value="{{current}}" data-field="current" bindinput="input" password maxlength="128" placeholder="{{force ? '老师告诉你的密码' : '请输入当前密码'}}" disabled="{{submitting}}"/>
+  <text class="label">新密码</text><input class="field" value="{{password}}" data-field="password" bindinput="input" password maxlength="128" placeholder="至少 8 位，不能与当前密码相同" disabled="{{submitting}}"/>
+  <text class="label">确认新密码</text><input class="field" value="{{confirmation}}" data-field="confirmation" bindinput="input" password maxlength="128" placeholder="再输入一次新密码" disabled="{{submitting}}"/>
+  <view wx:if="{{error}}" class="error" role="alert">{{error}}</view>
+  <button class="spaced" bindtap="submit" loading="{{submitting}}" disabled="{{submitting || !current || !password || !confirmation}}">保存新密码 →</button>
+  <button wx:if="{{force}}" class="button-outline spaced" bindtap="logout" disabled="{{submitting}}">退出登录</button>
+  <view class="safe-note">请不要把密码告诉他人。忘记密码时，请联系本校老师重置。</view>
+</view>

@@ -9,13 +9,13 @@ import { createApp } from "../../server/app.mjs";
 export async function productionFixture({
   now = new Date(),
   staticPath,
-  setup = "bootstrap",
+  initialize = "bootstrap",
 } = {}) {
   const directory = mkdtempSync(join(tmpdir(), "growup-enrollment-"));
   const dbPath = join(directory, "official.sqlite");
   const password = randomBytes(18).toString("base64url");
-  // setup: "web" leaves an empty database for the browser setup wizard.
-  if (setup === "bootstrap")
+  // initialize: "web" leaves an empty database for the browser setup wizard.
+  if (initialize === "bootstrap")
     bootstrap(
       { account: "platform.owner", name: "平台负责人", password },
       { dbPath },
@@ -54,9 +54,15 @@ export async function productionFixture({
       method: "POST",
       body: { account, regionId, password: secret },
     });
-  const owner = setup === "bootstrap" ? await login("platform.owner") : null;
+  const owner = initialize === "bootstrap" ? await login("platform.owner") : null;
   async function create(path, body, token = owner.token) {
-    return ok(path, { method: "POST", body, token }, 201);
+    const result = await ok(path, { method: "POST", body, token }, 201);
+    // Staff fixtures reuse the shared password; the forced first change has its own test.
+    if (path === "/users")
+      app.db
+        .prepare("UPDATE users SET must_change_password=0 WHERE id=?")
+        .run(result.id);
+    return result;
   }
   async function setup() {
     const regionA = await create("/platform/regions", { name: "西南成长大区" });

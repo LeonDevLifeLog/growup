@@ -25,6 +25,7 @@
   <text class="label">账号</text><input class="field" value="{{account}}" data-field="account" bindinput="input" placeholder="3–40 位字母、数字、点、下划线或短横线" maxlength="40" disabled="{{submitting}}"/>
   <text class="label">密码</text><input class="field" value="{{password}}" data-field="password" bindinput="input" password placeholder="{{mode === 'register' ? '8–128 个字符' : '请输入密码'}}" maxlength="128" disabled="{{submitting}}"/>
   <block wx:if="{{mode === 'register'}}"><text class="label">确认密码</text><input class="field" value="{{confirmPassword}}" data-field="confirmPassword" bindinput="input" password placeholder="再输入一次密码" maxlength="128" disabled="{{submitting}}"/></block>
+  <view wx:if="{{mode === 'login'}}" class="small spaced">忘记密码？请联系本校老师在后台重置，首次登录后再设置自己的新密码。</view>
   <view wx:if="{{error}}" class="error" role="alert">{{error}}</view>
   <button class="spaced" bindtap="submit" loading="{{submitting}}" disabled="{{submitting || checking || loading || !regions.length || (mode === 'register' && !invitation)}}">{{mode === 'login' ? '进入我的成长空间' : '创建我的成长空间'}} →</button>
   <button wx:if="{{!loading && !regions.length}}" class="button-outline spaced" bindtap="load">重新连接</button>

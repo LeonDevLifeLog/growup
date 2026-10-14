@@ -14,7 +14,8 @@ Base `/api`；JSON；失败 `{error: '中文原因'}`；身份为 `Authorization
 - `POST /auth/register` `{regionId,inviteCode,account,password,name}` → `{token,user}`；强制学生角色，邀请码决定区域/学校；注册与名额、使用记录在同一事务内，201。
 - `GET /auth/me` * → `{user}`
 - `POST /auth/logout` * → `{ok:true}`
-- `POST /auth/password` * `{currentPassword,password}` → `{token,user}`；验证旧密码并撤销所有旧会话，返回新会话。
+- `POST /auth/password` * `{currentPassword,password}` → `{token,user}`；所有角色可用。验证旧密码，新密码不能与当前密码相同（400），撤销所有旧会话并返回新会话，同时清除“需修改密码”标记。
+- `user.mustChangePassword`：账号由他人新建（`POST /users`）或重置密码（他人 `PATCH /users/:id` 带 `password`）后为 true。为 true 时除 `/auth/me`、`/auth/password`、`/auth/logout` 外的接口一律返回403“请先修改初始密码后再继续使用”；网页与小程序登录后直接进入修改密码页。学生自助注册、首次初始化和本人修改不会设置该标记。
 
 演示学生 `hainan.student` / `Growup123!`；海南管理员 `hainan.admin` / `Growup123!`。演示学校邀请码 `HN2026`、`SD2026`、`GD2026`。仅 DEMO_MODE 创建。
 

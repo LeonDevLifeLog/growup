@@ -62,7 +62,8 @@ Page({
       }
       saveSession(result);
       this.setData({ password: '', confirmPassword: '' });
-      wx.switchTab({ url: '/pages/home/index' });
+      if (result.user.mustChangePassword) wx.reLaunch({ url: '/pages/password/index?force=1' });
+      else wx.switchTab({ url: '/pages/home/index' });
     } catch (error) { this.setData({ error: error.message }); }
     finally { this.setData({ submitting: false }); }
   }

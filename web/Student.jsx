@@ -1186,9 +1186,17 @@ export function Profile() {
           </p>
           <small>{user.account}</small>
         </div>
-        <button className="button secondary" onClick={logout}>
-          退出登录
-        </button>
+        <div className="invite-actions">
+          <button
+            className="button secondary"
+            onClick={() => open({ type: "password" })}
+          >
+            修改密码
+          </button>
+          <button className="button secondary" onClick={logout}>
+            退出登录
+          </button>
+        </div>
       </section>
       <section className="panel records">
         <SectionTitle

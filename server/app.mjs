@@ -153,6 +153,7 @@ export function createApp({
     regionName: user.region_name,
     schoolId: user.school_id,
     schoolName: user.school_name,
+    mustChangePassword: user.must_change_password === 1,
   });
   const enabledUser = (user) =>
     user &&
@@ -479,6 +480,11 @@ export function createApp({
     }
 
     const user = requireUser(req);
+    if (
+      user.must_change_password === 1 &&
+      !["/auth/me", "/auth/password", "/auth/logout"].includes(path)
+    )
+      throw new ApiError(403, "请先修改初始密码后再继续使用");
     if (await managementApi(req, res, path, user)) return;
     if (method === "GET" && path === "/auth/me")
       return json(res, 200, { user: publicUser(user) });
@@ -495,15 +501,17 @@ export function createApp({
         !verifyPassword(passwordText(body.currentPassword), user.password_hash)
       )
         throw new ApiError(400, "当前密码不正确");
-      const digest = hashPassword(passwordText(body.password));
+      const password = passwordText(body.password);
+      if (verifyPassword(password, user.password_hash))
+        throw new ApiError(400, "新密码不能与当前密码相同");
+      const digest = hashPassword(password);
       db.exec("BEGIN IMMEDIATE");
       try {
-        db.prepare("UPDATE users SET password_hash=? WHERE id=?").run(
-          digest,
-          user.id,
-        );
+        db.prepare(
+          "UPDATE users SET password_hash=?,must_change_password=0 WHERE id=?",
+        ).run(digest, user.id);
         db.prepare("DELETE FROM sessions WHERE user_id=?").run(user.id);
-        const result = session(user);
+        const result = session({ ...user, must_change_password: 0 });
         db.exec("COMMIT");
         clearAttempts();
         return json(res, 200, result);

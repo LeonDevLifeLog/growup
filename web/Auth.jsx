@@ -261,6 +261,14 @@ export default function Auth({ purpose = "student" }) {
             {error}
           </p>
         )}
+        {!register && (
+          <details className="forgot-password">
+            <summary>忘记密码？</summary>
+            <p>
+              为保护账号安全，系统不提供自助找回。学生请联系本校老师（学校管理员）在“用户管理”中重置；管理员请联系上级管理员重置。重置后首次登录需设置新密码。
+            </p>
+          </details>
+        )}
         <button
           className="button primary full"
           disabled={

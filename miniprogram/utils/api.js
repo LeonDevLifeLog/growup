@@ -18,6 +18,11 @@ function requireStudent() {
     wx.reLaunch({ url: '/pages/login/index' });
     return null;
   }
+  // Passwords set by a teacher must be replaced before using anything else.
+  if (user.mustChangePassword) {
+    wx.reLaunch({ url: '/pages/password/index?force=1' });
+    return null;
+  }
   return user;
 }
 

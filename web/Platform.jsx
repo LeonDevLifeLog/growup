@@ -13,8 +13,8 @@ import {
 import { PageTitle } from "./Student.jsx";
 import { roleNames } from "./api.js";
 
-export function ChangePassword() {
-  const { call, authenticate, notify } = useApp();
+export function ChangePassword({ title = "修改我的密码" }) {
+  const { call, authenticate, notify, close } = useApp();
   const [currentPassword, setCurrent] = useState("");
   const [password, setPassword] = useState("");
   const [confirmation, setConfirmation] = useState("");
@@ -34,6 +34,7 @@ export function ChangePassword() {
         body: { currentPassword, password },
       });
       authenticate(result);
+      close();
       notify("密码已更新，其他会话已退出");
     } catch (e) {
       setError(e.message);
@@ -43,7 +44,7 @@ export function ChangePassword() {
   }
   return (
     <form className="form-stack" onSubmit={submit}>
-      <h3>修改我的密码</h3>
+      {title && <h3>{title}</h3>}
       <label>
         当前密码
         <input
