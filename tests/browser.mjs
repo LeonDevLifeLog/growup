@@ -245,6 +245,17 @@ try {
     .filter({ hasText: "验收小树苗" });
   await card.getByRole("button", { name: "审核通过", exact: true }).click();
   await expect(card).toHaveCount(0);
+  await admin.getByRole("button", { name: "已发布", exact: true }).click();
+  await card.getByRole("button", { name: "下架纸条", exact: true }).click();
+  const takedown = admin.getByRole("dialog", {
+    name: "下架这条纸条？",
+    exact: true,
+  });
+  await expect(takedown).toContainText("今天的小小进步，也值得认真记住。");
+  await takedown.getByRole("button", { name: "取消", exact: true }).click();
+  await expect(takedown).toHaveCount(0);
+  await expect(card).toBeVisible();
+  await admin.getByRole("button", { name: "待审核", exact: true }).click();
   await student.getByRole("button", { name: "所有心事", exact: true }).click();
   await expect(
     student.locator(".post-card").filter({ hasText: "验收小树苗" }),
@@ -291,6 +302,18 @@ try {
   await expect(
     student.locator(".post-card").filter({ hasText: "验收小树苗" }),
   ).toHaveCount(0);
+  await nav(admin, "树洞审核");
+  await admin.reload();
+  card = admin.locator(".moderation-card").filter({ hasText: "验收小树苗" });
+  await card.getByRole("button", { name: "驳回", exact: true }).click();
+  await admin
+    .getByRole("dialog", { name: "驳回这条纸条？", exact: true })
+    .getByRole("button", { name: "确认驳回", exact: true })
+    .click();
+  await expect(card).toHaveCount(0);
+  await admin.getByRole("button", { name: "已驳回", exact: true }).click();
+  await expect(card).toBeVisible();
+  record("驳回与下架需在确认弹窗中核对内容，取消不改变状态，确认后转入已驳回");
   await nav(admin, "支持需求");
   const service = admin
     .locator(".service-row")

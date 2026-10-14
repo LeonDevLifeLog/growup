@@ -4718,3 +4718,12 @@ td .text-button {
     min-height: 36px;
   }
 }
+.moderation-quote {
+  max-height: 160px;
+  overflow-y: auto;
+  padding: 10px 12px;
+  border-left: 3px solid #d8e2cc;
+  background: #f6f8f1;
+  border-radius: 0 7px 7px 0;
+  color: #5f6d57;
+}

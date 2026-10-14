@@ -403,6 +403,7 @@ export function AdminPosts() {
   const { call, bump, notify } = useApp();
   const [status, setStatus] = useState("pending");
   const [busy, setBusy] = useState("");
+  const [rejecting, setRejecting] = useState(null);
   const resource = useResource(`/admin/posts?status=${status}`);
   const posts = resource.data?.posts || [];
   async function moderate(id, next, reply = false) {
@@ -414,7 +415,7 @@ export function AdminPosts() {
         body: { status: next },
       });
       bump();
-      notify(next === "approved" ? "内容已审核发布。" : "内容已驳回。");
+      notify("内容已审核发布。");
     } catch (e) {
       notify(e.message, "error");
     } finally {
@@ -484,7 +485,14 @@ export function AdminPosts() {
                     <button
                       className="button secondary"
                       disabled={busy === `p${post.id}`}
-                      onClick={() => moderate(post.id, "rejected")}
+                      onClick={() =>
+                        setRejecting({
+                          id: post.id,
+                          reply: false,
+                          takedown: post.status === "approved",
+                          content: post.content,
+                        })
+                      }
                     >
                       <X size={15} />
                       {post.status === "approved" ? "下架纸条" : "驳回"}
@@ -519,7 +527,14 @@ export function AdminPosts() {
                           <button
                             className="text-button danger-text"
                             disabled={busy === `r${reply.id}`}
-                            onClick={() => moderate(reply.id, "rejected", true)}
+                            onClick={() =>
+                              setRejecting({
+                                id: reply.id,
+                                reply: true,
+                                takedown: reply.status === "approved",
+                                content: reply.content,
+                              })
+                            }
                           >
                             驳回回复
                             <X size={14} />
@@ -543,10 +558,44 @@ export function AdminPosts() {
           />
         )}
       </ResourceState>
+      {rejecting && (
+        <RejectDialog item={rejecting} onClose={() => setRejecting(null)} />
+      )}
       <p className="source-note">
         审核列表仅展示化名与内容，不向审核人员公开学生身份。被举报内容隐藏后需重新人工审核。
       </p>
     </>
+  );
+}
+
+function RejectDialog({ item, onClose }) {
+  const { busy, error, run } = useMutation();
+  const noun = item.reply ? "回复" : "纸条";
+  const verb = item.takedown ? "下架" : "驳回";
+  return (
+    <ConfirmDialog
+      title={`${verb}这条${noun}？`}
+      confirmLabel={`确认${verb}`}
+      danger
+      busy={busy}
+      error={error}
+      onSubmit={async () => {
+        const result = await run(
+          `/admin/${item.reply ? "replies" : "posts"}/${item.id}/moderate`,
+          { body: { status: "rejected" }, success: `${noun}已${verb}。` },
+        );
+        if (result) onClose();
+      }}
+      onClose={onClose}
+    >
+      <p className="preserve-lines moderation-quote">{item.content}</p>
+      <p>
+        {item.takedown
+          ? `下架后同区同学将看不到这条${noun}。`
+          : `驳回后这条${noun}不会公开。`}
+        之后仍可在“已驳回”中重新审核通过。
+      </p>
+    </ConfirmDialog>
   );
 }
 
