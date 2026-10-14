@@ -16,6 +16,7 @@ const storage = new Map();
 const app = { globalData: {} };
 const notices = [];
 const pendingModals = [];
+const modalTitles = [];
 let holdReports = false;
 const delayedReports = [];
 const wx = {
@@ -41,10 +42,11 @@ const wx = {
   },
   setNavigationBarTitle() {}, showToast(result) { notices.push(result.title); },
   showModal(options) {
+    modalTitles.push(options.title);
     const operation = options.success && options.success({ confirm: true });
     if (operation) pendingModals.push(Promise.resolve(operation));
   },
-  reLaunch() {}, switchTab() {}, navigateTo() {}, stopPullDownRefresh() {}
+  reLaunch() {}, switchTab() {}, navigateTo() {}, stopPullDownRefresh() {}, pageScrollTo() {}
 };
 const cache = new Map();
 function load(file) {
@@ -197,6 +199,17 @@ try {
   await journals.remove({currentTarget:{dataset:{id:entry.id}}});
   await Promise.all(pendingModals.splice(0));
   assert.ok(!journals.data.journals.some(item=>item.id===entry.id));
+  journals.write();
+  assert.equal(journals.data.editor, true, '写日记在底部弹层中打开');
+  journals.closeEditor();
+  assert.equal(journals.data.editor, false, '未填写时直接关闭弹层');
+  journals.write();
+  journals.input({ currentTarget: { dataset: { field: 'content' } }, detail: { value: '还没写完' } });
+  modalTitles.length = 0;
+  journals.closeEditor();
+  assert.deepEqual(modalTitles, ['放弃这篇日记？'], '已填写内容关闭前先确认');
+  assert.equal(journals.data.editor, false);
+  assert.equal(journals.data.content, '', '确认放弃后清空草稿');
   journals.setData({ title: '', content: '', entryMode: 'mood', moodIndex: 3, tagsText: '', goal: '' });
   await journals.submit();
   assert.equal(journals.data.error, '', '仅心情模式应允许没有正文和标题');
@@ -211,8 +224,21 @@ try {
     await service.submit();
     assert.equal(service.data.error, '', form.id + ' 提交错误：' + service.data.error);
     assert.ok(service.data.success);
+    assert.equal(service.data.tab, 'records', '提交后切换到我的申请查看状态');
   }
-  console.log(`原生页面事件到临时 API 联调通过：${toolPage.data.tools.length} 工具/${profiles} 个版本保存与月报、tracker回填修订保留ID/数量、历史删除与刷新持久化、日记心情/标签/目标、搜索与星图、仅心情保存、4份结构化服务表单；无JSON转移入口。`);
+  assert.equal(service.data.requests.length, service.data.forms.length);
+  const records = page('service');
+  await records.onLoad({ tab: 'records' });
+  assert.equal(records.data.tab, 'records', '从“我的”进入时直接显示申请状态');
+  await toolPage.selectTool(toolPage.data.tools[0]);
+  modalTitles.length = 0;
+  await toolPage.profileChange({ detail: { value: '0' } });
+  assert.deepEqual(modalTitles, [], '未填写时切换版本不打扰');
+  const firstField = toolPage.data.fields[0];
+  toolPage.updateField(firstField.id, firstField.type === 'multi' ? [] : '1');
+  toolPage.profileChange({ detail: { value: '0' } });
+  assert.deepEqual(modalTitles, ['切换后将清空填写'], '已填写时切换版本先确认');
+  console.log(`原生页面事件到临时 API 联调通过：${toolPage.data.tools.length} 工具/${profiles} 个版本保存与月报、tracker回填修订保留ID/数量、历史删除与刷新持久化、日记心情/标签/目标、搜索与星图、仅心情保存、4份结构化服务表单及提交后查看状态、日记底部弹层与放弃确认、工具切换前确认；无JSON转移入口。`);
   console.log('范围：Node内执行真实Page事件和隔离API，不代替微信运行或真机。');
   console.log('报告竞态：真实HTTP响应延迟乱序下，10月晚于9月返回、旧请求失败、切工具三种场景均保持当前报告与加载状态；qcd全部亲子版本指导/题目提示及suipian全部版本说明保留。');
 } finally {

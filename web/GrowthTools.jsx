@@ -6,7 +6,7 @@ import {
   LockKeyhole,
   Trash2,
 } from "lucide-react";
-import { useApp, useResource } from "./context.jsx";
+import { useApp, useDirty, useResource } from "./context.jsx";
 import { Empty, PrivateNote, ResourceState } from "./components.jsx";
 
 const localDate = () =>
@@ -251,6 +251,8 @@ function ToolWorkspace({ tool }) {
   const [historyLoading, setHistoryLoading] = useState(true);
   const [busy, setBusy] = useState(false);
   const [deleteId, setDeleteId] = useState("");
+  const [touched, setTouched] = useState(false);
+  useDirty(touched);
   const workspace = useRef(null);
   const reportRequestId = useRef(0);
   function invalidateReportRequest() {
@@ -331,6 +333,7 @@ function ToolWorkspace({ tool }) {
         ...rows.filter((row) => row.id !== data.record.id),
       ]);
       setReport(data.record.result);
+      setTouched(false);
       setTab("report");
       notify(
         isTracker
@@ -449,9 +452,10 @@ function ToolWorkspace({ tool }) {
           <SchemaFields
             fields={profile.fields}
             answers={answers}
-            onChange={(id, value) =>
-              setAnswers((state) => ({ ...state, [id]: value }))
-            }
+            onChange={(id, value) => {
+              setAnswers((state) => ({ ...state, [id]: value }));
+              setTouched(true);
+            }}
           />
           <button className="button primary full" disabled={busy}>
             {busy
@@ -582,6 +586,8 @@ export function StructuredServiceForm({ formId }) {
   const [answers, setAnswers] = useState(() =>
     formId === "fk" ? {} : { school: user?.schoolName || "" },
   );
+  const [touched, setTouched] = useState(false);
+  useDirty(touched);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   async function submit(event) {
@@ -613,9 +619,10 @@ export function StructuredServiceForm({ formId }) {
           <SchemaFields
             fields={form.profiles[0].fields}
             answers={answers}
-            onChange={(id, value) =>
-              setAnswers((state) => ({ ...state, [id]: value }))
-            }
+            onChange={(id, value) => {
+              setAnswers((state) => ({ ...state, [id]: value }));
+              setTouched(true);
+            }}
           />
           {error && (
             <p className="form-error" role="alert">

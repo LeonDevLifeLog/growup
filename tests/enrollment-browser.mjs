@@ -62,21 +62,26 @@ try {
   await expect(
     platform.getByRole("heading", { name: "平台管理", exact: true }),
   ).toBeVisible();
-  let form = platform.getByRole("region", { name: "新增大区", exact: true });
+  await platform.getByRole("button", { name: "新增大区", exact: true }).click();
+  let form = platform.getByRole("dialog", { name: "新增大区", exact: true });
   await form.getByLabel("大区名称", { exact: true }).fill("华东试点大区");
   await form.getByRole("button", { name: "创建大区", exact: true }).click();
+  await expect(form).toHaveCount(0);
   await expect(
-    platform.getByRole("heading", { name: "大区管理", exact: true }),
+    platform.locator("td").filter({ hasText: "华东试点大区" }),
   ).toBeVisible();
-  await expect(
-    platform.getByRole("region", { name: "新增学校" }).getByLabel("所属大区"),
-  ).toContainText("华东试点大区");
-  form = platform.getByRole("region", { name: "新增学校", exact: true });
+  await platform.getByRole("tab", { name: /学校/ }).click();
+  await platform.getByRole("button", { name: "新增学校", exact: true }).click();
+  form = platform.getByRole("dialog", { name: "新增学校", exact: true });
+  await expect(form.getByLabel("所属大区", { exact: true })).toContainText(
+    "华东试点大区",
+  );
   await form.getByLabel("学校名称", { exact: true }).fill("成长试点第一学校");
   await form.getByRole("button", { name: "创建学校", exact: true }).click();
+  await expect(form).toHaveCount(0);
   await expect(
-    platform.getByRole("region", { name: "任命管理员" }).getByLabel("所属大区"),
-  ).toContainText("华东试点大区");
+    platform.locator("td").filter({ hasText: "成长试点第一学校" }),
+  ).toBeVisible();
   for (const [role, account, name] of [
     ["region_admin", "area.manager", "区域负责人"],
     ["school_admin", "school.manager", "学校负责人"],
@@ -85,11 +90,15 @@ try {
       .locator(".sidebar")
       .getByRole("button", { name: "用户管理", exact: true })
       .click();
-    form = platform.getByRole("region", { name: "新增工作人员", exact: true });
+    await platform
+      .getByRole("button", { name: "新增工作人员", exact: true })
+      .click();
+    form = platform.getByRole("dialog", { name: "新增工作人员", exact: true });
     await form.getByLabel("用户称呼", { exact: true }).fill(name);
     await form.getByLabel("登录账号", { exact: true }).fill(account);
     await form.getByLabel("初始密码", { exact: true }).fill(fixture.password);
     await form.getByRole("button", { name: "创建用户", exact: true }).click();
+    await expect(form).toHaveCount(0);
     await expect(
       platform
         .getByRole("region", { name: "用户列表", exact: true })
@@ -99,7 +108,11 @@ try {
       .locator(".sidebar")
       .getByRole("button", { name: "平台管理", exact: true })
       .click();
-    form = platform.getByRole("region", { name: "任命管理员", exact: true });
+    await platform.getByRole("tab", { name: /管理员/ }).click();
+    await platform
+      .getByRole("button", { name: "任命管理员", exact: true })
+      .click();
+    form = platform.getByRole("dialog", { name: "任命管理员", exact: true });
     await form
       .getByRole("combobox", { name: "选择已有用户", exact: true })
       .selectOption({ label: `${name} · ${account}` });
@@ -107,7 +120,12 @@ try {
       form.getByLabel("角色", { exact: true }).locator("option"),
     ).toHaveCount(3);
     await form.getByLabel("角色", { exact: true }).selectOption(role);
+    if (role === "school_admin")
+      await expect(form.getByLabel("所属学校", { exact: true })).toContainText(
+        "成长试点第一学校",
+      );
     await form.getByRole("button", { name: "保存任命", exact: true }).click();
+    await expect(form).toHaveCount(0);
     await expect(
       platform.locator("td").filter({ hasText: account }),
     ).toBeVisible();
@@ -145,7 +163,7 @@ try {
     fullPage: false,
   });
   record(
-    "空正式库通过平台界面新增大区、学校，在用户管理建档后从既有用户任命两级管理员，桌面/375px无页面横向溢出",
+    "空正式库在平台分页签中通过弹窗新增大区、学校，在用户管理建档后从既有用户任命两级管理员，列表不被表单挤占，桌面/375px无页面横向溢出",
   );
 
   const school = await newPage();
@@ -154,17 +172,32 @@ try {
     .locator(".sidebar")
     .getByRole("button", { name: "学校与邀请", exact: true })
     .click();
-  await expect(school.getByLabel("所属学校", { exact: true })).toHaveValue(
-    /.+/,
-  );
-  await expect(school.getByLabel("所属学校", { exact: true })).toContainText(
-    "成长试点第一学校",
-  );
-  await school.getByLabel("邀请备注", { exact: true }).fill("2026秋季开通");
-  await school.getByLabel("注册名额", { exact: true }).fill("2");
   await school.getByRole("button", { name: "生成邀请码", exact: true }).click();
-  await expect(school.locator(".invitation-created code")).toBeVisible();
-  const code = await school.locator(".invitation-created code").innerText();
+  let inviteDialog = school.getByRole("dialog", {
+    name: "生成学生邀请码",
+    exact: true,
+  });
+  await expect(inviteDialog).toContainText("成长试点第一学校");
+  await inviteDialog
+    .getByLabel("邀请备注", { exact: true })
+    .fill("2026秋季开通");
+  await inviteDialog.getByLabel("注册名额", { exact: true }).fill("2");
+  await inviteDialog
+    .getByRole("button", { name: "生成邀请码", exact: true })
+    .click();
+  inviteDialog = school.getByRole("dialog", {
+    name: "邀请码已生成",
+    exact: true,
+  });
+  await expect(inviteDialog.locator(".invitation-created code")).toBeVisible();
+  const code = await inviteDialog
+    .locator(".invitation-created code")
+    .innerText();
+  await inviteDialog
+    .getByRole("button", { name: "我已记录", exact: true })
+    .click();
+  await expect(inviteDialog).toHaveCount(0);
+  await expect(school.getByText("2026秋季开通", { exact: true })).toBeVisible();
   assert.match(code, /^[A-F0-9]{24}$/);
   record("学校管理员登录后只能选择本校，生成限时限额邀请码并获得一次性完整值");
 
@@ -216,21 +249,54 @@ try {
     .getByRole("button", { name: "进入我的成长空间", exact: true })
     .click();
   await expect(dialog).toHaveCount(0);
+  await student
+    .getByRole("button", { name: "记录今天的心情", exact: true })
+    .click();
+  const checkin = student.getByRole("dialog", {
+    name: "今天，你感觉怎么样？",
+    exact: true,
+  });
+  await checkin.locator("textarea").fill("还没写完的心里话");
+  await student.keyboard.press("Escape");
+  const discard = student.getByRole("dialog", {
+    name: "放弃未保存的内容？",
+    exact: true,
+  });
+  await discard.getByRole("button", { name: "取消", exact: true }).click();
+  await expect(discard).toHaveCount(0);
+  await expect(checkin.locator("textarea")).toHaveValue("还没写完的心里话");
+  await checkin.getByRole("button", { name: "关闭弹窗", exact: true }).click();
+  await discard
+    .getByRole("button", { name: "放弃并关闭", exact: true })
+    .click();
+  await expect(checkin).toHaveCount(0);
   record("手机网页学生核对学校、确认密码后自行注册，退出重登成功且无演示入口");
+  record("填写中的弹窗被 Esc 或关闭按钮关闭前会先确认，取消后内容保留");
 
   await school.reload();
   await school.getByRole("button", { name: "使用记录", exact: true }).click();
+  const uses = school.getByRole("dialog", {
+    name: "邀请使用记录",
+    exact: true,
+  });
   await expect(
-    school.getByText("web.new.student", { exact: true }),
+    uses.getByText("web.new.student", { exact: true }),
   ).toBeVisible();
   await expect(school.getByText("1 / 2", { exact: true })).toBeVisible();
   await school.screenshot({
     path: resolve(artifact, "school-invitation-records.png"),
     fullPage: true,
   });
+  await uses.getByRole("button", { name: "关闭弹窗", exact: true }).click();
+  await expect(uses).toHaveCount(0);
   await school.getByRole("button", { name: "停用", exact: true }).click();
-  await school.getByRole("button", { name: "确认停用", exact: true }).click();
-  await expect(school.getByText("已停用", { exact: true })).toBeVisible();
+  await school
+    .getByRole("dialog")
+    .getByRole("button", { name: "确认停用", exact: true })
+    .click();
+  await expect(
+    school.locator("td .badge").filter({ hasText: "已停用" }),
+  ).toBeVisible();
   const revoked = await fixture.request("/auth/register", {
     method: "POST",
     body: {
@@ -242,7 +308,9 @@ try {
     },
   });
   assert.equal(revoked.status, 400);
-  record("后台显示学生注册记录与名额消费，邀请码停用后阻止新注册");
+  record(
+    "邀请码在弹窗中生成并一次性展示，使用记录以弹窗查看，停用经确认后阻止新注册",
+  );
 
   const area = await newPage();
   await login(area, "area.manager");
@@ -277,7 +345,8 @@ try {
   await expect(
     areaList.getByLabel("用户类型", { exact: true }).locator("option"),
   ).toHaveCount(4);
-  form = area.getByRole("region", { name: "新增工作人员", exact: true });
+  await area.getByRole("button", { name: "新增工作人员", exact: true }).click();
+  form = area.getByRole("dialog", { name: "新增工作人员", exact: true });
   await form.getByLabel("用户称呼", { exact: true }).fill("学校协管员");
   await form.getByLabel("登录账号", { exact: true }).fill("school.helper");
   await form.getByLabel("初始密码", { exact: true }).fill(fixture.password);
@@ -285,15 +354,14 @@ try {
     .getByLabel("所属学校", { exact: true })
     .selectOption({ label: "成长试点第一学校" });
   await form.getByRole("button", { name: "创建用户", exact: true }).click();
+  await expect(form).toHaveCount(0);
   let helperRow = area.locator("tr").filter({ hasText: "school.helper" });
   await expect(helperRow).toContainText("成长试点第一学校");
   await helperRow
     .getByRole("button", { name: "任命为学校管理员", exact: true })
     .click();
-  const appointment = area.getByRole("region", {
-    name: "任命学校管理员",
-    exact: true,
-  });
+  const appointment = area.getByRole("dialog");
+  await expect(appointment).toContainText("任命学校管理员");
   await expect(appointment.getByLabel("管理学校", { exact: true })).toHaveValue(
     /.+/,
   );
@@ -350,24 +418,40 @@ try {
     .getByRole("button", { name: "用户管理", exact: true })
     .click();
   let userRow = platform.locator("tr").filter({ hasText: "school.manager" });
-  await userRow
-    .getByRole("button", { name: "编辑 / 重置密码", exact: true })
-    .click();
-  const userEditor = platform.getByRole("region", {
-    name: "编辑用户",
+  await userRow.getByRole("button", { name: "编辑", exact: true }).click();
+  let userDialog = platform.getByRole("dialog", {
+    name: "编辑用户 · school.manager",
     exact: true,
   });
-  await userEditor
+  await userDialog
     .getByLabel("用户称呼", { exact: true })
     .fill("学校负责人已更新");
-  await userEditor
-    .getByLabel("重置密码", { exact: true })
-    .fill(fixture.password + ".new");
-  await userEditor
+  await userDialog
     .getByRole("button", { name: "保存用户资料", exact: true })
     .click();
-  await expect(userEditor).toHaveCount(0);
+  await expect(userDialog).toHaveCount(0);
   await expect(userRow).toContainText("学校负责人已更新");
+  await userRow.getByRole("button", { name: "重置密码", exact: true }).click();
+  userDialog = platform.getByRole("dialog");
+  await userDialog
+    .getByLabel("新密码", { exact: true })
+    .fill(fixture.password + ".new");
+  await userDialog
+    .getByLabel("确认新密码", { exact: true })
+    .fill(fixture.password + ".other");
+  await userDialog
+    .getByRole("button", { name: "重置密码", exact: true })
+    .click();
+  await expect(userDialog.getByRole("alert")).toContainText(
+    "两次输入的密码不一致",
+  );
+  await userDialog
+    .getByLabel("确认新密码", { exact: true })
+    .fill(fixture.password + ".new");
+  await userDialog
+    .getByRole("button", { name: "重置密码", exact: true })
+    .click();
+  await expect(userDialog).toHaveCount(0);
   const staleToken = await school.evaluate(() =>
     sessionStorage.getItem("growup-token"),
   );
@@ -384,24 +468,22 @@ try {
     .locator(".sidebar")
     .getByRole("button", { name: "平台管理", exact: true })
     .click();
+  await platform.getByRole("tab", { name: /管理员/ }).click();
   userRow = platform.locator("tr").filter({ hasText: "school.manager" });
   await userRow.getByRole("button", { name: "撤销权限", exact: true }).click();
   await platform
-    .getByRole("button", { name: "确认撤销权限", exact: true })
+    .getByRole("dialog")
+    .getByRole("button", { name: "确认撤销", exact: true })
     .click();
   await expect(userRow).toHaveCount(0);
   await platform
     .locator(".sidebar")
     .getByRole("button", { name: "用户管理", exact: true })
     .click();
-  const userList = platform.getByRole("region", {
-    name: "用户列表",
-    exact: true,
-  });
-  await userList
-    .getByLabel("搜索账号或称呼", { exact: true })
+  await platform
+    .getByRole("searchbox", { name: "搜索账号或称呼", exact: true })
     .fill("school.manager");
-  await userList.getByRole("button", { name: "查询用户", exact: true }).click();
+  await expect(platform.locator("tbody tr")).toHaveCount(1);
   await expect(
     platform.locator("tr").filter({ hasText: "school.manager" }),
   ).toContainText("待授权用户");
@@ -411,7 +493,7 @@ try {
     fullPage: true,
   });
   record(
-    "用户管理编辑、重置密码、查询及撤销管理员界面闭环通过，账号沿用且旧会话失效",
+    "用户管理在弹窗中编辑、重置密码（含确认校验）、即时搜索及撤销管理员闭环通过，账号沿用且旧会话失效",
   );
   writeFileSync(
     resolve(artifact, "enrollment-browser-result.json"),

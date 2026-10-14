@@ -235,6 +235,30 @@ button[disabled] {
   max-height:58vh;
 }
 
+.sheet-title {
+  font-size:31rpx;
+  margin:10rpx 0;
+}
+
+/* Segmented page tabs: one list or form visible at a time. */
+.seg-tabs {
+  display:flex;
+  gap:40rpx;
+  margin:30rpx 0 24rpx;
+  border-bottom:2rpx solid #e2e7dc;
+}
+
+.seg-tabs text {
+  padding:16rpx 0;
+  color:#7b8577;
+}
+
+.seg-tabs .selected-tab {
+  border-bottom:4rpx solid #245c45;
+  font-weight:700;
+  color:#245c45;
+}
+
 .close {
   font-size:36rpx;
   padding:10rpx 20rpx;

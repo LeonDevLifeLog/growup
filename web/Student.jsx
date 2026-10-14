@@ -19,7 +19,7 @@ import {
   Wind,
   X,
 } from "lucide-react";
-import { useApp, useResource } from "./context.jsx";
+import { useApp, useDirty, useResource } from "./context.jsx";
 import {
   Empty,
   Icon,
@@ -444,6 +444,8 @@ export function CheckinForm({ initialScore }) {
   const [score, setScore] = useState(initialScore || 0);
   const [note, setNote] = useState("");
   const [tags, setTags] = useState([]);
+  const [touched, setTouched] = useState(false);
+  useDirty(touched);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const [prefilled, setPrefilled] = useState(false);
@@ -532,7 +534,10 @@ export function CheckinForm({ initialScore }) {
         想对自己说的话<span className="optional">选填 · 仅自己可见</span>
         <textarea
           value={note}
-          onChange={(e) => setNote(e.target.value)}
+          onChange={(e) => {
+            setNote(e.target.value);
+            setTouched(true);
+          }}
           maxLength={500}
           rows={4}
           placeholder="发生了什么？有什么想记录的？写一点点也可以。"
@@ -955,6 +960,7 @@ export function PostForm({ post, report = false }) {
   const [content, setContent] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  useDirty(content.trim());
   async function submit(e) {
     e.preventDefault();
     setBusy(true);
@@ -1092,6 +1098,7 @@ export function ServiceForm({ service = "成长支持" }) {
   const [type, setType] = useState(service);
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
+  useDirty(message.trim());
   const [error, setError] = useState("");
   async function submit(e) {
     e.preventDefault();

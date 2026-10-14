@@ -1,6 +1,6 @@
 # 本地验证记录
 
-日期：2026-10-14，Asia/Shanghai。本轮（用户管理分级）环境：Linux（openEuler 22.03）、Node.js 24.14.0、Chrome 155、Docker 28.3.3。标注“沿用”的行为上一轮 macOS 环境结果，本轮未重跑。结果限于以下实际验证范围。
+日期：2026-10-14，Asia/Shanghai。本轮（用户管理分级与交互体验优化）环境：Linux（openEuler 22.03）、Node.js 24.14.0、Chrome 155、Docker 28.3.3。标注“沿用”的行为上一轮 macOS 环境结果，本轮未重跑。结果限于以下实际验证范围。
 
 ## 当前结果
 
@@ -8,10 +8,10 @@
 | --- | --- | --- |
 | 网页生产构建 | 通过 | React学生端、角色隔离后台与API托管 |
 | `npm test` | 35/35通过 | 真实HTTP、SQLite、动态组织、分级用户管理、任命、邀请、关怀、审核与个人记录 |
-| `npm run test:ui` | 11组通过 | 登录/错区、打卡、日记持久化、投稿、审核、关怀与服务处理；375px/桌面 |
-| `npm run test:ui:enrollment` | 8组通过 | 未登录无管理菜单、先建用户再任命、学校发邀请、学生注册重登、使用记录、大区/学校分级用户管理和用户编辑/重置/撤权 |
+| `npm run test:ui` | 11组通过 | 登录/错区、打卡、日记持久化、投稿、审核、关怀与服务处理（待跟进页签与确认）；375px/桌面 |
+| `npm run test:ui:enrollment` | 9组通过 | 未登录无管理菜单、平台页签与弹窗建组织、先建用户再任命、弹窗生成邀请码并一次性展示、学生注册重登、未保存内容关闭确认、使用记录弹窗、大区/学校分级用户管理和用户编辑/重置/撤权 |
 | `npm run test:ui:migration` | 5组通过 | 19工具填写/保存/回顾、历史编辑与删除、月报乱序、星图、4表单；无手工JSON入口 |
-| `node miniprogram/api-smoke.mjs` | 通过 | 实际Page事件连接临时API，19工具57版本、历史、月报、日记与星图、4表单 |
+| `node miniprogram/api-smoke.mjs` | 通过 | 实际Page事件连接临时API，19工具57版本、历史、月报、日记与星图、4表单；日记底部弹层与放弃确认、服务提交后切到“我的申请”、工具切换前确认 |
 | `npm run test:mini:enrollment` | 3组通过 | 动态大区选择器、核对学校、确认密码、注册重登、停用邀请码 |
 | `node miniprogram/validate.mjs --require-wcc` | 沿用通过（本轮无wcc，仅结构检查通过） | 14 JSON（含本机私有IDE配置）、15 JS、10页、5 Tab、107事件、21导航，10页真实WXML编译 |
 | `npm run test:docker` | 4组通过 | 空正式库、初始化、用户建档和管理员任命、校级用户目录范围、真实邀请注册打卡、容器重建持久化 |
@@ -29,6 +29,14 @@
 未登录时桌面侧栏和手机导航均无管理菜单，普通学生也无管理入口；直接访问后台地址仅显示登录入口。后端继续校验角色和范围。
 
 证据：[正式注册流程](verification/enrollment-browser-result.json)、[大区用户管理](verification/region-user-management.png)、[平台组织与任命](verification/platform-organizations.png)、[手机用户管理](verification/user-management-mobile.png)、[学校邀请记录](verification/school-invitation-records.png)。
+
+## 交互体验
+
+管理页的新增/编辑改为弹窗，列表成为首屏主体；危险操作统一用确认弹窗，错误显示在对应表单内；有未保存输入的弹窗关闭前会先确认；管理表格在手机上变为卡片。小程序的星图日记改为底部弹层，服务页分为“提交申请/我的申请”两个页签，树洞与工具页在丢弃输入前会确认。审查结论与改动清单见 [交互体验审查](UX_REVIEW.md)。
+
+已在浏览器测试中验证：平台页签与弹窗流程、邀请码一次性展示、Esc/关闭按钮触发放弃确认且取消后内容保留、重置密码两次输入校验、支持需求确认后转入“已跟进”；375px 下各后台页面无横向溢出。小程序新交互在 Node 页面事件中验证，未在微信开发者工具或真机走查视觉效果。
+
+证据：[平台管理员页签](verification/platform-organizations.png)、[用户管理](verification/user-management-desktop.png)、[邀请使用记录弹窗](verification/school-invitation-records.png)、[手机用户管理](verification/user-management-mobile.png)。
 
 ## 系统内记录
 
@@ -50,6 +58,6 @@
 
 本机此前没有 `growup-acceptance-20261014` 项目，8080 端口被其他服务占用。本轮在本机用上一提交（d1b4cc9）镜像建立该项目，地址 `http://127.0.0.1:8088`（`APP_PORT=8088`），初始化平台账号并通过旧版接口建立两大区、三校、两级管理员、待授权人员、邀请注册学生和打卡；随后使用SQLite在线备份保存数据库，再以新镜像 `growup:local` 原卷重建容器。正式模式、健康检查、非root与重启策略保留。
 
-升级前后7个用户的ID、密码摘要、类型、状态、大区/学校归属完全一致，组织、用户、打卡、邀请、使用记录、会话与审计数量一致，外键检查0错误，新用户表约束已生效。升级后的容器中已验证平台/大区/学校三级用户目录范围、大区建档并任命学校管理员、越权任命与跨区修改被拒绝，以及网页大区用户管理入口，结果见[分级用户管理容器检查](verification/scoped-user-management-result.json)。上一轮 macOS 验收记录见[容器更新检查](verification/user-management-result.json)。
+升级前后7个用户的ID、密码摘要、类型、状态、大区/学校归属完全一致，组织、用户、打卡、邀请、使用记录、会话与审计数量一致，外键检查0错误，新用户表约束已生效。升级后的容器中已验证平台/大区/学校三级用户目录范围、大区建档并任命学校管理员、越权任命与跨区修改被拒绝，以及网页大区用户管理入口，结果见[分级用户管理容器检查](verification/scoped-user-management-result.json)。上一轮 macOS 验收记录见[容器更新检查](verification/user-management-result.json)。交互体验更新后再次在线备份并以新镜像原卷重建，平台页签、弹窗及375px卡片列表在验收容器中正常，结果见[交互更新容器检查](verification/ux-docker-result.json)。
 
 本地容器不代表公网HTTPS、微信合法域名、真机或发布完成。正式服务还需实际组织授权、监护人隐私流程、人工审核与关怀排班、外部通知、灾难恢复和外部安全审计。

@@ -13,8 +13,16 @@ import {
   Users,
   X,
 } from "lucide-react";
-import { useApp, useResource } from "./context.jsx";
-import { Badge, Empty, ResourceState, SectionTitle } from "./components.jsx";
+import { useApp, useDirty, useMutation, useResource } from "./context.jsx";
+import {
+  Badge,
+  ConfirmDialog,
+  Empty,
+  ListHeader,
+  ResourceState,
+  SectionTitle,
+  Tabs,
+} from "./components.jsx";
 import { PageTitle } from "./Student.jsx";
 import { MoodFace } from "./Illustrations.jsx";
 import { shortDate, statusMeta } from "./api.js";
@@ -162,7 +170,7 @@ export function StudentTable({ students }) {
   const { open } = useApp();
   return (
     <div className="table-scroll">
-      <table>
+      <table className="stack-table">
         <thead>
           <tr>
             <th>学生</th>
@@ -175,26 +183,26 @@ export function StudentTable({ students }) {
         <tbody>
           {students.map((student) => (
             <tr key={student.id}>
-              <td>
+              <td data-label="学生">
                 <strong>{student.name}</strong>
                 <small>{student.schoolName}</small>
               </td>
-              <td>
+              <td data-label="最近打卡">
                 {typeof student.lastCheckin === "object"
                   ? student.lastCheckin?.date || "暂未打卡"
                   : student.lastCheckin || "暂未打卡"}
               </td>
-              <td>
+              <td data-label="连续低落">
                 {student.lowDays ? (
                   <span className="low-days">{student.lowDays} 天</span>
                 ) : (
                   "—"
                 )}
               </td>
-              <td>
+              <td data-label="关怀提示">
                 <Badge student={student} />
               </td>
-              <td>
+              <td data-label="跟进">
                 <button
                   className="text-button"
                   onClick={() => open({ type: "student", id: student.id })}
@@ -215,10 +223,13 @@ export function AdminStudents() {
   const resource = useResource("/admin/students");
   const [filter, setFilter] = useState("all");
   const [query, setQuery] = useState("");
-  const students = (resource.data?.students || []).filter(
+  const all = resource.data?.students || [];
+  const count = (key) =>
+    key === "all" ? all.length : all.filter((s) => s.status === key).length;
+  const students = all.filter(
     (s) =>
       (filter === "all" || filter === s.status) &&
-      `${s.name}${s.schoolName}${s.account}`.includes(query),
+      `${s.name}${s.schoolName}${s.account}`.includes(query.trim()),
   );
   return (
     <>
@@ -240,9 +251,11 @@ export function AdminStudents() {
               <button
                 className={`chip ${filter === key ? "active" : ""}`}
                 key={key}
+                aria-pressed={filter === key}
                 onClick={() => setFilter(key)}
               >
                 {label}
+                {resource.data && ` ${count(key)}`}
               </button>
             ))}
           </div>
@@ -261,8 +274,12 @@ export function AdminStudents() {
             <StudentTable students={students} />
           ) : (
             <Empty
-              title="没有符合条件的学生"
-              description="试试其他筛选条件。"
+              title={all.length ? "没有符合条件的学生" : "本范围还没有学生"}
+              description={
+                all.length
+                  ? "试试其他筛选条件或关键词。"
+                  : "学生通过学校邀请码注册后会出现在这里。"
+              }
             />
           )}
         </ResourceState>
@@ -281,6 +298,7 @@ export function StudentDetail({ id }) {
   const [note, setNote] = useState("");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  useDirty(note.trim());
   async function submit(e) {
     e.preventDefault();
     setBusy(true);
@@ -533,28 +551,18 @@ export function AdminPosts() {
 }
 
 export function AdminServices() {
-  const { call, bump, notify, open } = useApp();
+  const { open } = useApp();
   const resource = useResource("/admin/service-requests");
-  const [busy, setBusy] = useState(null);
-  const [pendingOnly, setPendingOnly] = useState(false);
-  const rows = (resource.data?.requests || []).filter(
-    (r) => !pendingOnly || r.status !== "handled",
-  );
-  async function handle(id) {
-    setBusy(id);
-    try {
-      await call(`/admin/service-requests/${id}`, {
-        method: "POST",
-        body: { status: "handled" },
-      });
-      bump();
-      notify("需求已标记为已跟进。");
-    } catch (e) {
-      notify(e.message, "error");
-    } finally {
-      setBusy(null);
-    }
-  }
+  const [tab, setTab] = useState("pending");
+  const [handling, setHandling] = useState(null);
+  const all = resource.data?.requests || [];
+  const pending = all.filter((r) => r.status !== "handled");
+  const rows =
+    tab === "pending"
+      ? pending
+      : tab === "handled"
+        ? all.filter((r) => r.status === "handled")
+        : all;
   return (
     <>
       <PageTitle
@@ -562,40 +570,47 @@ export function AdminServices() {
         title="把需要，连接到合适的支持"
         description="认真了解需求，联系并完成实际跟进后，再更新处理状态。"
       />
-      <div className="tool-backup">
-        <button
-          className="button secondary"
-          onClick={() =>
-            open({
-              type: "serviceForm",
-              formId: "r22",
-              title: "教师需求与身心状态",
-            })
-          }
-        >
-          填写教师需求
-        </button>
-        <button
-          className="button secondary"
-          onClick={() =>
-            open({ type: "serviceForm", formId: "fk2", title: "活动服务反馈" })
-          }
-        >
-          填写活动反馈
-        </button>
-      </div>
       <section className="panel">
-        <div className="section-heading">
-          <h2>本区支持需求</h2>
-          <label className="checkbox-label">
-            <input
-              type="checkbox"
-              checked={pendingOnly}
-              onChange={(e) => setPendingOnly(e.target.checked)}
-            />
-            只看待跟进
-          </label>
-        </div>
+        <ListHeader title="本区支持需求">
+          <button
+            className="button secondary"
+            onClick={() =>
+              open({
+                type: "serviceForm",
+                formId: "r22",
+                title: "教师需求与身心状态",
+              })
+            }
+          >
+            填写教师需求
+          </button>
+          <button
+            className="button secondary"
+            onClick={() =>
+              open({
+                type: "serviceForm",
+                formId: "fk2",
+                title: "活动服务反馈",
+              })
+            }
+          >
+            填写活动反馈
+          </button>
+        </ListHeader>
+        <Tabs
+          label="需求状态"
+          value={tab}
+          onChange={setTab}
+          tabs={[
+            { id: "pending", label: "待跟进", count: pending.length },
+            {
+              id: "handled",
+              label: "已跟进",
+              count: all.length - pending.length,
+            },
+            { id: "all", label: "全部", count: all.length },
+          ]}
+        />
         <ResourceState {...resource}>
           {rows.length ? (
             rows.map((row) => (
@@ -616,8 +631,7 @@ export function AdminServices() {
                 ) : (
                   <button
                     className="button secondary"
-                    disabled={busy === row.id}
-                    onClick={() => handle(row.id)}
+                    onClick={() => setHandling(row)}
                   >
                     标记已跟进
                     <Check size={15} />
@@ -627,12 +641,42 @@ export function AdminServices() {
             ))
           ) : (
             <Empty
-              title="没有待处理的支持需求"
-              description="新的需求会在这里展示。"
+              title={
+                tab === "pending" ? "待跟进需求已全部处理" : "这里还没有需求"
+              }
+              description="新的需求会出现在“待跟进”中。"
             />
           )}
         </ResourceState>
       </section>
+      {handling && (
+        <HandleDialog row={handling} onClose={() => setHandling(null)} />
+      )}
     </>
+  );
+}
+
+function HandleDialog({ row, onClose }) {
+  const { busy, error, run } = useMutation();
+  return (
+    <ConfirmDialog
+      title="确认已完成跟进？"
+      confirmLabel="确认已跟进"
+      busy={busy}
+      error={error}
+      onSubmit={async () => {
+        const result = await run(`/admin/service-requests/${row.id}`, {
+          body: { status: "handled" },
+          success: "需求已标记为已跟进。",
+        });
+        if (result) onClose();
+      }}
+      onClose={onClose}
+    >
+      <p>
+        {row.userName}（{row.schoolName}）· {row.type}
+      </p>
+      <p>请在实际联系并提供支持后再标记。标记后不能撤回。</p>
+    </ConfirmDialog>
   );
 }

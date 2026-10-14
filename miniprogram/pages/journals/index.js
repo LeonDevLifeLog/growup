@@ -3,7 +3,7 @@ const { request, requireStudent, localTime, moods } = require('../../utils/api')
 Page({
   data: {
     tab: 'map', journals: [], visibleJournals: [], checkins: [], loading: true, submitting: false,
-    error: '', success: '', editor: false, title: '', content: '', moodIndex: 0, intensityIndex: 1,
+    error: '', sheetError: '', success: '', editor: false, title: '', content: '', moodIndex: 0, intensityIndex: 1,
     moodNames: ['暂不记录心情', ...moods.map(item => item.name)], intensityNames: ['轻轻的 · 1', '比较明显 · 2', '很强烈 · 3'],
     tagsText: '', goal: '', query: '', mapNodes: [], mapEdges: [], connections: [], mapStats: {},
     deleting: false, entryMode: 'full', canvasVisible: false, imagePath: '', imageBusy: false
@@ -41,7 +41,16 @@ Page({
     this.setData({ mapNodes: nodes, mapEdges: edges, connections: map.edges.slice().sort((a, b) => b.weight - a.weight).slice(0, 12), imagePath: '', canvasVisible: false, mapStats: { ...stats, moodAverageLabel: stats.moodAverage === null || stats.moodAverage === undefined ? '—' : Number(stats.moodAverage).toFixed(1), moodChangeLabel: stats.moodChange === null || stats.moodChange === undefined ? '样本不足' : (stats.moodChange > 0 ? '+' : '') + Number(stats.moodChange).toFixed(1) } });
   },
   changeTab(event) { this.setData({ tab: event.currentTarget.dataset.tab }); },
-  write() { this.setData({ editor: !this.data.editor, error: '', success: '' }); },
+  write() { this.setData({ editor: true, sheetError: '', success: '' }); },
+  closeEditor() {
+    if (this.data.submitting) return;
+    const typed = this.data.title.trim() || this.data.content.trim() || this.data.tagsText.trim() || this.data.goal.trim();
+    if (!typed) { this.setData({ editor: false, sheetError: '' }); return; }
+    wx.showModal({ title: '放弃这篇日记？', content: '刚写下的内容还没有保存，关闭后无法恢复。', confirmText: '放弃', cancelText: '继续写', confirmColor: '#a34b38', success: result => {
+      if (result.confirm) this.setData({ editor: false, sheetError: '', title: '', content: '', tagsText: '', goal: '', moodIndex: 0, intensityIndex: 1 });
+    } });
+  },
+  noop() {},
   input(event) { this.setData({ [event.currentTarget.dataset.field]: event.detail.value }); },
   moodChange(event) { this.setData({ moodIndex: Number(event.detail.value) }); },
   intensityChange(event) { this.setData({ intensityIndex: Number(event.detail.value) }); },
@@ -56,15 +65,15 @@ Page({
     if (this.data.submitting) return;
     const tags = [...new Set(this.data.tagsText.split(/[,，、\n]/).map(tag => tag.trim()).filter(Boolean))];
     const content = this.data.entryMode === 'mood' ? '' : this.data.content.trim();
-    if (!content && !this.data.moodIndex) { this.setData({ error: '写下一点日常，或选择此刻的心情就可以保存' }); return; }
-    if (tags.length > 6 || tags.some(tag => tag.length > 20)) { this.setData({ error: '最多 6 个标签，每个不超过 20 字' }); return; }
-    this.setData({ submitting: true, error: '', success: '' });
+    if (!content && !this.data.moodIndex) { this.setData({ sheetError: '写下一点日常，或选择此刻的心情就可以保存' }); return; }
+    if (tags.length > 6 || tags.some(tag => tag.length > 20)) { this.setData({ sheetError: '最多 6 个标签，每个不超过 20 字' }); return; }
+    this.setData({ submitting: true, sheetError: '', success: '' });
     try {
       await request('/journals', 'POST', { title: this.data.title.trim(), content, mood: this.data.moodIndex || null, intensity: this.data.intensityIndex + 1, tags, goal: this.data.goal.trim() });
       this.setData({ editor: false, title: '', content: '', tagsText: '', goal: '', moodIndex: 0, intensityIndex: 1, tab: 'map' });
       wx.showToast({ title: '星星已收藏', icon: 'success' });
       await this.load();
-    } catch (error) { this.setData({ error: error.message }); }
+    } catch (error) { this.setData({ sheetError: error.message }); }
     finally { this.setData({ submitting: false }); }
   },
   remove(event) {
@@ -73,8 +82,8 @@ Page({
     wx.showModal({ title: '删除这颗星星？', content: '日记与它的标签关联将删除，无法撤销。心情打卡不受影响。', confirmText: '删除日记', confirmColor: '#a34b38', success: async result => {
       if (!result.confirm) return;
       this.setData({ deleting: true, error: '' });
-      try { await request('/journals/' + encodeURIComponent(id), 'DELETE'); await this.load(); }
-      catch (error) { this.setData({ error: error.message }); }
+      try { await request('/journals/' + encodeURIComponent(id), 'DELETE'); wx.showToast({ title: '日记已删除', icon: 'none' }); await this.load(); }
+      catch (error) { wx.showToast({ title: error.message, icon: 'none' }); }
       finally { this.setData({ deleting: false }); }
     } });
   },
@@ -107,12 +116,12 @@ Page({
       await new Promise(resolve => context.draw(false, resolve));
       const path = await new Promise((resolve, reject) => wx.canvasToTempFilePath({ canvasId: 'starMapCanvas', width, height, destWidth: 1372, destHeight: 1560, fileType: 'png', success: result => resolve(result.tempFilePath), fail: () => reject(new Error('星图图片生成失败，请重试')) }, this));
       this.setData({ imagePath: path });
-    } catch (error) { this.setData({ error: error.message || '图片生成失败，请重试' }); }
+    } catch (error) { wx.showToast({ title: error.message || '图片生成失败，请重试', icon: 'none' }); }
     finally { this.setData({ imageBusy: false }); }
   },
   saveImage() {
     if (!this.data.imagePath) return;
-    wx.saveImageToPhotosAlbum({ filePath: this.data.imagePath, success: () => wx.showToast({ title: '已保存到相册', icon: 'success' }), fail: () => this.setData({ error: '图片已生成，但未能保存到相册。请确认照片权限后重试。' }) });
+    wx.saveImageToPhotosAlbum({ filePath: this.data.imagePath, success: () => wx.showToast({ title: '已保存到相册', icon: 'success' }), fail: () => wx.showModal({ title: '未能保存到相册', content: '图片已生成。请在设置中允许保存到相册后重试。', showCancel: false, confirmText: '知道了', confirmColor: '#245c45' }) });
   },
   checkin() { wx.navigateTo({ url: '/pages/checkin/index' }); }
 });

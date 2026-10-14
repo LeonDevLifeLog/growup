@@ -106,10 +106,6 @@
   font-weight:600;
 }
 
-.editor-title {
-  margin:0 0 16rpx;
-}
-
 .goal-field { min-height:150rpx; }
 .map-stats { display:flex; justify-content:space-around; text-align:center; margin:30rpx 0; }
 .map-stats text { font-size:44rpx; font-weight:600; }

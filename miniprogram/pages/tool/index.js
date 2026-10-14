@@ -25,14 +25,23 @@ Page({
   async selectTool(tool) {
     if (!tool) throw new Error('暂时没有可用的成长观察工具');
     this.requestedId = tool.id;
+    this.touched = false;
     this.invalidateReport();
     this.setData({ tool, profileIndex: 0, profileNames: tool.profiles.map(profile => profile.name), profileDescription: tool.profiles[0].description || '', answers: {}, result: null, error: '', success: '', fields: withValues(tool.profiles[0].fields, {}), tab: 'entry' });
     wx.setNavigationBarTitle({ title: tool.name });
     await this.loadRecords();
   },
-  async toolChange(event) {
+  // Switching tool or version clears the form; ask first if something was typed.
+  confirmDiscard(apply) {
+    if (!this.touched) return apply();
+    wx.showModal({ title: '切换后将清空填写', content: '当前填写的内容还没有保存，确定切换吗？', confirmText: '切换', cancelText: '继续填写', confirmColor: '#a34b38', success: result => { if (result.confirm) apply(); } });
+  },
+  toolChange(event) {
     if (this.data.saving || this.data.deleting) return;
     const toolIndex = Number(event.detail.value);
+    return this.confirmDiscard(() => this.switchTool(toolIndex));
+  },
+  async switchTool(toolIndex) {
     this.setData({ toolIndex, loading: true, error: '' });
     try { await this.selectTool(this.data.tools[toolIndex]); }
     catch (error) { this.setData({ error: error.message }); }
@@ -40,9 +49,14 @@ Page({
   },
   profileChange(event) {
     const profileIndex = Number(event.detail.value);
+    return this.confirmDiscard(() => this.switchProfile(profileIndex));
+  },
+  switchProfile(profileIndex) {
+    this.touched = false;
     this.setData({ profileIndex, profileDescription: this.data.tool.profiles[profileIndex].description || '', answers: {}, fields: withValues(this.data.tool.profiles[profileIndex].fields, {}), error: '', success: '', result: null });
   },
   updateField(id, value) {
+    this.touched = true;
     const answers = { ...this.data.answers, [id]: value };
     this.setData({ answers, fields: withValues(this.data.tool.profiles[this.data.profileIndex].fields, answers), success: '' });
   },
@@ -82,11 +96,12 @@ Page({
     this.setData({ error: '', success: '' });
     let answers;
     try { answers = validate(this.data.fields, this.data.answers); }
-    catch (error) { this.setData({ error: error.message }); return; }
+    catch (error) { this.setData({ error: error.message }); wx.showToast({ title: error.message, icon: 'none' }); return; }
     this.setData({ saving: true });
     try {
       const { record } = await request('/tools/' + encodeURIComponent(this.data.tool.id) + '/records', 'POST', { profileId: this.data.tool.profiles[this.data.profileIndex].id, date: this.data.date, answers });
       this.invalidateReport();
+      this.touched = false;
       this.setData({ success: this.data.tool.mode === 'questionnaire' ? '已保存你的回答与本次结果。' : '成长观察已保存，可以在历史中回顾。', result: reportView(record.result, '本次成长现状回顾') });
       await this.loadRecords();
     } catch (error) { this.setData({ error: error.message }); }
@@ -102,6 +117,7 @@ Page({
     const profileIndex = this.data.tool.profiles.findIndex(profile => profile.id === record.profileId);
     if (profileIndex < 0) return;
     const answers = { ...record.answers };
+    this.touched = false;
     this.setData({ tab: 'entry', profileIndex, profileDescription: this.data.tool.profiles[profileIndex].description || '', date: record.date, answers, fields: withValues(this.data.tool.profiles[profileIndex].fields, answers), result: null, error: '', success: '正在修订 ' + record.date + ' 的「' + record.profileName + '」。保留日期和版本保存，会更新同一条记录。' });
   },
   viewResult(event) {

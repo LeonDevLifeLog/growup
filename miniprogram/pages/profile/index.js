@@ -13,7 +13,7 @@ Page({
     finally { this.setData({ loading: false }); }
   },
   records() { wx.switchTab({ url: '/pages/journals/index' }); },
-  service() { wx.navigateTo({ url: '/pages/service/index' }); },
+  service() { wx.navigateTo({ url: '/pages/service/index?tab=records' }); },
   privacy() { wx.navigateTo({ url: '/pages/article/index?id=privacy' }); },
   about() {
     wx.showModal({ title: '关于成长健研社', content: '成长健研社，青少年身心健康成长服务品牌。以成长服务、身心发展、思维表达与数据观测为核心，连接学校与家庭，陪伴青少年成长。记录心情、探索自己、让表达获得回应。', showCancel: false, confirmText: '知道了', confirmColor: '#245c45' });

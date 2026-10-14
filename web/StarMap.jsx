@@ -9,7 +9,7 @@ import {
   Sprout,
   Trash2,
 } from "lucide-react";
-import { useApp, useResource } from "./context.jsx";
+import { useApp, useDirty, useResource } from "./context.jsx";
 import { Empty, PrivateNote, ResourceState } from "./components.jsx";
 import { MoodFace } from "./Illustrations.jsx";
 import { moodNames, shortDate } from "./api.js";
@@ -364,6 +364,7 @@ export function StarMapForm() {
   const [customTag, setCustomTag] = useState("");
   const [goal, setGoal] = useState("");
   const [busy, setBusy] = useState(false);
+  useDirty(title.trim() || content.trim() || goal.trim());
   const [error, setError] = useState("");
   function toggleTag(tag) {
     setTags((values) =>

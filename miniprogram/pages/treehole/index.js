@@ -31,7 +31,13 @@ Page({
     const selectedPost = this.data.posts.find(post => post.id === event.currentTarget.dataset.id);
     if (selectedPost) this.setData({ sheet: 'reply', selectedPost, content: '', sheetError: '' });
   },
-  closeSheet() { if (!this.data.submitting) this.setData({ sheet: '', sheetError: '' }); },
+  closeSheet() {
+    if (this.data.submitting) return;
+    if (!this.data.content.trim()) { this.setData({ sheet: '', sheetError: '' }); return; }
+    wx.showModal({ title: '放弃这段内容？', content: '刚写下的文字还没有提交，关闭后无法恢复。', confirmText: '放弃', cancelText: '继续写', confirmColor: '#a34b38', success: result => {
+      if (result.confirm) this.setData({ sheet: '', sheetError: '', content: '' });
+    } });
+  },
   noop() {},
   input(event) { this.setData({ [event.currentTarget.dataset.field]: event.detail.value }); },
   chooseTopic(event) { this.setData({ topicIndex: Number(event.detail.value) }); },
@@ -54,12 +60,12 @@ Page({
   async warm(event) {
     if (this.data.actionBusy) return;
     const id = event.currentTarget.dataset.id;
-    this.setData({ actionBusy: true, error: '' });
+    this.setData({ actionBusy: true });
     try {
       const result = await request('/posts/' + id + '/warm', 'POST', {});
       this.setData({ posts: this.data.posts.map(post => post.id === id ? { ...post, warmCount: result.warmCount, warmed: true } : post) });
       wx.showToast({ title: '送出一份温暖', icon: 'none' });
-    } catch (error) { this.setData({ error: error.message }); }
+    } catch (error) { wx.showToast({ title: error.message, icon: 'none' }); }
     finally { this.setData({ actionBusy: false }); }
   },
   report(event) {
@@ -68,12 +74,12 @@ Page({
     wx.showActionSheet({
       itemList: ['泄露个人信息', '不友善或伤害性内容', '广告或其他不适宜内容'],
       success: async result => {
-        this.setData({ actionBusy: true, error: '' });
+        this.setData({ actionBusy: true });
         try {
           await request('/posts/' + id + '/report', 'POST', { reason: ['泄露个人信息', '不友善或伤害性内容', '广告或其他不适宜内容'][result.tapIndex] });
           wx.showToast({ title: '纸条已隐藏，等待复核', icon: 'none' });
           await this.load();
-        } catch (error) { this.setData({ error: error.message }); }
+        } catch (error) { wx.showToast({ title: error.message, icon: 'none' }); }
         finally { this.setData({ actionBusy: false }); }
       }
     });

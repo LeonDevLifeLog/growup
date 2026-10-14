@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useId, useRef } from "react";
 import {
   ArrowUpRight,
   X,
@@ -134,6 +134,7 @@ export function Locked({
 }
 export function Modal({ title, children, wide = false, onClose }) {
   const ref = useRef(null);
+  const titleId = useId();
   useEffect(() => {
     const dialog = ref.current;
     dialog.showModal();
@@ -145,7 +146,7 @@ export function Modal({ title, children, wide = false, onClose }) {
     <dialog
       ref={ref}
       className={`modal ${wide ? "wide" : ""}`}
-      aria-labelledby="modal-title"
+      aria-labelledby={titleId}
       onCancel={(event) => {
         event.preventDefault();
         onClose();
@@ -156,7 +157,7 @@ export function Modal({ title, children, wide = false, onClose }) {
     >
       <div className="modal-inner">
         <div className="modal-heading">
-          <h2 id="modal-title">{title}</h2>
+          <h2 id={titleId}>{title}</h2>
           <button
             className="icon-button"
             onClick={onClose}
@@ -176,5 +177,105 @@ export function PrivateNote({ children }) {
       <LockKeyhole size={14} />
       {children}
     </p>
+  );
+}
+
+// Create/edit forms open in a dialog so lists keep their place on the page.
+// Errors stay inside the dialog, next to the fields that caused them.
+export function FormDialog({
+  title,
+  description,
+  error,
+  busy,
+  submitLabel,
+  disabled = false,
+  danger = false,
+  wide = false,
+  onSubmit,
+  onClose,
+  children,
+}) {
+  const close = () => !busy && onClose();
+  return (
+    <Modal title={title} wide={wide} onClose={close}>
+      <form
+        className="form-stack dialog-form"
+        onSubmit={(event) => {
+          event.preventDefault();
+          if (!busy) onSubmit();
+        }}
+      >
+        {description && <div className="dialog-lead">{description}</div>}
+        {children}
+        {error && (
+          <p className="form-error" role="alert">
+            {error}
+          </p>
+        )}
+        <div className="dialog-actions">
+          <button
+            type="button"
+            className="button secondary"
+            onClick={close}
+            disabled={busy}
+          >
+            取消
+          </button>
+          <button
+            className={`button ${danger ? "danger" : "primary"}`}
+            disabled={busy || disabled}
+          >
+            {submitLabel}
+          </button>
+        </div>
+      </form>
+    </Modal>
+  );
+}
+export function ConfirmDialog({ confirmLabel, children, ...props }) {
+  return (
+    <FormDialog submitLabel={confirmLabel} description={children} {...props} />
+  );
+}
+export function ActiveBadge({ active }) {
+  return (
+    <span className={`badge ${active ? "green" : "gray"}`}>
+      <span />
+      {active ? "启用" : "停用"}
+    </span>
+  );
+}
+export function ListHeader({ title, count, unit = "", children }) {
+  return (
+    <div className="list-header">
+      <h2>
+        {title}
+        {count !== undefined && (
+          <small>
+            {count}
+            {unit}
+          </small>
+        )}
+      </h2>
+      {children && <div className="list-actions">{children}</div>}
+    </div>
+  );
+}
+export function Tabs({ label, tabs, value, onChange }) {
+  return (
+    <div className="tabs" role="tablist" aria-label={label}>
+      {tabs.map((tab) => (
+        <button
+          key={tab.id}
+          role="tab"
+          aria-selected={value === tab.id}
+          className={value === tab.id ? "active" : ""}
+          onClick={() => onChange(tab.id)}
+        >
+          {tab.label}
+          {tab.count !== undefined && <span>{tab.count}</span>}
+        </button>
+      ))}
+    </div>
   );
 }

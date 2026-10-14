@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   ArrowRight,
   ArrowUpRight,
@@ -23,7 +23,7 @@ import {
 } from "lucide-react";
 import { AppContext, useApp } from "./context.jsx";
 import { request, isAdmin, roleNames } from "./api.js";
-import { Locked, Mark, Modal } from "./components.jsx";
+import { ConfirmDialog, Locked, Mark, Modal } from "./components.jsx";
 import Auth from "./Auth.jsx";
 import Enrollment from "./Enrollment.jsx";
 import Platform, { ChangePassword } from "./Platform.jsx";
@@ -86,6 +86,8 @@ export default function App() {
     allowedViews.has(location.hash.slice(1)) ? location.hash.slice(1) : "home",
   );
   const [modal, setModal] = useState(null);
+  const [discarding, setDiscarding] = useState(false);
+  const dirty = useRef(false);
   const [refresh, setRefresh] = useState(0);
   const [toast, setToast] = useState(null);
   const [demo, setDemo] = useState(false);
@@ -200,8 +202,23 @@ export default function App() {
     setView("home");
     notify("已退出登录，记得好好照顾自己。");
   }
-  const open = useCallback((item) => setModal(item), []);
-  const close = useCallback(() => setModal(null), []);
+  const open = useCallback((item) => {
+    dirty.current = false;
+    setModal(item);
+  }, []);
+  const close = useCallback(() => {
+    dirty.current = false;
+    setModal(null);
+  }, []);
+  const setDirty = useCallback((value) => {
+    dirty.current = value;
+  }, []);
+  // Dismissing (X, Esc, backdrop) asks first when a form has unsaved input;
+  // forms still call close() directly after a successful save.
+  const requestClose = useCallback(() => {
+    if (dirty.current) setDiscarding(true);
+    else close();
+  }, [close]);
   function requireStudent() {
     if (user?.role === "student") return true;
     open({ type: "auth", purpose: "student" });
@@ -221,6 +238,7 @@ export default function App() {
     bump,
     open,
     close,
+    setDirty,
     notify,
     authenticate,
     logout,
@@ -451,6 +469,7 @@ export default function App() {
             <button
               key={item.id}
               className={view === item.id ? "active" : ""}
+              aria-current={view === item.id ? "page" : undefined}
               onClick={() => setView(item.id)}
             >
               <item.icon size={20} />
@@ -460,7 +479,8 @@ export default function App() {
                   .replace("心情记录", "心情")
                   .replace("成长探索", "探索")
                   .replace("我的星图", "星图")
-                  .replace("匿名树洞", "树洞")}
+                  .replace("匿名树洞", "树洞")
+                  .replace("学校与邀请", "邀请")}
               </span>
             </button>
           ))}
@@ -477,10 +497,24 @@ export default function App() {
             "toolCatalog",
             "serviceForm",
           ].includes(modal.type)}
-          onClose={close}
+          onClose={requestClose}
         >
           <ModalBody modal={modal} />
         </Modal>
+      )}
+      {discarding && (
+        <ConfirmDialog
+          title="放弃未保存的内容？"
+          confirmLabel="放弃并关闭"
+          danger
+          onSubmit={() => {
+            setDiscarding(false);
+            close();
+          }}
+          onClose={() => setDiscarding(false)}
+        >
+          刚才填写的内容还没有保存，关闭后将无法恢复。
+        </ConfirmDialog>
       )}
       {toast && (
         <div key={toast.key} className={`toast ${toast.type}`} role="status">

@@ -113,11 +113,6 @@
   color:#8c9a6a;
 }
 
-.sheet-title {
-  font-size:31rpx;
-  margin:10rpx 0;
-}
-
 .reply-source {
   background:#e9eddf;
   padding:22rpx;

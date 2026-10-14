@@ -2,13 +2,14 @@ const { serviceTypes } = require('../../data/content');
 const { request, requireStudent, localTime } = require('../../utils/api');
 const { withValues, validate } = require('../../utils/forms');
 Page({
-  data: { serviceTypes, typeIndex: 0, message: '', requests: [], loading: true, submitting: false, error: '', success: false, forms: [], form: null, fields: [], answers: {} },
+  data: { serviceTypes, typeIndex: 0, message: '', requests: [], loading: true, submitting: false, error: '', success: false, tab: 'new', forms: [], form: null, fields: [], answers: {} },
   async onLoad(options) {
     if (!requireStudent()) return;
     let type = '';
     try { type = decodeURIComponent(options.type || ''); } catch (_) { type = ''; }
     this.setData({ typeIndex: Math.max(0, serviceTypes.indexOf(type)) });
     this.formId = options.formId || '';
+    if (options.tab === 'records') this.setData({ tab: 'records' });
     await this.load();
   },
   async load() {
@@ -23,12 +24,14 @@ Page({
     } catch (error) { this.setData({ error: error.message }); }
     finally { this.setData({ loading: false }); }
   },
+  onPullDownRefresh() { this.load().finally(() => wx.stopPullDownRefresh()); },
+  changeTab(event) { this.setData({ tab: event.currentTarget.dataset.tab, error: '' }); },
   type(event) { this.setData({ typeIndex: Number(event.detail.value), success: false }); },
   input(event) { this.setData({ message: event.detail.value, success: false }); },
   chooseForm(event) {
     this.formId = event.currentTarget.dataset.id || '';
     const form = this.data.forms.find(item => item.id === this.formId) || null;
-    this.setData({ form, fields: form ? withValues(form.profiles[0].fields, {}) : [], answers: {}, success: false, error: '' });
+    this.setData({ form, fields: form ? withValues(form.profiles[0].fields, {}) : [], answers: {}, success: false, error: '', tab: 'new' });
   },
   updateField(id, value) {
     const answers = { ...this.data.answers, [id]: value };
@@ -57,7 +60,9 @@ Page({
     this.setData({ submitting: true, error: '', success: false });
     try {
       await request('/service-requests', 'POST', body);
-      this.setData({ message: '', answers: {}, success: true });
+      this.setData({ message: '', answers: {}, success: true, tab: 'records' });
+      wx.showToast({ title: '已提交', icon: 'success' });
+      wx.pageScrollTo({ scrollTop: 0, duration: 200 });
       await this.load();
     } catch (error) { this.setData({ error: error.message }); }
     finally { this.setData({ submitting: false }); }

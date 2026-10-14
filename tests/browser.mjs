@@ -298,8 +298,14 @@ try {
   await service
     .getByRole("button", { name: "标记已跟进", exact: true })
     .click();
+  await admin
+    .getByRole("dialog", { name: "确认已完成跟进？", exact: true })
+    .getByRole("button", { name: "确认已跟进", exact: true })
+    .click();
+  await expect(service).toHaveCount(0);
+  await admin.getByRole("tab", { name: /已跟进/ }).click();
   await expect(service).toContainText("已跟进");
-  record("举报即时隐藏与支持需求后台跟进通过");
+  record("举报即时隐藏；支持需求默认显示待跟进，确认后转入已跟进");
 
   await student.setViewportSize({ width: 375, height: 812 });
   for (const name of ["首页", "心情", "探索", "星图", "树洞"]) {

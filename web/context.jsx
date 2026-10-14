@@ -30,3 +30,36 @@ export function useResource(path, enabled = true) {
   }, [path, enabled, refresh, token, call]);
   return state;
 }
+
+/** One in-flight request per form; the error belongs to the form that sent it. */
+export function useMutation() {
+  const { call, bump, notify } = useApp();
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+  async function run(path, { method = "POST", body, success = "已保存" } = {}) {
+    if (busy) return null;
+    setBusy(true);
+    setError("");
+    try {
+      const result = await call(path, { method, body });
+      bump();
+      if (success) notify(success);
+      return result;
+    } catch (e) {
+      setError(e.message);
+      return null;
+    } finally {
+      setBusy(false);
+    }
+  }
+  return { busy, error, setError, run };
+}
+
+/** Ask before a dismissed dialog throws away what someone has typed. */
+export function useDirty(dirty) {
+  const { setDirty } = useApp();
+  useEffect(() => {
+    setDirty?.(!!dirty);
+    return () => setDirty?.(false);
+  }, [dirty, setDirty]);
+}
