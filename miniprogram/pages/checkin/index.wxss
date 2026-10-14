@@ -1,0 +1,65 @@
+.moods {
+  display:flex;
+  justify-content:space-between;
+  gap:8rpx;
+  margin-top:52rpx;
+}
+
+.mood {
+  flex:1;
+  text-align:center;
+  padding:16rpx 2rpx;
+  border-radius:24rpx;
+  border:3rpx solid transparent;
+}
+
+.chosen {
+  border-color:#245c45;
+  background:#fff;
+}
+
+.face {
+  width:90rpx;
+  height:90rpx;
+  border-radius:50%;
+  position:relative;
+  margin:0 auto 14rpx;
+  color:#365342;
+}
+
+.eyes {
+  position:absolute;
+  top:14rpx;
+  left:0;
+  width:100%;
+  font-size:25rpx;
+  letter-spacing:8rpx;
+  padding-left:8rpx;
+}
+
+.mouth {
+  position:absolute;
+  top:39rpx;
+  left:0;
+  width:100%;
+  font-size:36rpx;
+  line-height:1;
+}
+
+.low-mouth {
+  transform:rotate(180deg);
+  top:45rpx;
+}
+
+.mood-label {
+  font-size:20rpx;
+  white-space:nowrap;
+}
+
+.mood-answer {
+  font-size:27rpx;
+  text-align:center;
+  min-height:55rpx;
+  color:#5d754f;
+  margin:24rpx 0 40rpx;
+}

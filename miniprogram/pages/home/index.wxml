@@ -1,0 +1,27 @@
+<view class="page">
+  <view class="row"><view class="eyebrow">成长健研社</view><text class="pill">{{user.regionName}}</text></view>
+  <view class="title">你好，{{user.name}}<text>{{'\n'}}</text>今天也有新的可能。</view>
+  <view class="subtitle">青少年身心健康成长服务品牌<text>{{'\n'}}</text>陪你记录每一点成长。</view>
+  <view class="hero spaced">
+    <view class="hero-content"><text class="hero-tag">TODAY’S LITTLE CHECK-IN</text><view class="hero-title">今天的你，<text>{{'\n'}}</text>是什么心情？</view><view class="hero-text">{{checkin ? '已经记下「' + moodName + '」，谢谢你认真照顾自己。' : '无论晴天或下雨，这里都接得住。'}}</view><button class="hero-button" bindtap="checkin">{{checkin ? '看看 / 更新今日心情' : '记录今天的心情'}} ↗</button></view>
+    <view class="plant" aria-hidden="true"><view class="sun"></view><view class="stem"></view><view class="leaf leaf-a"></view><view class="leaf leaf-b"></view><view class="leaf leaf-c"></view><view class="ground"></view></view>
+  </view>
+  <view wx:if="{{loading}}" class="state">正在整理你的成长记录…</view>
+  <view wx:if="{{error}}" class="error">{{error}}<button class="button-small button-outline spaced" bindtap="load">重新加载</button></view>
+  <view wx:if="{{!loading && !error}}" class="stats">
+    <view><view class="stat-value">{{stats.totalCheckins || 0}}<text>天</text></view><view class="small">累计记录</view></view>
+    <view><view class="stat-value">{{stats.streak || 0}}<text>天</text></view><view class="small">连续记录</view></view>
+    <view><view class="stat-value">{{stats.journalCount || 0}}<text>篇</text></view><view class="small">星图日记</view></view>
+  </view>
+  <view class="row section-title"><text>留一点时间，给自己</text><text class="link" bindtap="explore">全部探索 →</text></view>
+  <view class="shortcuts"><view class="shortcut" bindtap="journals"><text class="shortcut-icon">✧</text><view class="shortcut-title">星图日记</view><view class="small">收藏生活里的微光</view><view class="shortcut-arrow">↗</view></view><view class="shortcut lavender" bindtap="treehole"><text class="shortcut-icon">☽</text><view class="shortcut-title">匿名树洞</view><view class="small">把心事交给一阵风</view><view class="shortcut-arrow">↗</view></view></view>
+  <view class="section-title">心情的小小足迹</view>
+  <view class="card">
+    <view wx:if="{{!week.length}}" class="state"><view class="empty-icon">◌</view><view>第一份记录，从今天开始。</view></view>
+    <view wx:else class="week-chart"><view wx:for="{{week}}" wx:key="id" class="chart-day"><view class="chart-column"><view class="chart-bar" style="height:{{item.height}}rpx"><text>{{item.score}}</text></view></view><view class="chart-label">{{item.shortDate}}</view></view></view>
+    <view class="small">最近 7 次记录 · 1 很低落 — 5 超开心</view>
+    <view class="link spaced" bindtap="journals">查看完整记录 →</view>
+  </view>
+  <view class="reading card" bindtap="read"><view class="eyebrow">给今天的一封小信</view><view class="section-title">你不需要一次说清所有事</view><view class="muted">先从“我今天感觉……”开始，就很好。</view><view class="link spaced">读一读 · 表达与理解 →</view></view>
+  <view class="support" bindtap="help">♡ 需要有人陪一陪？看看求助提示</view>
+</view>

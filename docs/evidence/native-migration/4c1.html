@@ -1,0 +1,1391 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
+  <meta name="description" content="4CR成长微手帐 - 青少年量表 · 4C素质与情绪韧性描述性分析工具">
+  <title>4CR成长微手帐 · 青少年版</title>
+  <style>
+    :root {
+      --bg-paper: #fefae0;
+      --bg-desk: #e7e5e0;
+      --bg-card: #fffef9;
+      --text-main: #3d405b;
+      --text-muted: #6b7280;
+      --primary: #588157;
+      --primary-dark: #344e41;
+      --accent: #dda15e;
+      --accent-dark: #bc6c25;
+      --bg-highlight: #fff9c4;
+      --border-hl: #eab308;
+      --bg-guide: #f4f1e8;
+      --border-soft: #a3b18a;
+      --safe-t: env(safe-area-inset-top, 0px);
+      --safe-b: env(safe-area-inset-bottom, 0px);
+    }
+    *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    body{
+      font-family:'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif;
+      background:var(--bg-desk);color:var(--text-main);line-height:1.6;
+      overflow-x:hidden;-webkit-font-smoothing:antialiased;
+    }
+    .container{
+      max-width:480px;margin:0 auto;min-height:100vh;padding-bottom:120px;
+      background:var(--bg-paper);
+      background-image:linear-gradient(#e8e2d4 1px,transparent 1px);
+      background-size:100% 28px;
+      box-shadow:0 0 20px rgba(0,0,0,.08);
+    }
+    .header{
+      background:var(--primary-dark);
+      padding:calc(28px + var(--safe-t)) 20px 24px;
+      border-radius:0 0 20px 20px;color:var(--bg-paper);
+      position:relative;overflow:hidden;
+      border-bottom:3px solid #283618;
+      box-shadow:0 4px 12px rgba(0,0,0,.12);
+    }
+    .header::before{
+      content:'';position:absolute;top:calc(var(--safe-t) - 4px);left:50%;
+      transform:translateX(-50%) rotate(-2deg);
+      width:120px;height:24px;background:rgba(221,161,94,.65);
+      border-left:3px dotted rgba(255,255,255,.3);
+      border-right:3px dotted rgba(255,255,255,.3);z-index:2;
+    }
+    .header-row{
+      display:flex;align-items:flex-start;justify-content:space-between;
+      position:relative;z-index:1;
+    }
+    .header-left{flex:1;min-width:0}
+    .header-sub{font-size:11px;opacity:.85;margin-bottom:4px;letter-spacing:1px}
+    .header-title{font-size:22px;font-weight:700;letter-spacing:-.3px}
+    .header-btns{
+      flex-shrink:0;margin-left:12px;margin-top:4px;
+      display:flex;gap:6px;
+    }
+    .hdr-btn{
+      padding:6px 12px;border-radius:6px;
+      background:rgba(255,255,255,.15);color:var(--bg-paper);
+      border:1px dashed rgba(255,255,255,.45);
+      font-size:12px;font-weight:600;letter-spacing:.5px;
+      cursor:pointer;transition:all .2s;font-family:inherit;
+      -webkit-user-select:none;user-select:none;
+      box-shadow:1px 1px 0 rgba(0,0,0,.08);
+      text-decoration:none;display:inline-flex;align-items:center;gap:4px;
+    }
+    .hdr-btn:active{
+      transform:scale(.95);
+      background:rgba(255,255,255,.25);
+    }
+    .home-btn{
+      border-color:rgba(221,161,94,.7);
+      background:rgba(221,161,94,.2);
+    }
+    .home-btn:active{
+      background:rgba(221,161,94,.35);
+    }
+    .dot{width:7px;height:7px;background:var(--accent);border-radius:50%;animation:pulse 2s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+    .role-tabs{padding:20px 16px 12px}
+    .role-tabs-inner{
+      display:flex;background:var(--bg-card);border-radius:10px;padding:4px;
+      box-shadow:2px 2px 0 var(--bg-desk);border:2px solid var(--bg-desk);
+    }
+    .role-tab{
+      flex:1;text-align:center;padding:12px 6px;border-radius:8px;
+      font-size:13px;font-weight:600;cursor:pointer;transition:all .25s;
+      border:none;background:transparent;color:var(--text-muted);font-family:inherit;
+      -webkit-user-select:none;user-select:none;
+    }
+    .role-tab.active{background:var(--primary);color:var(--bg-paper);box-shadow:2px 2px 0 var(--primary-dark)}
+    .content-section{padding:0 16px;display:none}
+    .content-section.active{display:block;animation:fadeIn .3s ease}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    .card{
+      background:var(--bg-card);border-radius:12px;padding:24px 16px 20px;
+      margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,.05);
+      border:1px solid var(--bg-desk);position:relative;
+    }
+    .card::before{
+      content:'';position:absolute;top:-6px;left:20px;
+      width:50px;height:16px;background:rgba(168,196,149,.55);
+      transform:rotate(-3deg);z-index:2;
+      border-left:2px dotted rgba(255,255,255,.5);
+      border-right:2px dotted rgba(255,255,255,.5);
+    }
+    .card-hdr{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+    .card-hdr-icon{font-size:18px}
+    .card-ttl{font-size:15px;font-weight:700;color:var(--primary-dark)}
+    .card-badge{
+      margin-left:auto;font-size:10px;color:var(--primary);font-weight:600;
+      background:var(--bg-guide);padding:3px 8px;border-radius:4px;
+      border:1px dashed var(--border-soft);
+    }
+    .weather-grid{display:flex;justify-content:space-between;gap:4px;margin-bottom:14px}
+    .weather-opt{
+      flex:1;text-align:center;padding:12px 2px;
+      border:2px dashed var(--bg-desk);border-radius:8px;cursor:pointer;
+      transition:all .2s;background:var(--bg-paper);
+      -webkit-user-select:none;user-select:none;
+    }
+    .weather-opt:active{transform:scale(.95)}
+    .weather-opt.sel{
+      border-style:solid;border-color:var(--primary);background:var(--bg-guide);
+      box-shadow:2px 2px 0 var(--primary);transform:rotate(-1.5deg);
+    }
+    .w-icon{font-size:24px;line-height:1}
+    .w-label{font-size:10px;color:var(--text-muted);margin-top:4px;font-weight:500}
+    .weather-opt.sel .w-label{color:var(--primary-dark);font-weight:700}
+    .tf{
+      width:100%;min-height:90px;border:1.5px dashed #c8c8c8;border-radius:8px;
+      padding:12px 14px;font-size:13px;resize:vertical;font-family:inherit;
+      transition:border-color .2s,box-shadow .2s;outline:none;
+      background:#fefcf3;line-height:1.6;color:var(--text-main);
+    }
+    .tf:focus{border-color:var(--primary);background:var(--bg-card);box-shadow:0 0 0 3px rgba(88,129,87,.12)}
+    .tf::placeholder{color:#b0b0b0;font-size:12px}
+    .tag-grp{margin-top:14px}
+    .tag-lbl{font-size:11px;color:var(--text-muted);margin-bottom:8px;font-weight:600}
+    .tags{display:flex;flex-wrap:wrap;gap:7px}
+    .tag{
+      padding:7px 12px;border:1.5px dashed var(--border-soft);border-radius:4px;
+      font-size:11px;color:var(--text-main);cursor:pointer;transition:all .15s;
+      background:var(--bg-card);-webkit-user-select:none;user-select:none;font-weight:500;
+    }
+    .tag:active{transform:scale(.95)}
+    .tag.sel{
+      background:var(--primary);color:var(--bg-paper);border-style:solid;border-color:var(--primary-dark);
+      box-shadow:2px 2px 0 var(--primary-dark);transform:translate(-1px,-1px);
+    }
+    .tag.sel-calm-yes{
+      background:var(--primary);color:var(--bg-paper);border-style:solid;border-color:var(--primary-dark);
+      box-shadow:2px 2px 0 var(--primary-dark);transform:translate(-1px,-1px);
+    }
+    .tag.sel-calm-no{
+      background:var(--accent);color:#fff;border-style:solid;border-color:var(--accent-dark);
+      box-shadow:2px 2px 0 var(--accent-dark);transform:translate(-1px,-1px);
+    }
+    .calm-hint{
+      font-size:10px;color:var(--text-muted);margin-top:6px;line-height:1.5;
+      padding-left:2px;
+    }
+    .ctx-row{display:flex;justify-content:space-between;gap:6px;margin-bottom:16px}
+    .ctx-row .tag{flex:1;display:flex;align-items:center;justify-content:center;text-align:center;padding:10px 4px}
+    .btn-p,.btn-s{
+      width:100%;border-radius:10px 5px 10px 5px;font-weight:600;cursor:pointer;
+      font-family:inherit;-webkit-user-select:none;user-select:none;transition:all .1s;
+    }
+    .btn-p{
+      margin-top:16px;background:var(--primary);color:var(--bg-paper);
+      border:2px solid var(--primary-dark);padding:14px;font-size:14px;
+      box-shadow:3px 3px 0 var(--primary-dark);
+    }
+    .btn-p:active{transform:translate(3px,3px);box-shadow:none}
+    .btn-p:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
+    .btn-s{
+      margin-top:10px;background:var(--bg-card);color:var(--primary);
+      border:2px dashed var(--primary);padding:13px;font-size:14px;
+    }
+    .btn-s:active{transform:translateY(1px)}
+    .btn-s:disabled{opacity:.5;cursor:not-allowed}
+    .tip-box{
+      background:var(--bg-highlight);border-radius:2px;padding:12px 14px;
+      margin-bottom:14px;font-size:11px;color:#713f12;line-height:1.6;
+      border:1px solid var(--border-hl);box-shadow:2px 2px 4px rgba(0,0,0,.06);transform:rotate(-.5deg);
+    }
+    .guide-box{
+      background:var(--bg-guide);border-radius:8px;padding:12px 14px;
+      margin-bottom:12px;font-size:12px;color:var(--text-main);line-height:1.7;
+      border:1px dashed var(--border-soft);border-left:4px solid var(--primary);
+    }
+    .guide-box-t{font-weight:700;margin-bottom:6px;font-size:13px;color:var(--primary-dark)}
+    .chk-row{display:flex;align-items:center;gap:8px;margin-top:12px;padding:6px 0}
+    .chk-row input[type="checkbox"]{width:18px;height:18px;accent-color:var(--primary);cursor:pointer}
+    .chk-row label{font-size:12px;color:var(--text-main);cursor:pointer;font-weight:600}
+    .rpt-section{padding:0 16px 16px}
+    .rpt-card{
+      background:linear-gradient(135deg,#e89947,#bc6c25);border-radius:10px;
+      padding:16px 14px;text-align:center;
+      box-shadow:0 6px 16px rgba(188,108,37,.25);border:2px solid #a55c20;
+      position:relative;overflow:hidden;
+    }
+    .rpt-card::before{
+      content:'';position:absolute;top:-5px;right:10px;
+      width:44px;height:12px;background:rgba(255,255,255,.35);
+      transform:rotate(5deg);border-left:2px dotted rgba(255,255,255,.5);border-right:2px dotted rgba(255,255,255,.5);
+    }
+    .rpt-ttl{font-size:15px;font-weight:700;color:#fff;margin-bottom:4px;position:relative;z-index:1}
+    .rpt-desc{font-size:11px;color:rgba(255,255,255,.92);margin-bottom:10px;line-height:1.4;position:relative;z-index:1}
+    .rpt-btn{
+      padding:9px 20px;border-radius:8px;font-size:12px;font-weight:600;
+      cursor:pointer;border:none;font-family:inherit;transition:all .15s;
+      background:#fffef9;color:#bc6c25;box-shadow:2px 2px 0 rgba(0,0,0,.12);position:relative;z-index:1;
+    }
+    .rpt-btn:active{transform:translateY(1px);box-shadow:none}
+    .data-section{padding:0 16px 20px}
+    .data-card{
+      background:var(--bg-card);border-radius:12px;padding:18px;
+      box-shadow:0 2px 8px rgba(0,0,0,.04);border:1px solid var(--bg-desk);border-top:3px solid var(--primary);
+    }
+    .data-ttl{font-size:14px;font-weight:600;color:var(--primary-dark);margin-bottom:6px}
+    .data-desc{font-size:11px;color:var(--text-muted);line-height:1.6;margin-bottom:14px}
+    .data-acts{display:flex;gap:8px}
+    .data-btn{
+      flex:1;padding:11px 4px;border-radius:8px;font-size:11px;cursor:pointer;
+      border:none;font-family:inherit;font-weight:600;transition:all .15s;
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+    }
+    .data-btn:active{transform:scale(.96)}
+    .db-bak{background:var(--bg-guide);color:var(--primary);border:1px dashed var(--primary)}
+    .db-clr{background:#fee2e2;color:#b91c1c;border:1px dashed #b91c1c}
+    .analyst-section{padding:0 16px 24px}
+    .analyst-card{
+      background:var(--bg-card);border-radius:12px;padding:20px 16px 18px;
+      box-shadow:0 2px 8px rgba(0,0,0,.04);border:1px solid var(--bg-desk);
+      border-top:3px solid var(--accent-dark);position:relative;overflow:hidden;
+    }
+    .analyst-card::before{
+      content:'';position:absolute;top:-6px;right:18px;
+      width:50px;height:16px;background:rgba(221,161,94,.55);
+      transform:rotate(3deg);z-index:2;
+      border-left:2px dotted rgba(255,255,255,.5);
+      border-right:2px dotted rgba(255,255,255,.5);
+    }
+    .analyst-hdr{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+    .analyst-ttl{font-size:14px;font-weight:700;color:var(--accent-dark)}
+    .analyst-badge{
+      margin-left:auto;font-size:10px;color:var(--accent-dark);font-weight:600;
+      background:rgba(221,161,94,.12);padding:3px 8px;border-radius:4px;
+      border:1px dashed var(--accent);
+    }
+    .analyst-body{display:flex;align-items:center;gap:14px}
+    .qr-wrap{
+      flex-shrink:0;padding:6px;background:#fff;
+      border:2px dashed var(--accent);border-radius:10px;
+      box-shadow:2px 2px 0 var(--accent-dark);
+      transform:rotate(-2deg);transition:transform .3s;
+    }
+    .qr-wrap:active{transform:rotate(0) scale(1.03)}
+    .qr-img{display:block;width:96px;height:96px;object-fit:contain}
+    .qr-fallback{
+      width:96px;height:96px;display:flex;align-items:center;justify-content:center;
+      font-size:11px;color:#999;text-align:center;line-height:1.4;white-space:pre-line;
+    }
+    .analyst-info{flex:1;min-width:0}
+    .analyst-info-t{font-size:13px;font-weight:700;color:var(--text-main);margin-bottom:4px}
+    .analyst-info-d{font-size:11px;color:var(--text-muted);line-height:1.6}
+    .analyst-tip{
+      margin-top:12px;padding:8px 10px;background:var(--bg-guide);border-radius:6px;
+      font-size:10px;color:var(--text-main);line-height:1.6;border-left:3px solid var(--accent-dark);
+    }
+    .analyst-tip strong{color:var(--accent-dark)}
+    .footer-bar{
+      position:fixed;bottom:0;left:0;right:0;
+      background:rgba(254,250,224,.94);
+      -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+      border-top:2px dashed var(--border-soft);
+      padding:10px 16px calc(10px + var(--safe-b));text-align:center;
+      font-size:10px;color:var(--text-muted);z-index:100;line-height:1.6;
+    }
+    .toast{
+      position:fixed;top:calc(16px + var(--safe-t));left:50%;transform:translateX(-50%);
+      background:var(--primary-dark);color:var(--bg-paper);padding:12px 24px;
+      border-radius:8px;font-size:13px;font-weight:500;z-index:1000;
+      opacity:0;pointer-events:none;transition:opacity .3s;
+      border:2px solid #283618;box-shadow:4px 4px 0 rgba(0,0,0,.08);max-width:85%;text-align:center;
+    }
+    .toast.show{opacity:1}
+    .rec-list{margin-top:12px;max-height:220px;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-right:4px}
+    .rec-item{
+      background:#f9f7f0;border-radius:0 8px 8px 0;padding:12px 14px;
+      margin-bottom:8px;display:flex;align-items:flex-start;gap:8px;
+      border-left:3px solid var(--primary);border-top:1px solid var(--bg-desk);
+      border-right:1px solid var(--bg-desk);border-bottom:1px solid var(--bg-desk);
+      transition:transform .15s;
+    }
+    .rec-item:active{transform:translateX(2px)}
+    .rec-icon{font-size:18px;flex-shrink:0}
+    .rec-body{flex:1;min-width:0}
+    .rec-txt{font-size:12px;color:var(--text-main);line-height:1.5;word-break:break-word}
+    .rec-meta{font-size:10px;color:#94a3b8;margin-top:3px}
+    .rec-hl{color:var(--accent-dark);font-size:13px;margin-left:3px}
+    .empty-st{text-align:center;padding:20px 16px;color:#94a3b8;font-size:12px}
+    .overlay{
+      display:none;position:fixed;top:0;left:0;right:0;bottom:0;
+      background:rgba(52,78,65,.4);z-index:200;
+      -webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);
+    }
+    .overlay.active{display:flex}
+    .rpt-overlay{align-items:flex-end;justify-content:center}
+    .modal-body{
+      background:var(--bg-paper);border-radius:18px 18px 0 0;
+      width:100%;max-width:480px;max-height:88vh;overflow-y:auto;
+      -webkit-overflow-scrolling:touch;
+      padding:20px 16px calc(32px + var(--safe-b));animation:slideUp .3s cubic-bezier(.16,1,.3,1);
+      border-top:5px solid var(--primary);
+      background-image:linear-gradient(#e8e2d4 1px,transparent 1px);background-size:100% 28px;
+    }
+    @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+    .modal-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .modal-ttl{font-size:16px;font-weight:700;color:var(--primary-dark)}
+    .modal-close{
+      font-size:20px;color:var(--text-muted);cursor:pointer;background:none;border:none;
+      width:36px;height:36px;border-radius:50%;transition:all .15s;
+      display:flex;align-items:center;justify-content:center;
+    }
+    .modal-close:active{background:var(--bg-desk)}
+    .cfm-overlay{align-items:center;justify-content:center;z-index:300}
+    .cfm-dialog{
+      background:var(--bg-paper);border-radius:12px;padding:28px 20px 20px;
+      width:80%;max-width:300px;text-align:center;position:relative;
+      box-shadow:0 8px 24px rgba(0,0,0,.12);border:1px solid var(--border-soft);
+      animation:scaleIn .2s ease;
+    }
+    .cfm-dialog.wide{max-width:340px;width:88%}
+    .cfm-dialog.wide .cfm-btn{padding:10px 4px;font-size:12px}
+    @keyframes scaleIn{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}
+    .cfm-dialog::before{
+      content:'';position:absolute;top:-6px;left:50%;transform:translateX(-50%) rotate(-2deg);
+      width:70px;height:16px;background:rgba(221,161,94,.6);
+      border-left:2px dotted rgba(255,255,255,.5);border-right:2px dotted rgba(255,255,255,.5);
+    }
+    .cfm-txt{font-size:14px;color:var(--text-main);font-weight:600;margin-bottom:16px;line-height:1.6}
+    .cfm-acts{display:flex;gap:8px}
+    .cfm-btn{
+      flex:1;padding:11px;border-radius:8px;font-size:13px;font-weight:600;
+      cursor:pointer;font-family:inherit;border:2px solid;transition:all .1s;
+    }
+    .cfm-cancel{background:var(--bg-card);color:var(--text-muted);border-color:var(--bg-desk)}
+    .cfm-cancel:active{background:var(--bg-guide)}
+    .cfm-ok{background:#fee2e2;color:#b91c1c;border-color:#b91c1c;border-style:dashed;box-shadow:2px 2px 0 #b91c1c}
+    .cfm-ok:active{transform:translate(2px,2px);box-shadow:none}
+    .cfm-go{background:var(--bg-guide);color:var(--primary);border-color:var(--primary);border-style:dashed;box-shadow:2px 2px 0 var(--primary-dark)}
+    .cfm-go:active{transform:translate(2px,2px);box-shadow:none}
+    .rpt-preview{
+      background:var(--bg-card);border-radius:10px;padding:14px 12px;
+      border:2px dashed var(--border-soft);box-shadow:2px 2px 0 var(--bg-desk);
+    }
+    .rpt-sec-ttl{
+      font-size:13px;font-weight:700;color:var(--primary-dark);margin:10px 0 5px;
+      display:flex;align-items:center;gap:5px;border-bottom:2px dotted var(--border-soft);padding-bottom:3px;
+    }
+    .rpt-sec-ttl:first-child{margin-top:0}
+    .rpt-txt{font-size:11px;color:var(--text-main);line-height:1.6;margin-bottom:6px}
+    .rpt-opp{
+      background:var(--bg-guide);border-radius:6px;padding:8px 10px;margin-bottom:5px;
+      border-left:3px solid var(--primary);border-top:1px solid var(--bg-desk);
+      border-right:1px solid var(--bg-desk);border-bottom:1px solid var(--bg-desk);
+    }
+    .rpt-opp-t{font-size:11px;font-weight:600;color:var(--primary-dark);margin-bottom:3px}
+    .rpt-opp-d{font-size:11px;color:var(--text-main);line-height:1.5}
+    .rpt-hl-item{
+      background:var(--bg-highlight);border-radius:6px;padding:7px 10px;margin-bottom:5px;
+      display:flex;align-items:flex-start;gap:6px;border:1px solid var(--border-hl);
+    }
+    .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px}
+    .stat-card{
+      background:var(--bg-card);border-radius:10px;padding:10px;text-align:center;
+      border:2px dashed var(--border-soft);box-shadow:2px 2px 0 var(--bg-desk);
+    }
+    .stat-num{font-size:22px;font-weight:700;color:var(--primary);letter-spacing:-1px}
+    .stat-lbl{font-size:10px;color:var(--text-muted);margin-top:1px;font-weight:500}
+    .export-opts{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+    .export-btn{
+      display:flex;align-items:center;gap:10px;padding:12px 14px;
+      background:var(--bg-card);border:1.5px dashed var(--border-soft);border-radius:8px;
+      cursor:pointer;text-align:left;font-family:inherit;transition:all .15s;
+    }
+    .export-btn:active{border-color:var(--primary);background:var(--bg-guide)}
+    .export-btn-icon{font-size:22px}
+    .export-btn-c{flex:1}
+    .export-btn-t{font-size:13px;font-weight:600;color:var(--primary-dark)}
+    .export-btn-d{font-size:11px;color:var(--text-muted);margin-top:1px}
+    .guide-sheet{
+      position:fixed;bottom:0;left:0;right:0;
+      background:var(--bg-paper);border-radius:18px 18px 0 0;
+      max-height:80vh;overflow-y:auto;-webkit-overflow-scrolling:touch;
+      padding:20px 16px calc(28px + var(--safe-b));z-index:210;
+      border-top:4px solid var(--accent-dark);
+      box-shadow:0 -4px 20px rgba(0,0,0,.1);display:none;
+      animation:slideUp .3s cubic-bezier(.16,1,.3,1);
+    }
+    .guide-sheet.open{display:block}
+    .guide-sheet-overlay{
+      position:fixed;top:0;left:0;right:0;bottom:0;
+      background:rgba(0,0,0,.3);z-index:205;display:none;
+    }
+    .guide-sheet-overlay.open{display:block}
+    .gs-ttl{font-size:16px;font-weight:700;color:var(--accent-dark);margin-bottom:14px}
+    .gs-sec{margin-bottom:14px}
+    .gs-sec-t{font-size:13px;font-weight:700;color:var(--primary-dark);margin-bottom:4px}
+    .gs-sec-c{font-size:12px;color:var(--text-main);line-height:1.7}
+    .gs-sec-c b{color:var(--accent-dark)}
+    /* 备份提醒相关 */
+    .warn-box{
+      background:#fff7ed;border:1px solid #fdba74;border-left:4px solid #ea580c;
+      border-radius:6px;padding:10px 12px;font-size:11px;color:#7c2d12;
+      line-height:1.7;margin-bottom:12px;
+    }
+    .warn-box b{color:#c2410c}
+    .bak-info{
+      display:flex;align-items:center;gap:6px;flex-wrap:wrap;
+      font-size:11px;color:var(--text-muted);margin-bottom:12px;
+    }
+    .bak-tag{
+      padding:2px 9px;border-radius:10px;font-size:10px;font-weight:700;
+      background:var(--bg-guide);color:var(--primary);border:1px dashed var(--border-soft);
+    }
+    .bak-tag.warn{background:#fff7ed;color:#c2410c;border-color:#fdba74}
+    .hidden{display:none!important}
+  </style>
+  <base target="_blank">
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="header-row">
+      <div class="header-left">
+        <div class="header-sub">无隐私搜集 · 适合6~15岁青少年</div>
+        <div class="header-title">4CR成长微手帐 · 青少年版</div>
+      </div>
+      <div class="header-btns">
+        <button class="hdr-btn home-btn" onclick="location.href='index.html'">返回主页</button>
+        <button class="hdr-btn" onclick="openGuide()">使用说明</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="role-tabs">
+    <div class="role-tabs-inner">
+      <button class="role-tab active" data-role="teen">青少年视角</button>
+      <button class="role-tab" data-role="activity">活动反馈</button>
+      <button class="role-tab" data-role="stress">压力观察</button>
+    </div>
+  </div>
+
+  <!-- 青少年端 -->
+  <div id="sec-teen" class="content-section active">
+    <div class="card">
+      <div class="card-hdr">
+        <span class="card-hdr-icon">🌤️</span>
+        <span class="card-ttl">今日情绪天气</span>
+        <span class="card-badge">每天1分钟</span>
+      </div>
+      <div class="weather-grid" id="weather-grid">
+        <div class="weather-opt" data-w="sunny"><div class="w-icon">☀️</div><div class="w-label">晴天</div></div>
+        <div class="weather-opt" data-w="cloudy"><div class="w-icon">⛅</div><div class="w-label">多云</div></div>
+        <div class="weather-opt" data-w="overcast"><div class="w-icon">☁️</div><div class="w-label">阴天</div></div>
+        <div class="weather-opt" data-w="rainy"><div class="w-icon">🌧️</div><div class="w-label">小雨</div></div>
+        <div class="weather-opt" data-w="stormy"><div class="w-icon">⛈️</div><div class="w-label">雷雨</div></div>
+      </div>
+      <textarea id="teen-w-desc" class="tf" placeholder="今天发生了什么？（选填）&#10;比如：数学课做出了难题，但小组讨论时没人听我说…"></textarea>
+
+      <div class="tag-grp">
+        <div class="tag-lbl">能不能较快让自己平静下来：</div>
+        <div class="tags" id="teen-w-calm-opts">
+          <span class="tag" data-calm="yes">✅ 能，比较快就平静了</span>
+          <span class="tag" data-calm="no">❌ 还不太行，情绪持续比较久</span>
+        </div>
+        <div class="calm-hint">不管开心还是难过，看你能不能自己调整，较快恢复平静。</div>
+      </div>
+
+      <button class="btn-p" onclick="saveRec('weather')">💾 保存到本机</button>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr">
+        <span class="card-hdr-icon">✨</span>
+        <span class="card-ttl">4C+R成长瞬间</span>
+        <span class="card-badge">每周2-3次</span>
+      </div>
+      <div style="font-size:12px;color:var(--text-muted);margin-bottom:10px">今天有没有哪个瞬间，让你觉得自己在成长？</div>
+      <textarea id="teen-4c-desc" class="tf" placeholder="我注意到…&#10;当时发生了什么…&#10;我做了什么…"></textarea>
+      <div class="tag-grp">
+        <div class="tag-lbl">跟哪种能力有关：</div>
+        <div class="tags" id="teen-4c-tags"></div>
+      </div>
+      <div class="chk-row">
+        <input type="checkbox" id="hl-chk">
+        <label for="hl-chk">标记为高光时刻 ⭐</label>
+      </div>
+      <button class="btn-s" onclick="saveRec('4c')">💾 保存到本机</button>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr">
+        <span class="card-hdr-icon">🎯</span>
+        <span class="card-ttl">本周想一想</span>
+        <span class="card-badge">每周至少1次</span>
+      </div>
+      <div class="guide-box">
+        <div class="guide-box-t">想一想这些问题：</div>
+        <div>1. 这周有没有试过用新方法解决问题？</div>
+        <div>2. 有没有觉得自己被理解了？或者被误会了？</div>
+        <div>3. 下周再遇到类似的困难，你想换个什么做法？</div>
+      </div>
+      <textarea id="teen-refl" class="tf" placeholder="写下你的想法…（没有标准答案）"></textarea>
+      <button class="btn-s" onclick="saveRec('reflection')">💾 保存到本机</button>
+    </div>
+
+    <div class="card" id="teen-recs-card" style="display:none">
+      <div class="card-hdr"><span class="card-hdr-icon">📖</span><span class="card-ttl">最近记录</span></div>
+      <div class="rec-list" id="teen-recs"></div>
+    </div>
+  </div>
+
+  <!-- 活动观察端 -->
+  <div id="sec-activity" class="content-section">
+    <div class="card">
+      <div class="card-hdr">
+        <span class="card-hdr-icon">🎪</span>
+        <span class="card-ttl">活动与服务反馈</span>
+        <span class="card-badge">线下/线上</span>
+      </div>
+      <div style="font-size:11px;color:var(--text-muted);margin-bottom:10px">记录参加活动或服务后的变化和效果。</div>
+      <div class="tag-grp">
+        <div class="tag-lbl">活动场景：</div>
+        <div class="tags" id="act-scene-tags"></div>
+      </div>
+      <textarea id="act-desc" class="tf" style="min-height:80px;font-size:12px" placeholder="写一写活动内容和孩子的反应、变化…&#10;比如：参加线上沟通课之后，孩子更愿意主动说话了。"></textarea>
+      <div class="tag-grp">
+        <div class="tag-lbl">跟哪种能力有关（可多选）：</div>
+        <div class="tags" id="act-dim-tags"></div>
+      </div>
+      <div class="chk-row" style="margin-top:8px;padding:2px 0">
+        <input type="checkbox" id="act-eff">
+        <label for="act-eff" style="font-size:11px">✅ 看到了好的变化</label>
+      </div>
+      <button class="btn-s" onclick="saveRec('activity')">💾 保存活动观察</button>
+    </div>
+    <div class="card" id="act-recs-card" style="display:none">
+      <div class="card-hdr"><span class="card-hdr-icon">📋</span><span class="card-ttl">活动观察记录</span></div>
+      <div class="rec-list" id="act-recs"></div>
+    </div>
+  </div>
+
+  <!-- 压力日常端 -->
+  <div id="sec-stress" class="content-section">
+    <div class="card">
+      <div class="card-hdr">
+        <span class="card-hdr-icon">🌿</span>
+        <span class="card-ttl">日常生活压力</span>
+        <span class="card-badge">自填 · 觉察</span>
+      </div>
+      <div style="font-size:11px;color:var(--text-muted);margin-bottom:10px">记录让你感到压力的来源，可以是任何事，写下来本身就是一种释放。</div>
+      <textarea id="stress-desc" class="tf" placeholder="今天或最近，什么事情让你感到有压力？&#10;比如：考试、和同学的关系、父母的期待、作业太多…&#10;也可以写写身体的感觉，比如心跳快、睡不着等。"></textarea>
+      <div class="tag-grp">
+        <div class="tag-lbl">压力来源（可多选）：</div>
+        <div class="tags" id="stress-source-tags">
+          <span class="tag" data-source="study">📚 学习</span>
+          <span class="tag" data-source="family">🏠 家庭</span>
+          <span class="tag" data-source="friends">👫 朋友</span>
+          <span class="tag" data-source="self">🧘 自我</span>
+          <span class="tag" data-source="future">🌟 未来</span>
+          <span class="tag" data-source="other">❓ 其他</span>
+        </div>
+      </div>
+      <button class="btn-s" onclick="saveRec('stress')">💾 保存压力记录</button>
+    </div>
+    <div class="card" id="stress-recs-card" style="display:none">
+      <div class="card-hdr"><span class="card-hdr-icon">📓</span><span class="card-ttl">压力记录</span></div>
+      <div class="rec-list" id="stress-recs"></div>
+    </div>
+  </div>
+
+  <!-- 报告生成 -->
+  <div class="rpt-section">
+    <div class="rpt-card">
+      <div class="rpt-ttl">生成月度成长报告</div>
+      <div class="rpt-desc">至少记录15天后再生成哦<br>生成后请导出数据，发给我们分析</div>
+      <button class="rpt-btn" onclick="generateReport()">🗄️ 生成报告</button>
+    </div>
+  </div>
+
+  <!-- 数据管理 -->
+  <div class="data-section">
+    <div class="data-card">
+      <div class="data-ttl">🔒 数据管理</div>
+      <div class="warn-box">
+        ⚠️ <b>记录只存在当前这个浏览器里。</b>清理浏览器缓存、卸载微信/浏览器、换手机，记录都会永久丢失且无法找回。<br>
+        👉 请每 <b>30 天左右</b>点一次「备份」，把文件存到微信收藏、网盘或电脑。
+      </div>
+      <div class="bak-info">
+        上次备份：<span class="bak-tag" id="bak-time">从未备份</span>
+        <span id="bak-extra" style="font-size:10px"></span>
+      </div>
+      <div class="data-desc">换设备或换浏览器时，用「导入/合并」把两边的数据合到一起。</div>
+      <div class="data-acts">
+        <button class="data-btn db-bak" onclick="exportAllData()">💾 备份</button>
+        <button class="data-btn db-bak" onclick="openImport()">📥 导入/合并</button>
+        <button class="data-btn db-clr" onclick="showConfirm()">🗑️ 清空</button>
+      </div>
+      <input type="file" id="imp-file" accept=".json,application/json" style="display:none" onchange="importData(event)">
+    </div>
+  </div>
+
+  <!-- 分析师区 -->
+  <div class="analyst-section">
+    <div class="analyst-card">
+      <div class="analyst-hdr">
+        <span style="font-size:18px">🧑‍🔬</span>
+        <span class="analyst-ttl">成长报告分析</span>
+        <span class="analyst-badge">专属服务</span>
+      </div>
+      <div class="analyst-body">
+        <div class="qr-wrap">
+          <img src="qrcode.png" alt="分析师二维码" class="qr-img" id="qr-img">
+        </div>
+        <div class="analyst-info">
+          <div class="analyst-info-t">扫码添加企业微信</div>
+          <div class="analyst-info-d">导出数据后，扫码添加企业微信，可以获取一对一的成长解读和专属建议。</div>
+        </div>
+      </div>
+      <div class="analyst-tip"><strong>📌 温馨提示：</strong>为了让分析更准确，请至少记录15天后再导出数据哦。</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- 底部栏 -->
+<div class="footer-bar">
+  📵 本工具不联网、不上传、不收集任何个人信息<br>
+  <span style="opacity:.85;display:inline-block">⚠️ 数据仅存于当前浏览器 · 换端或清理缓存前请先备份</span><br>
+  <span style="opacity:.65;display:inline-block">© 2026 山东省青少年文化交流中心 & 铃兰心理工作室 版权所有</span>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- 使用说明弹出面板 -->
+<div class="guide-sheet-overlay" id="gs-overlay" onclick="closeGuide()"></div>
+<div class="guide-sheet" id="gs-sheet">
+  <div class="gs-ttl">📖 4CR成长手帐 · 青少年量表</div>
+
+  <div class="gs-sec">
+    <div class="gs-sec-t">🌟 这是什么？</div>
+    <div class="gs-sec-c">4CR成长手帐是一个不收集隐私的成长记录工具。它基于4C素质模型（独立思考、沟通、协作、创造力）+ 情绪恢复力（Resilience）。本页面为青少年量表，包含青少年视角、活动反馈和压力日常。</div>
+  </div>
+
+  <div class="gs-sec" style="background:#fff7ed;border:1px solid #fdba74;border-radius:8px;padding:12px">
+    <div class="gs-sec-t" style="color:#c2410c">⚠️ 重要：数据存在哪里？</div>
+    <div class="gs-sec-c">
+      所有记录只保存在<b>你当前这个浏览器的本机缓存</b>里，不联网、不上传、不跨设备同步。<br>
+      • <b>微信内置浏览器</b> 和 <b>手机自带浏览器</b>（Safari、Chrome 等）的缓存是相互独立的，<b>数据不互通</b>。<br>
+      • 建议固定在<b>同一个入口</b>打开使用，不要一会儿用微信、一会儿用浏览器。<br>
+      • 清理浏览器数据、卸载微信/浏览器、更换手机，记录都会<b>永久丢失</b>。
+    </div>
+  </div>
+
+  <div class="gs-sec" style="background:#fff7ed;border:1px solid #fdba74;border-radius:8px;padding:12px">
+    <div class="gs-sec-t" style="color:#c2410c">💾 定期备份（非常重要）</div>
+    <div class="gs-sec-c">
+      建议每 <b>30 天左右</b>备份一次：点「数据管理 → 备份」，会下载一个 JSON 文件。<br>
+      把文件存到微信收藏、网盘，或发给自己，换设备时用「导入/合并」即可恢复。<br>
+      <b>⚠️ 在清理浏览器数据之前，务必先备份！</b>
+    </div>
+  </div>
+
+  <div class="gs-sec">
+    <div class="gs-sec-t">🔀 两个端的数据怎么合并？</div>
+    <div class="gs-sec-c">
+      例如先在手机浏览器记了一些，又在微信里记了一些：<br>
+      1️⃣ 在 A 端点「备份」，把 JSON 文件发到 B 端（微信文件传输助手 / 邮件都行）；<br>
+      2️⃣ 在 B 端点「导入/合并」，选择文件；<br>
+      3️⃣ 弹窗里选「合并」——两边的记录会自动去重合并，都不会丢。<br>
+      （若选「覆盖」，则会清空本机记录、完全使用文件里的数据，请谨慎。）
+    </div>
+  </div>
+
+  <div class="gs-sec">
+    <div class="gs-sec-t">👦 青少年视角</div>
+    <div class="gs-sec-c"><b>情绪天气</b>：每天1分钟，选情绪状态，选"能否较快平静下来"，可写一写发生了什么。<br><b>4C+R成长瞬间</b>：每周2-3次，记录成长瞬间，可标记高光时刻⭐<br><b>本周想一想</b>：每周1次，根据提示写一写。</div>
+  </div>
+
+  <div class="gs-sec">
+    <div class="gs-sec-t">🎪 活动反馈</div>
+    <div class="gs-sec-c">记录参加活动后的效果，勾选是否看到了好的变化。</div>
+  </div>
+
+  <div class="gs-sec">
+    <div class="gs-sec-t">🌿 压力日常</div>
+    <div class="gs-sec-c">记录让你感到压力的事情和来源，帮助自我觉察，也可以作为情绪管理的起点。</div>
+  </div>
+
+  <div class="gs-sec">
+    <div class="gs-sec-t">📊 报告与数据</div>
+    <div class="gs-sec-c">至少记录15天可生成月度报告。数据只存本地，请定期备份。导出后可发给分析师获取专业解读。</div>
+  </div>
+
+  <button class="btn-p" onclick="closeGuide()" style="margin-top:8px">我知道了</button>
+</div>
+
+<!-- 清空确认弹窗 -->
+<div class="overlay cfm-overlay" id="cfm-modal">
+  <div class="cfm-dialog">
+    <div class="cfm-txt">⚠️ 确定要清空所有记录吗？<br>
+      <span style="font-size:12px;font-weight:400;color:#c2410c;display:inline-block;margin-top:6px">清空后无法恢复！<br>请先点「备份」导出文件再清空。</span>
+    </div>
+    <div class="cfm-acts">
+      <button class="cfm-btn cfm-cancel" onclick="closeConfirm()">取消</button>
+      <button class="cfm-btn cfm-ok" onclick="execClear()">确认清空</button>
+    </div>
+  </div>
+</div>
+
+<!-- 导入方式弹窗 -->
+<div class="overlay cfm-overlay" id="imp-modal">
+  <div class="cfm-dialog wide">
+    <div class="cfm-txt">📥 选择导入方式<br>
+      <span style="font-size:11px;font-weight:400;color:var(--text-muted);display:inline-block;margin-top:6px;line-height:1.7">
+        <b style="color:var(--primary-dark)">合并</b>：保留本机记录，只补充文件里的新记录（推荐）<br>
+        <b style="color:#b91c1c">覆盖</b>：清空本机记录，完全使用文件里的数据
+      </span>
+    </div>
+    <div class="cfm-acts">
+      <button class="cfm-btn cfm-cancel" onclick="closeImport()">取消</button>
+      <button class="cfm-btn cfm-go" onclick="execImport('merge')">合并</button>
+      <button class="cfm-btn cfm-ok" onclick="execImport('replace')">覆盖</button>
+    </div>
+  </div>
+</div>
+
+<!-- 报告弹窗 -->
+<div class="overlay rpt-overlay" id="rpt-modal">
+  <div class="modal-body">
+    <div class="modal-hdr">
+      <span class="modal-ttl">📋 月度成长报告</span>
+      <button class="modal-close" onclick="closeRptModal()">✕</button>
+    </div>
+    <div id="rpt-content"></div>
+    <div class="export-opts" style="margin-top:16px">
+      <button class="export-btn" onclick="downloadRptJSON()">
+        <span class="export-btn-icon">📁</span>
+        <div class="export-btn-c">
+          <div class="export-btn-t">导出本月报告数据</div>
+          <div class="export-btn-d">发给我们分析</div>
+        </div>
+      </button>
+    </div>
+    <div style="margin-top:10px;font-size:10px;color:var(--text-muted);line-height:1.6;text-align:center">
+      报告仅含本月数据。完整备份请到「数据管理 → 备份」。
+    </div>
+  </div>
+</div>
+
+<script>
+/* ====== 常量 ====== */
+var SK = 'growth_journal_records_teen';
+var BK = 'growth_journal_last_backup_teen';
+var DIMS = [
+  {key:'critical', icon:'🧠', name:'独立思考'},
+  {key:'communication', icon:'💬', name:'沟通'},
+  {key:'collaboration', icon:'🤝', name:'协作'},
+  {key:'creativity', icon:'💡', name:'创造力'},
+  {key:'resilience', icon:'🛡️', name:'情绪恢复力'}
+];
+var ACTS = [
+  {key:'online', icon:'💻', name:'线上'},
+  {key:'offline', icon:'🏟️', name:'线下'},
+  {key:'group', icon:'👥', name:'团体'},
+  {key:'individual', icon:'🧑‍🤝‍🧑', name:'一对一'}
+];
+var STRESS_SOURCES = [
+  {key:'study', icon:'📚', name:'学习'},
+  {key:'family', icon:'🏠', name:'家庭'},
+  {key:'friends', icon:'👫', name:'朋友'},
+  {key:'self', icon:'🧘', name:'自我'},
+  {key:'future', icon:'🌟', name:'未来'},
+  {key:'other', icon:'❓', name:'其他'}
+];
+var WEATHERS = {sunny:'☀️晴天', cloudy:'⛅多云', overcast:'☁️阴天', rainy:'🌧️小雨', stormy:'⛈️雷雨'};
+var TYPE_ICONS = {emotion_weather:'🌤️', _4c_moment:'✨', reflection:'🎯', activity_observation:'🎪', stress_daily:'🌿'};
+
+var records = [];
+var curWeather = null;
+var curCalm = null;
+var curReport = null;
+var pendingImport = null;
+
+/* ====== 工具函数 ====== */
+function $(id) { return document.getElementById(id); }
+function esc(s) {
+  if (!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function genId() { return Date.now().toString(36) + Math.random().toString(36).substr(2,5); }
+function nowStr() {
+  return new Date().toLocaleString('zh-CN', {year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'});
+}
+function curMonth() {
+  var d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2,'0');
+}
+function pad2(n){ return String(n).padStart(2,'0'); }
+function pick(arr, key, field) {
+  for (var i = 0; i < arr.length; i++) if (arr[i].key === key) return arr[i][field];
+  return field === 'name' ? key : '';
+}
+function dimIcon(k){ return pick(DIMS, k, 'icon'); }
+function dimName(k){ return pick(DIMS, k, 'name'); }
+function sourceIcon(k){ return pick(STRESS_SOURCES, k, 'icon'); }
+function sourceName(k){ return pick(STRESS_SOURCES, k, 'name'); }
+function isWeChat(){ return /MicroMessenger/i.test(navigator.userAgent); }
+
+/* ====== 初始化 ====== */
+function init() {
+  try {
+    var saved = localStorage.getItem(SK);
+    if (saved) records = JSON.parse(saved) || [];
+  } catch(e) { records = []; }
+  buildTags();
+  bindEvents();
+  refreshLists();
+  handleQrFallback();
+  renderBackupInfo();
+  checkBackupReminder();
+}
+
+function handleQrFallback() {
+  var img = $('qr-img');
+  if (!img) return;
+  img.onerror = function() {
+    this.style.display = 'none';
+    var fb = document.createElement('div');
+    fb.className = 'qr-fallback';
+    fb.textContent = '二维码\n加载中…';
+    this.parentNode.appendChild(fb);
+  };
+}
+
+function buildTags() {
+  var dimHTML = '';
+  for (var i = 0; i < DIMS.length; i++) {
+    dimHTML += '<span class="tag" data-dim="' + DIMS[i].key + '">' + DIMS[i].icon + ' ' + DIMS[i].name + '</span>';
+  }
+  $('teen-4c-tags').innerHTML = dimHTML;
+  $('act-dim-tags').innerHTML = dimHTML;
+
+  var actHTML = '';
+  for (var i = 0; i < ACTS.length; i++) {
+    actHTML += '<span class="tag" data-act="' + ACTS[i].key + '">' + ACTS[i].icon + ' ' + ACTS[i].name + '</span>';
+  }
+  $('act-scene-tags').innerHTML = actHTML;
+}
+
+function bindEvents() {
+  var tabs = document.querySelectorAll('.role-tab');
+  for (var i = 0; i < tabs.length; i++) {
+    tabs[i].addEventListener('click', function() {
+      var allTabs = document.querySelectorAll('.role-tab');
+      var allSecs = document.querySelectorAll('.content-section');
+      for (var j = 0; j < allTabs.length; j++) allTabs[j].classList.remove('active');
+      for (var j = 0; j < allSecs.length; j++) allSecs[j].classList.remove('active');
+      this.classList.add('active');
+      $('sec-' + this.dataset.role).classList.add('active');
+    });
+  }
+
+  var wopts = document.querySelectorAll('.weather-opt');
+  for (var i = 0; i < wopts.length; i++) {
+    wopts[i].addEventListener('click', function() {
+      var all = document.querySelectorAll('.weather-opt');
+      for (var j = 0; j < all.length; j++) all[j].classList.remove('sel');
+      this.classList.add('sel');
+      curWeather = this.dataset.w;
+    });
+  }
+
+  var calmOpts = document.querySelectorAll('#teen-w-calm-opts .tag');
+  for (var i = 0; i < calmOpts.length; i++) {
+    calmOpts[i].addEventListener('click', function() {
+      var allCalm = document.querySelectorAll('#teen-w-calm-opts .tag');
+      if (this.classList.contains('sel')) {
+        this.classList.remove('sel-calm-yes','sel-calm-no','sel');
+        curCalm = null;
+        return;
+      }
+      for (var j = 0; j < allCalm.length; j++) allCalm[j].classList.remove('sel-calm-yes','sel-calm-no','sel');
+      curCalm = this.dataset.calm;
+      this.classList.add(curCalm === 'yes' ? 'sel-calm-yes' : 'sel-calm-no');
+      this.classList.add('sel');
+    });
+  }
+
+  /* 通用标签点选（平静选项有独立逻辑，故排除） */
+  document.addEventListener('click', function(e) {
+    var t = e.target;
+    if (!t.classList || !t.classList.contains('tag')) return;
+    if (t.closest('#teen-w-calm-opts')) return;
+    t.classList.toggle('sel');
+  });
+}
+
+/* ====== 获取选中标签 ====== */
+function getSelTags(containerId, attr) {
+  var c = $(containerId);
+  if (!c) return [];
+  var key = attr || 'dim';
+  var sel = c.querySelectorAll('.tag.sel');
+  var result = [];
+  for (var i = 0; i < sel.length; i++) result.push(sel[i].dataset[key]);
+  return result;
+}
+function clearTags(containerId) {
+  var c = $(containerId);
+  if (!c) return;
+  var sel = c.querySelectorAll('.tag.sel');
+  for (var i = 0; i < sel.length; i++) sel[i].classList.remove('sel','sel-calm-yes','sel-calm-no');
+}
+
+/* ====== Toast ====== */
+var toastTimer;
+function showToast(msg) {
+  var t = $('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ t.classList.remove('show'); }, 2600);
+}
+
+/* ====== 保存记录 ====== */
+function saveRec(type) {
+  var rec = null;
+
+  if (type === 'weather') {
+    if (!curWeather) { showToast('☁️ 请先选择今天的情绪天气'); return; }
+    rec = {
+      type: 'emotion_weather',
+      weather: curWeather,
+      description: $('teen-w-desc').value.trim(),
+      calmQuick: curCalm,
+      dimensions: [],
+      context: 'teen'
+    };
+    curWeather = null; curCalm = null;
+    var wopts = document.querySelectorAll('.weather-opt');
+    for (var i = 0; i < wopts.length; i++) wopts[i].classList.remove('sel');
+    $('teen-w-desc').value = '';
+    clearTags('teen-w-calm-opts');
+
+  } else if (type === '4c') {
+    if (!$('teen-4c-desc').value.trim()) { showToast('✏️ 请描述今天的成长瞬间'); return; }
+    rec = {
+      type: '_4c_moment',
+      description: $('teen-4c-desc').value.trim(),
+      dimensions: getSelTags('teen-4c-tags'),
+      isHighlight: $('hl-chk').checked,
+      context: 'teen'
+    };
+    $('teen-4c-desc').value = '';
+    clearTags('teen-4c-tags');
+    $('hl-chk').checked = false;
+
+  } else if (type === 'reflection') {
+    if (!$('teen-refl').value.trim()) { showToast('✏️ 请写下你的想法'); return; }
+    rec = { type:'reflection', description:$('teen-refl').value.trim(), dimensions:[], context:'teen' };
+    $('teen-refl').value = '';
+
+  } else if (type === 'activity') {
+    if (!$('act-desc').value.trim()) { showToast('✏️ 请描述活动反馈'); return; }
+    rec = {
+      type: 'activity_observation',
+      description: $('act-desc').value.trim(),
+      dimensions: getSelTags('act-dim-tags'),
+      activityScenes: getSelTags('act-scene-tags','act'),
+      isEffective: $('act-eff').checked,
+      context: 'activity'
+    };
+    $('act-desc').value = '';
+    clearTags('act-dim-tags');
+    clearTags('act-scene-tags');
+    $('act-eff').checked = false;
+
+  } else if (type === 'stress') {
+    if (!$('stress-desc').value.trim()) { showToast('✏️ 请写下你的压力来源'); return; }
+    rec = {
+      type: 'stress_daily',
+      description: $('stress-desc').value.trim(),
+      stressSources: getSelTags('stress-source-tags','source'),
+      dimensions: [],
+      context: 'stress'
+    };
+    $('stress-desc').value = '';
+    clearTags('stress-source-tags');
+  }
+
+  if (!rec) return;
+  rec.id = genId();
+  rec.timestamp = nowStr();
+  rec.month = curMonth();
+  records.push(rec);
+  persist();
+  refreshLists();
+
+  var msg = '✅ 已保存';
+  if (rec.type === 'emotion_weather') msg = '✅ 情绪天气已保存';
+  else if (rec.type === '_4c_moment') msg = rec.isHighlight ? '⭐ 高光时刻已保存！' : '✅ 成长瞬间已保存';
+  else if (rec.type === 'reflection') msg = '✅ 本周想法已保存';
+  else if (rec.type === 'activity_observation') msg = '🎪 活动观察已保存';
+  else if (rec.type === 'stress_daily') msg = '🌿 压力记录已保存';
+  showToast(msg);
+}
+
+function persist() {
+  try { localStorage.setItem(SK, JSON.stringify(records)); return true; }
+  catch(e) { showToast('⚠️ 存储空间不够，请先备份再清空'); return false; }
+}
+
+/* ====== 记录列表 ====== */
+function refreshLists() {
+  renderList('teen-recs','teen-recs-card', filterRecs('teen'));
+  renderList('act-recs','act-recs-card', filterRecs('activity'));
+  renderList('stress-recs','stress-recs-card', filterRecs('stress'));
+}
+
+function filterRecs(ctx) {
+  var result = [];
+  for (var i = records.length - 1; i >= 0 && result.length < 30; i--) {
+    if (records[i].context === ctx) result.push(records[i]);
+  }
+  return result;
+}
+
+function renderList(listId, cardId, list) {
+  var card = $(cardId), el = $(listId);
+  if (!card || !el) return;
+  card.style.display = 'block';
+  if (!list.length) {
+    el.innerHTML = '<div class="empty-st">🌱 还没有记录哦，写下今天的第一笔吧！</div>';
+    return;
+  }
+  var html = '';
+  for (var i = 0; i < list.length; i++) {
+    var r = list[i];
+    var icon = TYPE_ICONS[r.type] || '📝';
+    var meta = esc(r.timestamp);
+
+    if (r.dimensions && r.dimensions.length) {
+      meta += ' · ';
+      for (var j = 0; j < r.dimensions.length; j++) meta += dimIcon(r.dimensions[j]);
+    }
+    if (r.type === 'emotion_weather' && r.calmQuick) {
+      meta += r.calmQuick === 'yes' ? ' · ✅平静' : ' · ❌未平静';
+    }
+    if (r.activityScenes && r.activityScenes.length) meta += ' · ' + r.activityScenes.join(' ');
+    if (r.stressSources && r.stressSources.length) {
+      meta += ' · ';
+      for (var j = 0; j < r.stressSources.length; j++) meta += sourceIcon(r.stressSources[j]);
+    }
+
+    var hl = r.isHighlight ? '<span class="rec-hl">⭐</span>' : '';
+    var eff = r.isEffective ? ' ✅' : '';
+    var wTxt = r.weather ? (WEATHERS[r.weather] || '') + ' ' : '';
+    var preview = r.description ? esc(r.description.substring(0,40)) + (r.description.length > 40 ? '…' : '') : wTxt;
+
+    html += '<div class="rec-item"><span class="rec-icon">' + icon + '</span><div class="rec-body">' +
+            '<div class="rec-txt">' + preview + hl + eff + '</div>' +
+            '<div class="rec-meta">' + meta + '</div></div></div>';
+  }
+  el.innerHTML = html;
+}
+
+/* ====== 使用说明 ====== */
+function openGuide() {
+  $('gs-sheet').classList.add('open');
+  $('gs-overlay').classList.add('open');
+}
+function closeGuide() {
+  $('gs-sheet').classList.remove('open');
+  $('gs-overlay').classList.remove('open');
+}
+
+/* ====== 备份时间与提醒 ====== */
+function getLastBackup() {
+  try { return Number(localStorage.getItem(BK) || 0); } catch(e) { return 0; }
+}
+function markBackup() {
+  try { localStorage.setItem(BK, String(Date.now())); } catch(e) {}
+  renderBackupInfo();
+}
+function renderBackupInfo() {
+  var el = $('bak-time'), extra = $('bak-extra');
+  if (!el) return;
+  var t = getLastBackup();
+  if (!t) {
+    el.textContent = '从未备份';
+    el.className = 'bak-tag warn';
+    if (extra) extra.textContent = records.length ? '（建议马上备份一次）' : '';
+    return;
+  }
+  var days = Math.floor((Date.now() - t) / 86400000);
+  var d = new Date(t);
+  el.textContent = d.getFullYear() + '-' + pad2(d.getMonth()+1) + '-' + pad2(d.getDate()) +
+                   '（' + (days === 0 ? '今天' : days + '天前') + '）';
+  el.className = days >= 30 ? 'bak-tag warn' : 'bak-tag';
+  if (extra) extra.textContent = days >= 30 ? '⚠️ 超过30天没备份了' : '';
+}
+function checkBackupReminder() {
+  if (!records.length) return;
+  var t = getLastBackup();
+  var days = t ? Math.floor((Date.now() - t) / 86400000) : 999;
+  if (days >= 30) {
+    setTimeout(function() {
+      showToast('⏰ ' + (t ? '已 ' + days + ' 天未备份' : '还没有备份过') + '，请到「数据管理」备份一次');
+    }, 1500);
+  }
+}
+
+/* ====== 报告生成 ====== */
+function generateReport() {
+  var month = curMonth();
+  var mRecs = [];
+  for (var i = 0; i < records.length; i++) if (records[i].month === month) mRecs.push(records[i]);
+
+  var daySet = {};
+  for (var i = 0; i < mRecs.length; i++) daySet[mRecs[i].timestamp.split(' ')[0]] = true;
+  var days = Object.keys(daySet).length;
+
+  if (days < 15) showToast('📊 这个月只记了' + days + '天，最好记满15天再生成哦');
+
+  var dimCount = {};
+  for (var i = 0; i < DIMS.length; i++) dimCount[DIMS[i].key] = 0;
+  for (var i = 0; i < mRecs.length; i++) {
+    var dims = mRecs[i].dimensions || [];
+    for (var j = 0; j < dims.length; j++) if (dimCount[dims[j]] !== undefined) dimCount[dims[j]]++;
+  }
+
+  var wCount = {}, calmCount = {yes:0, no:0, none:0};
+  for (var i = 0; i < mRecs.length; i++) {
+    if (mRecs[i].type === 'emotion_weather') {
+      wCount[mRecs[i].weather] = (wCount[mRecs[i].weather] || 0) + 1;
+      if (mRecs[i].calmQuick === 'yes') calmCount.yes++;
+      else if (mRecs[i].calmQuick === 'no') calmCount.no++;
+      else calmCount.none++;
+    }
+  }
+
+  var highlights = [], effRecs = [], stressRecs = [];
+  for (var i = 0; i < mRecs.length; i++) {
+    if (mRecs[i].isHighlight) highlights.push(mRecs[i]);
+    if (mRecs[i].isEffective) effRecs.push(mRecs[i]);
+    if (mRecs[i].type === 'stress_daily') stressRecs.push(mRecs[i]);
+  }
+
+  curReport = {
+    month: month, totalRecords: mRecs.length, recordDays: days,
+    dimCount: dimCount, weatherCount: wCount, calmCount: calmCount,
+    highlights: highlights, effectiveRecords: effRecs, stressRecords: stressRecs,
+    records: mRecs, generatedAt: nowStr()
+  };
+
+  var html = '<div class="stats-grid">';
+  html += '<div class="stat-card"><div class="stat-num">' + days + '</div><div class="stat-lbl">记录天数</div></div>';
+  html += '<div class="stat-card"><div class="stat-num">' + mRecs.length + '</div><div class="stat-lbl">记录总数</div></div>';
+  html += '<div class="stat-card"><div class="stat-num">' + highlights.length + '</div><div class="stat-lbl">高光时刻</div></div>';
+  html += '<div class="stat-card"><div class="stat-num">' + stressRecs.length + '</div><div class="stat-lbl">压力记录</div></div>';
+  html += '</div>';
+
+  var totalCalm = calmCount.yes + calmCount.no;
+  if (totalCalm > 0) {
+    var calmPct = Math.round(calmCount.yes / totalCalm * 100);
+    html += '<div class="stats-grid" style="margin-top:8px">';
+    html += '<div class="stat-card"><div class="stat-num">' + calmPct + '%</div><div class="stat-lbl">主动平静率</div></div>';
+    html += '<div class="stat-card"><div class="stat-num">' + calmCount.yes + '/' + totalCalm + '</div><div class="stat-lbl">平静/总次数</div></div>';
+    html += '</div>';
+  }
+
+  html += '<div class="rpt-preview">';
+  html += '<div class="rpt-sec-ttl">📊 能力分布</div>';
+
+  var maxDim = 1;
+  for (var k in dimCount) if (dimCount[k] > maxDim) maxDim = dimCount[k];
+
+  for (var i = 0; i < DIMS.length; i++) {
+    var d = DIMS[i];
+    var pct = Math.round(dimCount[d.key] / maxDim * 100);
+    html += '<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">' +
+            '<span style="font-size:12px;width:20px">' + d.icon + '</span>' +
+            '<span style="font-size:11px;width:60px;color:var(--text-muted)">' + d.name + '</span>' +
+            '<div style="flex:1;height:8px;background:var(--bg-desk);border-radius:4px;overflow:hidden">' +
+            '<div style="width:' + pct + '%;height:100%;background:var(--primary);border-radius:4px"></div></div>' +
+            '<span style="font-size:11px;color:var(--primary-dark);font-weight:600;width:24px;text-align:right">' + dimCount[d.key] + '</span></div>';
+  }
+
+  var wKeys = Object.keys(wCount);
+  if (wKeys.length) {
+    html += '<div class="rpt-sec-ttl">🌤️ 情绪天气分布</div>';
+    var wParts = [];
+    for (var i = 0; i < wKeys.length; i++) wParts.push((WEATHERS[wKeys[i]] || wKeys[i]) + '×' + wCount[wKeys[i]]);
+    html += '<div class="rpt-txt">' + wParts.join('　') + '</div>';
+
+    if (totalCalm > 0) {
+      html += '<div class="rpt-sec-ttl">🧘 情绪平静情况</div>';
+      html += '<div class="rpt-txt">✅ 较快平静下来：' + calmCount.yes + '次　❌ 情绪持续较久：' + calmCount.no + '次';
+      if (calmCount.none > 0) html += '　⏳ 没选：' + calmCount.none + '次';
+      html += '</div>';
+      var denom = totalCalm + calmCount.none;
+      html += '<div style="display:flex;height:10px;border-radius:5px;overflow:hidden;margin:6px 0 2px;background:var(--bg-desk)">';
+      if (calmCount.yes > 0) html += '<div style="width:' + (calmCount.yes / denom * 100) + '%;background:var(--primary)"></div>';
+      if (calmCount.no > 0) html += '<div style="width:' + (calmCount.no / denom * 100) + '%;background:var(--accent)"></div>';
+      html += '</div>';
+      html += '<div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text-muted)"><span>✅ 已平静</span><span>❌ 未平静</span></div>';
+    }
+  }
+
+  if (highlights.length) {
+    html += '<div class="rpt-sec-ttl">⭐ 高光时刻</div>';
+    for (var i = 0; i < highlights.length; i++) {
+      html += '<div class="rpt-hl-item"><span>⭐</span><span style="font-size:11px">' + esc(highlights[i].description.substring(0,60)) + '</span></div>';
+    }
+  }
+
+  if (stressRecs.length) {
+    html += '<div class="rpt-sec-ttl">🌿 压力日常 (共' + stressRecs.length + '条)</div>';
+    var srcCount = {};
+    for (var i = 0; i < stressRecs.length; i++) {
+      var srcs = stressRecs[i].stressSources || [];
+      for (var j = 0; j < srcs.length; j++) srcCount[srcs[j]] = (srcCount[srcs[j]] || 0) + 1;
+    }
+    var srcKeys = Object.keys(srcCount);
+    if (srcKeys.length) {
+      html += '<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px">';
+      for (var i = 0; i < srcKeys.length; i++) {
+        html += '<span style="background:var(--bg-guide);padding:2px 10px;border-radius:20px;font-size:11px">' +
+                sourceIcon(srcKeys[i]) + ' ' + sourceName(srcKeys[i]) + ' ×' + srcCount[srcKeys[i]] + '</span>';
+      }
+      html += '</div>';
+    }
+    html += '<div style="font-size:11px;color:var(--text-muted);margin-bottom:4px">最近压力记录：</div>';
+    var recentStress = stressRecs.slice(0, 3);
+    for (var i = 0; i < recentStress.length; i++) {
+      html += '<div class="rpt-opp"><div class="rpt-opp-d">' + esc(recentStress[i].description.substring(0,40)) + '</div></div>';
+    }
+  }
+
+  var sortedDims = [];
+  for (var i = 0; i < DIMS.length; i++) {
+    sortedDims.push({icon: DIMS[i].icon, name: DIMS[i].name, count: dimCount[DIMS[i].key]});
+  }
+  sortedDims.sort(function(a,b){ return a.count - b.count; });
+
+  html += '<div class="rpt-sec-ttl">🌱 可以多练习</div>';
+  var maxCount = sortedDims[sortedDims.length - 1].count;
+  for (var i = 0; i < sortedDims.length; i++) {
+    if (sortedDims[i].count < maxCount) {
+      html += '<div class="rpt-opp"><div class="rpt-opp-t">' + sortedDims[i].icon + ' ' + sortedDims[i].name +
+              '</div><div class="rpt-opp-d">这个月记了' + sortedDims[i].count + '次，可以在生活中多留意相关的时刻哦。</div></div>';
+    }
+  }
+
+  html += '</div>';
+  $('rpt-content').innerHTML = html;
+  $('rpt-modal').classList.add('active');
+  checkBackupReminder();
+}
+
+function closeRptModal() { $('rpt-modal').classList.remove('active'); }
+
+/* ====== 导出 / 导入 / 清空 ====== */
+function exportAllData() {
+  if (!records.length) { showToast('📭 还没有记录可以备份哦'); return; }
+  if (isWeChat() && !confirm('检测到你正在微信内打开。\n\n微信内下载文件可能失败，建议先点右上角「···」→「在浏览器打开」再备份。\n\n仍要继续吗？')) return;
+  downloadJSON({ version: 2, exportDate: nowStr(), records: records },
+               '4CR成长手帐_青少年_' + curMonth() + '.json');
+  markBackup();
+  showToast('💾 备份已下载，请妥善保存');
+}
+
+function downloadRptJSON() {
+  if (!curReport) { showToast('⚠️ 请先生成报告'); return; }
+  if (isWeChat() && !confirm('微信内下载可能失败，建议点右上角「···」→「在浏览器打开」。\n\n仍要继续吗？')) return;
+  downloadJSON(curReport, '4CR月度报告_青少年_' + curReport.month + '.json');
+  showToast('📁 报告已导出');
+}
+
+function downloadJSON(data, filename) {
+  try {
+    var blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 3000);
+  } catch(e) {
+    showToast('⚠️ 导出失败，请换个浏览器再试');
+  }
+}
+
+function openImport() { $('imp-file').click(); }
+
+function importData(e) {
+  var file = e.target.files && e.target.files[0];
+  e.target.value = '';
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(ev) {
+    try {
+      var data = JSON.parse(ev.target.result);
+      var list = Array.isArray(data) ? data : (data && data.records);
+      if (!list || !list.length) { showToast('⚠️ 文件里没有可导入的记录'); return; }
+      pendingImport = list;
+      $('imp-modal').classList.add('active');
+    } catch(err) {
+      showToast('⚠️ 打不开这个文件，请确认是本工具导出的 JSON');
+    }
+  };
+  reader.onerror = function(){ showToast('⚠️ 文件读取失败'); };
+  reader.readAsText(file);
+}
+
+function closeImport() {
+  pendingImport = null;
+  $('imp-modal').classList.remove('active');
+}
+
+function execImport(mode) {
+  if (!pendingImport) { closeImport(); return; }
+  var list = pendingImport, msg;
+
+  if (mode === 'replace') {
+    records = list.slice();
+    msg = '📥 已覆盖导入 ' + list.length + ' 条记录';
+  } else {
+    var seen = {};
+    for (var i = 0; i < records.length; i++) if (records[i].id) seen[records[i].id] = 1;
+    var added = 0;
+    for (var j = 0; j < list.length; j++) {
+      var r = list[j];
+      if (!r || typeof r !== 'object') continue;
+      if (r.id && seen[r.id]) continue;
+      if (r.id) seen[r.id] = 1;
+      records.push(r);
+      added++;
+    }
+    msg = added ? '📥 合并完成，新增 ' + added + ' 条记录' : '✅ 数据已是最新，没有新增记录';
+  }
+
+  persist();
+  refreshLists();
+  closeImport();
+  showToast(msg);
+}
+
+function showConfirm() { $('cfm-modal').classList.add('active'); }
+function closeConfirm() { $('cfm-modal').classList.remove('active'); }
+function execClear() {
+  records = [];
+  persist();
+  refreshLists();
+  closeConfirm();
+  showToast('🗑️ 已清空所有记录');
+}
+
+/* ====== 启动 ====== */
+init();
+</script>
+</body>
+</html>

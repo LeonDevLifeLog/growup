@@ -1,0 +1,4 @@
+{
+  "desc": "成长记录和区域树洞不参与搜索索引",
+  "rules": [{ "action": "disallow", "page": "*" }]
+}

@@ -1,0 +1,223 @@
+.hero {
+  background:#245c45;
+  color:#fff;
+  border-radius:36rpx;
+  padding:34rpx;
+  position:relative;
+  overflow:hidden;
+  min-height:390rpx;
+}
+
+.hero-content {
+  width:76%;
+  position:relative;
+  z-index:2;
+}
+
+.hero-tag {
+  font-size:18rpx;
+  letter-spacing:2rpx;
+  color:#caddad;
+}
+
+.hero-title {
+  font-size:46rpx;
+  line-height:1.45;
+  font-weight:600;
+  margin:16rpx 0;
+}
+
+.hero-text {
+  font-size:23rpx;
+  color:#dfebd6;
+  width:88%;
+  min-height:74rpx;
+}
+
+.hero-button {
+  margin-top:26rpx;
+  background:#d5e7a7;
+  color:#245c45;
+  font-size:25rpx;
+  border-radius:20rpx;
+  padding:19rpx 24rpx;
+  display:inline-block;
+}
+
+.plant {
+  position:absolute;
+  width:200rpx;
+  height:300rpx;
+  right:-16rpx;
+  bottom:0;
+}
+
+.sun {
+  position:absolute;
+  right:35rpx;
+  top:10rpx;
+  width:64rpx;
+  height:64rpx;
+  border-radius:50%;
+  background:#d5e7a7;
+}
+
+.stem {
+  position:absolute;
+  width:6rpx;
+  height:200rpx;
+  background:#9dbb80;
+  bottom:0;
+  right:92rpx;
+  transform:rotate(8deg);
+}
+
+.leaf {
+  position:absolute;
+  width:85rpx;
+  height:47rpx;
+  border-radius:90% 8% 90% 8%;
+  background:#b0c68d;
+  transform:rotate(-30deg);
+  right:20rpx;
+  bottom:90rpx;
+}
+
+.leaf-a {
+  right:94rpx;
+  bottom:128rpx;
+  transform:rotate(55deg);
+  background:#88a66b;
+}
+
+.leaf-b {
+  right:26rpx;
+  bottom:154rpx;
+}
+
+.leaf-c {
+  right:95rpx;
+  bottom:55rpx;
+  transform:rotate(50deg);
+}
+
+.ground {
+  position:absolute;
+  right:0;
+  bottom:-42rpx;
+  width:220rpx;
+  height:90rpx;
+  background:#52764d;
+  border-radius:50%;
+}
+
+.stats {
+  display:flex;
+  justify-content:space-around;
+  padding:32rpx 0 12rpx;
+}
+
+.stats>view {
+  text-align:center;
+}
+
+.stat-value {
+  font-size:46rpx;
+  font-weight:600;
+}
+
+.stat-value text {
+  font-size:22rpx;
+  margin-left:6rpx;
+  color:#7a857e;
+}
+
+.shortcuts {
+  display:flex;
+  gap:20rpx;
+}
+
+.shortcut {
+  flex:1;
+  background:#e8efdc;
+  border-radius:28rpx;
+  padding:28rpx 24rpx;
+  position:relative;
+}
+
+.lavender {
+  background:#eae8ef;
+}
+
+.shortcut-icon {
+  font-size:48rpx;
+  color:#59774b;
+}
+
+.shortcut-title {
+  font-size:30rpx;
+  font-weight:600;
+  margin:6rpx 0;
+}
+
+.shortcut-arrow {
+  font-size:32rpx;
+  position:absolute;
+  right:22rpx;
+  top:26rpx;
+}
+
+.week-chart {
+  height:210rpx;
+  display:flex;
+  gap:16rpx;
+  align-items:flex-end;
+  margin-bottom:24rpx;
+}
+
+.chart-day {
+  flex:1;
+  text-align:center;
+  min-width:0;
+}
+
+.chart-column {
+  height:146rpx;
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+}
+
+.chart-bar {
+  width:45rpx;
+  background:#d5e7a7;
+  border-radius:12rpx 12rpx 5rpx 5rpx;
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
+  font-size:19rpx;
+  color:#456238;
+  min-height:24rpx;
+}
+
+.chart-label {
+  font-size:19rpx;
+  color:#8b9388;
+  margin-top:12rpx;
+}
+
+.reading {
+  background:#f1eedf;
+}
+
+.reading .section-title {
+  font-size:31rpx;
+  margin:16rpx 0;
+}
+
+.support {
+  text-align:center;
+  font-size:23rpx;
+  color:#6d7b6c;
+  padding:24rpx 0;
+}

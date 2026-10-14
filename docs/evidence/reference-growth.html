@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>成长健研社 · 青少年身心健康成长服务品牌</title>
+<meta name="description" content="青少年身心健康成长服务品牌">
+<meta name="format-detection" content="telephone=no,email=no,address=no">
+<meta name="theme-color" content="#FFFFFF">
+<meta property="og:title" content="成长健研社">
+<meta property="og:description" content="发现成长 · 理解成长">
+<meta property="og:image" content="https://pub-22d62f589bf945458a5910bf197d7310.r2.dev/cz.jpg">
+<meta property="og:image:width" content="500">
+<meta property="og:image:height" content="500">
+<meta property="og:url" content="https://你的域名/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="成长健研社">
+<style>
+/* ========== 基础重置 ========== */
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+html,body{background:#fff}
+body{
+  color:#000;
+  font:15px/1.5 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+  -webkit-font-smoothing:antialiased;
+  -webkit-tap-highlight-color:transparent;
+  overflow-x:hidden;
+  touch-action:manipulation;
+}
+::selection{background:#000;color:#fff}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit}
+img{display:block;max-width:100%}
+
+/* ========== 主容器 ========== */
+main{
+  max-width:480px;margin:0 auto;
+  padding:48px 20px calc(96px + env(safe-area-inset-bottom,0px));
+  min-height:100vh;min-height:100dvh;
+  -webkit-overflow-scrolling:touch;
+  touch-action:pan-y;
+}
+
+/* ========== 工具类 ========== */
+.g2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.g3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.g4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-variant-numeric:tabular-nums}
+.tip{font-size:11px;color:#999;margin-top:12px;text-align:center;line-height:1.6}
+
+/* ========== 品牌头 ========== */
+.brand{position:relative;text-align:center}
+.brand h1{
+  font-family:Georgia,"Songti SC",serif;
+  font-weight:900;font-size:30px;line-height:1.2;
+  letter-spacing:.04em;margin-bottom:6px;
+}
+.brand p{color:#666;font-size:15px;letter-spacing:.22em}
+.dots{
+  background-image:radial-gradient(rgba(0,0,0,.09) 1px,transparent 1px);
+  background-size:16px 16px;
+  -webkit-mask-image:linear-gradient(to bottom,rgba(0,0,0,1),transparent 88%);
+  mask-image:linear-gradient(to bottom,rgba(0,0,0,1),transparent 88%);
+}
+.dots-top{
+  position:absolute;left:-20px;right:-20px;top:-48px;height:256px;
+  z-index:-1;pointer-events:none;
+}
+
+/* ========== 带横线的标题 ========== */
+.stl{
+  display:inline-flex;align-items:center;gap:12px;
+  font-size:16px;font-weight:600;color:#000;
+}
+.stl::before,.stl::after{
+  content:'';width:28px;height:1px;background:#E3E3E3;flex-shrink:0;
+}
+.section{margin-bottom:20px}
+
+/* ========== 分隔线 ========== */
+.sep{display:flex;align-items:center;gap:14px;margin:28px 0}
+.sep::before,.sep::after{content:'';flex:1;height:1px;background:#E3E3E3}
+.sep-dot{width:4px;height:4px;border-radius:9999px;background:#000;flex-shrink:0}
+
+/* ========== 统一卡片 ========== */
+.sbtn,.support-card,.philosophy-card,.lab-card{
+  background:#fff;border:1px solid #EAEAEA;border-radius:8px;color:#000;
+  box-shadow:0 1px 2px rgba(0,0,0,.02);
+  -webkit-user-select:none;user-select:none;
+  touch-action:manipulation;
+  transition:background-color .15s ease,transform .1s ease;
+}
+.sbtn:active,.support-card:active,.philosophy-card:active,.lab-card:active{
+  transform:scale(.97);background:#FAFAFA;transition-duration:.05s;
+}
+.sbtn{
+  display:flex;align-items:center;justify-content:center;
+  padding:12px 6px;min-height:50px;
+  font-size:13px;font-weight:500;line-height:1.4;text-align:center;
+}
+.support-card{
+  min-height:56px;display:flex;align-items:center;justify-content:center;
+  padding:8px 6px;text-align:center;position:relative;overflow:hidden;
+}
+.support-card span{font-size:12px;font-weight:600;line-height:1.35}
+.philosophy-card{
+  min-height:56px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:12px 6px 8px;text-align:center;position:relative;overflow:hidden;
+}
+.philosophy-card::before{
+  content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:14px;height:2px;background:#000;
+}
+.philosophy-card span{font-size:12px;font-weight:600;line-height:1.35}
+.lab-card{
+  height:96px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:4px;padding:10px 8px;
+}
+.lab-card svg{width:16px;height:16px;color:#000}
+.lab-card span{font-size:12px;font-weight:600;line-height:1.35}
+
+/* ========== 合作伙伴 ========== */
+.partner-card{
+  min-height:64px;display:flex;align-items:center;justify-content:center;
+  padding:6px 2px;background:transparent;
+  -webkit-user-select:none;user-select:none;
+  touch-action:manipulation;transition:transform .1s ease;
+}
+.partner-card:active{transform:scale(.94)}
+.partner-card img{max-height:56px;width:auto;object-fit:contain}
+.partner-fb{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-size:11px;font-weight:600;line-height:1.35;text-align:center;
+}
+
+/* ========== 二维码 ========== */
+.qr{border:1px solid #EAEAEA;border-radius:8px;padding:2px;margin-bottom:16px;display:inline-block}
+.img-fallback{
+  display:flex;align-items:center;justify-content:center;
+  background:#FAFAFA;border-radius:8px;color:#999;font-size:11px;
+}
+
+/* ========== 弹窗 ========== */
+.modal-overlay{
+  position:fixed;top:0;right:0;bottom:0;left:0;z-index:100;
+  background:rgba(0,0,0,.5);
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+  display:flex;align-items:center;justify-content:center;padding:24px;
+  opacity:0;pointer-events:none;
+  transition:opacity .3s ease;
+}
+@supports not (backdrop-filter:blur(1px)){.modal-overlay{background:rgba(0,0,0,.6)}}
+.modal-overlay.show{opacity:1;pointer-events:auto}
+.modal-box{
+  background:#fff;width:100%;max-width:320px;border-radius:12px;
+  padding:24px;position:relative;
+  box-shadow:0 20px 50px rgba(0,0,0,.2);
+  border:1px solid #EAEAEA;
+  transform:scale(.9);transition:transform .3s ease;
+  will-change:transform,opacity;
+}
+.modal-overlay.show .modal-box{transform:scale(1)}
+.modal-close{
+  position:absolute;top:8px;right:8px;width:40px;height:40px;
+  display:flex;align-items:center;justify-content:center;
+  border-radius:50%;color:#666;
+  transition:transform .1s ease;
+}
+.modal-close:active{transform:scale(.9)}
+.modal-close svg{width:14px;height:14px}
+.modal-title{
+  font-size:16px;font-weight:600;text-align:center;
+  padding:0 32px;line-height:1.4;margin-bottom:12px;
+}
+.modal-divider{width:24px;height:2px;background:#000;border-radius:99px;margin:0 auto 16px}
+.modal-body{
+  display:flex;flex-direction:column;gap:10px;
+  max-height:55vh;overflow-y:auto;
+  -webkit-overflow-scrolling:touch;overscroll-behavior:contain;
+}
+.mcard{border:1px solid #EAEAEA;border-radius:8px;padding:12px 14px;text-align:center}
+.mcard .num{
+  font-family:ui-monospace,Menlo,Consolas,monospace;
+  font-size:10px;color:#666;display:block;margin-bottom:4px;
+}
+.mcard h4{font-size:13px;font-weight:600;line-height:1.4;margin-bottom:6px;color:#000}
+.mcard p{font-size:11px;color:#666;line-height:1.6}
+.mcard .acts{display:flex;flex-direction:column;align-items:center;gap:6px;padding-top:10px}
+
+/* 弹窗内按钮 */
+.mbtn{
+  display:inline-flex;align-items:center;justify-content:center;gap:5px;
+  width:100%;max-width:190px;min-height:44px;padding:8px 10px;
+  background:#fff;border:1px solid #EAEAEA;border-radius:8px;
+  font-size:12px;font-weight:600;color:#000;
+  box-shadow:0 1px 2px rgba(0,0,0,.02);
+  transition:background-color .15s,transform .1s;
+  -webkit-user-select:none;user-select:none;
+  touch-action:manipulation;
+}
+.mbtn:active{transform:scale(.96);background:#FAFAFA}
+.mbtn svg{width:12px;height:12px;flex-shrink:0;stroke:#000}
+.mbtn-lg{
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  padding:11px 16px;min-height:44px;min-width:160px;
+  background:#fff;border:1px solid #EAEAEA;border-radius:8px;
+  font-size:13px;font-weight:600;color:#000;
+  box-shadow:0 1px 2px rgba(0,0,0,.02);
+  transition:background-color .15s,transform .1s;
+  -webkit-user-select:none;user-select:none;
+  touch-action:manipulation;
+}
+.mbtn-lg:active{transform:scale(.96);background:#FAFAFA}
+.mbtn-lg svg{width:16px;height:16px;flex-shrink:0;stroke:#000}
+
+/* ========== 全屏页面视图 ========== */
+.page-view{
+  position:fixed;top:0;right:0;bottom:0;left:0;z-index:110;
+  background:#fff;
+  visibility:hidden;pointer-events:none;
+  transition:visibility 0s linear .36s;
+}
+.page-view.is-open{visibility:visible;pointer-events:auto;transition:visibility 0s}
+.page-view-panel{
+  position:absolute;top:0;right:0;bottom:0;left:0;background:#fff;
+  transform:translateX(100%);
+  transition:transform .34s cubic-bezier(.22,1,.36,1);
+  will-change:transform;
+  display:flex;flex-direction:column;
+}
+.page-view.is-open .page-view-panel{transform:translateX(0)}
+@media (prefers-reduced-motion:reduce){.page-view-panel{transition:none}}
+
+.pv-header{
+  flex-shrink:0;
+  max-width:480px;width:100%;margin:0 auto;
+  padding:max(16px,env(safe-area-inset-top)) 20px 12px;
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid #EAEAEA;
+}
+.pv-header .tag{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:10px;color:#999;letter-spacing:.2em}
+.pv-body{
+  flex:1;min-height:0;overflow-y:auto;
+  -webkit-overflow-scrolling:touch;overscroll-behavior:contain;
+}
+.pv-content{max-width:480px;margin:0 auto;padding:40px 20px}
+.page-back{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:10px 14px;min-height:44px;
+  background:#fff;border:1px solid #EAEAEA;border-radius:9999px;
+  font-size:12px;font-weight:600;color:#000;
+  box-shadow:0 1px 2px rgba(0,0,0,.02);
+  transition:background-color .15s,transform .1s;
+  -webkit-user-select:none;user-select:none;touch-action:manipulation;
+}
+.page-back:active{transform:scale(.94);background:#FAFAFA}
+.page-back svg{width:14px;height:14px}
+
+.pv-sec{margin-bottom:32px}
+.pv-sec-head{
+  display:flex;align-items:center;gap:10px;
+  padding-bottom:10px;margin-bottom:14px;
+  border-bottom:1px solid #E3E3E3;
+}
+.pv-sec-head .num{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11px;color:#666}
+.pv-sec-head h2{font-size:14px;font-weight:600;color:#000}
+
+/* ========== 悬浮按钮 ========== */
+#top-btn,#feedback-btn{
+  position:fixed;
+  bottom:calc(64px + env(safe-area-inset-bottom,0px));
+  width:44px;height:44px;border-radius:9999px;
+  background:#000;color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 14px rgba(0,0,0,.18);
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+  opacity:0;pointer-events:none;transform:translateY(10px);
+  transition:opacity .3s,transform .3s;
+  z-index:60;
+}
+#top-btn{right:20px}
+#feedback-btn{left:20px}
+#top-btn.is-visible,#feedback-btn.is-visible{opacity:1;pointer-events:auto;transform:none}
+#top-btn svg,#feedback-btn svg{width:18px;height:18px}
+
+/* ========== 滚动锁定 ========== */
+html.modal-open{overflow:hidden;overscroll-behavior:none}
+body.modal-open{position:fixed;left:0;right:0;width:100%;overflow:hidden}
+
+/* ========== 滚动渐入 ========== */
+@media (prefers-reduced-motion:no-preference){
+  .reveal{opacity:0;transform:translateY(14px);transition:opacity .5s,transform .5s cubic-bezier(.22,1,.36,1)}
+  .reveal.is-in{opacity:1;transform:none}
+}
+
+/* ========== 底部固定栏 ========== */
+.site-footer{
+  position:fixed;bottom:0;left:0;right:0;z-index:50;
+  background:#000;transform:translateZ(0);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+.site-footer .inner{max-width:480px;margin:0 auto;padding:12px 20px;text-align:center}
+.site-footer p{font-size:11px;color:rgba(255,255,255,.5)}
+.pv-footer{
+  flex-shrink:0;background:#000;
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+.pv-footer .inner{max-width:480px;margin:0 auto;padding:12px 20px;text-align:center}
+.pv-footer p{font-size:11px;color:rgba(255,255,255,.5)}
+</style>
+</head>
+<body>
+
+<main>
+  <!-- 品牌标识 -->
+  <section class="brand">
+    <div class="dots dots-top" aria-hidden="true"></div>
+    <h1>成长健研社</h1>
+    <p>发现成长 · 理解成长</p>
+  </section>
+
+  <div class="sep" aria-hidden="true"><span class="sep-dot"></span></div>
+
+  <!-- 成长支持服务 -->
+  <section style="text-align:center">
+    <h2 class="stl section">成长支持服务</h2>
+    <div class="g2">
+      <div class="support-card" onclick="openModal('descriptive-modal')"><span>Star-Track描述性分析</span></div>
+      <div class="support-card" onclick="openModal('school-modal')"><span>校园场景解决方案</span></div>
+      <div class="support-card" onclick="openModal('family-modal')"><span>家庭场景解决方案</span></div>
+      <div class="support-card" onclick="openModal('theory-modal')"><span>技能理论与服务输出</span></div>
+    </div>
+    <p class="tip">轻触卡片查看详情</p>
+  </section>
+
+  <div class="sep" aria-hidden="true"><span class="sep-dot"></span></div>
+
+  <!-- 星图 -->
+  <section style="text-align:center">
+    <h2 class="stl section">星图</h2>
+    <div style="display:flex;justify-content:center">
+      <div class="support-card" style="width:calc(50% - 4px)" onclick="openModal('starmap-modal')">
+        <span>STARMAP · 星图</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="sep" aria-hidden="true"><span class="sep-dot"></span></div>
+
+  <!-- 核心理念 -->
+  <section style="text-align:center">
+    <h2 class="stl section">核心理念</h2>
+    <div class="g2">
+      <div class="philosophy-card" onclick="showPhilosophyGroup(0)"><span>青少年成长服务理论</span></div>
+      <div class="philosophy-card" onclick="showPhilosophyGroup(1)"><span>青少年身心健康发展理论</span></div>
+      <div class="philosophy-card" onclick="showPhilosophyGroup(2)"><span>思维成长与表达理解</span></div>
+      <div class="philosophy-card" onclick="showPhilosophyGroup(3)"><span>数据观测分析与隐私</span></div>
+    </div>
+    <p class="tip">轻触卡片查看详情</p>
+  </section>
+
+  <div class="sep" aria-hidden="true"><span class="sep-dot"></span></div>
+
+  <!-- 成长共研室 -->
+  <section style="text-align:center">
+    <h2 class="stl section">成长共研室</h2>
+    <div class="g2">
+      <div class="lab-card" onclick="showLab(0)">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+        <span>月拾WE成长社群</span>
+      </div>
+      <div class="lab-card" onclick="showLab(1)">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+        <span>抗碎片化成长研究</span>
+      </div>
+    </div>
+    <p class="tip">轻触卡片查看详情</p>
+  </section>
+
+  <div class="sep" aria-hidden="true"><span class="sep-dot"></span></div>
+
+  <!-- 合作伙伴 -->
+  <section style="text-align:center">
+    <h2 class="stl section">合作生态伙伴体系</h2>
+    <div id="partner-grid" class="g4"></div>
+    <p class="tip" style="margin-top:16px">轻触logo查看详情 · 更多伙伴正在加入中</p>
+    <p class="tip">公益基金、高等院校、服务机构等多类合作接口持续开放</p>
+  </section>
+
+  <div class="sep" aria-hidden="true"><span class="sep-dot"></span></div>
+
+  <!-- 联系我们 -->
+  <section style="text-align:center;margin-bottom:16px">
+    <h2 class="stl section">联系我们</h2>
+    <div style="display:flex;flex-direction:column;align-items:center">
+      <div class="qr">
+        <img src="qrcode.png" alt="企业微信二维码" width="110" height="110" decoding="async" loading="lazy"
+             onerror="this.style.display='none';this.parentElement.classList.add('img-fallback');this.parentElement.style.width='114px';this.parentElement.style.height='114px';this.parentElement.innerHTML='二维码加载中';">
+      </div>
+      <p style="font-size:12px;color:#666">期待与你探讨任何与成长有关的想法</p>
+      <p style="font-size:12px;color:#666;margin-top:2px">青少年身心健康成长服务品牌</p>
+    </div>
+  </section>
+</main>
+
+<!-- ============ 弹窗：描述性分析 ============ -->
+<div id="descriptive-modal" class="modal-overlay">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal(this)" aria-label="关闭">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+    </button>
+    <h3 class="modal-title">Star-Track 成长描述性分析</h3>
+    <div class="modal-divider"></div>
+    <div class="modal-body">
+      <div class="mcard">
+        <h4>成长现状观察分析</h4>
+        <p>针对多个成长主题，采用「算法 + 人工」双核解析近期状态，量身定制成长建议与方向指引。</p>
+      </div>
+      <div class="mcard">
+        <h4>中长期成长观察分析</h4>
+        <p>针对多个成长主题，融合「行为观察 + 算法 + 人工」的多维分析，构建「实践—反馈—优化」的健康成长闭环。</p>
+      </div>
+      <div style="padding-top:6px;display:flex;justify-content:center">
+        <button type="button" class="mbtn-lg" onclick="goToScalesPage()">
+          使用 Star-Track 工具
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 弹窗：星图 ============ -->
+<div id="starmap-modal" class="modal-overlay">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal(this)" aria-label="关闭">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+    </button>
+    <h3 class="modal-title">STARMAP · 星图</h3>
+    <div class="modal-divider"></div>
+    <div class="modal-body">
+      <div class="mcard">
+        <h4>轻量成长陪伴工具</h4>
+        <p>随手写下日常，整理成长碎片，理清成长脉络，帮助青少年发现成长，理解成长。<br>（公开测试中，欢迎使用并反馈给我们您的体验）</p>
+      </div>
+      <div style="padding-top:6px;display:flex;justify-content:center">
+        <a href="shiguang.html" class="mbtn-lg">
+          进入 STARMAP · 星图
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 弹窗：校园场景 ============ -->
+<div id="school-modal" class="modal-overlay">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal(this)" aria-label="关闭">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+    </button>
+    <h3 class="modal-title">校园场景解决方案</h3>
+    <div class="modal-divider"></div>
+    <div class="modal-body">
+      <div class="mcard">
+        <span class="num">01</span>
+        <h4>需求统计分析</h4>
+        <p>深入调研学校现状，倾听学生、教师与家长的真实需求，结合语言环境、关系生态、错误文化等维度综合分析，形成精准的需求分析报告。</p>
+        <div class="acts">
+          <a href="r21.html" class="mbtn">成长需求统计<svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg></a>
+          <a href="r22.html" class="mbtn">教师需求统计<svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg></a>
+        </div>
+      </div>
+      <div class="mcard">
+        <span class="num">02</span>
+        <h4>制定服务方案</h4>
+        <p>基于分析结果，量身定制阶段性服务方案与执行计划，涵盖学生课程、教师工作坊、校园文化建设与家校协同等多种形式。</p>
+      </div>
+      <div class="mcard">
+        <span class="num">03</span>
+        <h4>执行服务落地</h4>
+        <p>专家团队负责理论指导与质量督导，大学生团队深入一线承担课堂带领与朋辈陪伴，双轨协同、稳步推进各项服务落地。</p>
+      </div>
+      <div class="mcard">
+        <span class="num">04</span>
+        <h4>反馈追踪迭代</h4>
+        <p>定期评估服务效果，收集学生、教师与家长的多方反馈，以「评估—跟进—复盘」机制持续优化迭代，确保服务长效落地。</p>
+        <div class="acts">
+          <a href="fk2.html" class="mbtn">服务反馈<svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 弹窗：家庭场景 ============ -->
+<div id="family-modal" class="modal-overlay">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal(this)" aria-label="关闭">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+    </button>
+    <h3 class="modal-title">家庭场景解决方案</h3>
+    <div class="modal-divider"></div>
+    <div class="modal-body">
+      <div class="mcard">
+        <h4>个体定制服务</h4>
+        <p>科学分析青少年与家庭的个性化需求，提供一对一专业支持与长期跟踪反馈，助力孩子可持续地健康成长。</p>
+      </div>
+      <div class="mcard">
+        <h4>线下小团体活动</h4>
+        <p>通过线下沙龙与互动游戏，结合专业行为观测，精准分析素质状态、识别并补齐短板，帮助孩子在真实互动中建立健康的人际关系。</p>
+      </div>
+      <div class="mcard">
+        <h4>表达与理解引导</h4>
+        <p>借助戏剧、叙事、音乐、绘画等表达方式，结合专业观察分析，让孩子在放松解压的同时自如表达情感、提升沟通，增强情绪韧性与创造力。</p>
+      </div>
+      <div class="mcard">
+        <h4>素质与思维提升</h4>
+        <p>线上线下融合的系统课程与个性化指导，全面培养批判性思维、沟通协作、创新创造（4C）与情绪韧性等核心能力。</p>
+        <div class="acts">
+          <img src="sph.png" alt="视频号二维码" width="90" height="90" style="border-radius:8px;box-shadow:0 1px 2px rgba(0,0,0,.05)" decoding="async" loading="lazy"
+               onerror="this.style.display='none';this.parentElement.insertAdjacentHTML('beforeend','<div class=&quot;img-fallback&quot; style=&quot;width:90px;height:90px&quot;>加载中</div>');">
+          <p style="font-size:10px;color:#666">关注视频号获取更多内容</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 弹窗：理论与技能 ============ -->
+<div id="theory-modal" class="modal-overlay">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal(this)" aria-label="关闭">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+    </button>
+    <h3 class="modal-title">技能理论与服务输出</h3>
+    <div class="modal-divider"></div>
+    <div class="modal-body">
+      <div class="mcard">
+        <span class="num">01</span>
+        <h4>技能理论体系</h4>
+        <p>面向在校大学生、教师、心理咨询师等群体所构建的完整涵盖观察分析、成长陪伴等技能的理论体系。</p>
+      </div>
+      <div class="mcard">
+        <span class="num">02</span>
+        <h4>技能培训体系</h4>
+        <p>面向教师、家长及成长服务者，提供分层次、模块化的培训课程，涵盖理论研修、案例督导、实操演练等，帮助其系统掌握科学方法。</p>
+      </div>
+      <div class="mcard">
+        <span class="num">03</span>
+        <h4>技能实践体系</h4>
+        <p>链接校园、家庭与社区真实场景，提供从项目设计、落地执行到效果评估的全流程实践支持，让理念在行动中生根发芽。</p>
+      </div>
+      <div class="mcard">
+        <span class="num">04</span>
+        <h4>服务输出体系</h4>
+        <p>面向社区、培训机构、企业等提供的定制化服务输出，推动理论和技能在实际场景中的应用与落地。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 弹窗：核心理念（动态填充） ============ -->
+<div id="philosophy-modal" class="modal-overlay">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal(this)" aria-label="关闭">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+    </button>
+    <h3 class="modal-title" id="philosophy-modal-title"></h3>
+    <div class="modal-divider"></div>
+    <div class="modal-body" id="philosophy-modal-items"></div>
+  </div>
+</div>
+
+<!-- ============ 弹窗：成长共研室（动态填充） ============ -->
+<div id="lab-modal" class="modal-overlay">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal(this)" aria-label="关闭">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+    </button>
+    <h3 class="modal-title" id="lab-modal-title"></h3>
+    <div class="modal-divider"></div>
+    <div class="modal-body">
+      <div class="mcard">
+        <span class="num" id="lab-modal-num">01</span>
+        <p id="lab-modal-desc"></p>
+      </div>
+      <div id="lab-modal-action" style="display:flex;flex-direction:column;align-items:center;gap:6px;padding-top:2px"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 弹窗：合作伙伴（动态填充） ============ -->
+<div id="partner-modal" class="modal-overlay">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal(this)" aria-label="关闭">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+    </button>
+    <div id="partner-modal-logo" style="display:flex;align-items:center;justify-content:center;margin-bottom:12px;padding:0 32px;min-height:56px"></div>
+    <h3 class="modal-title" id="partner-modal-title"></h3>
+    <div class="modal-divider"></div>
+    <div class="modal-body" id="partner-modal-items"></div>
+  </div>
+</div>
+
+<!-- ============ 全屏页：量表列表 ============ -->
+<div id="scales-page" class="page-view" aria-hidden="true">
+  <div class="page-view-panel">
+    <div class="pv-header">
+      <button type="button" class="page-back" onclick="closePageView()" aria-label="返回主页">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+        <span>返回</span>
+      </button>
+      <span class="tag">成长健研社</span>
+    </div>
+
+    <div class="pv-body">
+      <div class="pv-content">
+        <section style="position:relative;text-align:center">
+          <div class="dots dots-top" aria-hidden="true" style="top:-40px;height:208px"></div>
+          <h2 class="stl" style="line-height:1.4">Star-Track<br>成长描述性分析工具</h2>
+          <p style="color:#666;font-size:12px;margin-top:12px;line-height:1.6;letter-spacing:.04em">选择需要的工具，开启成长观察与分析</p>
+        </section>
+
+        <div class="sep" aria-hidden="true"><span class="sep-dot"></span></div>
+
+        <section class="pv-sec">
+          <div class="pv-sec-head">
+            <span class="num">01</span>
+            <h2>Star-Track 中长期成长观察分析</h2>
+          </div>
+          <div class="g3">
+            <a href="4c1.html" class="sbtn">4CR青少年版</a>
+            <a href="4cr.html" class="sbtn">4CR家庭版</a>
+            <a href="sl.html" class="sbtn">睡眠</a>
+            <a href="qc1.html" class="sbtn">青春期<br>青少年版</a>
+            <a href="qc.html" class="sbtn">青春期<br>家庭版</a>
+            <a href="sz.html" class="sbtn">数字产品</a>
+            <a href="gt1.html" class="sbtn">亲子关系与沟通<br>青少年版</a>
+            <a href="gt.html" class="sbtn">亲子关系与沟通<br>家庭版</a>
+            <a href="ys.html" class="sbtn">饮食与体重</a>
+          </div>
+        </section>
+
+        <section class="pv-sec">
+          <div class="pv-sec-head">
+            <span class="num">02</span>
+            <h2>Star-Track 成长现状分析</h2>
+          </div>
+          <div class="g3">
+            <a href="ya.html" class="sbtn">压力与韧性</a>
+            <a href="sm.html" class="sbtn">睡眠</a>
+            <a href="pm.html" class="sbtn">数字产品</a>
+            <a href="qz.html" class="sbtn">亲子关系与沟通</a>
+            <a href="ysd.html" class="sbtn">饮食与体重</a>
+            <a href="rj.html" class="sbtn">人际关系交往</a>
+            <a href="k1.html" class="sbtn">口腔与视力</a>
+            <a href="qcd.html" class="sbtn">青春期</a>
+            <a href="fxd.html" class="sbtn">反省与规划</a>
+          </div>
+        </section>
+
+        <p class="tip" style="margin-top:32px">请根据需求选择工具，或咨询我们</p>
+      </div>
+    </div>
+
+    <footer class="pv-footer">
+      <div class="inner"><p>© 2026 山东省青少年文化交流中心 版权所有</p></div>
+    </footer>
+  </div>
+</div>
+
+<!-- 悬浮反馈按钮 -->
+<a id="feedback-btn" href="fk.html" aria-label="填写反馈表单" title="填写反馈表单">
+  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+</a>
+
+<!-- 回到顶部 -->
+<button id="top-btn" aria-label="回到顶部">
+  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.5 10.5L12 3m0 0l7.5 7.5M12 3v18"/></svg>
+</button>
+
+<!-- 底部栏 -->
+<footer class="site-footer">
+  <div class="inner"><p>© 2026 山东省青少年文化交流中心 版权所有</p></div>
+</footer>
+
+<script>
+(function(){
+'use strict';
+
+var $ = function(id){ return document.getElementById(id); };
+var padNum = function(n){ return (n < 10 ? '0' : '') + n; };
+
+/* ========== 滚动锁定 ========== */
+var scrollY = 0;
+var unlockTimer = null;
+
+function lockScroll(){
+  if (document.documentElement.classList.contains('modal-open')) return;
+  scrollY = window.scrollY || window.pageYOffset || 0;
+  document.documentElement.classList.add('modal-open');
+  document.body.classList.add('modal-open');
+  document.body.style.top = -scrollY + 'px';
+}
+function unlockScroll(){
+  if (!document.documentElement.classList.contains('modal-open')) return;
+  document.documentElement.classList.remove('modal-open');
+  document.body.classList.remove('modal-open');
+  document.body.style.top = '';
+  var y = scrollY;
+  requestAnimationFrame(function(){
+    var el = document.documentElement;
+    var prev = el.style.scrollBehavior;
+    el.style.scrollBehavior = 'auto';
+    window.scrollTo(0, y);
+    el.style.scrollBehavior = prev;
+  });
+}
+function scheduleUnlock(){
+  clearTimeout(unlockTimer);
+  unlockTimer = setTimeout(function(){
+    if (!document.querySelector('.modal-overlay.show') && !activePageView) unlockScroll();
+  }, 350);
+}
+
+/* 兜底：锁定期间只放行弹窗/全屏页内的触摸滚动 */
+document.addEventListener('touchmove', function(e){
+  if (!document.documentElement.classList.contains('modal-open')) return;
+  var t = e.target;
+  if (t && t.closest && t.closest('.modal-body, .pv-body')) return;
+  e.preventDefault();
+}, { passive: false });
+
+/* ========== 弹窗开关 ========== */
+function openModal(id){
+  var m = typeof id === 'string' ? document.getElementById(id) : id;
+  if (!m) return;
+  clearTimeout(unlockTimer);
+  if (!document.documentElement.classList.contains('modal-open')) lockScroll();
+  requestAnimationFrame(function(){ m.classList.add('show'); });
+}
+
+function closeModal(el){
+  var m;
+  if (typeof el === 'string') m = document.getElementById(el);
+  else if (el && el.classList && el.classList.contains('modal-overlay')) m = el;
+  else if (el && el.closest) m = el.closest('.modal-overlay');
+  if (!m || !m.classList.contains('show')) return;
+  m.classList.remove('show');
+  scheduleUnlock();
+}
+
+/* 轻触遮罩关闭弹窗（点中卡片本身不关闭） */
+var overlayDown = null;
+document.addEventListener('pointerdown', function(e){
+  if (e.target && e.target.classList && e.target.classList.contains('modal-overlay')) overlayDown = e.target;
+});
+document.addEventListener('pointerup', function(e){
+  if (overlayDown && e.target === overlayDown) closeModal(overlayDown);
+  overlayDown = null;
+});
+
+/* Esc 关闭（桌面调试） */
+var activePageView = null;
+var pageClosing = false;
+
+document.addEventListener('keydown', function(e){
+  if (e.key !== 'Escape' && e.keyCode !== 27) return;
+  if (activePageView) { closePageView(); return; }
+  var open = document.querySelector('.modal-overlay.show');
+  if (open) closeModal(open);
+});
+
+/* ========== 全屏页面视图 ========== */
+function openPageView(el){
+  if (!el || activePageView === el) return;
+  activePageView = el;
+  if (!document.documentElement.classList.contains('modal-open')) lockScroll();
+  el.classList.add('is-open');
+  el.setAttribute('aria-hidden', 'false');
+  el.removeAttribute('inert');
+}
+function closePageView(){
+  if (!activePageView || pageClosing) return;
+  pageClosing = true;
+  var el = activePageView;
+  activePageView = null;
+  el.classList.remove('is-open');
+  el.setAttribute('aria-hidden', 'true');
+  el.setAttribute('inert', '');
+  clearTimeout(unlockTimer);
+  unlockTimer = setTimeout(function(){
+    pageClosing = false;
+    if (!document.querySelector('.modal-overlay.show')) unlockScroll();
+  }, 380);
+}
+function goToScalesPage(){
+  closeModal('descriptive-modal');
+  setTimeout(function(){ openPageView($('scales-page')); }, 20);
+}
+
+/* ========== 核心理念分组 ========== */
+var philosophyGroups = [
+  {
+    title: '青少年成长服务理论',
+    items: [
+      { name: 'R2双线成长框架', desc: '成长由两条线共同决定：内在线修炼能力、心智、动机与品格；环境线改善家庭语言系统、校园反馈文化与关系生态。双线并进，成长不留死角。' },
+      { name: '积极心理学', desc: '由塞利格曼创立，研究焦点从「修复问题」转向「培育优势」——关注积极情绪、心流、品格优势与意义感。PERMA、PYD等理念皆植根于此：不止帮青少年「不出问题」，更要让他们蓬勃生长、活出丰盈。' },
+      { name: '发展心理学', desc: '研究人一生心理发展规律的学科：皮亚杰认知发展阶段、埃里克森人格发展八阶段、维果茨基「最近发展区」等经典理论皆出于此。理解青春期「同一性探索」与前额叶持续发育的特点，读懂行为背后的成长密码。' }
+    ]
+  },
+  {
+    title: '青少年身心健康发展理论',
+    items: [
+      { name: '抗碎片化成长', desc: '成长健研社提出的青少年成长理论：旨在通过叙事整合、关系联结、意义重建与身份缝合，应对时间、关系、意义与身份造成的四重断裂，促进青少年成长经验的连续与完整。' },
+      { name: '4C素质与情绪韧性', desc: '4C素质（创造力、批判性思维、沟通、协作）搭建能力框架，情绪韧性筑牢心理基石；双核驱动，助力青少年全面、可持续地成长。' },
+      { name: '国内外成熟理论', desc: '整合SEL社会情感学习（五大核心能力）、SDT自我决定理论（自主、胜任、归属）、成长型思维、PERMA与VIA品格优势、PYD积极青少年发展（5C→贡献）及APA心理韧性等国内外成熟理论，为青少年身心健康发展提供多维理论支撑。' }
+    ]
+  },
+  {
+    title: '思维与表达',
+    items: [
+      { name: '辩证法思维与成长', desc: '引导青少年客观理性、辩证思考，提升独立判断能力；帮助家庭以调研求证、换位共情、反求诸己化解冲突，构建有韧性的健康亲子关系。' },
+      { name: '表达与理解引导理论', desc: '以开放式引导、情境叙事与多模态表达，激发自主表达与深层思考；在「发现—理解—重构」的循环中唤醒内在力量，建立积极的自我认同。' }
+    ]
+  },
+  {
+    title: '数据与观测',
+    items: [
+      { name: '描述性分析与观测统计', desc: '「算法+人工」双核保障，拒绝给孩子贴标签；坚持客观记录与情境化分析，还原真实成长轨迹，为个性化支持提供实证依据。' },
+      { name: '数据理念与隐私', desc: '秉持「数据最好的状态是被计算，而非被存储」的理念：零个人隐私数据采集、算法自动化处理、轻量化架构，构建全新的数据计算生态。' }
+    ]
+  }
+];
+
+function showPhilosophyGroup(i){
+  var g = philosophyGroups[i];
+  if (!g) return;
+  $('philosophy-modal-title').textContent = g.title;
+  $('philosophy-modal-items').innerHTML = g.items.map(function(it, idx){
+    return '<div class="mcard"><span class="num">' + padNum(idx + 1) + '</span>' +
+           '<h4>' + it.name + '</h4><p>' + it.desc + '</p></div>';
+  }).join('');
+  $('philosophy-modal-items').scrollTop = 0;
+  openModal('philosophy-modal');
+}
+
+/* ========== 成长共研室 ========== */
+var arrowIcon = '<svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>';
+
+var labItems = [
+  { title: '月拾WE成长社群', desc: '「月亮型」成长社群——像月亮一样成长：不要求永远圆满，缺过的地方，总会慢慢重新亮起来。', action: '<a href="../yue/yue1.html" class="mbtn-lg">进入月拾WE' + arrowIcon + '</a>' },
+  { title: '抗碎片化成长研究', desc: '数字时代青少年成长抗碎片化研究。', action: '<a href="suipian.html" class="mbtn-lg">开启研究' + arrowIcon + '</a>' }
+];
+
+function showLab(i){
+  var it = labItems[i];
+  if (!it) return;
+  $('lab-modal-title').textContent = it.title;
+  $('lab-modal-num').textContent = padNum(i + 1);
+  $('lab-modal-desc').textContent = it.desc;
+  $('lab-modal-action').innerHTML = it.action;
+  openModal('lab-modal');
+}
+
+/* ========== 合作伙伴 ========== */
+var partners = [
+  {
+    name: '山东省精神卫生中心儿少医学中心',
+    short: '山东精卫\n儿少医学中心',
+    logo: 'es1.png',
+    intro: '长期专注儿童青少年心理健康的临床诊疗、预防保健与科研教学，汇聚众多专业力量，为孩子提供从评估、诊疗到干预的一体化医学支持。',
+    desc: '为成长健研社提供医学理论支撑、专业督导与危机干预支持，共同守护每一位青少年的身心健康成长。'
+  },
+  {
+    name: '铃兰心理工作室',
+    short: '铃兰心理\n工作室',
+    logo: 'es2.png',
+    intro: '青少年身心健康成长服务领域的专业服务团队，秉持「科学、温暖、循证」的服务理念，长期从事青少年服务一线工作。',
+    desc: '成长健研社的执行团队，设计开发科学、易用的成长分析工具，为青少年提供身心健康成长服务的全链路支持。'
+  },
+  {
+    name: '无框剧场',
+    short: '无框剧场',
+    logo: 'es3.png',
+    intro: '先对自己有趣，再对别人有用——由在校大学生打造的青少年文化发展品牌，探索打造青少年群体的健康成长文化的新模式。',
+    desc: '设计执行表达与理解、戏剧与艺术支持等服务，用年轻热情积极探索「文化 x 成长」的创新模式。'
+  },
+  {
+    name: 'ZystraX Lab',
+    short: 'ZystraX Lab',
+    logo: 'es4.png',
+    intro: '年轻态实用数据服务品牌，独特的算计设计、数据统计与隐私安全思路，打造数据算法新生态。',
+    desc: '为成长健研社提供数据采集分析统计、算法设计与隐私安全设计的全链路技术支持。'
+  }
+];
+
+function renderPartners(){
+  var grid = $('partner-grid');
+  if (!grid) return;
+  if (partners.length > 0 && partners.length < 4) {
+    grid.style.gridTemplateColumns = 'repeat(' + partners.length + ', minmax(0, 1fr))';
+  }
+  grid.innerHTML = partners.map(function(p, i){
+    return '<div class="partner-card" data-i="' + i + '"><img src="' + p.logo + '" alt="' + p.name + '" loading="lazy" decoding="async"></div>';
+  }).join('');
+
+  var imgs = grid.querySelectorAll('img');
+  for (var j = 0; j < imgs.length; j++) {
+    imgs[j].addEventListener('error', function(){
+      var card = this.parentElement;
+      var idx = parseInt(card.getAttribute('data-i'), 10);
+      if (isNaN(idx)) return;
+      this.remove();
+      var fb = document.createElement('div');
+      fb.className = 'partner-fb';
+      fb.innerHTML = partners[idx].short.split('\n').join('<br>');
+      card.appendChild(fb);
+    });
+  }
+
+  grid.addEventListener('click', function(e){
+    var card = e.target.closest ? e.target.closest('.partner-card') : null;
+    if (!card) return;
+    var idx = parseInt(card.getAttribute('data-i'), 10);
+    if (!isNaN(idx)) showPartner(idx);
+  });
+}
+
+function showPartner(i){
+  var p = partners[i];
+  if (!p) return;
+
+  var box = $('partner-modal-logo');
+  box.innerHTML = '';
+  var img = document.createElement('img');
+  img.src = p.logo;
+  img.alt = p.name;
+  img.style.maxHeight = '72px';
+  img.style.width = 'auto';
+  img.style.objectFit = 'contain';
+  img.addEventListener('error', function(){
+    box.innerHTML = '';
+    var fb = document.createElement('div');
+    fb.className = 'partner-fb';
+    fb.innerHTML = p.short.split('\n').join('<br>');
+    box.appendChild(fb);
+  });
+  box.appendChild(img);
+
+  $('partner-modal-title').textContent = p.name;
+  $('partner-modal-items').innerHTML =
+    '<div class="mcard"><span class="num">01</span><h4>伙伴介绍</h4><p>' + p.intro + '</p></div>' +
+    '<div class="mcard"><span class="num">02</span><h4>合作领域</h4><p>' + p.desc + '</p></div>';
+  $('partner-modal-items').scrollTop = 0;
+  openModal('partner-modal');
+}
+
+/* ========== 悬浮按钮 ========== */
+function updateFloatingButtons(){
+  var topBtn = $('top-btn');
+  var fbBtn = $('feedback-btn');
+  if (!topBtn || !fbBtn) return;
+  var y = window.scrollY || window.pageYOffset || 0;
+  var visible = y > 240;
+  topBtn.classList.toggle('is-visible', visible);
+  fbBtn.classList.toggle('is-visible', visible);
+}
+window.addEventListener('scroll', updateFloatingButtons, { passive: true });
+$('top-btn').addEventListener('click', function(){
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+/* ========== 滚动渐入 ========== */
+function initReveal(){
+  if (!('IntersectionObserver' in window)) return;
+  var targets = document.querySelectorAll('main > section');
+  if (!targets.length) return;
+  var io = new IntersectionObserver(function(entries){
+    for (var i = 0; i < entries.length; i++) {
+      if (entries[i].isIntersecting) {
+        entries[i].target.classList.add('is-in');
+        io.unobserve(entries[i].target);
+      }
+    }
+  }, { threshold: 0.06 });
+  for (var j = 0; j < targets.length; j++) {
+    targets[j].classList.add('reveal');
+    io.observe(targets[j]);
+  }
+}
+
+/* ========== 初始化 ========== */
+document.addEventListener('DOMContentLoaded', function(){
+  renderPartners();
+  initReveal();
+  updateFloatingButtons();
+});
+
+/* ========== BFCache 恢复修复 ========== */
+window.addEventListener('pageshow', function(e){
+  if (!e.persisted) return;
+
+  var reveals = document.querySelectorAll('.reveal');
+  for (var i = 0; i < reveals.length; i++) {
+    reveals[i].style.transition = 'none';
+    reveals[i].classList.add('is-in');
+  }
+  void document.body.offsetHeight;
+  for (var j = 0; j < reveals.length; j++) reveals[j].style.transition = '';
+
+  var pages = document.querySelectorAll('.page-view.is-open');
+  for (var k = 0; k < pages.length; k++) {
+    pages[k].classList.remove('is-open');
+    pages[k].setAttribute('aria-hidden', 'true');
+  }
+  activePageView = null;
+  pageClosing = false;
+
+  var overlays = document.querySelectorAll('.modal-overlay.show');
+  for (var m = 0; m < overlays.length; m++) overlays[m].classList.remove('show');
+
+  document.documentElement.classList.remove('modal-open');
+  document.body.classList.remove('modal-open');
+  document.body.style.top = '';
+  clearTimeout(unlockTimer);
+
+  updateFloatingButtons();
+});
+
+/* ========== 暴露全局函数（供内联 onclick 使用） ========== */
+window.openModal = openModal;
+window.closeModal = closeModal;
+window.showPhilosophyGroup = showPhilosophyGroup;
+window.showLab = showLab;
+window.showPartner = showPartner;
+window.closePageView = closePageView;
+window.goToScalesPage = goToScalesPage;
+
+})();
+</script>
+</body>
+</html>

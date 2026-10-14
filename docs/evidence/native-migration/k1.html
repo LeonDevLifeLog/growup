@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#FAF6EE">
+<meta name="format-detection" content="telephone=no,email=no,address=no">
+<title>成长健研社 · 青少年牙齿与视力现状观察分析</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@500;600;700&display=swap" rel="stylesheet"></noscript>
+<style>
+:root{
+  --bg:#FAF6EE;--bg2:#F0E9D6;--paper:#FFF;
+  --ink:#1A1A1A;--ink2:#524A3C;--ink3:#8E8674;
+  --olive:#2A3F2D;--terra:#B25336;--amber:#C99432;--line:#E0D7C0;
+  --shadow:0 1px 2px rgba(42,63,45,.05),0 4px 16px rgba(42,63,45,.07);
+  --shadow-lg:0 10px 30px rgba(42,63,45,.16);
+  --r-s:10px;--r-m:16px;--r-l:22px;
+  --ease:cubic-bezier(.22,.61,.36,1);
+  --serif:"Noto Serif SC",serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%;touch-action:manipulation}
+body{
+  font-family:"Noto Sans SC",-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+  font-size:15px;line-height:1.7;color:var(--ink);
+  min-height:100vh;overscroll-behavior-y:contain;-webkit-font-smoothing:antialiased;
+  background:var(--bg);
+  background-image:radial-gradient(circle at 10% 15%,rgba(178,83,54,.04) 0,transparent 38%),
+    radial-gradient(circle at 90% 85%,rgba(42,63,45,.07) 0,transparent 42%),
+    repeating-linear-gradient(45deg,transparent 0,transparent 2px,rgba(42,63,45,.014) 2px,rgba(42,63,45,.014) 4px);
+}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;-webkit-user-select:none;user-select:none}
+[hidden]{display:none!important}
+::selection{background:rgba(178,83,54,.18)}
+.g-a{--gc:var(--olive)}
+.g-b{--gc:#9A6B14}
+.g-c{--gc:var(--terra)}
+.g-d{--gc:#A83838}
+
+/* ---------- 顶栏（含进度） ---------- */
+.topbar{position:sticky;top:0;z-index:50;transform:translateZ(0);
+  background:rgba(250,246,238,.9);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top)}
+.topbar-inner{max-width:640px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 14px}
+.back-btn{display:inline-flex;align-items:center;gap:5px;padding:8px 12px 8px 8px;min-height:40px;
+  border-radius:var(--r-s);color:var(--olive);font-size:14px;font-weight:500;transition:background .15s}
+.back-btn:active{background:rgba(42,63,45,.08)}
+.back-btn svg{width:16px;height:16px}
+.topbar-brand{font-family:var(--serif);font-weight:500;font-size:13px;color:var(--ink3);letter-spacing:.05em}
+.top-quiz{display:flex;align-items:center;gap:10px}
+.dim-tag{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--terra);
+  background:rgba(178,83,54,.08);padding:3px 10px;border-radius:99px}
+.dim-tag .dot{width:5px;height:5px;border-radius:50%;background:var(--terra)}
+.q-count{font-size:13px;color:var(--ink3)}
+.q-count b{font-family:var(--serif);color:var(--olive);font-size:15px}
+.progress-track{height:3px;background:rgba(224,215,192,.5)}
+.progress-track i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--olive),var(--terra));transition:width .5s var(--ease)}
+
+/* ---------- 布局 ---------- */
+.wrap{max-width:640px;margin:0 auto;padding:0 18px calc(28px + env(safe-area-inset-bottom))}
+.stage-in{animation:fadeUp .4s var(--ease)}
+
+/* ---------- 首页 ---------- */
+.hero{padding:34px 0 22px;position:relative}
+.hero-tag{display:inline-flex;align-items:center;gap:8px;font-size:12px;color:var(--olive);letter-spacing:.14em;
+  background:rgba(42,63,45,.08);padding:6px 12px;border-radius:99px;margin-bottom:16px}
+.hero-tag .dot{width:6px;height:6px;border-radius:50%;background:var(--terra);animation:pulse 2.4s ease-in-out infinite}
+.hero h1{font-family:var(--serif);font-size:clamp(27px,7.2vw,33px);font-weight:700;line-height:1.35;letter-spacing:-.01em;margin-bottom:12px}
+.hero .accent{font-style:normal;color:var(--terra);position:relative;z-index:0;display:inline-block}
+.hero .accent::after{content:"";position:absolute;left:-2px;right:-2px;bottom:3px;height:8px;background:rgba(201,148,50,.32);border-radius:2px;z-index:-1}
+.lead{font-size:15px;color:var(--ink2);line-height:1.85;max-width:540px}
+.hero-deco{position:absolute;top:6px;right:-8px;width:84px;height:84px;opacity:.6;pointer-events:none}
+
+.info-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r-m);padding:18px 20px;
+  margin:18px 0 24px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.info-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(180deg,var(--terra),var(--amber))}
+.info-card h3{font-family:var(--serif);font-size:16px;font-weight:600;color:var(--olive);margin-bottom:10px}
+.info-list{list-style:none;counter-reset:n}
+.info-list li{position:relative;padding-left:30px;font-size:14px;color:var(--ink2);line-height:1.8;counter-increment:n}
+.info-list li+li{margin-top:6px}
+.info-list li::before{content:counter(n);position:absolute;left:0;top:5px;width:20px;height:20px;
+  border-radius:50%;background:var(--olive);color:#fff;font-size:11px;font-weight:600;
+  display:flex;align-items:center;justify-content:center;line-height:1}
+.hl{color:var(--terra);font-weight:500}
+.tip{background:#FFFBEB;border-left:3px solid var(--amber);padding:11px 12px;border-radius:0 var(--r-s) var(--r-s) 0;
+  margin-top:12px;font-size:13px;color:#744210;line-height:1.7}
+
+.section-title{display:flex;align-items:center;gap:10px;margin:0 0 14px}
+.section-title span{font-family:var(--serif);font-size:14px;color:var(--ink2);letter-spacing:.1em}
+.section-title .line{flex:1;height:1px;background:var(--line)}
+
+.age-cards{display:flex;flex-direction:column;gap:14px}
+@media(min-width:560px){.age-cards{flex-direction:row}.age-card{flex:1}}
+.age-card{--acc:#5B8C5A;position:relative;overflow:hidden;cursor:pointer;outline:none;
+  background:var(--paper);border:1.5px solid var(--line);border-radius:var(--r-l);
+  padding:18px 16px;box-shadow:var(--shadow);display:flex;align-items:center;gap:14px;
+  transition:transform .15s var(--ease),border-color .2s}
+.age-card[data-age="middle"]{--acc:#C99432}
+.age-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--acc)}
+.age-card:active,.age-card:focus-visible{transform:scale(.985);border-color:var(--acc)}
+.age-icon{width:50px;height:50px;border-radius:14px;background:rgba(42,63,45,.06);color:var(--acc);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.age-card[data-age="middle"] .age-icon{background:rgba(201,148,50,.12)}
+.age-card[data-age="primary"] .age-icon{background:rgba(91,140,90,.14)}
+.age-icon svg{width:24px;height:24px}
+.age-content{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+.age-title{font-family:var(--serif);font-size:17px;font-weight:600;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.age-range{font-family:"Noto Sans SC",sans-serif;font-size:11px;font-weight:500;color:var(--acc);
+  background:rgba(201,148,50,.14);padding:2px 8px;border-radius:99px;letter-spacing:.05em}
+.age-card[data-age="primary"] .age-range{background:rgba(91,140,90,.14)}
+.age-desc{font-size:13px;color:var(--ink2);line-height:1.6}
+.age-arrow{width:30px;height:30px;border-radius:50%;background:var(--bg2);color:var(--ink3);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .2s,color .2s}
+.age-arrow svg{width:14px;height:14px}
+.age-card:active .age-arrow{background:var(--acc);color:#fff}
+.footnote{margin-top:26px;font-size:12px;color:var(--ink3);text-align:center;line-height:1.8}
+
+/* ---------- 问卷 ---------- */
+#page-quiz{display:flex;flex-direction:column;min-height:calc(100vh - 140px);padding-top:14px}
+@supports(min-height:100svh){#page-quiz{min-height:calc(100svh - 140px)}}
+.q-card{flex:1;background:var(--paper);border:1px solid var(--line);border-radius:var(--r-l);
+  padding:26px 20px 22px;box-shadow:var(--shadow)}
+.q-text{font-family:var(--serif);font-size:19px;font-weight:600;line-height:1.6;margin-bottom:6px}
+.q-hint{font-size:12.5px;color:var(--ink3);margin-bottom:16px}
+.q-options{display:flex;flex-direction:column;gap:9px}
+.q-opt{display:flex;align-items:flex-start;gap:11px;text-align:left;background:#FBF8F0;
+  border:1.5px solid var(--line);border-radius:var(--r-m);padding:13px 14px;min-height:52px;
+  font-size:15px;line-height:1.55;color:var(--ink);
+  transition:border-color .18s,background .18s,box-shadow .18s,transform .12s}
+.q-opt:active{transform:scale(.985)}
+.q-opt.sel{background:#fff;border-color:var(--olive);box-shadow:0 4px 14px rgba(42,63,45,.12)}
+.q-mark{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--line);background:#fff;
+  display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;
+  font-size:12px;font-weight:600;color:var(--ink3);transition:background .18s,border-color .18s,color .18s}
+.q-opt.sel .q-mark{background:var(--olive);border-color:var(--olive);color:#fff}
+.q-card.q-anim{animation:qNext .32s var(--ease)}
+.q-card.q-anim-back{animation:qPrev .32s var(--ease)}
+
+.q-nav{position:sticky;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:40;
+  display:grid;grid-template-columns:auto 1fr;gap:10px;margin-top:20px;padding:8px;
+  background:rgba(255,255,255,.88);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border:1px solid var(--line);border-radius:99px;box-shadow:var(--shadow-lg)}
+.nav-prev{width:48px;height:44px;border-radius:99px;display:inline-flex;align-items:center;justify-content:center;
+  color:var(--ink2);transition:background .15s,opacity .15s}
+.nav-prev svg{width:16px;height:16px}
+.nav-prev:active{background:var(--bg2)}
+.nav-prev:disabled{opacity:.3}
+.nav-next{height:44px;border-radius:99px;padding:0 22px;display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  background:var(--olive);color:#fff;font-size:15px;font-weight:500;letter-spacing:.05em;
+  box-shadow:0 6px 18px rgba(42,63,45,.25);transition:background .2s,opacity .15s,transform .12s}
+.nav-next svg{width:15px;height:15px}
+.nav-next:active{transform:translateY(1px)}
+.nav-next:disabled{background:#C9C1AC;box-shadow:none}
+.nav-next.nudge{animation:nudge .5s var(--ease)}
+.auto-tip{text-align:center;font-size:12px;color:var(--ink3);margin-top:12px}
+
+/* ---------- 结果 ---------- */
+.result-hero{text-align:center;padding:30px 0 6px}
+.result-badge{display:inline-block;font-size:12px;color:var(--olive);letter-spacing:.15em;
+  background:rgba(42,63,45,.08);padding:6px 14px;border-radius:99px;margin-bottom:14px}
+.result-title{font-family:var(--serif);font-size:26px;font-weight:700}
+.result-sub{font-size:14px;color:var(--ink2);margin-top:6px}
+
+.dual-rings{display:flex;justify-content:center;gap:14px;margin:22px 0 4px}
+.ring-unit{position:relative;flex:1;max-width:150px;height:150px;animation:pop .6s var(--ease) both}
+@supports(aspect-ratio:1){.ring-unit{height:auto;aspect-ratio:1}}
+.ring-unit svg{width:100%;height:100%;display:block;transform:rotate(-90deg)}
+.ru-bg,.ru-fg{fill:none;stroke-width:8.5}
+.ru-bg{stroke:var(--line)}
+.ru-fg{stroke:var(--gc);stroke-linecap:round;stroke-dasharray:314.16;stroke-dashoffset:314.16;
+  transition:stroke-dashoffset 1.3s var(--ease)}
+.ru-num{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px}
+.ru-num b{font-family:var(--serif);font-size:clamp(26px,7vw,32px);font-weight:700;color:var(--gc);line-height:1}
+.ru-num span{font-size:11.5px;color:var(--ink3);letter-spacing:.15em}
+
+.verdict-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r-m);padding:16px 18px;
+  margin:16px 0 4px;box-shadow:var(--shadow);position:relative;overflow:hidden;animation:fadeUp .5s var(--ease) .15s both}
+.verdict-card::before{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:linear-gradient(90deg,var(--terra),var(--amber),var(--olive))}
+.verdict-label{font-family:var(--serif);font-weight:500;font-size:13px;color:var(--ink3);letter-spacing:.1em;margin-bottom:6px}
+.verdict-text{font-size:14.5px;line-height:1.85}
+
+.report-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r-m);
+  padding:18px;margin-top:14px;box-shadow:var(--shadow);animation:fadeUp .55s var(--ease) both}
+.rc-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.rc-head h3{font-family:var(--serif);font-size:16px;font-weight:600;color:var(--olive);display:flex;align-items:center;gap:8px}
+.rc-head h3 svg{width:18px;height:18px;color:var(--terra);flex-shrink:0}
+.grade-tag{margin-left:auto;font-size:11.5px;font-weight:500;padding:3px 10px;border-radius:99px;letter-spacing:.05em;white-space:nowrap}
+.grade-tag.g-a{color:#2A3F2D;background:rgba(42,63,45,.12)}
+.grade-tag.g-b{color:#8A6420;background:rgba(201,148,50,.2)}
+.grade-tag.g-c{color:#B25336;background:rgba(178,83,54,.12)}
+.grade-tag.g-d{color:#A83838;background:rgba(168,56,56,.12)}
+.rc-score{display:flex;align-items:center;gap:8px;margin-top:12px;padding-bottom:12px;border-bottom:1px dashed var(--line)}
+.rc-score b{font-family:var(--serif);font-size:26px;font-weight:700;color:var(--gc);line-height:1}
+.rc-max{font-size:12px;color:var(--ink3)}
+.rc-bar{flex:1;height:5px;background:var(--bg2);border-radius:99px;overflow:hidden}
+.rc-bar i{display:block;height:100%;border-radius:99px;background:var(--gc);
+  transform:scaleX(0);transform-origin:left;animation:grow 1s var(--ease) both}
+.rc-pct{font-size:12px;color:var(--ink3);white-space:nowrap}
+.rc-analysis{font-size:13.5px;color:var(--ink2);line-height:1.8;margin-top:12px}
+.rc-advice{margin-top:12px;background:#FBF8F0;border:1px solid var(--line);border-radius:var(--r-s);padding:12px 14px}
+.rc-advice h4{font-size:12px;color:var(--ink3);letter-spacing:.12em;margin-bottom:8px}
+.rc-advice ul{list-style:none}
+.rc-advice li{position:relative;padding-left:16px;font-size:13.5px;color:var(--ink2);line-height:1.75}
+.rc-advice li+li{margin-top:6px}
+.rc-advice li::before{content:"";position:absolute;left:1px;top:.66em;width:6px;height:6px;border-radius:50%;background:var(--gc);opacity:.65}
+
+.contact-card{background:linear-gradient(135deg,#FBF8F0,#F5EFE0);border:1px solid var(--line);border-left:3px solid var(--olive);
+  border-radius:var(--r-m);padding:20px;text-align:center;margin-top:20px;animation:fadeUp .5s var(--ease) .1s both}
+.cg-icon{width:46px;height:46px;margin:0 auto 10px;border-radius:50%;background:rgba(42,63,45,.08);display:flex;align-items:center;justify-content:center}
+.cg-icon svg{width:22px;height:22px;color:var(--olive)}
+.cg-title{font-family:var(--serif);font-size:16px;font-weight:600;color:var(--olive);margin-bottom:6px}
+.cg-text{font-size:13.5px;color:var(--ink2);line-height:1.75;max-width:320px;margin:0 auto}
+
+.action-row{display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:26px}
+.action-btn{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;max-width:340px;
+  padding:15px;background:linear-gradient(135deg,var(--olive),#1A2A1C);color:#fff;font-size:15px;font-weight:500;
+  letter-spacing:.06em;border-radius:99px;box-shadow:0 8px 24px rgba(42,63,45,.28);
+  -webkit-appearance:none;appearance:none;transition:transform .15s,box-shadow .15s}
+.action-btn:active{transform:translateY(1px);box-shadow:0 4px 12px rgba(42,63,45,.2)}
+.action-btn svg{width:17px;height:17px}
+.ghost-btn{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border-radius:99px;
+  font-size:13.5px;color:var(--ink2);border:1px solid var(--line);background:var(--paper);transition:background .15s}
+.ghost-btn:active{background:var(--bg2)}
+.ghost-btn svg{width:14px;height:14px}
+
+/* ---------- 动画 ---------- */
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}}
+@keyframes qNext{from{opacity:0;transform:translateX(26px)}}
+@keyframes qPrev{from{opacity:0;transform:translateX(-26px)}}
+@keyframes pop{from{opacity:0;transform:scale(.9)}}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.45;transform:scale(.7)}}
+@keyframes grow{from{transform:scaleX(0)}to{transform:scaleX(var(--p))}}
+@keyframes nudge{0%,100%{transform:none}25%{transform:translateX(5px)}55%{transform:translateX(-3px)}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+@media(max-width:360px){
+  .q-text{font-size:17.5px}
+  .age-card{padding:14px 12px}
+  .age-icon{width:44px;height:44px}
+  .dual-rings{gap:10px}
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <button class="back-btn" id="backBtn" type="button" aria-label="返回">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      <span>返回</span>
+    </button>
+    <div class="top-quiz" id="topQuiz" hidden>
+      <span class="dim-tag"><i class="dot"></i><span id="dimText">牙齿</span></span>
+      <span class="q-count"><b id="qIdx">1</b>/<span id="qTotal">12</span></span>
+    </div>
+    <span class="topbar-brand" id="brand">Star-Track · 系列分析手册</span>
+  </div>
+  <div class="progress-track" id="progressTrack" hidden><i id="progressFill"></i></div>
+</header>
+
+<main class="wrap" id="app">
+
+  <!-- ===== 首页 ===== -->
+  <section id="page-home" class="stage">
+    <div class="hero">
+      <div class="hero-tag"><i class="dot"></i>6–15岁 · 牙齿与视力观察分析</div>
+      <h1>护眼洁齿小雷达<br>在成长中<em class="accent">守住清晰洁净</em></h1>
+      <p class="lead">视力与牙齿是孩子成长中最容易透支的两项健康资产。本观察分析覆盖小学与初中阶段，针对各阶段用眼强度与口腔习惯定制专属题目，帮助家长发现隐藏的护眼盲区与口腔风险，让好习惯陪伴孩子一生。</p>
+      <div class="hero-deco" aria-hidden="true">
+        <svg viewBox="0 0 100 100" fill="none">
+          <circle cx="50" cy="50" r="40" stroke="#2A3F2D" stroke-width="1.2" stroke-dasharray="2 5" opacity=".4"/>
+          <path d="M28 50c7-10 14-14 22-14s15 4 22 14c-7 10-14 14-22 14s-15-4-22-14z" stroke="#B25336" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="50" cy="50" r="6" fill="#2A3F2D"/>
+          <circle cx="52.5" cy="47.5" r="1.6" fill="#FAF6EE"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="info-card">
+      <h3>填写说明</h3>
+      <ul class="info-list">
+        <li>请根据孩子<b class="hl">最近一个月</b>的真实习惯作答。</li>
+        <li>如果孩子的情况有波动，请选择<b class="hl">最常出现</b>的频率。</li>
+        <li>答案没有“对错”之分，请<b class="hl">如实填写</b>，结果仅作观察参考。</li>
+      </ul>
+      <div class="tip"><strong>💬 温馨提示：</strong>本工具基于日常观察设计，不构成医学诊断。若孩子已出现明显不适，请及时就医检查。</div>
+    </div>
+
+    <div class="section-title"><i class="line"></i><span>请选择孩子所处年龄段</span><i class="line"></i></div>
+
+    <div class="age-cards" id="ageCards">
+      <div class="age-card" data-age="primary" role="button" tabindex="0">
+        <span class="age-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+        </span>
+        <span class="age-content">
+          <span class="age-title">小学生版 <span class="age-range">6–12岁</span></span>
+          <span class="age-desc">12 道轻松小问题，关于刷牙、甜食、看黑板和户外玩耍</span>
+        </span>
+        <span class="age-arrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </span>
+      </div>
+
+      <div class="age-card" data-age="middle" role="button" tabindex="0">
+        <span class="age-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6.5" cy="14" r="3.4"/><circle cx="17.5" cy="14" r="3.4"/><path d="M9.9 13.4c1-1.4 3.2-1.4 4.2 0M3.1 14.5 4.6 7.5h3.4M20.9 14.5 19.4 7.5h-3.4"/></svg>
+        </span>
+        <span class="age-content">
+          <span class="age-title">初中生版 <span class="age-range">13–15岁</span></span>
+          <span class="age-desc">14 道问题，关注学习用眼、连续用眼时长与口腔细节</span>
+        </span>
+        <span class="age-arrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </span>
+      </div>
+    </div>
+
+    <p class="footnote">本工具基于日常观察设计，不构成诊断<br>如孩子眼部或口腔持续不适，请联系我们获取支持</p>
+  </section>
+
+  <!-- ===== 问卷页 ===== -->
+  <section id="page-quiz" class="stage" hidden>
+    <article class="q-card" id="qCard">
+      <h2 class="q-text" id="qText" aria-live="polite"></h2>
+      <p class="q-hint">请选择最符合情况的选项</p>
+      <div class="q-options" id="qOptions"></div>
+    </article>
+    <nav class="q-nav">
+      <button class="nav-prev" id="prevBtn" type="button" aria-label="上一题" disabled>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      </button>
+      <button class="nav-next" id="nextBtn" type="button" disabled>
+        <span id="nextLabel">下一题</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+    </nav>
+    <p class="auto-tip" id="autoTip">选中后将自动进入下一题，可随时返回修改</p>
+  </section>
+
+  <!-- ===== 报告页 ===== -->
+  <section id="page-result" class="stage" hidden>
+    <div class="result-hero">
+      <div class="result-badge">分析完成</div>
+      <h2 class="result-title">健康护佑画像</h2>
+      <p class="result-sub" id="resultSub">基于你的回答</p>
+    </div>
+    <div class="dual-rings" id="dualRings"></div>
+    <div class="verdict-card">
+      <div class="verdict-label">整体印象</div>
+      <p class="verdict-text" id="verdictText"></p>
+    </div>
+    <div id="resultCards"></div>
+    <div class="contact-card">
+      <div class="cg-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+      </div>
+      <div class="cg-title">守护清晰视界，从齿开始</div>
+      <p class="cg-text">如需获得更专业的眼科与口腔科指导，详情请联系客服。</p>
+    </div>
+    <div class="action-row">
+      <button class="action-btn" id="restartBtn" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5"/></svg>
+        再做一次
+      </button>
+      <button class="ghost-btn" id="homeBtn" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        返回首页
+      </button>
+    </div>
+  </section>
+</main>
+
+<script>
+(function(){
+'use strict';
+var $=function(s){return document.querySelector(s)};
+
+/* ================= 配置 ================= */
+var AUTO_NEXT=true, AUTO_DELAY=380;
+var REDUCED=matchMedia('(prefers-reduced-motion: reduce)').matches;
+var C=2*Math.PI*50; // 评分环周长（viewBox 120 / r 50）
+
+var ICON={
+teeth:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5.5C10.8 4 9.3 3.2 7.7 3.2 4.9 3.2 3 5.6 3 8.4c0 2.2.9 3.4 1.5 5.6.4 1.7.6 4.8 2.2 4.8 1.6 0 1.2-3.7 2.8-3.7h5c1.6 0 1.2 3.7 2.8 3.7 1.6 0 1.8-3.1 2.2-4.8.6-2.2 1.5-3.4 1.5-5.6 0-2.8-1.9-5.2-4.7-5.2-1.6 0-3.1.8-4.3 2.3z"/></svg>',
+vision:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>'};
+
+/* ================= 题库 ================= */
+var QUIZ={
+primary:{sections:[
+{key:'teeth',name:'牙齿',questions:[
+{text:'你每天刷牙几次？',options:[{t:'每天 2 次（早晚）',s:4},{t:'每天 1 次',s:2},{t:'有时候会忘',s:1},{t:'不常刷牙',s:0}]},
+{text:'每次刷牙大概多久？',options:[{t:'2 分钟以上',s:4},{t:'1 分钟左右',s:3},{t:'不到 1 分钟',s:1},{t:'没注意过',s:0}]},
+{text:'你用的牙膏是含氟的吗？',options:[{t:'是的，含氟牙膏',s:4},{t:'不太确定',s:2},{t:'不是含氟的',s:1},{t:'不知道',s:0}]},
+{text:'你多久吃一次甜食（糖果、蛋糕、巧克力）？',options:[{t:'很少吃',s:4},{t:'每周几次',s:3},{t:'每天都吃',s:1},{t:'一天好几次',s:0}]},
+{text:'吃完饭后你会漱口吗？',options:[{t:'经常漱口',s:4},{t:'偶尔会',s:2},{t:'很少',s:1},{t:'从来不',s:0}]},
+{text:'最近牙齿有没有不舒服？',options:[{t:'没有，挺好的',s:4},{t:'偶尔有点酸',s:3},{t:'有蛀牙',s:1},{t:'牙疼或出血',s:0}]}
+]},
+{key:'vision',name:'视力',questions:[
+{text:'上课时看黑板上的字清楚吗？',options:[{t:'很清楚',s:4},{t:'偶尔有点模糊',s:2},{t:'经常模糊',s:1},{t:'看不清',s:0}]},
+{text:'读书写字时你的姿势怎么样？',options:[{t:'很端正',s:4},{t:'还可以',s:3},{t:'容易歪着',s:1},{t:'常常趴着',s:0}]},
+{text:'你连续看书或看屏幕大概多久休息一下？',options:[{t:'不到 30 分钟',s:4},{t:'30 - 60 分钟',s:3},{t:'1 - 2 小时',s:1},{t:'超过 2 小时',s:0}]},
+{text:'你每天户外活动（玩耍、走路、运动）多久？',options:[{t:'1 小时以上',s:4},{t:'每周几次',s:3},{t:'偶尔出去',s:1},{t:'几乎不出门',s:0}]},
+{text:'眼睛最近有没有不舒服？',options:[{t:'没有',s:4},{t:'偶尔干涩',s:3},{t:'经常酸胀',s:1},{t:'经常不舒服',s:0}]},
+{text:'你现在戴眼镜吗？',options:[{t:'不戴，看得很清楚',s:4},{t:'戴眼镜，看得清楚',s:4},{t:'戴了但还是有点模糊',s:1},{t:'不戴，但有点看不清',s:0}]}
+]}
+]},
+middle:{sections:[
+{key:'teeth',name:'牙齿',questions:[
+{text:'你每天刷牙几次？',options:[{t:'每天 2 次及以上',s:4},{t:'每天 1 次',s:2},{t:'偶尔忘',s:1},{t:'不常刷',s:0}]},
+{text:'你的刷牙方式是？',options:[{t:'巴氏刷牙法',s:4},{t:'上下刷',s:3},{t:'随便横刷',s:1},{t:'不太清楚',s:0}]},
+{text:'你会使用牙线或冲牙器吗？',options:[{t:'每天用',s:4},{t:'经常用',s:3},{t:'偶尔用',s:1},{t:'从来不用',s:0}]},
+{text:'你用含氟牙膏吗？',options:[{t:'是的',s:4},{t:'不太确定',s:2},{t:'不用',s:1},{t:'不知道',s:0}]},
+{text:'甜食和碳酸饮料的频率？',options:[{t:'很少',s:4},{t:'每周几次',s:3},{t:'每天都喝/吃',s:1},{t:'一天多次',s:0}]},
+{text:'最近半年牙齿有什么问题吗？',options:[{t:'没有',s:4},{t:'偶尔敏感',s:3},{t:'有蛀牙',s:1},{t:'疼痛或牙龈出血',s:0}]},
+{text:'智齿和牙齿矫正情况你关注过吗？',options:[{t:'已检查处理',s:4},{t:'定期复查中',s:3},{t:'知道但没处理',s:1},{t:'完全不了解',s:0}]}
+]},
+{key:'vision',name:'视力',questions:[
+{text:'你现在的视力状况？',options:[{t:'双眼都清晰',s:4},{t:'一眼好一眼差',s:2},{t:'都有些模糊',s:1},{t:'严重模糊',s:0}]},
+{text:'近一年度数有没有变化？',options:[{t:'基本稳定',s:4},{t:'略增加',s:2},{t:'明显增加',s:1},{t:'没查过',s:0}]},
+{text:'每天连续用眼（不休息）多久？',options:[{t:'不到 1 小时',s:4},{t:'1 - 2 小时',s:3},{t:'2 - 4 小时',s:1},{t:'4 小时以上',s:0}]},
+{text:'你会用 20-20-20 法则休息眼睛吗？',options:[{t:'经常这样',s:4},{t:'偶尔',s:2},{t:'很少',s:1},{t:'不知道这是什么',s:0}]},
+{text:'你每天户外活动多久？',options:[{t:'1 小时以上',s:4},{t:'每周几次',s:3},{t:'偶尔',s:1},{t:'几乎没有',s:0}]},
+{text:'电子屏幕使用情况？',options:[{t:'主要是学习',s:4},{t:'学习加少量娱乐',s:3},{t:'长时间娱乐',s:1},{t:'几乎全天盯着',s:0}]},
+{text:'最近一年做过散瞳验光吗？',options:[{t:'做过，遵医嘱',s:4},{t:'做过',s:3},{t:'没做过',s:1},{t:'不清楚',s:0}]}
+]}
+]}};
+
+/* ================= 文案 ================= */
+var GRADE_TEXT={
+teeth:{
+a:{label:'优秀',analysis:'你的口腔习惯很扎实——刷牙频率、时长、含氟牙膏使用都到位，甜食也控制得当。继续保持这份自律，牙齿会陪你很久。',advice:['继续坚持早晚各 2 分钟刷牙，使用含氟牙膏','每 6 个月做一次口腔检查和洁牙','吃完甜食后及时漱口，减少糖分停留','学习使用牙线清理牙缝，预防邻面龋']},
+b:{label:'良好',analysis:'整体不错，但还有提升空间。可能是刷牙时长不够，或甜食频率略高，稍微调整就能进入优秀区间。',advice:['把每次刷牙时间延长到 2 分钟以上','学会巴氏刷牙法，关注牙龈沟清洁','减少甜食和碳酸饮料，改用水果替代','餐后漱口，养成使用牙线的习惯']},
+c:{label:'需关注',analysis:'有些习惯需要调整了。甜食、刷牙时长或方法可能存在问题，建议尽快改善，否则容易出现蛀牙或牙龈问题。',advice:['每天早晚认真刷牙 2 分钟，用含氟牙膏','尽量减少甜食和含糖饮料的摄入','建议尽快去口腔科做一次检查','学习正确的刷牙方法（巴氏法）']},
+d:{label:'建议就医',analysis:'当前口腔状况存在明显风险。可能已经有蛀牙或牙龈问题，建议尽快就医，同时建立基础的日常护理习惯。',advice:['尽快预约口腔科检查，处理现有问题','从每天 2 次刷牙开始建立基础习惯','使用含氟牙膏，每次刷满 2 分钟','大幅减少甜食，餐后认真漱口']}},
+vision:{
+a:{label:'优秀',analysis:'你的用眼习惯很健康，户外时间充足，眼睛状态良好。继续保持，把好习惯坚持下来。',advice:['继续保持每天 1 小时以上户外活动','坚持 20-20-20 法则：每 20 分钟远眺 20 英尺外 20 秒','保持正确读写姿势，眼睛离书本一尺','每学期做一次视力检查']},
+b:{label:'良好',analysis:'整体不错，但连续用眼时长或户外时间可以再优化。稍加调整就能进入优秀区间。',advice:['把连续用眼时间控制在 1 小时以内','增加户外活动，每天争取 1 小时以上','注意读写姿势，避免趴着或躺着看书','已经近视的同学要定期复查度数']},
+c:{label:'需关注',analysis:'用眼习惯需要调整了。连续用眼过长、户外不足或姿势不当，都可能让视力进一步下降，建议尽快改变。',advice:['严格遵守 20-20-20 法则','每天保证 1 小时以上户外活动','减少非学习类屏幕使用时间','建议尽快做一次视力检查']},
+d:{label:'建议就医',analysis:'当前视力状况需要重视。可能已经存在较明显的视力问题，建议尽快做专业检查并遵医嘱。',advice:['尽快到眼科做散瞳验光检查','遵医嘱配镜或调整度数','严格控制用眼时长，增加户外活动','保持正确读写姿势，定期复查']}}
+};
+var WORD={a:'整体表现优秀',b:'整体表现良好',c:'整体需要关注',d:'建议尽快就医'};
+function grade(pct){return pct>=85?'a':pct>=70?'b':pct>=50?'c':'d'}
+
+/* ================= 状态 ================= */
+var els={
+  home:$('#page-home'),quiz:$('#page-quiz'),result:$('#page-result'),
+  brand:$('#brand'),topQuiz:$('#topQuiz'),dimText:$('#dimText'),
+  qIdx:$('#qIdx'),qTotal:$('#qTotal'),progressTrack:$('#progressTrack'),progressFill:$('#progressFill'),
+  qCard:$('#qCard'),qText:$('#qText'),qOptions:$('#qOptions'),
+  prevBtn:$('#prevBtn'),nextBtn:$('#nextBtn'),nextLabel:$('#nextLabel'),autoTip:$('#autoTip'),
+  ageCards:$('#ageCards'),resultSub:$('#resultSub'),verdictText:$('#verdictText'),
+  dualRings:$('#dualRings'),resultCards:$('#resultCards'),backBtn:$('#backBtn')
+};
+var ver='',flat=[],answers=[],idx=0,stage='home',timer=null,pushed=false;
+
+function buzz(ms){if(navigator.vibrate){try{navigator.vibrate(ms)}catch(e){}}}
+
+function showStage(s){
+  clearTimeout(timer);
+  stage=s;
+  [['home',els.home],['quiz',els.quiz],['result',els.result]].forEach(function(p){
+    var on=p[0]===s;p[1].hidden=!on;
+    if(on){p[1].classList.remove('stage-in');void p[1].offsetWidth;p[1].classList.add('stage-in')}
+  });
+  var q=s==='quiz';
+  els.brand.hidden=q;els.topQuiz.hidden=!q;els.progressTrack.hidden=!q;
+  window.scrollTo(0,0);
+}
+
+/* ================= 问卷 ================= */
+function flatten(v){
+  var out=[];
+  QUIZ[v].sections.forEach(function(sec){
+    sec.questions.forEach(function(q){out.push({k:sec.key,n:sec.name,q:q})});
+  });
+  return out;
+}
+
+function start(v){
+  ver=v;
+  flat=flatten(v);
+  answers=flat.map(function(){return -1});
+  idx=0;
+  els.qTotal.textContent=flat.length;
+  if(!pushed){try{history.pushState({q:1},'');pushed=true}catch(e){}}
+  showStage('quiz');
+  renderQ(1);
+}
+
+function renderQ(dir){
+  var it=flat[idx];
+  els.dimText.textContent=it.n;
+  els.qIdx.textContent=idx+1;
+  els.progressFill.style.width=((idx+1)/flat.length*100).toFixed(1)+'%';
+  els.qText.textContent=it.q.text;
+  els.qOptions.innerHTML='';
+  it.q.options.forEach(function(o,i){
+    var b=document.createElement('button');
+    b.type='button';
+    b.className='q-opt'+(answers[idx]===i?' sel':'');
+    b.innerHTML='<span class="q-mark">'+'ABCD'[i]+'</span><span>'+o.t+'</span>';
+    b.addEventListener('click',function(){pick(i)});
+    els.qOptions.appendChild(b);
+  });
+  els.autoTip.hidden=idx!==0;
+  updateNav();
+  if(dir){
+    els.qCard.classList.remove('q-anim','q-anim-back');
+    void els.qCard.offsetWidth;
+    els.qCard.classList.add(dir>0?'q-anim':'q-anim-back');
+  }
+}
+
+function updateNav(){
+  els.prevBtn.disabled=idx===0;
+  els.nextBtn.disabled=answers[idx]<0;
+  els.nextLabel.textContent=idx===flat.length-1?'查看报告':'下一题';
+}
+
+function pick(i){
+  answers[idx]=i;
+  Array.prototype.forEach.call(els.qOptions.children,function(el,j){el.classList.toggle('sel',j===i)});
+  buzz(8);
+  clearTimeout(timer);
+  if(idx<flat.length-1){
+    if(AUTO_NEXT)timer=setTimeout(function(){go(1)},AUTO_DELAY);
+    else updateNav();
+  }else{
+    updateNav();
+    els.nextBtn.classList.remove('nudge');void els.nextBtn.offsetWidth;els.nextBtn.classList.add('nudge');
+  }
+}
+
+function go(d){
+  clearTimeout(timer);
+  if(d>0&&answers[idx]<0)return;
+  var t=idx+d;
+  if(t<0)return;
+  if(t>=flat.length){finish();return}
+  idx=t;
+  renderQ(d);
+  window.scrollTo({top:0,behavior:REDUCED?'auto':'smooth'});
+}
+
+/* ================= 结果 ================= */
+function compute(){
+  var acc={},cnt={};
+  flat.forEach(function(it,i){
+    var a=answers[i];
+    acc[it.k]=(acc[it.k]||0)+(a>=0?it.q.options[a].s:0);
+    cnt[it.k]=(cnt[it.k]||0)+1;
+  });
+  var secs=QUIZ[ver].sections.map(function(sec){
+    var max=cnt[sec.key]*4,score=acc[sec.key]||0;
+    var pct=Math.round(score/max*100);
+    return{key:sec.key,name:sec.name,score:score,max:max,pct:pct,grade:grade(pct)};
+  });
+  var avg=Math.round(secs.reduce(function(s,r){return s+r.pct},0)/secs.length);
+  return{secs:secs,avg:avg,grade:grade(avg)};
+}
+
+function countUp(el,to,dur){
+  if(REDUCED){el.textContent=to;return}
+  var t0=performance.now();
+  (function step(t){
+    var p=Math.min((t-t0)/dur,1);
+    el.textContent=Math.round((1-Math.pow(1-p,3))*to);
+    if(p<1)requestAnimationFrame(step);
+  })(t0);
+}
+
+function renderResult(res){
+  els.resultSub.textContent=WORD[res.grade];
+  els.verdictText.innerHTML='根据你刚刚的回答，你的牙齿与视力健康整体得分为 <b class="hl">'+res.avg+
+    '</b> 分。下面是分项的详细分析和具体建议，请重点关注需要改善的部分。';
+
+  /* 双评分环 */
+  els.dualRings.innerHTML=res.secs.map(function(s,i){
+    return '<div class="ring-unit g-'+s.grade+'" style="animation-delay:'+(i*0.12)+'s">'+
+      '<svg viewBox="0 0 120 120" aria-hidden="true">'+
+      '<circle class="ru-bg" cx="60" cy="60" r="50"/>'+
+      '<circle class="ru-fg" cx="60" cy="60" r="50"/></svg>'+
+      '<div class="ru-num"><b>0</b><span>'+s.name+'</span></div></div>';
+  }).join('');
+  requestAnimationFrame(function(){requestAnimationFrame(function(){
+    var fgs=els.dualRings.querySelectorAll('.ru-fg');
+    Array.prototype.forEach.call(fgs,function(f,i){
+      f.style.strokeDashoffset=(C*(1-res.secs[i].pct/100)).toFixed(1);
+    });
+    var nums=els.dualRings.querySelectorAll('.ru-num b');
+    Array.prototype.forEach.call(nums,function(n,i){countUp(n,res.secs[i].pct,1200)});
+  })});
+
+  /* 分项报告卡片 */
+  els.resultCards.innerHTML=res.secs.map(function(s,i){
+    var gt=GRADE_TEXT[s.key][s.grade];
+    return '<div class="report-card g-'+s.grade+'" style="animation-delay:'+(0.18+i*0.14)+'s">'+
+      '<div class="rc-head"><h3>'+ICON[s.key]+s.name+'状况分析</h3>'+
+        '<span class="grade-tag g-'+s.grade+'">'+gt.label+'</span></div>'+
+      '<div class="rc-score"><b>'+s.score+'</b><span class="rc-max">/ '+s.max+' 分</span>'+
+        '<span class="rc-bar"><i style="--p:'+(s.pct/100).toFixed(3)+';animation-delay:'+(0.45+i*0.14)+'s"></i></span>'+
+        '<span class="rc-pct">'+s.pct+'%</span></div>'+
+      '<p class="rc-analysis">'+gt.analysis+'</p>'+
+      '<div class="rc-advice"><h4>行动指南</h4><ul>'+
+        gt.advice.map(function(a){return '<li>'+a+'</li>'}).join('')+
+      '</ul></div></div>';
+  }).join('');
+}
+
+function finish(){
+  clearTimeout(timer);
+  renderResult(compute());
+  showStage('result');
+}
+
+/* ================= 事件 ================= */
+els.ageCards.addEventListener('click',function(e){
+  var c=e.target.closest('[data-age]');
+  if(c)start(c.dataset.age);
+});
+els.ageCards.addEventListener('keydown',function(e){
+  if(e.key==='Enter'||e.key===' '){
+    var c=e.target.closest('[data-age]');
+    if(c){e.preventDefault();start(c.dataset.age)}
+  }
+});
+els.prevBtn.addEventListener('click',function(){go(-1)});
+els.nextBtn.addEventListener('click',function(){go(1)});
+ $('#restartBtn').addEventListener('click',function(){showStage('home')});
+ $('#homeBtn').addEventListener('click',function(){showStage('home')});
+els.backBtn.addEventListener('click',function(){
+  if(stage==='home'){location.href='index.html';return}
+  if(stage==='quiz'&&pushed){history.back()}else{showStage('home')}
+});
+
+/* 系统返回：问卷中挽留，其余回首页 */
+window.addEventListener('popstate',function(){
+  if(!pushed)return;
+  pushed=false;
+  if(stage==='quiz'&&answers.some(function(a){return a>=0})&&
+     !confirm('确定退出本次评估吗？当前作答不会被保存。')){
+    pushed=true;
+    try{history.pushState({q:1},'')}catch(e){}
+    return;
+  }
+  showStage('home');
+});
+
+/* 桌面端键盘支持：← → 切题，1-4 选答案 */
+document.addEventListener('keydown',function(e){
+  if(stage!=='quiz')return;
+  if(e.key==='ArrowRight')go(1);
+  else if(e.key==='ArrowLeft')go(-1);
+  else if(/^[1-4]$/.test(e.key))pick(+e.key-1);
+});
+})();
+</script>
+</body>
+</html>

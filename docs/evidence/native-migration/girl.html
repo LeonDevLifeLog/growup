@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#fff8ed">
+<title>青春期成长家庭共评手帐 · 女生版</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg-deep:#fff8ed; --bg-card:rgba(255,255,255,.72);
+  --border:rgba(251,146,60,.28); --border-hover:rgba(251,146,60,.55);
+  --text-primary:#7c2d12; --text-secondary:#9a3412; --text-muted:#c2410c;
+  --accent-sun:#fb923c; --accent-pink:#f472b6; --accent-yellow:#fbbf24;
+  --accent-green:#84cc16; --accent-blue:#38bdf8; --accent-rose:#fb7185;
+  --safe-top:env(safe-area-inset-top,0px);
+  --safe-bottom:env(safe-area-inset-bottom,0px)
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{
+  margin:0;padding:0;-webkit-text-size-adjust:100%;
+  font-family:'Nunito','PingFang SC',-apple-system,sans-serif;
+  background:var(--bg-deep);color:var(--text-primary);
+  min-height:100dvh;overflow-x:hidden;
+  background-image:radial-gradient(ellipse at 20% 0%,#fef3c7 0%,transparent 55%),
+                   radial-gradient(ellipse at 80% 100%,#fed7aa 0%,transparent 55%);
+  background-attachment:fixed;
+  padding-bottom:calc(84px + var(--safe-bottom))
+}
+input,textarea,select{font-size:16px;-webkit-user-select:text;user-select:text}
+.font-display{font-family:'Fredoka','PingFang SC',sans-serif}
+
+.card{
+  background:var(--bg-card);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border:1px solid var(--border);border-radius:20px;
+  box-shadow:0 8px 32px rgba(251,146,60,.08)
+}
+.btn-primary{
+  background:linear-gradient(135deg,var(--accent-sun),var(--accent-yellow));
+  color:#fff;font-weight:700;padding:14px 20px;border-radius:14px;border:none;
+  cursor:pointer;transition:transform .2s,box-shadow .2s;
+  font-family:'Fredoka',sans-serif;font-size:1rem;
+  box-shadow:0 6px 18px rgba(251,146,60,.35);
+  width:100%;min-height:52px;touch-action:manipulation;letter-spacing:.5px
+}
+.btn-primary:active{transform:scale(.97);box-shadow:0 3px 8px rgba(251,146,60,.4)}
+.btn-ghost{
+  background:rgba(255,255,255,.6);border:1px solid var(--border);
+  color:var(--text-secondary);padding:10px 16px;border-radius:12px;cursor:pointer;
+  transition:all .2s;font-weight:600;font-family:inherit;font-size:.85rem;
+  min-height:42px;touch-action:manipulation;display:inline-flex;
+  align-items:center;justify-content:center;gap:6px
+}
+.btn-ghost:active{background:rgba(251,146,60,.15);transform:scale(.97)}
+
+.scale-btn{
+  padding:8px 4px;border-radius:12px;border:1.5px solid var(--border);
+  background:rgba(255,255,255,.5);color:var(--text-secondary);cursor:pointer;
+  transition:all .15s;font-family:'Fredoka',sans-serif;font-weight:600;
+  font-size:.85rem;text-align:center;touch-action:manipulation;
+  min-height:54px;display:flex;flex-direction:column;justify-content:center;gap:2px
+}
+.scale-btn:active{transform:scale(.95);border-color:var(--accent-sun)}
+.scale-btn.active{
+  background:linear-gradient(135deg,var(--accent-yellow),var(--accent-sun));
+  border-color:var(--accent-sun);color:#fff;
+  box-shadow:0 6px 16px rgba(251,146,60,.35)
+}
+.scale-btn .label{font-size:.6rem;font-family:'Nunito',sans-serif;font-weight:600;color:var(--text-muted);line-height:1.1}
+.scale-btn.active .label{color:rgba(255,255,255,.9)}
+
+.tag-btn{
+  padding:6px 12px;border-radius:10px;border:1.5px solid var(--border);
+  background:rgba(255,255,255,.5);color:var(--text-secondary);cursor:pointer;
+  transition:all .15s;font-weight:600;font-size:.8rem;font-family:inherit;
+  touch-action:manipulation;line-height:1.3
+}
+.tag-btn:active{transform:scale(.95);border-color:var(--accent-pink)}
+.tag-btn.active{
+  background:linear-gradient(135deg,var(--accent-pink),var(--accent-rose));
+  border-color:var(--accent-pink);color:#fff;box-shadow:0 4px 12px rgba(244,114,182,.35)
+}
+
+.time-input{
+  background:rgba(255,255,255,.7);border:1.5px solid var(--border);
+  border-radius:12px;padding:10px 12px;color:var(--text-primary);font-size:15px;
+  font-family:'Nunito',sans-serif;width:100%;transition:border-color .2s;color-scheme:light
+}
+.time-input:focus{outline:none;border-color:var(--accent-sun);background:rgba(255,255,255,.9)}
+
+.acc{
+  background:var(--bg-card);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border:1px solid var(--border);border-radius:18px;
+  margin-bottom:10px;overflow:hidden;
+  box-shadow:0 4px 18px rgba(251,146,60,.06)
+}
+.acc>summary{
+  padding:15px 18px;cursor:pointer;list-style:none;
+  font-family:'Fredoka','PingFang SC',sans-serif;font-weight:600;font-size:1rem;
+  display:flex;align-items:center;gap:10px;
+  -webkit-user-select:none;user-select:none;
+  background:rgba(251,146,60,.04)
+}
+.acc>summary::-webkit-details-marker{display:none}
+.acc>summary::after{
+  content:'›';margin-left:auto;font-size:1.4rem;color:var(--text-muted);
+  transform:rotate(90deg);transition:transform .25s;line-height:1
+}
+.acc[open]>summary::after{transform:rotate(-90deg)}
+.acc .icon-wrap{
+  width:24px;height:24px;border-radius:8px;
+  background:linear-gradient(135deg,rgba(251,146,60,.25),rgba(244,114,182,.25));
+  display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0
+}
+.acc-body{padding:4px 18px 18px}
+.acc-body .hint{font-size:.72rem;color:var(--text-muted);line-height:1.6;margin:4px 0 12px}
+
+.sub-group-label{
+  display:flex;align-items:center;gap:10px;margin:14px 0 8px;
+  font-size:.7rem;font-weight:700;color:var(--text-muted);
+  font-family:'Nunito',sans-serif;letter-spacing:.5px
+}
+.sub-group-label::before,.sub-group-label::after{
+  content:'';flex:1;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(251,146,60,.2),transparent)
+}
+
+.perspective{
+  display:inline-flex;align-items:center;gap:3px;padding:1px 6px;border-radius:5px;
+  font-size:.6rem;font-weight:700;font-family:'Nunito',sans-serif;
+  vertical-align:middle;margin-left:6px;line-height:1.5
+}
+.perspective.child{background:rgba(251,146,60,.15);color:#c2410c}
+.perspective.parent{background:rgba(56,189,248,.15);color:#0369a1}
+.perspective.together{background:rgba(132,204,22,.15);color:#4d7c0f}
+
+.q-block{padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.4);border:1px solid rgba(251,146,60,.12);margin-bottom:8px}
+.q-block h4{font-family:'Fredoka','PingFang SC',sans-serif;font-weight:600;font-size:.85rem;margin:0 0 8px;color:var(--text-primary);line-height:1.5}
+.q-num{display:inline-flex;width:20px;height:20px;border-radius:50%;background:linear-gradient(135deg,var(--accent-sun),var(--accent-pink));color:#fff;align-items:center;justify-content:center;font-size:.6rem;font-weight:700;margin-right:4px;flex-shrink:0}
+
+.toast{
+  position:fixed;top:calc(16px + var(--safe-top));left:16px;right:16px;
+  background:linear-gradient(135deg,#ffedd5,#fed7aa);border:1px solid var(--accent-sun);
+  color:var(--text-primary);padding:12px 18px;border-radius:12px;
+  box-shadow:0 12px 40px rgba(251,146,60,.3);z-index:1000;
+  transform:translateY(-120px);opacity:0;pointer-events:none;
+  transition:transform .4s cubic-bezier(.34,1.56,.64,1),opacity .3s;
+  display:flex;align-items:center;gap:10px;max-width:480px;margin:0 auto;font-size:.85rem
+}
+.toast.show{transform:translateY(0);opacity:1;pointer-events:auto}
+
+.history-item{background:rgba(255,255,255,.5);border:1px solid var(--border);border-radius:14px;padding:12px;transition:background .2s;margin-bottom:8px}
+.history-item:active{background:rgba(251,146,60,.1)}
+.delete-btn{background:rgba(244,114,182,.1);border:1px solid rgba(244,114,182,.3);color:#be185d;padding:3px 9px;border-radius:8px;font-size:.68rem;font-weight:600;cursor:pointer;font-family:'Fredoka',sans-serif}
+.history-older-wrap{max-height:220px;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-right:4px}
+
+.bottom-bar{
+  position:fixed;bottom:0;left:50%;transform:translateX(-50%);right:0;z-index:60;
+  padding:10px 14px calc(10px + var(--safe-bottom));
+  background:rgba(255,248,237,.95);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-top:1px solid var(--border);
+  display:flex;gap:8px;max-width:720px;width:100%
+}
+.bottom-bar .btn-ghost{flex:0 0 auto;padding:10px 12px;min-height:48px;font-size:.8rem}
+.bottom-bar .btn-primary{flex:1;min-height:48px;padding:10px 16px;font-size:.95rem}
+
+.reminder-bar{
+  display:flex;align-items:flex-start;gap:10px;
+  background:#fff7ed;border:1px solid #fdba74;border-left:4px solid #ea580c;
+  border-radius:12px;padding:12px 14px;font-size:.78rem;color:#7c2d12;
+  line-height:1.6;margin-bottom:12px
+}
+.reminder-bar b{color:#c2410c}
+
+.modal-mask{
+  display:none;position:fixed;inset:0;z-index:9999;
+  background:rgba(0,0,0,.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  padding:16px;overflow-y:auto;-webkit-overflow-scrolling:touch
+}
+.modal-mask.open{display:flex;align-items:flex-end;justify-content:center}
+@media(min-width:600px){.modal-mask.open{align-items:center}}
+.modal-sheet{
+  background:#fffcf6;border:1px solid var(--border);
+  border-radius:22px 22px 0 0;padding:22px 20px calc(22px + var(--safe-bottom));
+  max-width:520px;width:100%;max-height:88vh;overflow-y:auto;
+  box-shadow:0 20px 60px rgba(0,0,0,.2);position:relative;
+  animation:slideUp .3s cubic-bezier(.16,1,.3,1)
+}
+@media(min-width:600px){.modal-sheet{border-radius:22px}}
+@keyframes slideUp{from{transform:translateY(60px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-title{font-family:'Fredoka',sans-serif;font-size:1.15rem;font-weight:700;margin:0 0 14px;color:var(--text-primary);display:flex;align-items:center;gap:8px}
+.modal-close{position:absolute;top:14px;right:14px;width:34px;height:34px;border-radius:50%;background:rgba(251,146,60,.12);border:none;color:var(--text-secondary);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
+
+.gs-sec{margin-bottom:14px;font-size:.85rem;line-height:1.75;color:var(--text-secondary)}
+.gs-sec-t{font-family:'Fredoka',sans-serif;font-weight:700;font-size:.95rem;color:var(--text-primary);margin-bottom:5px}
+.gs-warn{background:#fff7ed;border:1px solid #fdba74;border-radius:12px;padding:12px 14px}
+.gs-warn .gs-sec-t{color:#c2410c}
+.gs-sec b{color:var(--accent-sun)}
+
+.bak-info{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:.78rem;color:var(--text-muted);margin:10px 0 14px}
+.bak-tag{padding:3px 10px;border-radius:10px;font-size:.72rem;font-weight:700;background:rgba(132,204,22,.12);color:#4d7c0f;border:1px dashed rgba(132,204,22,.4)}
+.bak-tag.warn{background:#fff7ed;color:#c2410c;border-color:#fdba74}
+.data-acts{display:flex;flex-direction:column;gap:8px}
+.data-btn{
+  display:flex;align-items:center;gap:10px;padding:13px 14px;
+  background:rgba(255,255,255,.6);border:1.5px dashed var(--border);
+  border-radius:12px;cursor:pointer;font-family:inherit;font-size:.85rem;
+  color:var(--text-primary);font-weight:600;text-align:left
+}
+.data-btn:active{background:rgba(251,146,60,.1)}
+.data-btn .ico{font-size:1.3rem}
+.data-btn.danger{border-color:rgba(239,68,68,.4);color:#b91c1c}
+.data-btn.danger:active{background:rgba(239,68,68,.08)}
+
+.imp-opt{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.imp-opt button{padding:14px 16px;border-radius:14px;border:1.5px dashed var(--border);background:rgba(255,255,255,.6);text-align:left;cursor:pointer;font-family:inherit}
+.imp-opt button:active{background:rgba(251,146,60,.1)}
+.imp-opt .t{font-weight:700;font-size:.9rem;color:var(--text-primary);margin-bottom:2px}
+.imp-opt .d{font-size:.75rem;color:var(--text-muted);line-height:1.5}
+.imp-opt .go .t{color:#4d7c0f}
+.imp-opt .replace .t{color:#b91c1c}
+
+.wc-textarea{width:100%;height:150px;background:rgba(255,255,255,.7);border:1.5px solid var(--border);border-radius:12px;padding:10px;font-size:11px;font-family:monospace;color:var(--text-primary);resize:none;line-height:1.5;-webkit-user-select:text;user-select:text;margin-bottom:12px}
+.wc-btns{display:flex;gap:8px;flex-wrap:wrap}
+
+.container-max{max-width:720px;margin:0 auto;padding:0 14px}
+.disclaimer-box{background:rgba(132,204,22,.1);border:1px solid rgba(132,204,22,.3);border-radius:14px;padding:12px 14px;font-size:.78rem;line-height:1.65;color:var(--text-secondary);margin-bottom:10px}
+.disclaimer-box b{color:#4d7c0f}
+.role-intro-box{background:rgba(251,191,36,.12);border:1px solid rgba(251,191,36,.4);border-radius:14px;padding:12px 14px;font-size:.78rem;line-height:1.65;color:var(--text-secondary);margin-bottom:14px}
+.role-intro-box b{color:#92400e}
+.gender-badge{display:inline-flex;align-items:center;gap:4px;padding:4px 12px;border-radius:10px;background:rgba(244,114,182,.15);border:1px solid rgba(244,114,182,.3);color:#be185d;font-family:'Fredoka',sans-serif;font-weight:600;font-size:.8rem}
+</style>
+</head>
+<body>
+<div class="toast" id="toast"></div>
+
+<div class="container-max" style="padding-top:16px;position:relative;z-index:2">
+
+  <header style="margin-bottom:14px">
+    <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:10px">
+      <span style="display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;background:rgba(251,146,60,.15);border:1px solid var(--border);font-size:.7rem;font-weight:600;color:var(--accent-sun)">🔒 本地保存 · 隐私安全</span>
+      <span class="gender-badge">👧 女生版</span>
+      <a href="qc.html" class="btn-ghost" style="min-height:auto;padding:5px 10px;font-size:.72rem">切换性别</a>
+    </div>
+    <h1 class="font-display" style="font-size:1.55rem;line-height:1.2;margin:0 0 6px">青春期<span style="background:linear-gradient(135deg,var(--accent-sun),var(--accent-pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">成长家庭共评手帐</span></h1>
+    <p style="font-size:.82rem;color:var(--text-secondary);line-height:1.6;margin:0 0 10px">记录日常观察、课程反馈、亲子对话或专业咨询，一起陪伴成长。</p>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;font-size:.75rem;color:var(--text-secondary)">
+      <span style="padding:5px 12px;border-radius:10px;background:rgba(255,255,255,.55)"><span class="font-display" id="todayDate"></span></span>
+      <span style="padding:5px 12px;border-radius:10px;background:rgba(255,255,255,.55)">已记录 <span class="font-display" id="recordCount">0</span> 次</span>
+    </div>
+  </header>
+
+  <div class="reminder-bar hidden" id="reminderBar">
+    <span style="font-size:1.1rem">💾</span>
+    <div>
+      <b>记录只存在当前浏览器里。</b>清理缓存、卸载浏览器或换手机都会永久丢失。<br>
+      请每 <b>30 天左右</b>到「数据」点一次备份，文件存到微信收藏或网盘。
+    </div>
+  </div>
+
+  <div class="disclaimer-box">
+    <div><b>开始之前：</b>青春期是成长中的自然阶段，身体和情绪的变化都很正常。这里没有"标准答案"，<b>欢迎家长和孩子一起讨论、共同填写</b>。所有内容只保存在你当前使用的设备上，我们不会收集任何隐私信息。</div>
+  </div>
+  <div class="role-intro-box">
+    <div><b>怎么记录：</b>每次记录前，先选择"记录场景"（比如日常观察、上完课、聊过天等）。如果是课程、对话或咨询后，记得补充对应反馈。建议每月记录 3-4 次，长期坚持能发现成长规律。</div>
+  </div>
+
+  <!-- ========== 折叠内容 ========== -->
+  <details class="acc" open>
+    <summary><span class="icon-wrap">✏️</span>1. 基本信息</summary>
+    <div class="acc-body">
+      <div style="display:grid;grid-template-columns:1fr;gap:14px;margin-bottom:6px">
+        <div>
+          <label style="display:block;font-size:.75rem;font-weight:600;color:var(--text-secondary);margin-bottom:6px">孩子目前的年龄段</label>
+          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:6px" data-factor="age">
+            <button type="button" class="scale-btn" data-value="10-12">10-12岁<span class="label">青春期前期</span></button>
+            <button type="button" class="scale-btn" data-value="13-15">13-15岁<span class="label">青春期中期</span></button>
+            <button type="button" class="scale-btn" data-value="16-18">16-18岁<span class="label">青春期后期</span></button>
+            <button type="button" class="scale-btn" data-value="other">其他<span class="label">关注成长</span></button>
+          </div>
+        </div>
+        <div>
+          <label style="display:block;font-size:.75rem;font-weight:600;color:var(--text-secondary);margin-bottom:6px">今天孩子的心情怎么样？</label>
+          <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:5px" data-factor="mood">
+            <button type="button" class="scale-btn" data-value="great">😄<span class="label">很好</span></button>
+            <button type="button" class="scale-btn" data-value="ok">🙂<span class="label">还行</span></button>
+            <button type="button" class="scale-btn" data-value="confused">😕<span class="label">迷茫</span></button>
+            <button type="button" class="scale-btn" data-value="anxious">😣<span class="label">焦虑</span></button>
+            <button type="button" class="scale-btn" data-value="sad">😢<span class="label">不开心</span></button>
+          </div>
+        </div>
+        <div>
+          <label style="display:block;font-size:.75rem;font-weight:600;color:var(--text-secondary);margin-bottom:6px">孩子对自己身体变化的接受程度</label>
+          <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:5px" data-factor="bodyAccept">
+            <button type="button" class="scale-btn" data-value="1">1<span class="label">很不接受</span></button>
+            <button type="button" class="scale-btn" data-value="2">2<span class="label">有点别扭</span></button>
+            <button type="button" class="scale-btn" data-value="3">3<span class="label">一般</span></button>
+            <button type="button" class="scale-btn" data-value="4">4<span class="label">接受</span></button>
+            <button type="button" class="scale-btn" data-value="5">5<span class="label">很接受</span></button>
+          </div>
+        </div>
+        <div>
+          <label style="display:block;font-size:.75rem;font-weight:600;color:var(--text-secondary);margin-bottom:6px">家长观察到的孩子适应情况</label>
+          <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:5px" data-factor="parentObserve">
+            <button type="button" class="scale-btn" data-value="1">1<span class="label">比较困扰</span></button>
+            <button type="button" class="scale-btn" data-value="2">2<span class="label">有些困扰</span></button>
+            <button type="button" class="scale-btn" data-value="3">3<span class="label">一般</span></button>
+            <button type="button" class="scale-btn" data-value="4">4<span class="label">较好</span></button>
+            <button type="button" class="scale-btn" data-value="5">5<span class="label">很好</span></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </details>
+
+  <details class="acc">
+    <summary><span class="icon-wrap">📋</span>2. 记录场景</summary>
+    <div class="acc-body">
+      <p class="hint">这次记录是因为什么？选择对应场景，下面会出现更具体的反馈项。</p>
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-bottom:12px" data-factor="context" id="contextSelector">
+        <button type="button" class="scale-btn" data-value="daily">日常观察<span class="label">家庭日常</span></button>
+        <button type="button" class="scale-btn" data-value="offlineCourse">线下课程<span class="label">面授/工作坊</span></button>
+        <button type="button" class="scale-btn" data-value="onlineCourse">线上课程<span class="label">直播/录播</span></button>
+        <button type="button" class="scale-btn" data-value="parentTalk">亲子对话<span class="label">家庭沟通</span></button>
+        <button type="button" class="scale-btn" data-value="consultation">专业咨询<span class="label">心理咨询</span></button>
+      </div>
+
+      <div class="context-panel hidden" id="panelCourse">
+        <div class="sub-group-label">课程实践反馈</div>
+        <div style="display:grid;grid-template-columns:1fr;gap:10px;margin-bottom:12px">
+          <div><label style="display:block;font-size:.75rem;font-weight:600;color:var(--text-secondary);margin-bottom:6px">课程/活动名称</label><input type="text" class="time-input" data-note="courseName" placeholder="例如：青春期身体认知工作坊 第3期"></div>
+          <div><label style="display:block;font-size:.75rem;font-weight:600;color:var(--text-secondary);margin-bottom:6px">孩子参与度</label>
+            <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:5px" data-factor="childParticipation">
+              <button type="button" class="scale-btn" data-value="1">1<span class="label">被动</span></button>
+              <button type="button" class="scale-btn" data-value="2">2<span class="label">抗拒</span></button>
+              <button type="button" class="scale-btn" data-value="3">3<span class="label">一般</span></button>
+              <button type="button" class="scale-btn" data-value="4">4<span class="label">积极</span></button>
+              <button type="button" class="scale-btn" data-value="5">5<span class="label">投入</span></button>
+            </div>
+          </div>
+        </div>
+        <div style="margin-bottom:12px"><label style="display:block;font-size:.75rem;font-weight:600;color:var(--text-secondary);margin-bottom:6px">课程内容主要讲了什么？<span style="font-weight:400;color:var(--text-muted)">（可多选）</span></label>
+          <div style="display:flex;flex-wrap:wrap;gap:6px" data-multi="true" data-factor="courseContent">
+            <button type="button" class="tag-btn" data-value="bodyKnowledge">身体发育知识</button>
+            <button type="button" class="tag-btn" data-value="emotionManage">情绪管理</button>
+            <button type="button" class="tag-btn" data-value="relationship">人际与情感</button>
+            <button type="button" class="tag-btn" data-value="selfProtect">自我保护</button>
+            <button type="button" class="tag-btn" data-value="sexEdu">性教育基础</button>
+            <button type="button" class="tag-btn" data-value="pubertyPsych">青春期心理</button>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr;gap:10px">
+          <div><label style="display:block;font-size:.75rem;font-weight:600;color:var(--text-secondary);margin-bottom:6px">家长课后收获</label><textarea class="time-input" data-note="parentGainNote" rows="2" placeholder="比如：学到了什么、改变了什么认知……"></textarea></div>
+          <div><label style="display:block;font-size:.75rem;font-weight:600;color:var(--text-secondary);margin-bottom:6px">课后打算怎么做？</label><textarea class="time-input" data-note="actionItems" rows="2" placeholder="比如：计划在家里尝试的做法……"></textarea></div>
+        </div>
+      </div>
+
+      <div class="context-panel hidden" id="panelTalk">
+        <div class="sub-group-label">亲子对话反馈</div>
+        <div style="margin-bottom:12px"><label style="display:block;font-size:.75rem;font-weight:600;color:var(--text-secondary);margin-bottom:6px">聊了什么话题？</label><input type="text" class="time-input" data-note="talkTopic" placeholder="例如：聊了月经/乳房发育的话题"></div>
+        <div style="display:grid;grid-template-columns:1fr;gap:10px;margin-bottom:12px">
+          <div><label style="display:block;font-size:.75rem;font-weight:600;color:var(--text-secondary);margin-bottom:6px">对话效果自评</label>
+            <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:5px" data-factor="talkEffect">
+              <button type="button" class="scale-btn" data-value="1">1<span class="label">没聊下去</span></button>
+              <button type="button" class="scale-btn" data-value="2">2<span class="label">勉强</span></button>
+              <button type="button" class="scale-btn" data-value="3">3<span class="label">一般</span></button>
+              <button type="button" class="scale-btn" data-value="4">4<span class="label">较好</span></button>
+              <button type="button" class="scale-btn" data-value="5">5<span class="label">很有收获</span></button>
+            </div>
+          </div>
+          <div><label style="display:block;font-size:.75rem;font-weight:600;color:var(--text-secondary);margin-bottom:6px">孩子当时的反应<span style="font-weight:400;color:var(--text-muted)">（可多选）</span></label>
+            <div style="display:flex;flex-wrap:wrap;gap:6px" data-multi="true" data-factor="childReaction">
+              <button type="button" class="tag-btn" data-value="willing">愿意聊</button>
+              <button type="button" class="tag-btn" data-value="shy">有点不好意思</button>
+              <button type="button" class="tag-btn" data-value="asked">问了问题</button>
+              <button type="button" class="tag-btn" data-value="shared">主动分享</button>
+            </div>
+          </div>
+        </div>
+        <div><label style="display:block;font-size:.75rem;font-weight:600;color:var(--text-secondary);margin-bottom:6px">简单记录一下对话过程</label><textarea class="time-input" data-note="talkProcessNote" rows="2" placeholder="比如：怎么开场的、聊了什么……"></textarea></div>
+      </div>
+
+      <div class="context-panel hidden" id="panelConsult">
+        <div class="sub-group-label">专业咨询反馈</div>
+        <div style="margin-bottom:12px"><label style="display:block;font-size:.75rem;font-weight:600;color:var(--text-secondary);margin-bottom:6px">咨询主题</label><input type="text" class="time-input" data-note="consultTopic" placeholder="例如：孩子对身体变化的焦虑"></div>
+        <div style="display:grid;grid-template-columns:1fr;gap:10px">
+          <div><label style="display:block;font-size:.75rem;font-weight:600;color:var(--text-secondary);margin-bottom:6px">咨询师的主要建议</label><textarea class="time-input" data-note="consultAdviceNote" rows="2" placeholder="记下咨询师的重点建议……"></textarea></div>
+          <div><label style="display:block;font-size:.75rem;font-weight:600;color:var(--text-secondary);margin-bottom:6px">我们打算怎么做？</label><textarea class="time-input" data-note="consultFollowUpNote" rows="2" placeholder="计划如何落实这些建议……"></textarea></div>
+        </div>
+      </div>
+    </div>
+  </details>
+
+  <details class="acc">
+    <summary><span class="icon-wrap">🌱</span>3. 身体变化与感受</summary>
+    <div class="acc-body">
+      <div class="sub-group-label">变化观察</div>
+      <div class="q-block"><h4><span class="q-num">1</span>孩子自己注意到了哪些身体变化？<span class="perspective child">孩子</span></h4>
+        <div style="display:flex;flex-wrap:wrap;gap:6px" data-multi="true" data-factor="teenBodyChange">
+          <button type="button" class="tag-btn" data-value="height">身高增长</button>
+          <button type="button" class="tag-btn" data-value="weight">体重增加</button>
+          <button type="button" class="tag-btn" data-value="breast">乳房发育</button>
+          <button type="button" class="tag-btn" data-value="bodyHair">体毛生长</button>
+          <button type="button" class="tag-btn" data-value="menstruation">月经初潮</button>
+          <button type="button" class="tag-btn" data-value="hip">臀部变化</button>
+          <button type="button" class="tag-btn" data-value="discharge">分泌物变化</button>
+          <button type="button" class="tag-btn" data-value="acne">面部痤疮</button>
+          <button type="button" class="tag-btn" data-value="dysmenorrhea">痛经</button>
+        </div>
+      </div>
+      <div class="q-block"><h4><span class="q-num">2</span>家长观察到了哪些身体变化？<span class="perspective parent">家长</span></h4>
+        <div style="display:flex;flex-wrap:wrap;gap:6px" data-multi="true" data-factor="parentObserveBody">
+          <button type="button" class="tag-btn" data-value="height">身高明显增长</button>
+          <button type="button" class="tag-btn" data-value="bodyHair">长出体毛</button>
+          <button type="button" class="tag-btn" data-value="breast">乳房发育</button>
+          <button type="button" class="tag-btn" data-value="menstruation">月经初潮</button>
+          <button type="button" class="tag-btn" data-value="hip">臀部变化</button>
+          <button type="button" class="tag-btn" data-value="acne">面部痤疮</button>
+        </div>
+      </div>
+      <div class="sub-group-label">感受与沟通</div>
+      <div class="q-block"><h4><span class="q-num">3</span>孩子对身体变化的感受是？<span class="perspective child">孩子</span></h4>
+        <div style="display:flex;flex-wrap:wrap;gap:6px" data-factor="teenBodyFeeling">
+          <button type="button" class="tag-btn" data-value="curious">很好奇</button>
+          <button type="button" class="tag-btn" data-value="calm">觉得很正常</button>
+          <button type="button" class="tag-btn" data-value="shy">有点害羞</button>
+          <button type="button" class="tag-btn" data-value="worried">有点担心</button>
+          <button type="button" class="tag-btn" data-value="embarrassed">觉得尴尬</button>
+        </div>
+      </div>
+      <div class="q-block"><h4><span class="q-num">4</span>家里聊过这些身体发育的话题吗？<span class="perspective together">共填</span></h4>
+        <div style="display:flex;flex-wrap:wrap;gap:6px" data-multi="true" data-factor="familyBodyTalk">
+          <button type="button" class="tag-btn" data-value="menstruation">月经</button>
+          <button type="button" class="tag-btn" data-value="breast">乳房发育</button>
+          <button type="button" class="tag-btn" data-value="bodyHair">体毛</button>
+          <button type="button" class="tag-btn" data-value="shape">身材变化</button>
+        </div>
+      </div>
+    </div>
+  </details>
+
+  <details class="acc">
+    <summary><span class="icon-wrap">📚</span>4. 性知识了解与需求</summary>
+    <div class="acc-body">
+      <div class="sub-group-label">知识掌握情况</div>
+      <div class="q-block"><h4><span class="q-num">1</span>孩子主要从哪里了解性知识？<span class="perspective child">孩子</span></h4>
+        <div style="display:flex;flex-wrap:wrap;gap:6px" data-multi="true" data-factor="knowledgeSource">
+          <button type="button" class="tag-btn" data-value="school">学校课堂</button>
+          <button type="button" class="tag-btn" data-value="family">家庭教育</button>
+          <button type="button" class="tag-btn" data-value="internet">网络搜索</button>
+          <button type="button" class="tag-btn" data-value="book">科普书籍</button>
+          <button type="button" class="tag-btn" data-value="peer">同龄人交流</button>
+        </div>
+      </div>
+      <div class="q-block"><h4><span class="q-num">2</span>孩子目前最想了解的性知识是？<span class="perspective child">孩子</span></h4>
+        <div style="display:flex;flex-wrap:wrap;gap:6px" data-multi="true" data-factor="knowledgeNeed">
+          <button type="button" class="tag-btn" data-value="bodyChange">身体发育细节</button>
+          <button type="button" class="tag-btn" data-value="menstrualCare">月经护理</button>
+          <button type="button" class="tag-btn" data-value="relationship">恋爱与情感</button>
+          <button type="button" class="tag-btn" data-value="protection">避孕与防护</button>
+        </div>
+      </div>
+    </div>
+  </details>
+
+  <details class="acc">
+    <summary><span class="icon-wrap">💖</span>5. 情绪心理变化</summary>
+    <div class="acc-body">
+      <div class="q-block"><h4><span class="q-num">1</span>孩子近期主要的情绪表现？<span class="perspective parent">家长</span></h4>
+        <div style="display:flex;flex-wrap:wrap;gap:6px" data-multi="true" data-factor="emotionShow">
+          <button type="button" class="tag-btn" data-value="stable">情绪稳定</button>
+          <button type="button" class="tag-btn" data-value="irritable">易怒烦躁</button>
+          <button type="button" class="tag-btn" data-value="silent">沉默寡言</button>
+          <button type="button" class="tag-btn" data-value="rebellious">逆反对抗</button>
+          <button type="button" class="tag-btn" data-value="anxious">焦虑紧张</button>
+        </div>
+      </div>
+      <div class="q-block"><h4><span class="q-num">2</span>家长做了哪些心理支持？<span class="perspective parent">家长</span></h4>
+        <div style="display:flex;flex-wrap:wrap;gap:6px" data-multi="true" data-factor="parentSupport">
+          <button type="button" class="tag-btn" data-value="listen">倾听理解</button>
+          <button type="button" class="tag-btn" data-value="space">给予独处空间</button>
+          <button type="button" class="tag-btn" data-value="accompany">陪伴活动</button>
+          <button type="button" class="tag-btn" data-value="affirm">肯定鼓励</button>
+        </div>
+      </div>
+    </div>
+  </details>
+
+  <details class="acc">
+    <summary><span class="icon-wrap">🛡️</span>6. 行为安全与自我保护</summary>
+    <div class="acc-body">
+      <div class="q-block"><h4><span class="q-num">1</span>孩子是否掌握了自我保护的原则？<span class="perspective together">共填</span></h4>
+        <div style="display:flex;flex-wrap:wrap;gap:6px" data-multi="true" data-factor="safetySkill">
+          <button type="button" class="tag-btn" data-value="boundary">身体边界感</button>
+          <button type="button" class="tag-btn" data-value="refuse">敢于拒绝</button>
+          <button type="button" class="tag-btn" data-value="help">知道如何求助</button>
+          <button type="button" class="tag-btn" data-value="privacy">保护隐私部位</button>
+        </div>
+      </div>
+    </div>
+  </details>
+
+  <details class="acc">
+    <summary><span class="icon-wrap">🗣️</span>7. 亲子沟通质量</summary>
+    <div class="acc-body">
+      <div class="q-block"><h4><span class="q-num">1</span>本周亲子沟通的频率和质量如何？<span class="perspective parent">家长</span></h4>
+        <div style="display:flex;flex-wrap:wrap;gap:6px" data-factor="commQuality">
+          <button type="button" class="tag-btn" data-value="high">频繁且深入</button>
+          <button type="button" class="tag-btn" data-value="normal">日常沟通</button>
+          <button type="button" class="tag-btn" data-value="low">沟通较少</button>
+          <button type="button" class="tag-btn" data-value="conflict">存在冲突</button>
+        </div>
+      </div>
+    </div>
+  </details>
+
+  <details class="acc">
+    <summary><span class="icon-wrap">💭</span>8. 我的青春期想法与困惑</summary>
+    <div class="acc-body">
+      <p class="hint">任何关于成长、情绪、人际、未来的想法或困惑都可以写在这里，只保存在本地。</p>
+      <textarea data-note="freeThoughts" rows="4" class="time-input" placeholder="例如：我有时候会突然很烦躁，不知道自己怎么了… 或者：最近和父母沟通变少了，有点想改善…" style="min-height:100px"></textarea>
+    </div>
+  </details>
+
+  <details class="acc">
+    <summary><span class="icon-wrap">🕰️</span>9. 历史记录</summary>
+    <div class="acc-body">
+      <div id="historyContainer">
+        <p style="font-size:.85rem;color:var(--text-muted);margin:0">还没有记录，填写完上面的内容后，点击底部「保存本次记录」就可以看到啦。</p>
+      </div>
+    </div>
+  </details>
+
+  <details class="acc">
+    <summary><span class="icon-wrap">🔬</span>10. 联系分析师</summary>
+    <div class="acc-body">
+      <p class="hint">导出数据后，可以添加企业微信，获得专业支持解读和个性化成长建议。</p>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:14px;padding:8px 0">
+        <div style="width:170px;height:170px;border-radius:16px;overflow:hidden;border:2px solid var(--border);background:rgba(255,255,255,.6);box-shadow:0 8px 24px rgba(251,146,60,.12);display:flex;align-items:center;justify-content:center">
+          <img src="qrcode.png" alt="联系分析师二维码" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.style.display='none';this.parentNode.innerHTML='<div style=&quot;color:#999;font-size:.75rem;text-align:center;padding:10px;line-height:1.5&quot;>二维码图片<br>未加载</div>'">
+        </div>
+        <div style="text-align:center;font-size:.82rem;line-height:1.7;color:var(--text-secondary)">
+          <strong style="color:var(--accent-sun);font-weight:700">添加企业微信</strong><br>
+          发送导出的 json 文件，获取专业解读与个性化成长建议
+        </div>
+        <div style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:10px;background:rgba(251,146,60,.1);border:1px solid rgba(251,146,60,.25);font-size:.72rem;font-weight:600;color:var(--text-muted)">
+          建议至少完成 5 次记录后再导出报告数据。
+        </div>
+      </div>
+    </div>
+  </details>
+
+</div>
+
+<!-- 底部固定工具栏 -->
+<div class="bottom-bar">
+  <button class="btn-ghost" onclick="openGuide()">📖 说明</button>
+  <button class="btn-primary" onclick="saveRecord()">💾 保存本次记录</button>
+  <button class="btn-ghost" onclick="openDataSheet()">⚙️ 数据</button>
+</div>
+
+<!-- ========== 使用说明 ========== -->
+<div class="modal-mask" id="guideMask" onclick="if(event.target===this)closeModal('guideMask')">
+  <div class="modal-sheet">
+    <button class="modal-close" onclick="closeModal('guideMask')">✕</button>
+    <h3 class="modal-title">📖 使用说明</h3>
+
+    <div class="gs-sec">
+      <div class="gs-sec-t">🌟 这是什么？</div>
+      这是一款<b>家庭共评</b>的青春期成长记录工具，帮助家长和孩子一起记录身体变化、情绪、沟通和课程反馈。所有内容只保存在你当前浏览器里，不上传、不联网、不跨设备同步。
+    </div>
+
+    <div class="gs-sec gs-warn">
+      <div class="gs-sec-t">⚠️ 数据存在哪里？</div>
+      <b>微信内置浏览器</b> 和 <b>手机自带浏览器</b>（Safari、Chrome 等）的缓存相互独立，<b>数据不互通</b>。<br>
+      建议固定在<b>同一个入口</b>打开使用，不要一会儿微信、一会儿浏览器。<br>
+      清理浏览器数据、卸载微信/浏览器、更换手机，记录都会<b>永久丢失</b>。
+    </div>
+
+    <div class="gs-sec gs-warn">
+      <div class="gs-sec-t">💾 定期备份（非常重要）</div>
+      建议每 <b>30 天左右</b>备份一次：点底部「数据」→「备份」，会下载一个 JSON 文件。<br>
+      把文件存到微信收藏、网盘，或发给自己。<br>
+      <b>⚠️ 清理浏览器数据之前，务必先备份！</b>
+    </div>
+
+    <div class="gs-sec">
+      <div class="gs-sec-t">🔀 两个端的数据怎么合并？</div>
+      例如先在手机浏览器记了一些，又在微信里记了一些：<br>
+      1️⃣ 在 A 端点「备份」，把文件发到 B 端；<br>
+      2️⃣ 在 B 端点「导入/合并」，选择文件；<br>
+      3️⃣ 选「合并」——两边的记录会自动去重合并。<br>
+      （选「覆盖」会清空本机记录、完全使用文件里的数据，请谨慎。）
+    </div>
+
+    <div class="gs-sec">
+      <div class="gs-sec-t">✏️ 怎么记录？</div>
+      每次记录前，先选「记录场景」。如果是课程/对话/咨询后，记得补充对应反馈。建议每月 3-4 次，长期坚持能看到成长规律。所有板块可以自由折叠，不必每次都填。
+    </div>
+
+    <button class="btn-primary" onclick="closeModal('guideMask')" style="margin-top:8px">我知道了</button>
+  </div>
+</div>
+
+<!-- ========== 数据管理 ========== -->
+<div class="modal-mask" id="dataMask" onclick="if(event.target===this)closeModal('dataMask')">
+  <div class="modal-sheet">
+    <button class="modal-close" onclick="closeModal('dataMask')">✕</button>
+    <h3 class="modal-title">⚙️ 数据管理</h3>
+
+    <div style="background:#fff7ed;border:1px solid #fdba74;border-left:4px solid #ea580c;border-radius:10px;padding:11px 13px;font-size:.78rem;color:#7c2d12;line-height:1.7;margin-bottom:12px">
+      ⚠️ <b>记录只存在当前浏览器里。</b>清理缓存、卸载浏览器或换手机都会永久丢失。<br>
+      👉 请每 <b>30 天左右</b>点一次「备份」。
+    </div>
+
+    <div class="bak-info">
+      上次备份：<span class="bak-tag" id="bakTime">从未备份</span>
+      <span id="bakExtra" style="font-size:.72rem"></span>
+    </div>
+
+    <div class="data-acts">
+      <button class="data-btn" onclick="exportData()"><span class="ico">💾</span><div><div style="font-weight:700">备份数据</div><div style="font-size:.72rem;color:var(--text-muted);font-weight:400">下载 JSON 文件，妥善保存</div></div></button>
+      <button class="data-btn" onclick="openImport()"><span class="ico">📥</span><div><div style="font-weight:700">导入 / 合并</div><div style="font-size:.72rem;color:var(--text-muted);font-weight:400">换设备或跨浏览器时使用</div></div></button>
+      <button class="data-btn danger" onclick="openClear()"><span class="ico">🗑️</span><div><div style="font-weight:700">清空所有记录</div><div style="font-size:.72rem;color:#b91c1c;font-weight:400">请务必先备份！</div></div></button>
+    </div>
+    <input type="file" id="importFile" accept=".json,application/json" style="display:none">
+  </div>
+</div>
+
+<!-- ========== 导入方式 ========== -->
+<div class="modal-mask" id="importMask" onclick="if(event.target===this)closeImport()">
+  <div class="modal-sheet">
+    <button class="modal-close" onclick="closeImport()">✕</button>
+    <h3 class="modal-title">📥 选择导入方式</h3>
+    <div class="imp-opt">
+      <button class="go" onclick="execImport('merge')">
+        <div class="t">合并（推荐）</div>
+        <div class="d">保留本机记录，只补充文件里的新记录，自动去重</div>
+      </button>
+      <button class="replace" onclick="execImport('replace')">
+        <div class="t">覆盖</div>
+        <div class="d">清空本机记录，完全使用文件里的数据，不可恢复</div>
+      </button>
+    </div>
+    <button class="btn-ghost" onclick="closeImport()" style="width:100%">取消</button>
+  </div>
+</div>
+
+<!-- ========== 清空确认 ========== -->
+<div class="modal-mask" id="clearMask" onclick="if(event.target===this)closeModal('clearMask')">
+  <div class="modal-sheet">
+    <button class="modal-close" onclick="closeModal('clearMask')">✕</button>
+    <h3 class="modal-title">⚠️ 确认清空</h3>
+    <p style="font-size:.85rem;line-height:1.65;color:var(--text-secondary);margin-bottom:14px">
+      确定要清空所有记录吗？清空后无法恢复！<br>
+      <b style="color:#c2410c">请先点「备份」导出文件再清空。</b>
+    </p>
+    <div style="display:flex;gap:8px">
+      <button class="btn-ghost" onclick="closeModal('clearMask')" style="flex:1">取消</button>
+      <button class="btn-primary" onclick="execClear()" style="flex:1;background:linear-gradient(135deg,#ef4444,#dc2626);box-shadow:0 6px 18px rgba(239,68,68,.35)">确认清空</button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== 微信导出 ========== -->
+<div class="modal-mask" id="wcMask" onclick="if(event.target===this)closeModal('wcMask')">
+  <div class="modal-sheet">
+    <button class="modal-close" onclick="closeModal('wcMask')">✕</button>
+    <h3 class="modal-title">📤 导出数据</h3>
+    <p style="font-size:.78rem;line-height:1.6;color:var(--text-secondary);margin-bottom:12px">微信内下载可能失败。优先点「下载文件」；若失败，请复制全部内容，粘贴到备忘录或文件传输助手保存。</p>
+    <textarea class="wc-textarea" id="wcTextarea" readonly></textarea>
+    <div class="wc-btns">
+      <button class="btn-primary" onclick="wcDownload()" style="flex:1;min-height:44px;font-size:.85rem">⬇️ 下载文件</button>
+      <button class="btn-ghost" onclick="wcCopy()" style="flex:1">📋 复制全部</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ================= 常量 & 标签映射（女生版） ================= */
+var STORAGE_KEY = 'growthRecords';
+var BACKUP_KEY = 'growthLastBackup';
+
+var LABELS = {
+  context: {daily:'日常观察',offlineCourse:'线下课程',onlineCourse:'线上课程',parentTalk:'亲子对话',consultation:'专业咨询'},
+  mood: {great:'😄很好',ok:'🙂还行',confused:'😕迷茫',anxious:'😣焦虑',sad:'😢不开心'},
+  age: {'10-12':'10-12岁','13-15':'13-15岁','16-18':'16-18岁',other:'其他'},
+  bodyAccept: {'1':'很不接受','2':'有点别扭','3':'一般','4':'接受','5':'很接受'},
+  parentObserve: {'1':'比较困扰','2':'有些困扰','3':'一般','4':'较好','5':'很好'},
+  teenBodyChange: {height:'身高增长',weight:'体重增加',breast:'乳房发育',bodyHair:'体毛生长',menstruation:'月经初潮',hip:'臀部变化',discharge:'分泌物变化',acne:'面部痤疮',dysmenorrhea:'痛经'},
+  parentObserveBody: {height:'身高增长',bodyHair:'体毛',breast:'乳房发育',menstruation:'月经初潮',hip:'臀部变化',acne:'面部痤疮'},
+  teenBodyFeeling: {curious:'好奇',calm:'觉得很正常',shy:'害羞',worried:'担心',embarrassed:'尴尬'},
+  familyBodyTalk: {menstruation:'月经',breast:'乳房发育',bodyHair:'体毛',shape:'身材变化'},
+  knowledgeSource: {school:'学校课堂',family:'家庭教育',internet:'网络搜索',book:'科普书籍',peer:'同龄人交流'},
+  knowledgeNeed: {bodyChange:'身体发育细节',menstrualCare:'月经护理',relationship:'恋爱与情感',protection:'避孕与防护'},
+  emotionShow: {stable:'情绪稳定',irritable:'易怒烦躁',silent:'沉默寡言',rebellious:'逆反对抗',anxious:'焦虑紧张'},
+  parentSupport: {listen:'倾听理解',space:'给予空间',accompany:'陪伴活动',affirm:'肯定鼓励'},
+  safetySkill: {boundary:'身体边界感',refuse:'敢于拒绝',help:'知道求助',privacy:'保护隐私'},
+  commQuality: {high:'频繁深入',normal:'日常沟通',low:'沟通较少',conflict:'存在冲突'},
+  childParticipation: {'1':'被动','2':'抗拒','3':'一般','4':'积极','5':'投入'},
+  talkEffect: {'1':'没聊下去','2':'勉强','3':'一般','4':'较好','5':'很有收获'},
+  childReaction: {willing:'愿意聊',shy:'不好意思',asked:'问了问题',shared:'主动分享'},
+  courseContent: {bodyKnowledge:'身体发育知识',emotionManage:'情绪管理',relationship:'人际与情感',selfProtect:'自我保护',sexEdu:'性教育基础',pubertyPsych:'青春期心理'}
+};
+function lbl(factor,val){ return (LABELS[factor]&&LABELS[factor][val])||val; }
+
+/* ================= 工具函数 ================= */
+function $(id){ return document.getElementById(id); }
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function pad2(n){ return String(n).padStart(2,'0'); }
+function curMonth(){ var d=new Date(); return d.getFullYear()+'-'+pad2(d.getMonth()+1); }
+function nowStr(){ return new Date().toLocaleString('zh-CN',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}); }
+function isWeChat(){ return /MicroMessenger/i.test(navigator.userAgent); }
+
+var toastTimer;
+function showToast(msg){
+  var t=$('toast'); t.textContent=msg; t.classList.add('show');
+  clearTimeout(toastTimer); toastTimer=setTimeout(function(){ t.classList.remove('show'); },2500);
+}
+
+function openModal(id){ $(id).classList.add('open'); }
+function closeModal(id){ $(id).classList.remove('open'); }
+function openGuide(){ openModal('guideMask'); }
+function openDataSheet(){ openModal('dataMask'); renderBackupInfo(); }
+
+/* ================= 表单数据 ================= */
+function getFormData(){
+  var data={};
+  document.querySelectorAll('[data-factor]').forEach(function(c){
+    var f=c.dataset.factor, multi=c.dataset.multi==='true';
+    var act=c.querySelectorAll('.active');
+    if(multi) data[f]=Array.prototype.map.call(act,function(b){return b.dataset.value;});
+    else data[f]=act.length?act[0].dataset.value:'';
+  });
+  document.querySelectorAll('[data-note]').forEach(function(el){
+    data[el.dataset.note]=el.value.trim();
+  });
+  var d=new Date();
+  data.timestamp=d.toISOString();
+  data.dateStr=d.toLocaleDateString('zh-CN');
+  return data;
+}
+
+function resetForm(){
+  document.querySelectorAll('.active').forEach(function(b){ b.classList.remove('active'); });
+  document.querySelectorAll('[data-note]').forEach(function(el){ el.value=''; });
+  toggleContextPanels('');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function toggleContextPanels(ctx){
+  $('panelCourse').classList.toggle('hidden', !(ctx==='offlineCourse'||ctx==='onlineCourse'));
+  $('panelTalk').classList.toggle('hidden', ctx!=='parentTalk');
+  $('panelConsult').classList.toggle('hidden', ctx!=='consultation');
+}
+
+/* ================= 保存 ================= */
+function saveRecord(){
+  var ctx=document.querySelector('#contextSelector .active');
+  if(!ctx){ showToast('请先选择"记录场景"'); return; }
+  var data=getFormData();
+  var records=loadRecords();
+  records.push(data);
+  try { localStorage.setItem(STORAGE_KEY,JSON.stringify(records)); }
+  catch(e){ showToast('⚠️ 存储空间不足，请先备份再清空'); return; }
+  renderHistory();
+  resetForm();
+  showToast('✅ 记录已保存到本机');
+}
+
+function loadRecords(){
+  try { var s=localStorage.getItem(STORAGE_KEY); return s?JSON.parse(s)||[]:[]; }
+  catch(e){ return []; }
+}
+function persistRecords(list){
+  try { localStorage.setItem(STORAGE_KEY,JSON.stringify(list)); return true; }
+  catch(e){ showToast('⚠️ 存储失败'); return false; }
+}
+
+/* ================= 历史渲染 ================= */
+function recordHtml(r,idx){
+  var tags=[];
+  if(r.context) tags.push(lbl('context',r.context));
+  if(r.mood) tags.push(lbl('mood',r.mood));
+  if(r.age) tags.push(lbl('age',r.age));
+  if(r.bodyAccept) tags.push('接受度:'+lbl('bodyAccept',r.bodyAccept));
+  if(r.parentObserve) tags.push('适应:'+lbl('parentObserve',r.parentObserve));
+  ['teenBodyChange','parentObserveBody','teenBodyFeeling','familyBodyTalk','knowledgeSource','knowledgeNeed','emotionShow','parentSupport','safetySkill','commQuality','childReaction','courseContent','childParticipation','talkEffect'].forEach(function(f){
+    if(r[f]){
+      var vals=Array.isArray(r[f])?r[f]:[r[f]];
+      if(vals.length) tags.push(vals.map(function(v){return lbl(f,v);}).join('、'));
+    }
+  });
+  [['courseName','课程'],['parentGainNote','收获'],['actionItems','行动'],['talkTopic','对话主题'],['talkProcessNote','对话过程'],['consultTopic','咨询'],['consultAdviceNote','建议'],['consultFollowUpNote','落实']].forEach(function(pair){
+    if(r[pair[0]]) tags.push(pair[1]+':'+r[pair[0]]);
+  });
+  if(r.freeThoughts){
+    var short=r.freeThoughts.length>24?r.freeThoughts.slice(0,24)+'…':r.freeThoughts;
+    tags.push('💭 '+short);
+  }
+  var h='<div class="history-item"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">'+
+        '<span class="font-display" style="font-weight:700;font-size:.85rem">'+esc(r.dateStr||'')+'</span>'+
+        '<button class="delete-btn" data-idx="'+idx+'">删除</button></div>'+
+        '<div style="display:flex;flex-wrap:wrap;gap:5px">';
+  tags.forEach(function(t){
+    h+='<span style="font-size:.7rem;padding:2px 8px;border-radius:6px;background:rgba(251,146,60,.08);color:var(--text-secondary);line-height:1.5">'+esc(t)+'</span>';
+  });
+  h+='</div></div>';
+  return h;
+}
+
+function renderHistory(){
+  var records=loadRecords();
+  $('recordCount').textContent=records.length;
+  var box=$('historyContainer');
+  if(!records.length){
+    box.innerHTML='<p style="font-size:.85rem;color:var(--text-muted);margin:0">还没有记录，填写完上面的内容后，点击底部「保存本次记录」就可以看到啦。</p>';
+    return;
+  }
+  var recentN=Math.min(3,records.length);
+  var html='';
+  for(var i=records.length-1;i>=records.length-recentN;i--) html+=recordHtml(records[i],i);
+  if(records.length>3){
+    html+='<div class="sub-group-label">更早的记录（'+(records.length-3)+'条）</div>';
+    html+='<div class="history-older-wrap">';
+    for(var i=records.length-4;i>=0;i--) html+=recordHtml(records[i],i);
+    html+='</div>';
+  }
+  box.innerHTML=html;
+  box.querySelectorAll('.delete-btn').forEach(function(btn){
+    btn.addEventListener('click',function(e){
+      e.stopPropagation();
+      if(!confirm('确定删除这条记录吗？')) return;
+      var idx=parseInt(btn.dataset.idx,10);
+      var list=loadRecords();
+      list.splice(idx,1);
+      persistRecords(list);
+      renderHistory();
+      showToast('记录已删除');
+    });
+  });
+}
+
+/* ================= 备份 & 提醒 ================= */
+function getLastBackup(){ try { return Number(localStorage.getItem(BACKUP_KEY)||0); } catch(e){ return 0; } }
+function markBackup(){ try { localStorage.setItem(BACKUP_KEY,String(Date.now())); } catch(e){} renderBackupInfo(); }
+
+function renderBackupInfo(){
+  var el=$('bakTime'), extra=$('bakExtra');
+  if(!el) return;
+  var t=getLastBackup();
+  if(!t){
+    el.textContent='从未备份'; el.className='bak-tag warn';
+    if(extra) extra.textContent = loadRecords().length ? '（建议马上备份一次）' : '';
+    return;
+  }
+  var days=Math.floor((Date.now()-t)/86400000);
+  var d=new Date(t);
+  el.textContent=d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate())+'（'+(days===0?'今天':days+'天前')+'）';
+  el.className=days>=30?'bak-tag warn':'bak-tag';
+  if(extra) extra.textContent=days>=30?'⚠️ 超过30天没备份了':'';
+}
+
+function checkBackupReminder(){
+  var records=loadRecords();
+  var bar=$('reminderBar');
+  if(!records.length){ bar.classList.add('hidden'); return; }
+  var t=getLastBackup();
+  var days=t?Math.floor((Date.now()-t)/86400000):999;
+  if(days>=30){
+    bar.classList.remove('hidden');
+    setTimeout(function(){
+      showToast('⏰ '+(t?'已 '+days+' 天未备份':'还没有备份过')+'，请到「数据」备份一次');
+    },1200);
+  } else {
+    bar.classList.add('hidden');
+  }
+}
+
+/* ================= 导出 ================= */
+function exportData(){
+  var records=loadRecords();
+  if(!records.length){ showToast('暂无记录可导出'); return; }
+  var dataStr=JSON.stringify({version:2,exportDate:nowStr(),records:records},null,2);
+  if(isWeChat()){
+    $('wcTextarea').value=dataStr;
+    closeModal('dataMask');
+    openModal('wcMask');
+    return;
+  }
+  doDownload(dataStr);
+  markBackup();
+  closeModal('dataMask');
+  showToast('💾 备份已下载，请妥善保存');
+}
+
+function doDownload(str){
+  try{
+    var blob=new Blob([str],{type:'application/json'});
+    var url=URL.createObjectURL(blob);
+    var a=document.createElement('a');
+    a.href=url;
+    a.download='青春期成长手帐_女生版_'+curMonth()+'.json';
+    a.style.display='none';
+    document.body.appendChild(a); a.click();
+    document.body.removeChild(a);
+    setTimeout(function(){ URL.revokeObjectURL(url); },3000);
+    return true;
+  }catch(e){
+    return false;
+  }
+}
+
+function wcDownload(){
+  var str=$('wcTextarea').value;
+  if(doDownload(str)){ markBackup(); showToast('下载已开始'); closeModal('wcMask'); }
+  else { showToast('下载失败，请尝试复制'); }
+}
+function wcCopy(){
+  var ta=$('wcTextarea');
+  ta.select();
+  try{
+    document.execCommand('copy');
+    showToast('已复制到剪贴板');
+  }catch(e){
+    if(navigator.clipboard) navigator.clipboard.writeText(ta.value).then(function(){ showToast('已复制到剪贴板'); });
+    else showToast('复制失败，请长按选择复制');
+  }
+}
+
+/* ================= 导入 ================= */
+var pendingImport=null;
+function openImport(){ $('importFile').click(); }
+
+$('importFile').addEventListener('change',function(e){
+  var file=e.target.files&&e.target.files[0];
+  e.target.value='';
+  if(!file) return;
+  var reader=new FileReader();
+  reader.onload=function(ev){
+    try{
+      var data=JSON.parse(ev.target.result);
+      var list=Array.isArray(data)?data:(data&&data.records);
+      if(!list||!list.length){ showToast('⚠️ 文件里没有可导入的记录'); return; }
+      pendingImport=list;
+      closeModal('dataMask');
+      openModal('importMask');
+    }catch(err){
+      showToast('⚠️ 打不开这个文件，请确认是本工具导出的 JSON');
+    }
+  };
+  reader.onerror=function(){ showToast('⚠️ 文件读取失败'); };
+  reader.readAsText(file);
+});
+
+function closeImport(){ pendingImport=null; closeModal('importMask'); }
+
+function execImport(mode){
+  if(!pendingImport){ closeImport(); return; }
+  var list=pendingImport;
+  var msg;
+  if(mode==='replace'){
+    persistRecords(list);
+    msg='📥 已覆盖导入 '+list.length+' 条记录';
+  } else {
+    var records=loadRecords();
+    var seen={};
+    records.forEach(function(r){ if(r&&r.timestamp) seen[r.timestamp+'|'+(r.context||'')]=1; });
+    var added=0;
+    list.forEach(function(r){
+      if(!r||typeof r!=='object') return;
+      var key=r.timestamp+'|'+(r.context||'');
+      if(seen[key]) return;
+      seen[key]=1;
+      records.push(r);
+      added++;
+    });
+    persistRecords(records);
+    msg=added?('📥 合并完成，新增 '+added+' 条记录'):'✅ 数据已是最新，没有新增记录';
+  }
+  renderHistory();
+  renderBackupInfo();
+  closeImport();
+  checkBackupReminder();
+  showToast(msg);
+}
+
+/* ================= 清空 ================= */
+function openClear(){ closeModal('dataMask'); openModal('clearMask'); }
+function execClear(){
+  localStorage.removeItem(STORAGE_KEY);
+  renderHistory();
+  renderBackupInfo();
+  closeModal('clearMask');
+  showToast('🗑️ 已清空所有记录');
+}
+
+/* ================= 选择器事件 ================= */
+function initSelectors(){
+  document.querySelectorAll('[data-factor]').forEach(function(container){
+    var multi=container.dataset.multi==='true';
+    container.querySelectorAll('button').forEach(function(btn){
+      btn.addEventListener('click',function(){
+        if(multi){ btn.classList.toggle('active'); }
+        else {
+          container.querySelectorAll('button').forEach(function(b){ b.classList.remove('active'); });
+          btn.classList.add('active');
+          if(container.id==='contextSelector') toggleContextPanels(btn.dataset.value);
+        }
+      });
+    });
+  });
+}
+
+/* ================= 初始化 ================= */
+document.getElementById('todayDate').textContent=new Date().toLocaleDateString('zh-CN',{year:'numeric',month:'long',day:'numeric'});
+initSelectors();
+renderHistory();
+renderBackupInfo();
+checkBackupReminder();
+</script>
+</body>
+</html>

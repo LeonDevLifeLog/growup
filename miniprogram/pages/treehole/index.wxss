@@ -1,0 +1,147 @@
+.tree-tabs {
+  display:flex;
+  gap:40rpx;
+  margin:36rpx 0 20rpx;
+  border-bottom:2rpx solid #e2e7dc;
+}
+
+.tree-tabs text {
+  padding:14rpx 0;
+  color:#7b8577;
+}
+
+.tree-tabs .selected-tab {
+  border-bottom:4rpx solid #245c45;
+  font-weight:700;
+  color:#245c45;
+}
+
+.filters {
+  white-space:nowrap;
+  margin-bottom:20rpx;
+}
+
+.filter-line {
+  display:flex;
+  flex-wrap:nowrap;
+}
+
+.filter-line .chip {
+  flex-shrink:0;
+}
+
+.post {
+  background:#fffef9;
+  padding:28rpx;
+}
+
+.post-author {
+  display:flex;
+  align-items:center;
+  gap:16rpx;
+}
+
+.avatar {
+  width:66rpx;
+  height:66rpx;
+  line-height:66rpx;
+  border-radius:50%;
+  background:#e8ebdf;
+  color:#72905d;
+  font-size:40rpx;
+  text-align:center;
+}
+
+.nickname {
+  font-size:26rpx;
+  font-weight:600;
+}
+
+.topic {
+  font-size:21rpx;
+  color:#859576;
+}
+
+.post-content {
+  font-size:28rpx;
+  line-height:1.9;
+  color:#53654b;
+  margin:28rpx 0;
+}
+
+.post-actions {
+  display:flex;
+  align-items:center;
+  gap:10rpx;
+  border-top:1rpx solid #edf0e7;
+  padding-top:20rpx;
+}
+
+.action {
+  background:transparent;
+  padding:10rpx 12rpx;
+  color:#718365;
+  font-size:23rpx;
+  white-space:nowrap;
+  font-weight:400;
+}
+
+.action[disabled] {
+  background:transparent;
+  color:#718365;
+}
+
+.warm {
+  background:#edf2e4;
+  border-radius:24rpx;
+}
+
+.warm[disabled] {
+  background:#e7eddf;
+  color:#728664;
+  opacity:.8;
+}
+
+.report {
+  margin-left:auto;
+  font-size:21rpx;
+  color:#939b8b;
+}
+
+.status {
+  margin-top:18rpx;
+  color:#8c9a6a;
+}
+
+.sheet-title {
+  font-size:31rpx;
+  margin:10rpx 0;
+}
+
+.reply-source {
+  background:#e9eddf;
+  padding:22rpx;
+  border-radius:20rpx;
+  font-size:25rpx;
+  line-height:1.8;
+  margin:12rpx 0 24rpx;
+}
+
+.reply-source .small {
+  display:block;
+  margin-bottom:12rpx;
+}
+
+.reply {
+  padding:20rpx 0;
+  border-bottom:1rpx solid #e0e7d9;
+  font-size:25rpx;
+}
+
+.reply .small {
+  margin-bottom:8rpx;
+}
+
+.replies {
+  margin-bottom:24rpx;
+}

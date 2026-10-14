@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>成长健研社 · 青少年饮食与体重追踪微手帐</title>
+    <style>
+        :root {
+            --primary: #16A085; --secondary: #F39C12; --accent: #9B59B6;
+            --success: #27AE60; --warning: #E67E22; --danger: #E74C3C;
+            --bg: #F4F8F5; --card: #FFFFFF; --text-main: #1E2A3A; --text-light: #7A8A9E;
+            --radius: 14px; --shadow: 0 4px 14px rgba(0,0,0,0.04);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background: var(--bg); color: var(--text-main); line-height: 1.5; padding: 14px 12px 0; -webkit-font-smoothing: antialiased; }
+        .container { max-width: 800px; margin: 0 auto; padding-bottom: calc(70px + env(safe-area-inset-bottom)); }
+        body, input, select, textarea, button { font-size: 14px; }
+        header::before, header::after, .nav-tab, .modal-overlay { will-change: transform, opacity; }
+        header { text-align: center; margin-bottom: 18px; padding: 22px 16px 20px; background: linear-gradient(135deg, #16A085 0%, #27AE60 50%, #F39C12 100%); color: white; border-radius: 22px; box-shadow: 0 6px 20px rgba(22, 160, 133, 0.25); position: relative; overflow: hidden; }
+        header::before { content: ''; position: absolute; top: -30px; right: -30px; width: 120px; height: 120px; background: rgba(255,255,255,0.1); border-radius: 50%; }
+        header::after { content: ''; position: absolute; bottom: -40px; left: -20px; width: 100px; height: 100px; background: rgba(255,255,255,0.08); border-radius: 50%; }
+        header h1 { font-size: 20px; letter-spacing: 0.5px; margin-bottom: 4px; font-weight: 700; position: relative; z-index: 2; }
+        header p { font-size: 12px; opacity: 0.92; margin-bottom: 2px; position: relative; z-index: 2; }
+        .header-actions { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-top: 12px; position: relative; z-index: 2; }
+        .help-btn { display: inline-flex; align-items: center; gap: 4px; background: rgba(255,255,255,0.20); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); color: white; border: 1.2px solid rgba(255,255,255,0.4); border-radius: 30px; padding: 5px 14px; font-size: 12px; font-weight: 500; text-decoration: none; cursor: pointer; transition: 0.2s; }
+        .help-btn:hover { background: rgba(255,255,255,0.30); }
+        .help-btn:active { transform: scale(0.96); }
+        .card { background: var(--card); border-radius: var(--radius); padding: 16px 14px; margin-bottom: 14px; box-shadow: var(--shadow); border: 1px solid #f0f2f5; }
+        .card h2 { font-size: 15px; color: var(--primary); margin-bottom: 14px; border-bottom: 1px solid #EDF1F7; padding-bottom: 10px; font-weight: 600; letter-spacing: 0.2px; }
+        .form-group { margin-bottom: 14px; }
+        .form-group label { display: block; font-weight: 600; margin-bottom: 5px; font-size: 13px; color: var(--text-main); }
+        .form-group .hint { font-size: 11px; color: var(--text-light); margin-bottom: 4px; }
+        input[type="date"], input[type="number"], input[type="text"], select, textarea { width: 100%; padding: 10px 12px; border: 1px solid #DFE4EC; border-radius: 10px; font-size: 16px; background: #FAFCFE; transition: 0.2s; color: var(--text-main); -webkit-appearance: none; appearance: none; }
+        input:focus, select:focus, textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(22, 160, 133, 0.12); outline: none; }
+        textarea { min-height: 64px; resize: vertical; }
+        .checkbox-group label { font-weight: 400; display: flex; align-items: center; gap: 10px; margin-bottom: 8px; cursor: pointer; padding: 8px 12px; border-radius: 10px; background: #FAFCFE; font-size: 13px; border: 1px solid #EEF2F7; transition: 0.15s; }
+        .checkbox-group label:active { background: #F0F4FC; }
+        .checkbox-group input[type="checkbox"] { width: 18px; height: 18px; flex-shrink: 0; accent-color: var(--primary); }
+        .slider-container { display: flex; align-items: center; gap: 12px; }
+        .slider-container input[type="range"] { flex-grow: 1; padding: 0; height: 5px; border-radius: 3px; -webkit-appearance: none; appearance: none; background: #DCE1E8; }
+        .slider-container input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; background: var(--primary); border-radius: 50%; cursor: pointer; box-shadow: 0 2px 6px rgba(22,160,133,0.3); }
+        .slider-value { font-weight: 700; color: var(--primary); min-width: 22px; text-align: center; font-size: 16px; }
+        .btn { display: flex; justify-content: center; align-items: center; width: 100%; padding: 13px 16px; border: none; border-radius: 12px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; letter-spacing: 0.3px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); margin-bottom: 12px; }
+        .btn:active { transform: scale(0.97); opacity: 0.85; }
+        .btn-primary { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(22,160,133,0.28); }
+        .btn-analyst { background: var(--secondary); color: white; box-shadow: 0 4px 12px rgba(243,156,18,0.25); }
+        .btn-danger { background: var(--danger); color: white; box-shadow: 0 4px 12px rgba(231,76,60,0.20); }
+        .btn-outline { background: #fff; color: var(--secondary); border: 1.5px solid var(--secondary); box-shadow: none; }
+        .btn-outline:active { background: #FFF8EC; }
+        .btn-success { background: var(--success); color: white; box-shadow: 0 4px 12px rgba(39,174,96,0.25); }
+        .btn-group { display: flex; gap: 10px; margin-top: 18px; }
+        .btn-group .btn { flex: 1; margin-bottom: 0; font-size: 13px; padding: 12px 8px; }
+        .nav-tabs { display: flex; margin-bottom: 16px; border-radius: 14px; overflow: hidden; background: #fff; padding: 4px; gap: 4px; border: 1px solid #E9EDF3; box-shadow: 0 2px 6px rgba(0,0,0,0.02); }
+        .nav-tab { flex: 1; padding: 10px 6px; text-align: center; cursor: pointer; font-weight: 600; color: var(--text-light); transition: 0.25s; font-size: 13px; border-radius: 10px; }
+        .nav-tab.active { background: var(--primary); color: white; box-shadow: 0 2px 8px rgba(22,160,133,0.25); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .history-item { border: 1px solid #EEF2F7; border-radius: 14px; padding: 14px; margin-bottom: 12px; background: #FAFCFE; }
+        .history-date { font-weight: 700; color: var(--secondary); margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; font-size: 14px; }
+        .history-detail p { font-size: 12.5px; margin-bottom: 4px; line-height: 1.55; }
+        .tag { display: inline-block; padding: 1px 8px; border-radius: 30px; font-size: 10px; font-weight: 700; margin-left: 4px; letter-spacing: 0.3px; }
+        .tag-staple { background: #ffeaa7; color: #8B5A00; } .tag-protein { background: #fab1a0; color: #6D214F; }
+        .tag-veg { background: #55efc4; color: #006266; } .tag-fruit { background: #ff7675; color: #fff; }
+        .tag-dairy { background: #74b9ff; color: #fff; } .tag-snack { background: #fdcb6e; color: #5C3D00; }
+        .tag-drink { background: #a29bfe; color: #130f40; } .tag-junk { background: #e17055; color: #fff; }
+        .tag-feedback { background: #a29bfe; color: #130f40; } .tag-event { background: #fd79a8; color: #fff; }
+        .delete-btn { background: rgba(231,76,60,0.08); border: none; color: #e74c3c; cursor: pointer; font-size: 11px; padding: 4px 12px; border-radius: 30px; font-weight: 600; transition: 0.15s; }
+        .delete-btn:active { background: rgba(231,76,60,0.18); }
+        .qr-card { background: rgba(255,255,255,0.95); border: 2px dashed var(--primary); text-align: center; margin-top: 24px; }
+        .qr-card h2 { border: none; color: var(--secondary); justify-content: center; font-size: 15px; }
+        .qr-img { width: 120px; height: 120px; border-radius: 12px; margin: 6px auto 14px; display: block; background: #f8faff; box-shadow: 0 4px 10px rgba(0,0,0,0.04); object-fit: contain; }
+        .qr-notice { font-size: 12px; color: var(--text-light); line-height: 1.5; }
+        .fixed-footer { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(255,255,255,0.92); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); box-shadow: 0 -2px 10px rgba(0,0,0,0.03); padding: 8px 16px; padding-bottom: calc(8px + env(safe-area-inset-bottom)); text-align: center; font-size: 11px; color: #A0AAB8; z-index: 999; letter-spacing: 0.3px; }
+        .fixed-footer span { color: var(--primary); font-weight: 600; }
+        .validation-message { color: var(--danger); font-size: 12px; margin-top: 6px; display: none; padding: 4px 10px; background: rgba(231,76,60,0.06); border-radius: 8px; border-left: 3px solid var(--danger); }
+        .validation-message.show { display: block; }
+        .analytics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+        .analytics-item { background: #F8FAFE; border-radius: 12px; padding: 12px 8px; text-align: center; border: 1px solid #EDF2F7; }
+        .analytics-item .num { font-size: 22px; font-weight: 700; color: var(--primary); }
+        .analytics-item .label { font-size: 10px; color: var(--text-light); margin-top: 2px; }
+        .desc-panel { background: linear-gradient(135deg, #F8FBF9, #FFF8EC); border-radius: 12px; padding: 14px; font-size: 12.5px; color: var(--text-main); line-height: 1.65; border-left: 3px solid var(--secondary); margin-top: 12px; }
+        .desc-panel strong { color: var(--primary); }
+        .trend-chart { background: #FAFCFE; border-radius: 12px; padding: 12px; margin-top: 12px; border: 1px solid #EDF2F7; }
+        .trend-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px dashed #EEF2F7; font-size: 12px; }
+        .trend-row:last-child { border: none; }
+        .trend-bar { flex: 1; margin: 0 10px; height: 6px; background: #EDF2F7; border-radius: 3px; overflow: hidden; }
+        .trend-bar-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary)); border-radius: 3px; transition: width 0.6s; }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(30,42,58,0.5); z-index: 1000; justify-content: center; align-items: flex-start; padding: 20px 10px; overflow-y: auto; }
+        .modal-overlay.active { display: flex; }
+        .modal-box { background: var(--bg); width: 100%; max-width: 500px; padding: 16px; border-radius: 20px; position: relative; box-sizing: border-box; margin-bottom: 40px; box-shadow: 0 10px 40px rgba(0,0,0,0.15); }
+        .modal-close-btn { position: absolute; top: 12px; right: 16px; width: 30px; height: 30px; line-height: 30px; text-align: center; background: rgba(255,255,255,0.9); border-radius: 50%; font-size: 18px; color: var(--text-light); cursor: pointer; z-index: 10; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+        .modal-hero { text-align: center; margin-bottom: 16px; padding: 24px 16px; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border-radius: 16px; box-shadow: 0 8px 20px rgba(22, 160, 133, 0.15); }
+        .modal-hero h3 { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+        .modal-hero p { font-size: 13px; opacity: 0.92; }
+        .modal-hero span { display: inline-block; margin-top: 12px; padding: 4px 14px; background: rgba(255,255,255,0.18); border-radius: 30px; font-size: 11px; }
+        .info-card { background: var(--card); border-radius: 16px; padding: 18px; margin-bottom: 12px; box-shadow: 0 4px 14px rgba(0,0,0,0.04); border-left: 4px solid var(--primary); }
+        .info-card.alt { border-left-color: var(--secondary); } .info-card.warn { border-left-color: var(--warning); } .info-card.privacy { border-left-color: var(--success); }
+        .info-card .title { font-size: 16px; font-weight: 700; margin-bottom: 6px; color: var(--text-main); }
+        .info-card .desc { font-size: 13.5px; color: var(--text-light); margin-bottom: 12px; line-height: 1.6; }
+        .info-card .highlight-box { background: #F2F5FA; border-radius: 10px; padding: 12px 14px; font-size: 13px; color: var(--text-main); line-height: 1.6; }
+        .info-card .highlight-box .tag { display: inline-block; background: var(--primary); color: white; padding: 1px 10px; border-radius: 20px; font-size: 11px; margin-right: 4px; }
+        .info-card.alt .highlight-box .tag { background: var(--secondary); } .info-card.warn .highlight-box .tag { background: var(--warning); }
+        .info-card.privacy .highlight-box { background: #EEF9F0; } .info-card.privacy .highlight-box .tag { background: var(--success); }
+        .rule-card { background: linear-gradient(135deg, #FAFDFF, #F0F7FF); border: 1.5px dashed var(--primary); text-align: center; }
+        .rule-formula { font-size: 18px; font-weight: 700; color: var(--secondary); margin: 10px 0; }
+        .toast { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(31,42,58,0.9); color: #fff; padding: 12px 20px; border-radius: 12px; font-size: 14px; z-index: 10000; opacity: 0; pointer-events: none; transition: opacity 0.3s; text-align: center; max-width: 80%; }
+        .toast.show { opacity: 1; }
+        .wc-modal-mask { display: none; position: fixed; inset: 0; z-index: 9999; background: rgba(0,0,0,0.55); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); padding: 16px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+        .wc-modal-mask.open { display: flex; align-items: center; justify-content: center; }
+        .wc-modal-box { background: var(--card); border: 1px solid #f0f2f5; border-radius: 20px; padding: 24px 20px; max-width: 520px; width: 100%; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,0.2); margin: auto; }
+        .wc-modal-box h3 { font-size: 1.1rem; margin: 0 0 8px; color: var(--text-main); }
+        .wc-modal-box .sub { font-size: 0.75rem; color: var(--text-light); margin-bottom: 14px; line-height: 1.5; }
+        .wc-textarea-wrap textarea { width: 100%; height: 180px; background: #FAFCFE; border: 1px solid #DFE4EC; border-radius: 10px; padding: 12px; font-size: 12px; font-family: monospace; color: var(--text-main); resize: none; line-height: 1.5; -webkit-user-select: text; user-select: text; }
+        .wc-btn-row { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+        .wc-btn-copy { flex: 1; padding: 12px; border-radius: 12px; border: none; cursor: pointer; font-weight: 600; background: var(--primary); color: #fff; box-shadow: 0 4px 12px rgba(22,160,133,0.28); }
+        .wc-btn-copy.green { background: var(--success); box-shadow: 0 4px 12px rgba(39,174,96,0.28); }
+        .wc-btn-close { width: 100%; padding: 10px; border-radius: 12px; border: 1px solid #DFE4EC; background: transparent; color: var(--text-light); font-weight: 600; font-size: 0.85rem; cursor: pointer; margin-top: 8px; }
+        /* 体格评估专用样式 */
+        .metric-status { display: inline-block; padding: 2px 10px; border-radius: 30px; font-size: 11px; font-weight: 700; letter-spacing: 0.3px; }
+        .metric-status.normal { background: #e6f4ea; color: #1b7a2e; }
+        .metric-status.warn { background: #fff3e0; color: #b36b00; }
+        .metric-status.danger { background: #fde8e8; color: #c0392b; }
+        .metric-status.info { background: #e8f0fe; color: #1a5fb4; }
+        .metric-bar-wrap { margin-top: 6px; height: 6px; background: #EDF2F7; border-radius: 99px; position: relative; overflow: hidden; }
+        .metric-bar-fill { height: 100%; border-radius: 99px; transition: width 0.6s; }
+        .metric-bar-fill.normal { background: linear-gradient(90deg, #4a8c4a, #5cb85c); }
+        .metric-bar-fill.warn { background: linear-gradient(90deg, #d4a017, #e8b830); }
+        .metric-bar-fill.danger { background: linear-gradient(90deg, #c0392b, #e74c3c); }
+        .metric-bar-fill.info { background: linear-gradient(90deg, #2980b9, #3498db); }
+        .assessment-card { background: linear-gradient(135deg, #FAFCFE, #F8FBF9); border-radius: 14px; padding: 16px; margin-top: 14px; border: 1px solid #EDF2F7; }
+        .assessment-card h3 { font-size: 14px; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+        .assessment-card .metric-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+        .assessment-card .metric-row .metric-label { font-size: 12px; color: var(--text-light); min-width: 80px; }
+        .assessment-card .metric-row .metric-val { font-size: 18px; font-weight: 700; color: var(--text-main); }
+        .assessment-card .metric-row .metric-unit { font-size: 12px; color: var(--text-light); font-weight: 400; }
+        .assessment-explain { font-size: 12px; color: var(--text-main); line-height: 1.7; padding: 10px 12px; background: #FFF8EC; border-radius: 10px; border-left: 3px solid var(--secondary); margin-top: 10px; }
+        .assessment-explain.danger { background: #FDE8E8; border-left-color: var(--danger); }
+        .assessment-explain.info { background: #E8F0FE; border-left-color: #2980b9; }
+        .assessment-explain.success { background: #EEF9F0; border-left-color: var(--success); }
+        .waist-tip { font-size: 11px; color: var(--text-light); line-height: 1.6; margin-top: 8px; padding: 8px 10px; background: #F8FAFE; border-radius: 8px; border: 1px dashed #DCE1E8; }
+        /* ===== 备份提醒与数据管理（新增） ===== */
+        .backup-banner { display: none; align-items: center; gap: 8px; background: #FFF8EC; border: 1px solid #F5DFB8; border-left: 4px solid var(--warning); border-radius: 12px; padding: 10px 12px; font-size: 12px; line-height: 1.55; color: var(--text-main); margin-bottom: 14px; }
+        .backup-banner .banner-btn { flex-shrink: 0; background: var(--warning); color: #fff; border: none; border-radius: 20px; padding: 6px 12px; font-size: 12px; font-weight: 600; cursor: pointer; }
+        .backup-banner .banner-dismiss { flex-shrink: 0; background: none; border: none; color: var(--text-light); font-size: 18px; cursor: pointer; padding: 0 2px; line-height: 1; }
+        .dm-stat { background: #F8FAFE; border: 1px solid #EDF2F7; border-radius: 12px; padding: 12px 14px; font-size: 13px; margin-bottom: 10px; line-height: 1.6; }
+        .dm-stat.ok b { color: var(--success); } .dm-stat.warn b { color: var(--warning); } .dm-stat.none b { color: var(--danger); }
+        @media (max-width: 380px) {
+            .analytics-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<div class="container">
+    <header>
+        <h1>「成长食光」饮食与体重追踪手帐</h1>
+        <p>饮食 · 体重 · 营养师协作</p>
+        <p style="font-size:11px; opacity:0.85;">适合6-18岁青少年 · 灵活记录 · 科学分析</p>
+        <div class="header-actions">
+            <a href="index.html" class="help-btn"><span>🏠</span> 返回主页</a>
+            <a href="javascript:void(0)" class="help-btn" onclick="openConceptModal()"><span>📖</span> 使用说明</a>
+            <a href="javascript:void(0)" class="help-btn" onclick="openDataModal()"><span>💾</span> 数据备份</a>
+        </div>
+    </header>
+
+    <!-- 30天备份提醒横幅（新增） -->
+    <div class="backup-banner" id="backupBanner">
+        <span style="font-size:16px;">🔔</span>
+        <div style="flex:1;" id="backupBannerText"></div>
+        <button type="button" class="banner-btn" onclick="exportAllData()">立即备份</button>
+        <button type="button" class="banner-dismiss" onclick="dismissBackupBanner()" title="暂不提醒（3天内不再提醒）">×</button>
+    </div>
+
+    <div class="nav-tabs">
+        <div class="nav-tab active" onclick="switchTab('record')">🍽️ 饮食记录</div>
+        <div class="nav-tab" onclick="switchTab('body')">📏 体重身高</div>
+        <div class="nav-tab" onclick="switchTab('history')">📊 成长轨迹</div>
+        <div class="nav-tab" onclick="switchTab('feedback')">📬 营养咨询</div>
+    </div>
+
+    <!-- ===== 饮食记录 Tab ===== -->
+    <div id="record-tab" class="tab-content active">
+        <form id="dietLogForm">
+            <div class="card">
+                <h2>📅 本次记录信息</h2>
+                <div class="form-group"><label>记录日期 <span style="color:var(--danger);">*</span></label><input type="date" data-field="date" data-required></div>
+                <div class="form-group"><label>记录粒度 <span style="color:var(--danger);">*</span></label>
+                    <select data-field="recordType" data-required>
+                        <option value="">— 请选择 —</option>
+                        <option value="single_meal">单餐详细记录</option>
+                        <option value="daily_summary">一日饮食概览</option>
+                        <option value="special_event">特殊饮食事件（如聚餐/暴食）</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>当前生活场景 <span style="color:var(--danger);">*</span></label>
+                    <select data-field="lifeScene" data-required>
+                        <option value="">— 请选择 —</option>
+                        <option value="home">🏠 家庭居家</option>
+                        <option value="school_canteen">🏫 学校食堂走读</option>
+                        <option value="boarding">🛏️ 住校就读</option>
+                        <option value="dining_out">🍴 外出就餐</option>
+                        <option value="holiday">🎉 假期/节庆</option>
+                        <option value="travel">🚗 旅行外出</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>餐次/时段 <span style="color:var(--danger);">*</span></label>
+                    <select data-field="mealType" data-required>
+                        <option value="">— 请选择 —</option>
+                        <option value="breakfast">🌅 早餐</option><option value="lunch">☀️ 午餐</option><option value="dinner">🌙 晚餐</option>
+                        <option value="snack_morning">🍎 上午加餐</option><option value="snack_afternoon">🍪 下午加餐</option><option value="snack_evening">🌙 晚间零食</option>
+                        <option value="all_day">🗓️ 全天概况</option><option value="event">⚡ 特定事件</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>用餐地点 <span style="color:var(--danger);">*</span></label>
+                    <select data-field="diningPlace" data-required>
+                        <option value="">— 请选择 —</option>
+                        <option value="home_table">家中餐桌</option><option value="school_canteen">学校食堂</option><option value="dormitory">宿舍</option>
+                        <option value="classroom">教室</option><option value="restaurant">餐厅</option><option value="takeout">外卖/外带</option>
+                        <option value="street_food">街边小吃</option><option value="multiple">多个地点</option>
+                    </select>
+                </div>
+            </div>
+            <div class="card">
+                <h2>🥗 食物构成（可以选多个）</h2>
+                <div class="checkbox-group" data-field="foodGroups" data-type="checkbox-group">
+                    <label><input type="checkbox" value="staple_rice"> 🍚 <strong>主食-米饭/面食</strong></label>
+                    <label><input type="checkbox" value="staple_cereal"> 🌾 <strong>主食-杂粮/薯类</strong></label>
+                    <label><input type="checkbox" value="protein_meat"> 🍖 <strong>动物蛋白-猪牛羊肉</strong></label>
+                    <label><input type="checkbox" value="protein_poultry"> 🍗 <strong>动物蛋白-禽类</strong></label>
+                    <label><input type="checkbox" value="protein_fish"> 🐟 <strong>动物蛋白-鱼虾海鲜</strong></label>
+                    <label><input type="checkbox" value="protein_egg"> 🥚 <strong>动物蛋白-蛋类</strong></label>
+                    <label><input type="checkbox" value="protein_plant"> 🫘 <strong>植物蛋白-豆制品</strong></label>
+                    <label><input type="checkbox" value="vegetable"> 🥬 <strong>蔬菜类</strong></label>
+                    <label><input type="checkbox" value="fruit"> 🍎 <strong>水果类</strong></label>
+                    <label><input type="checkbox" value="dairy"> 🥛 <strong>奶及奶制品</strong></label>
+                    <label><input type="checkbox" value="snack_chips"> 🍟 <strong>零食-膨化油炸</strong></label>
+                    <label><input type="checkbox" value="snack_sweet"> 🍫 <strong>零食-糖果糕点</strong></label>
+                    <label><input type="checkbox" value="drink_sugary"> 🥤 <strong>含糖饮料/奶茶</strong></label>
+                    <label><input type="checkbox" value="drink_water"> 💧 <strong>白开水/纯水</strong></label>
+                </div>
+                <div class="form-group" style="margin-top:14px;"><label>进食份量 <span style="color:var(--danger);">*</span></label>
+                    <select data-field="portionSize" data-required>
+                        <option value="">— 请选择 —</option>
+                        <option value="small">少量（不到正常量的一半）</option><option value="proper">适量（7-8分饱）</option>
+                        <option value="large">偏多（9-10分饱）</option><option value="excessive">过量（撑得难受）</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>进食速度 <span style="color:var(--danger);">*</span></label>
+                    <select data-field="eatingSpeed" data-required>
+                        <option value="">— 请选择 —</option>
+                        <option value="slow">慢（超过20分钟）</option><option value="normal">正常（10-20分钟）</option>
+                        <option value="fast">快（不到10分钟）</option><option value="very_fast">非常快（不到5分钟）</option>
+                    </select>
+                </div>
+            </div>
+            <div class="card">
+                <h2>💧 饮水与零食估计</h2>
+                <div class="form-group"><label>喝水估计（毫升）</label><input type="number" data-field="waterIntake" placeholder="比如 1500" min="0"></div>
+                <div class="form-group"><label>零食次数估计</label><input type="number" data-field="snackCount" placeholder="比如 2" min="0"></div>
+                <div class="form-group"><label>含糖饮料（杯/瓶）</label><input type="number" data-field="sugaryDrinkCount" placeholder="比如 1" min="0"></div>
+            </div>
+            <div class="card">
+                <h2>😌 进食情境与情绪</h2>
+                <div class="form-group"><label>进食前情绪状态 <span style="color:var(--danger);">*</span></label>
+                    <select data-field="moodBefore" data-required>
+                        <option value="">— 请选择 —</option>
+                        <option value="hungry">正常饥饿</option><option value="happy">愉快期待</option><option value="bored">无聊消遣</option>
+                        <option value="stressed">学习压力/焦虑</option><option value="sad">低落难过</option><option value="reward">想奖励自己</option><option value="social">社交场合</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>进食后感受 <span style="color:var(--danger);">*</span></label>
+                    <select data-field="moodAfter" data-required>
+                        <option value="">— 请选择 —</option>
+                        <option value="satisfied">满足舒适</option><option value="energetic">精力充沛</option><option value="stuffed">撑胀不适</option>
+                        <option value="guilty">内疚自责</option><option value="sleepy">困倦想睡</option><option value="still_hungry">没饱还想吃</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>是否边吃边看屏幕</label>
+                    <select data-field="screenWhileEating">
+                        <option value="none">没有看屏幕</option><option value="phone">看手机/平板</option>
+                        <option value="tv">看电视</option><option value="computer">用电脑</option>
+                    </select>
+                </div>
+            </div>
+            <div class="card">
+                <h2>🏃 作息与活动</h2>
+                <div class="form-group"><label>运动时长估计（分钟）</label><input type="number" data-field="exerciseDuration" placeholder="比如 60" min="0"></div>
+                <div class="form-group"><label>睡眠时长估计（小时）</label><input type="number" data-field="sleepHours" placeholder="比如 8" min="0" max="24" step="0.5"></div>
+                <div class="form-group"><label>食欲评分（1=差，5=旺盛）</label>
+                    <div class="slider-container">
+                        <input type="range" data-field="appetiteScore" min="1" max="5" value="3" oninput="this.nextElementSibling.innerText = this.value">
+                        <span class="slider-value">3</span>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <h2>📝 观察与反思</h2>
+                <div class="form-group"><label>饮食观察/特殊情况</label><textarea data-field="observations" placeholder="比如：考试压力大吃了很多零食 / 住校食堂菜比较油 / 今天尝试了一种新蔬菜……"></textarea></div>
+                <div class="form-group"><label>家长/自我关怀回应</label><textarea data-field="careResponse" placeholder="比如：把'别吃了'换成'今天是不是有点累' / 一起准备了健康加餐……"></textarea></div>
+            </div>
+            <div id="formValidation" class="validation-message">⚠️ 请填写所有带 * 的必填项</div>
+            <button type="submit" class="btn btn-primary">💾 保存饮食记录</button>
+            <button type="button" class="btn btn-analyst" onclick="exportAsJSON()">📥 导出JSON数据</button>
+        </form>
+    </div>
+
+    <!-- ===== 体重身高 Tab ===== -->
+    <div id="body-tab" class="tab-content">
+        <div class="card">
+            <h2>📏 身体测量记录</h2>
+            <p style="font-size:12px; color:var(--text-light); margin-bottom:12px;">建议每周或每两周固定时间测量（比如周日早晨），穿轻薄衣物、上完厕所后测量</p>
+            <form id="bodyForm">
+                <div class="form-group"><label>测量日期 <span style="color:var(--danger);">*</span></label><input type="date" data-field="date" data-required></div>
+                <div class="form-group"><label>性别 <span style="color:var(--danger);">*</span></label>
+                    <select data-field="gender" data-required>
+                        <option value="">— 请选择 —</option>
+                        <option value="male">男</option>
+                        <option value="female">女</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>年龄（岁） <span style="color:var(--danger);">*</span></label><input type="number" data-field="age" placeholder="比如 14" min="6" max="18" step="1" data-required></div>
+                <div class="form-group"><label>体重（公斤） <span style="color:var(--danger);">*</span></label><input type="number" data-field="weight" placeholder="比如 52.5" min="20" max="150" step="0.1" data-required></div>
+                <div class="form-group"><label>身高（厘米） <span style="color:var(--danger);">*</span></label><input type="number" data-field="height" placeholder="比如 165" min="100" max="200" step="0.1" data-required></div>
+                <div class="form-group">
+                    <label>腰围（厘米） <span style="color:var(--danger);">*</span></label>
+                    <input type="number" data-field="waist" placeholder="比如 68" min="40" max="130" step="0.1" data-required>
+                    <div class="hint">💡 站立位，在肚脐水平位置用软尺绕腹一周，正常呼吸末测量</div>
+                </div>
+                <div class="form-group"><label>测量时段</label>
+                    <select data-field="measureTime">
+                        <option value="morning">早上空腹</option><option value="noon">中午</option><option value="evening">晚上</option><option value="irregular">不固定</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>青春期发育阶段（自己判断/家长判断）</label>
+                    <select data-field="pubertyStage">
+                        <option value="early">前期（刚开始发育）</option><option value="middle">中期（快速长个子）</option>
+                        <option value="late">后期（趋于稳定）</option><option value="unknown">不太确定</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>备注（比如月经周期、感冒等）</label><textarea data-field="notes" placeholder="影响体重的特殊情况……"></textarea></div>
+                <div id="bodyValidation" class="validation-message">⚠️ 请填写日期、性别、年龄、体重、身高和腰围</div>
+                <button type="submit" class="btn btn-success">💾 保存测量数据</button>
+            </form>
+        </div>
+
+        <!-- 身体数据看板 -->
+        <div class="card">
+            <h2>📊 身体数据看板</h2>
+            <div class="analytics-grid" style="grid-template-columns: repeat(3, 1fr);">
+                <div class="analytics-item"><div class="num" id="latestWeight">—</div><div class="label">最新体重</div></div>
+                <div class="analytics-item"><div class="num" id="latestHeight">—</div><div class="label">最新身高</div></div>
+                <div class="analytics-item"><div class="num" id="latestWaist">—</div><div class="label">最新腰围</div></div>
+            </div>
+            <!-- 综合评估区 -->
+            <div class="assessment-card" id="assessmentPanel">
+                <h3>🔍 体格综合评估</h3>
+                <div id="assessmentContent">
+                    <p style="text-align:center; color:var(--text-light); padding:12px 0; font-size:13px;">保存测量数据后即可查看评估结果</p>
+                </div>
+            </div>
+            <div class="desc-panel"><strong>BMI 说明：</strong>BMI = 体重 ÷ 身高²。青少年的BMI需要结合年龄和性别来评估，建议参考WHO或中国儿童青少年生长发育标准。<br><br><strong>WHtR 说明：</strong>腰围身高比 = 腰围 ÷ 身高。WHtR 是评估<strong>中心性肥胖</strong>的关键指标，不受年龄和种族影响，临界值为 0.5。≥ 0.5 提示中心性超重，≥ 0.55 提示中心性肥胖。中心性肥胖意味着内脏脂肪过多，比全身性肥胖危害更大。</div>
+        </div>
+
+        <!-- 中心性肥胖与偏瘦专题解读 -->
+        <div class="card">
+            <h2>🔬 中心性肥胖与偏瘦专题</h2>
+            <div class="info-card warn" style="margin-bottom:10px;">
+                <div class="title">⚠️ 中心性肥胖 — 最危险的肥胖类型</div>
+                <div class="desc">中心性肥胖是指脂肪主要堆积在腹部（内脏脂肪），表现为"苹果型"体型——肚子大、四肢相对较细。即使BMI在正常范围内，如果腰围身高比 ≥ 0.5，也意味着代谢风险显著升高。</div>
+                <div class="highlight-box">
+                    <span class="tag">危害</span> 胰岛素抵抗 → 2型糖尿病前期<br>
+                    <span class="tag">危害</span> 脂肪肝 → 肝功能异常<br>
+                    <span class="tag">危害</span> 血脂异常 → 心血管风险升高<br>
+                    <span class="tag">危害</span> 生长激素分泌抑制 → 影响身高<br>
+                    <span class="tag">关键</span> 腰围身高比(WHtR) ≥ 0.5 即需干预
+                </div>
+            </div>
+            <div class="info-card" style="border-left-color: #2980b9; margin-bottom:10px;">
+                <div class="title">📐 偏瘦 — 被低估的生长隐患</div>
+                <div class="desc">偏瘦不仅影响身高发育和免疫力，还会导致体力不足、注意力涣散，尤其在学业繁重时更易疲劳。腰围身高比 &lt; 0.43 往往伴随营养不足信号。</div>
+                <div class="highlight-box">
+                    <span class="tag">影响</span> 身高增长潜力未能充分发挥<br>
+                    <span class="tag">影响</span> 免疫力低下 → 频繁感冒生病<br>
+                    <span class="tag">影响</span> 肌肉量不足 → 体力差、体育落后<br>
+                    <span class="tag">影响</span> 青春期发育迟缓（女：闭经风险；男：第二性征延迟）<br>
+                    <span class="tag">注意</span> 需排查：挑食偏食、消化吸收不良、甲状腺功能亢进、刻意节食
+                </div>
+            </div>
+            <div class="info-card alt">
+                <div class="title">🥗 WHtR 分级参考（青少年通用标准）</div>
+                <div class="highlight-box" style="line-height:2.0;">
+                    WHtR &lt; 0.43 → <span class="metric-status info" style="display:inline;">偏瘦型</span> — 关注营养不足<br>
+                    WHtR 0.43–0.49 → <span class="metric-status normal" style="display:inline;">正常</span> — 继续保持<br>
+                    WHtR 0.50–0.54 → <span class="metric-status warn" style="display:inline;">中心性超重</span> — 需积极干预<br>
+                    WHtR ≥ 0.55 → <span class="metric-status danger" style="display:inline;">中心性肥胖</span> — 建议就医评估
+                </div>
+            </div>
+            <div class="waist-tip">💡 <strong>腰围正确测量方法：</strong>被测者站立，双臂自然下垂，暴露腹部。测量者用软尺在<strong>肚脐水平</strong>位置绕腹一周，软尺紧贴皮肤但不压迫，在正常呼气末读取数值。建议每次由同一人、同一时段测量，以减少误差。</div>
+        </div>
+
+        <div class="card">
+            <h2>📈 体重身高腰围变化趋势</h2>
+            <div id="bodyTrendList" style="margin-top:8px;"><p style="text-align:center; color:var(--text-light); padding:16px 0; font-size:13px;">还没有测量记录</p></div>
+            <div class="btn-group">
+                <button type="button" class="btn btn-outline" onclick="exportBodyJSON()">📥 导出身体数据</button>
+                <button type="button" class="btn btn-danger" onclick="clearBodyData()">🗑️ 清空数据</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== 历史轨迹 Tab ===== -->
+    <div id="history-tab" class="tab-content">
+        <div class="card">
+            <h2>📊 饮食历史轨迹</h2>
+            <div id="historyList"></div>
+            <div class="btn-group">
+                <button type="button" class="btn btn-outline" onclick="backupData()">📥 导出记录(JSON)</button>
+                <button type="button" class="btn btn-danger" onclick="clearAllData()">🗑️ 清空饮食记录</button>
+            </div>
+        </div>
+        <div class="card">
+            <h2>📈 饮食分析综合看板</h2>
+            <div class="analytics-grid">
+                <div class="analytics-item"><div class="num" id="totalDays">0</div><div class="label">总记录次数</div></div>
+                <div class="analytics-item"><div class="num" id="avgWater">0</div><div class="label">平均喝水量</div></div>
+                <div class="analytics-item"><div class="num" id="snackRate">0%</div><div class="label">有零食的餐次比例</div></div>
+                <div class="analytics-item"><div class="num" id="sugaryRate">0%</div><div class="label">含糖饮料出现频率</div></div>
+            </div>
+            <div class="trend-chart" id="foodGroupChart"><p style="text-align:center; font-size:12px; color:var(--text-light);">食物类别出现频率</p></div>
+            <div class="desc-panel"><strong>分析小结：</strong><span id="descAnalysis">再多记录几天就能看到规律啦~ 建议多记几次关键餐次。</span></div>
+        </div>
+    </div>
+
+    <!-- ===== 营养咨询反馈 Tab ===== -->
+    <div id="feedback-tab" class="tab-content">
+        <div class="card">
+            <h2>📬 营养师咨询记录</h2>
+            <p style="font-size:12px; color:var(--text-light); margin-bottom:12px;">记录营养师给的建议和实际执行情况</p>
+            <form id="feedbackForm">
+                <div class="form-group"><label>咨询日期 <span style="color:var(--danger);">*</span></label><input type="date" data-field="date" data-required></div>
+                <div class="form-group"><label>咨询形式 <span style="color:var(--danger);">*</span></label>
+                    <select data-field="consultType" data-required>
+                        <option value="">— 请选择 —</option>
+                        <option value="online">线上咨询</option><option value="offline">线下门诊</option>
+                        <option value="school">学校体检/营养课</option><option value="followup">复诊随访</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>咨询主题 <span style="color:var(--danger);">*</span></label><input type="text" data-field="consultTopic" placeholder="比如：体重管理/挑食/长高营养/中心性肥胖/偏瘦改善" data-required></div>
+                <div class="form-group"><label>营养师主要建议</label><textarea data-field="nutritionistAdvice" placeholder="比如：增加蛋白质摄入/少喝含糖饮料/规律吃早餐/减少精制碳水以改善中心性肥胖……"></textarea></div>
+                <div class="form-group"><label>饮食执行度（1~5，做得怎么样？） <span style="color:var(--danger);">*</span></label>
+                    <div class="slider-container">
+                        <input type="range" data-field="adherenceLevel" min="1" max="5" value="3" oninput="this.nextElementSibling.innerText = this.value">
+                        <span class="slider-value">3</span>
+                    </div>
+                </div>
+                <div class="form-group"><label>体重变化趋势</label>
+                    <select data-field="weightChange">
+                        <option value="decrease">下降了</option><option value="stable">保持稳定</option>
+                        <option value="slight_increase">缓慢增加（正常范围）</option><option value="rapid_increase">增加得太快</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>孩子配合度</label>
+                    <select data-field="childCooperation">
+                        <option value="active">主动配合</option><option value="passive">被动配合</option><option value="resistant">不太愿意执行</option>
+                    </select>
+                </div>
+                <div class="checkbox-group" data-field="checkboxes" data-type="checkbox-group">
+                    <label><input type="checkbox" value="dietPlanFollowed"> 📋 <strong>遵循饮食计划</strong> 大部分时间按方案执行</label>
+                    <label><input type="checkbox" value="childFeedbackShared"> 🗣️ <strong>孩子主动反馈</strong> 表达了ta对饮食的感受</label>
+                    <label><input type="checkbox" value="familySupport"> 👨‍👩‍👧 <strong>家庭支持</strong> 全家人一起改变饮食</label>
+                </div>
+                <div class="form-group"><label>观察/挑战/进步</label><textarea data-field="notes" placeholder="执行中遇到的困难、孩子的变化、成功瞬间……"></textarea></div>
+                <div id="feedbackValidation" class="validation-message">⚠️ 请填写所有带 * 的必填项</div>
+                <button type="submit" class="btn btn-success">💾 保存咨询记录</button>
+            </form>
+        </div>
+        <div class="card">
+            <h2>📋 咨询历史</h2>
+            <div id="feedbackHistoryList"></div>
+            <div class="btn-group">
+                <button class="btn btn-outline" onclick="exportFeedbackJSON()">📥 导出咨询JSON</button>
+                <button class="btn btn-danger" onclick="clearFeedbackData()">🗑️ 清空记录</button>
+            </div>
+        </div>
+        <div class="card">
+            <h2>📊 咨询效果分析</h2>
+            <div class="analytics-grid">
+                <div class="analytics-item"><div class="num" id="fbTotal">0</div><div class="label">咨询总次数</div></div>
+                <div class="analytics-item"><div class="num" id="fbAvgAdherence">0.0</div><div class="label">平均执行度</div></div>
+                <div class="analytics-item"><div class="num" id="fbActiveRate">0%</div><div class="label">孩子主动配合率</div></div>
+                <div class="analytics-item"><div class="num" id="fbFamilyRate">0%</div><div class="label">家庭共同参与率</div></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card qr-card">
+        <h2>🥗 获取营养师个性化方案</h2>
+        <p class="qr-notice">导出JSON后，添加企业微信<br>发送数据获取个性化饮食建议</p>
+        <img src="qrcode.png" alt="营养师二维码" class="qr-img">
+        <p class="qr-notice" style="color: var(--primary); font-weight: 600;">为了分析更准确，建议至少记录15条数据再导出</p>
+    </div>
+</div>
+
+<!-- ===== 设计理念 / 使用说明弹窗 ===== -->
+<div id="conceptModal" class="modal-overlay">
+    <div class="modal-box">
+        <div class="modal-close-btn" onclick="closeConceptModal()">×</div>
+        <div class="modal-hero">
+            <h3>「成长食光」</h3>
+            <p>从"管住嘴"到"科学滋养"</p>
+            <span>守护青少年健康成长 · 营养师协作</span>
+        </div>
+        <div class="info-card">
+            <div class="title">📖 简单使用说明</div>
+            <div class="desc" style="margin-bottom: 0; line-height: 1.75;">
+                <strong>1. 饮食记录：</strong>按需记录，不用每天打卡。可以记一餐、一天，或者特殊事件（比如聚餐/暴食），重点是慢慢找到规律。<br>
+                <strong>2. 体重身高：</strong>每周或每两周固定时间测量一次，<strong>务必同时测量腰围</strong>，以评估中心性肥胖风险。<br>
+                <strong>3. 成长轨迹：</strong>随时查看历史记录和综合分析。<br>
+                <strong>4. 营养咨询：</strong>记录营养师给建议和执行情况。<br>
+                <strong>5. 导出分析：</strong>积累一定数据后（比如15条记录），导出JSON发给专业人士。<br>
+                <strong>6. 数据安全：</strong>数据只保存在当前浏览器（<strong>微信和手机浏览器互不相通</strong>，请固定用一个入口）。每30天左右在「💾 数据备份」中导出一份；换手机、清理手机缓存或浏览器数据前，务必先备份。
+            </div>
+        </div>
+        <div class="info-card" style="border-left: none; font-size: 14px; line-height: 1.7;">
+            青春期是生长发育的关键窗口期，饮食不仅影响当下的体重和体能，更会影响成年后的健康基础。然而，<strong style="color: var(--primary);">"管住嘴"</strong>式的粗暴干预往往适得其反，容易引发逆反和饮食障碍。<br><br>
+            <strong style="color: var(--primary);">「成长食光」</strong>相信：饮食是观察青少年身心状态的窗口。我们用专业的数据记录和分析，支持家长与营养师协同，陪伴孩子度过关键成长期。
+        </div>
+        <div class="info-card alt">
+            <div class="title">🌿 灵活记录观</div>
+            <div class="desc">不必强求每餐都记，完美主义反而容易放弃。关注"关键场景"和"长期趋势"才是核心。</div>
+            <div class="highlight-box"><span class="tag">按需记录</span> 记住特殊的聚餐、住校期间的饮食概况、情绪性进食就可以了。偶尔漏记完全正常，能捕捉到饮食模式和问题比形式上的连续更重要。</div>
+        </div>
+        <div class="info-card">
+            <div class="title">🥗 全场景饮食观</div>
+            <div class="desc">青少年的饮食发生在多个场景：家庭餐桌、学校食堂、住校宿舍、街边小吃、外出聚餐。每个场景都有不同的营养挑战。</div>
+            <div class="highlight-box">
+                <span class="tag">家庭</span> 最可控的场景，是建立健康饮食基础的好地方。<br><br>
+                <span class="tag">食堂</span> 走读生午餐的主要场景，注意荤素搭配和油盐多少。<br><br>
+                <span class="tag">住校</span> 自主权变大，零食和含糖饮料是主要风险点。<br><br>
+                <span class="tag">外食</span> 高油高盐高糖的集中暴露场景，注意控制频率。
+            </div>
+        </div>
+        <div class="info-card alt">
+            <div class="title">😌 情绪与饮食解码</div>
+            <div class="desc">青少年暴食、挑食、零食依赖，往往不是"馋"，而是情绪的表达。考试压力、社交焦虑、青春期波动，都会通过饮食行为表现出来。</div>
+            <div class="highlight-box"><span class="tag">先理解，再调整</span> 记录进食前后的情绪。试着把"别吃了"换成"今天是不是压力有点大？"。先理解情绪，再调整饮食。</div>
+        </div>
+        <div class="info-card warn">
+            <div class="title">📈 长期追踪思维</div>
+            <div class="desc">一天的饮食不能定义健康，长期模式才是关键。体重身高需要结合年龄、性别、青春期阶段综合评估，避免简单的"胖瘦"标签。</div>
+            <div class="highlight-box"><span class="tag">关注趋势，而非单点</span> 关注体重身高的<strong>变化趋势</strong>而不是单次的数值。青春期快速长个子时体重增加是正常的，关键是增长速度是否合理。</div>
+        </div>
+        <div class="info-card warn">
+            <div class="title">⚠️ 中心性肥胖 — 比BMI更重要的指标</div>
+            <div class="desc">BMI无法区分"肌肉重"和"脂肪重"，也无法反映脂肪的分布位置。而脂肪堆积在腹部（内脏脂肪）比堆积在皮下危害大得多。</div>
+            <div class="highlight-box">
+                <span class="tag">核心指标</span> <strong>腰围身高比（WHtR）= 腰围 ÷ 身高</strong>，临界值 0.5，不受年龄种族影响<br><br>
+                <span class="tag">为什么重要</span> 中心性肥胖直接关联胰岛素抵抗、脂肪肝、血脂异常。很多BMI"正常"的孩子实际上已经是中心性肥胖<br><br>
+                <span class="tag">行动建议</span> 每次测体重时<strong>同时测量腰围</strong>，关注WHtR的变化趋势比关注体重绝对值更有意义
+            </div>
+        </div>
+        <div class="info-card" style="border-left-color: #2980b9;">
+            <div class="title">📐 偏瘦不是"省心" — 低体重的隐匿风险</div>
+            <div class="desc">很多家长觉得孩子偏瘦"不用操心"，但持续的低体重可能意味着营养摄入不足、消化吸收障碍甚至内分泌问题。</div>
+            <div class="highlight-box">
+                <span class="tag">生长风险</span> 身高增长有窗口期，营养不足会让遗传潜力"打折扣"<br><br>
+                <span class="tag">免疫风险</span> 偏瘦孩子反复感冒、注意力差，常被误认为"体质差"而非"营养差"<br><br>
+                <span class="tag">排查要点</span> 挑食偏食？消化不好？刻意节食？甲亢？需逐一排查
+            </div>
+        </div>
+        <div class="info-card warn">
+            <div class="title">📱 数据存在哪里？如何跨端使用？</div>
+            <div class="desc">所有数据保存在<strong>当前浏览器</strong>的本地存储中。微信内置浏览器与手机浏览器（Safari/Chrome）是两个独立空间、互不相通；换手机、卸载浏览器、清理缓存都会导致数据丢失。</div>
+            <div class="highlight-box">
+                <span class="tag">建议</span> 固定使用同一个入口记录，避免两边交替记录导致数据分散<br><br>
+                <span class="tag">备份</span> 每30天左右导出一次完整备份，留一份JSON文件<br><br>
+                <span class="tag">合并</span> 两端都有记录时，用「💾 数据备份 → 导入合并」汇总，相同记录自动去重<br><br>
+                <span class="tag">警惕</span> 清理手机缓存 / 浏览器数据 / 微信存储空间前，先备份！
+            </div>
+        </div>
+        <div class="info-card rule-card">
+            <div class="title" style="color: var(--primary);">核心实践 · 健康餐盘法则</div>
+            <div class="desc" style="margin-bottom: 0;">每餐的理想食物搭配（可以参考这个比例）</div>
+            <div class="rule-formula">1/2 蔬菜水果 + 1/4 优质蛋白 + 1/4 主食</div>
+            <div class="desc" style="margin-bottom: 0;">配1杯奶或水，少油少盐少糖，颜色越丰富越好。</div>
+        </div>
+        <div class="info-card privacy">
+            <div class="title">🔒 隐私与数据安全</div>
+            <div class="desc">所有数据只保存在你自己的设备上，不会上传或分享。导出JSON由你主动操作，只用于发送给你信任的营养师。</div>
+            <div class="highlight-box">
+                <span class="tag">本地存储</span> 所有记录只存在于你的设备，你可以随时备份或删除。<br><br>
+                <span class="tag">透明可控</span> 不收集、不追踪、不上传任何个人数据，导出完全由你决定。
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 微信环境导出弹窗 -->
+<div class="wc-modal-mask" id="wcModal">
+    <div class="wc-modal-box">
+        <h3>📋 导出数据</h3>
+        <p class="sub">微信环境已优化导出。优先点击「下载文件」将自动保存为 .json 文件；若无法下载，请使用「复制全部」后粘贴到备忘录保存。</p>
+        <div class="wc-textarea-wrap">
+            <textarea id="wcTextarea" readonly></textarea>
+        </div>
+        <div class="wc-btn-row">
+            <button class="wc-btn-copy green" id="wcDownloadBtn" style="background: linear-gradient(135deg, #27AE60, #1E8449); box-shadow: 0 4px 12px rgba(39,174,96,0.28);">⬇️ 下载文件</button>
+            <button class="wc-btn-copy" id="wcCopyBtn">📋 复制全部</button>
+        </div>
+        <button class="wc-btn-close" id="wcCloseBtn">关闭</button>
+    </div>
+</div>
+
+<!-- ===== 数据备份与合并弹窗（新增） ===== -->
+<div id="dataModal" class="modal-overlay">
+    <div class="modal-box">
+        <div class="modal-close-btn" onclick="closeDataModal()">×</div>
+        <div class="modal-hero" style="background:linear-gradient(135deg,#2980b9,#16A085);">
+            <h3>💾 数据备份与迁移</h3>
+            <p>本地保存 · 定期备份 · 双端合并</p>
+            <span>所有数据只保存在当前设备</span>
+        </div>
+        <div class="info-card warn">
+            <div class="title">📱 微信与浏览器数据不互通</div>
+            <div class="desc">微信内置浏览器和手机浏览器（Safari/Chrome）是两个<strong>完全独立的存储空间</strong>，同一部手机两边打开，看到的数据也不一样。数据跟着"入口"走，不跟手机走。</div>
+            <div class="highlight-box">
+                <span class="tag">建议</span> 固定只用一个入口记录，避免两边交替记录导致数据分散<br><br>
+                <span class="tag">换端</span> 旧端「导出完整备份」→ 新端「导入合并」即可完成迁移，相同记录自动去重<br><br>
+                <span class="tag">防丢</span> 手机"清理缓存/清除浏览数据"、微信"清理存储空间"都会清空本地记录，操作前务必先备份
+            </div>
+        </div>
+        <div class="info-card alt">
+            <div class="title">📤 备份状态</div>
+            <div class="dm-stat" id="backupStatBox">—</div>
+            <button type="button" class="btn btn-primary" onclick="exportAllData()">📥 导出完整备份（饮食+身体+咨询）</button>
+            <p style="font-size:11px;color:var(--text-light);line-height:1.6;">建议每30天左右备份一次；换手机 / 换浏览器 / 清理缓存之前必须备份。</p>
+        </div>
+        <div class="info-card" style="border-left-color:var(--accent);">
+            <div class="title">🔁 导入合并（双端合并 / 恢复备份）</div>
+            <div class="desc">选择之前导出的 .json 文件，或把内容粘贴进来。完全相同的记录自动跳过，两端各自记录的不同内容都会保留。</div>
+            <div class="btn-group">
+                <button type="button" class="btn btn-outline" onclick="document.getElementById('importFileInput').click()">📂 选择文件导入</button>
+                <button type="button" class="btn btn-outline" onclick="togglePasteArea()">📋 粘贴JSON导入</button>
+            </div>
+            <input type="file" id="importFileInput" accept=".json,application/json,text/plain" style="display:none;">
+            <div id="pasteImportArea" style="display:none;margin-top:10px;">
+                <textarea id="pasteImportText" placeholder="把导出的 JSON 全部内容粘贴到这里……" style="font-size:12px;font-family:monospace;"></textarea>
+                <button type="button" class="btn btn-success" onclick="importFromPaste()">✔ 开始合并</button>
+            </div>
+            <p style="font-size:11px;color:var(--text-light);line-height:1.6;margin-top:4px;">微信内若无法选择文件，请改用「粘贴JSON导入」。</p>
+        </div>
+    </div>
+</div>
+
+<footer class="fixed-footer">© 2026 山东省青少年文化交流中心 &amp; 铃兰心理工作室 版权所有</footer>
+
+<script>
+    // ================= 工具函数 =================
+    function $(s, p) { return (p || document).querySelector(s); }
+    function $$(s, p) { return Array.prototype.slice.call((p || document).querySelectorAll(s)); }
+    var toastEl = $('#toast'), toastTimer = null;
+    function showToast(msg) {
+        toastEl.textContent = msg; toastEl.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(function () { toastEl.classList.remove('show'); }, 2500);
+    }
+    function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+    function uid() { return Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8); }
+    function todayStr() { var d = new Date(), p = function (n) { return (n < 10 ? '0' : '') + n; }; return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()); }
+    function byDateDesc(a, b) { return (b.date || '').localeCompare(a.date || '') || (b.createdAt || '').localeCompare(a.createdAt || ''); }
+
+    // ================= 本地存储 =================
+    // ★ 如与旧版键名不同，只需修改这三处
+    var STORE_KEYS = { diet: 'dietLogs', body: 'bodyLogs', feedback: 'feedbackLogs' };
+    var BACKUP_TIME_KEY = 'lastBackupTime', BACKUP_REMIND_KEY = 'lastBackupRemindAt';
+    var BACKUP_INTERVAL_MS = 30 * 24 * 60 * 60 * 1000; // 30天
+
+    function readStore(k) { try { var v = JSON.parse(localStorage.getItem(k) || '[]'); return Array.isArray(v) ? v : []; } catch (e) { return []; } }
+    function writeStore(k, arr) {
+        try { localStorage.setItem(k, JSON.stringify(arr)); return true; }
+        catch (e) { showToast('⚠️ 存储空间不足，建议先导出备份再清理部分记录'); return false; }
+    }
+    function hasAnyData() { return !!(readStore(STORE_KEYS.diet).length || readStore(STORE_KEYS.body).length || readStore(STORE_KEYS.feedback).length); }
+
+    // ================= 导出核心（微信兼容） =================
+    function downloadFile(content, filename, mimeType) {
+        mimeType = mimeType || 'application/json';
+        try {
+            var blob = new Blob([content], { type: mimeType });
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url; a.download = filename;
+            document.body.appendChild(a); a.click(); document.body.removeChild(a);
+            setTimeout(function () { URL.revokeObjectURL(url); }, 1500);
+            return true;
+        } catch (e) { return false; }
+    }
+    function downloadFileBase64(content, filename) {
+        try {
+            var base64 = btoa(unescape(encodeURIComponent(content)));
+            var link = document.createElement('a');
+            link.href = 'data:application/octet-stream;charset=utf-8;base64,' + base64;
+            link.download = filename;
+            document.body.appendChild(link); link.click(); document.body.removeChild(link);
+            return true;
+        } catch (e) { return false; }
+    }
+    function exportData(data, filename, label) {
+        label = label || '数据';
+        if (!data || (Array.isArray(data) && data.length === 0)) { showToast('暂无' + label + '可导出'); return; }
+        markBackedUp(); // 任何一次导出都视为完成了一次备份
+        var dataStr = JSON.stringify(data, null, 2);
+        var isWeChat = /MicroMessenger/i.test(navigator.userAgent);
+        if (isWeChat) {
+            $('#wcTextarea').value = dataStr;
+            $('#wcModal').classList.add('open');
+            $('#wcDownloadBtn').dataset.content = dataStr;
+            $('#wcDownloadBtn').dataset.filename = filename;
+        } else {
+            var success = downloadFile(dataStr, filename);
+            if (success) showToast('✅ ' + label + '已导出！');
+            else showToast('导出失败，请重试');
+        }
+    }
+    $('#wcDownloadBtn').addEventListener('click', function () {
+        var content = this.dataset.content, filename = this.dataset.filename;
+        if (!content || !filename) { showToast('数据缺失，请重新导出'); return; }
+        var success = downloadFile(content, filename);
+        if (!success) success = downloadFileBase64(content, filename);
+        if (success) showToast('✅ 下载已开始');
+        else showToast('下载失败，请使用「复制全部」保存');
+    });
+    $('#wcCopyBtn').addEventListener('click', function () {
+        var textarea = $('#wcTextarea');
+        textarea.select(); textarea.setSelectionRange(0, textarea.value.length);
+        try { document.execCommand('copy'); showToast('✅ 已复制，请粘贴到备忘录保存为 .json 文件'); }
+        catch (e) { showToast('复制失败，请长按文本手动复制'); }
+    });
+    $('#wcCloseBtn').addEventListener('click', function () { $('#wcModal').classList.remove('open'); });
+
+    // ================= 备份提醒 / 双端合并（新增） =================
+    function markBackedUp() { try { localStorage.setItem(BACKUP_TIME_KEY, String(Date.now())); } catch (e) {} updateBackupUI(); }
+    function daysSinceBackup() { var t = parseInt(localStorage.getItem(BACKUP_TIME_KEY), 10); return t ? Math.floor((Date.now() - t) / 86400000) : null; }
+
+    function updateBackupUI() {
+        var days = daysSinceBackup(), stat = $('#backupStatBox'), banner = $('#backupBanner');
+        if (stat) {
+            if (days === null) { stat.className = 'dm-stat none'; stat.innerHTML = '你<strong>从未备份</strong>过数据，存在丢失风险。'; }
+            else if (days >= 30) { stat.className = 'dm-stat warn'; stat.innerHTML = '距上次备份已 <strong>' + days + ' 天</strong>，建议尽快导出一份新备份。'; }
+            else { stat.className = 'dm-stat ok'; stat.innerHTML = '距上次备份 <strong>' + days + ' 天</strong>，状态良好，建议 <strong>' + (30 - days) + ' 天内</strong>再备份一次。'; }
+        }
+        if (banner) {
+            var snoozed = parseInt(localStorage.getItem(BACKUP_REMIND_KEY), 10) || 0;
+            var overdue = (days === null || days * 86400000 >= BACKUP_INTERVAL_MS) && hasAnyData();
+            if (Date.now() - snoozed < 3 * 86400000) overdue = false; // 点「暂不」后3天内不再弹
+            banner.style.display = overdue ? 'flex' : 'none';
+            if (overdue) $('#backupBannerText').innerHTML = days === null
+                ? '你还没有备份过数据。本地记录可能因<strong>清理缓存/清除浏览器数据</strong>而丢失，建议立即导出一份。'
+                : '已 <strong>' + days + ' 天</strong>未备份数据，建议导出一份新备份，防止意外丢失。';
+        }
+    }
+    function dismissBackupBanner() { try { localStorage.setItem(BACKUP_REMIND_KEY, String(Date.now())); } catch (e) {} $('#backupBanner').style.display = 'none'; }
+
+    function exportAllData() {
+        var now = new Date().toISOString();
+        var pkg = { app: '成长食光', type: 'full-backup', exportedAt: now,
+            data: { diet: readStore(STORE_KEYS.diet), body: readStore(STORE_KEYS.body), feedback: readStore(STORE_KEYS.feedback) } };
+        var total = pkg.data.diet.length + pkg.data.body.length + pkg.data.feedback.length;
+        if (!total) { showToast('暂无数据可备份，先去记几条吧~'); return; }
+        exportData(pkg, '成长食光-完整备份-' + now.slice(0, 10) + '.json', '完整备份');
+    }
+
+    function openDataModal() { updateBackupUI(); $('#dataModal').classList.add('active'); }
+    function closeDataModal() { $('#dataModal').classList.remove('active'); }
+    $('#dataModal').addEventListener('click', function (e) { if (e.target === this) closeDataModal(); });
+    function togglePasteArea() { var el = $('#pasteImportArea'); el.style.display = el.style.display === 'none' ? 'block' : 'none'; }
+
+    // 自动识别单类导出文件的类型
+    function detectRecordType(rec) {
+        if (!rec || typeof rec !== 'object') return null;
+        if ('weight' in rec || 'height' in rec || 'waist' in rec) return 'body';
+        if ('consultType' in rec || 'consultTopic' in rec || 'adherenceLevel' in rec) return 'feedback';
+        if ('mealType' in rec || 'foodGroups' in rec || 'recordType' in rec || 'portionSize' in rec) return 'diet';
+        return null;
+    }
+    function recordKey(rec) {
+        if (!rec || typeof rec !== 'object') return 'x';
+        if (rec.id != null && rec.id !== '') return 'id:' + String(rec.id);
+        var copy = {}; // 无 id 的旧记录按内容指纹去重
+        for (var k in rec) { if (k !== 'id' && k !== 'createdAt') copy[k] = rec[k]; }
+        return 'fp:' + JSON.stringify(copy);
+    }
+    function mergeInto(key, incoming) {
+        if (!Array.isArray(incoming) || !incoming.length) return 0;
+        var list = readStore(key), seen = {};
+        list.forEach(function (r) { seen[recordKey(r)] = 1; });
+        var added = 0;
+        incoming.forEach(function (r) {
+            if (!r || typeof r !== 'object') return;
+            var k = recordKey(r);
+            if (seen[k]) return; // 相同记录自动跳过
+            seen[k] = 1; list.push(r); added++;
+        });
+        if (added) writeStore(key, list);
+        return added;
+    }
+    function parseAndMerge(text) {
+        var parsed;
+        try { parsed = JSON.parse(text); } catch (e) { showToast('❌ JSON 格式有误，请确认内容完整'); return; }
+        var res = { diet: 0, body: 0, feedback: 0 };
+        var arr = Array.isArray(parsed) ? parsed : (parsed && Array.isArray(parsed.records) ? parsed.records : null);
+        if (parsed && parsed.data && (parsed.data.diet || parsed.data.body || parsed.data.feedback)) { // 完整备份
+            res.diet = mergeInto(STORE_KEYS.diet, parsed.data.diet);
+            res.body = mergeInto(STORE_KEYS.body, parsed.data.body);
+            res.feedback = mergeInto(STORE_KEYS.feedback, parsed.data.feedback);
+        } else if (arr || (parsed && typeof parsed === 'object' && detectRecordType(parsed))) { // 单类导出
+            (arr || [parsed]).forEach(function (r) {
+                var t = detectRecordType(r);
+                if (t) res[t] += mergeInto(STORE_KEYS[t], [r]);
+            });
+        } else { showToast('❌ 无法识别的数据格式，请使用本页面导出的JSON'); return; }
+        var total = res.diet + res.body + res.feedback;
+        if (!total) { showToast('没有新增记录（导入的内容可能都已存在）'); return; }
+        showToast('✅ 合并成功：饮食 +' + res.diet + '，身体 +' + res.body + '，咨询 +' + res.feedback + '，即将刷新…');
+        setTimeout(function () { location.reload(); }, 1800);
+    }
+    function importFromPaste() {
+        var text = $('#pasteImportText').value.trim();
+        if (!text) { showToast('请先粘贴JSON内容'); return; }
+        parseAndMerge(text);
+    }
+    $('#importFileInput').addEventListener('change', function () {
+        var file = this.files && this.files[0], self = this;
+        if (!file) return;
+        var reader = new FileReader();
+        reader.onload = function (e) { parseAndMerge(e.target.result); };
+        reader.onerror = function () { showToast('文件读取失败，请改用「粘贴JSON导入」'); };
+        reader.readAsText(file, 'UTF-8');
+        self.value = '';
+    });
+
+    // 清空数据前的备份警示（三个清空按钮共用）
+    function confirmClearBeforeWipe(label) {
+        var days = daysSinceBackup();
+        var warn = days === null ? '⚠️ 你从未备份过数据！\n\n' : (days > 30 ? '⚠️ 已 ' + days + ' 天未备份数据！\n\n' : '');
+        return confirm(warn + '即将清空「' + label + '」的全部本地记录，清空后无法恢复。\n如需保留，请先点「导出」按钮备份数据。\n\n确定继续清空吗？');
+    }
+
+    // ================= 标签映射 =================
+    var L = {
+        recordType: { single_meal: '单餐记录', daily_summary: '一日概览', special_event: '特殊事件' },
+        lifeScene: { home: '家庭居家', school_canteen: '学校食堂', boarding: '住校', dining_out: '外出就餐', holiday: '假期节庆', travel: '旅行外出' },
+        mealType: { breakfast: '早餐', lunch: '午餐', dinner: '晚餐', snack_morning: '上午加餐', snack_afternoon: '下午加餐', snack_evening: '晚间零食', all_day: '全天概况', event: '特定事件' },
+        diningPlace: { home_table: '家中餐桌', school_canteen: '学校食堂', dormitory: '宿舍', classroom: '教室', restaurant: '餐厅', takeout: '外卖', street_food: '街边小吃', multiple: '多个地点' },
+        portionSize: { small: '少量', proper: '适量', large: '偏多', excessive: '过量' },
+        eatingSpeed: { slow: '慢', normal: '正常', fast: '快', very_fast: '非常快' },
+        moodBefore: { hungry: '正常饥饿', happy: '愉快', bored: '无聊', stressed: '压力焦虑', sad: '低落', reward: '奖励自己', social: '社交场合' },
+        moodAfter: { satisfied: '满足', energetic: '精力充沛', stuffed: '撑胀', guilty: '内疚', sleepy: '困倦', still_hungry: '还想吃' },
+        screenWhileEating: { none: '没看屏幕', phone: '手机', tv: '电视', computer: '电脑' },
+        consultType: { online: '线上咨询', offline: '线下门诊', school: '学校体检/营养课', followup: '复诊随访' },
+        weightChange: { decrease: '下降', stable: '稳定', slight_increase: '缓慢增加', rapid_increase: '增加过快' },
+        childCooperation: { active: '主动配合', passive: '被动配合', resistant: '不愿执行' },
+        gender: { male: '男', female: '女' },
+        measureTime: { morning: '早上空腹', noon: '中午', evening: '晚上', irregular: '不固定' },
+        pubertyStage: { early: '前期', middle: '中期', late: '后期', unknown: '不确定' }
+    };
+    var FOOD_MAP = {
+        staple_rice: ['主食-米面', 'tag-staple'], staple_cereal: ['主食-杂粮薯类', 'tag-staple'],
+        protein_meat: ['红肉', 'tag-protein'], protein_poultry: ['禽类', 'tag-protein'], protein_fish: ['鱼虾', 'tag-protein'],
+        protein_egg: ['蛋类', 'tag-protein'], protein_plant: ['豆制品', 'tag-protein'],
+        vegetable: ['蔬菜', 'tag-veg'], fruit: ['水果', 'tag-fruit'], dairy: ['奶制品', 'tag-dairy'],
+        snack_chips: ['油炸零食', 'tag-snack'], snack_sweet: ['甜食糕点', 'tag-snack'],
+        drink_sugary: ['含糖饮料', 'tag-drink'], drink_water: ['白开水', 'tag-drink']
+    };
+    var FB_CHECKS = { dietPlanFollowed: '遵循饮食计划', childFeedbackShared: '孩子主动反馈', familySupport: '家庭支持' };
+
+    // ================= 页签与弹窗 =================
+    var TAB_ORDER = ['record', 'body', 'history', 'feedback'];
+    function switchTab(name) {
+        $$('.nav-tab').forEach(function (t, i) { t.classList.toggle('active', TAB_ORDER[i] === name); });
+        $$('.tab-content').forEach(function (c) { c.classList.toggle('active', c.id === name + '-tab'); });
+    }
+    function openConceptModal() { $('#conceptModal').classList.add('active'); }
+    function closeConceptModal() { $('#conceptModal').classList.remove('active'); }
+
+    // ================= 表单引擎 =================
+    function collectForm(form) {
+        var data = {};
+        $$('[data-field]', form).forEach(function (el) {
+            var f = el.getAttribute('data-field');
+            if (el.getAttribute('data-type') === 'checkbox-group') {
+                data[f] = $$('input[type="checkbox"]:checked', el).map(function (c) { return c.value; });
+            } else if (el.type === 'range') {
+                data[f] = +el.value;
+            } else {
+                data[f] = (el.value || '').trim();
+            }
+        });
+        return data;
+    }
+    function validateForm(form) {
+        var ok = true, first = null;
+        $$('[data-required]', form).forEach(function (el) {
+            var bad = (el.getAttribute('data-type') === 'checkbox-group')
+                ? !$$('input[type="checkbox"]:checked', el).length
+                : !(el.value && el.value.trim());
+            el.style.borderColor = bad ? 'var(--danger)' : '';
+            if (bad && ok) { ok = false; first = el; }
+        });
+        var msg = $('.validation-message', form);
+        if (msg) msg.classList.toggle('show', !ok);
+        if (!ok && first) { first.scrollIntoView({ behavior: 'smooth', block: 'center' }); first.focus(); }
+        return ok;
+    }
+    function resetForm(form) {
+        form.reset();
+        $$('input[type="date"]', form).forEach(function (el) { el.value = todayStr(); }); // 修复原 valueAsDate 的时区问题
+        $$('input[type="range"]', form).forEach(function (r) { var s = r.nextElementSibling; if (s && s.className === 'slider-value') s.textContent = r.value; });
+        $$('[data-required]', form).forEach(function (el) { el.style.borderColor = ''; });
+        var msg = $('.validation-message', form);
+        if (msg) msg.classList.remove('show');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ================= 饮食记录 =================
+    $('#dietLogForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        if (!validateForm(this)) return;
+        var rec = collectForm(this);
+        rec.id = uid(); rec.createdAt = new Date().toISOString();
+        var list = readStore(STORE_KEYS.diet);
+        list.unshift(rec);
+        if (writeStore(STORE_KEYS.diet, list)) { showToast('✅ 饮食记录已保存'); resetForm(this); renderDiet(); }
+    });
+
+    function renderDiet() { renderDietHistory(); renderDietAnalytics(); }
+
+    function renderDietHistory() {
+        var list = readStore(STORE_KEYS.diet).slice().sort(byDateDesc);
+        var box = $('#historyList');
+        if (!list.length) {
+            box.innerHTML = '<p style="text-align:center;color:var(--text-light);padding:16px 0;font-size:13px;">还没有饮食记录，去「饮食记录」页保存第一条吧~</p>';
+            return;
+        }
+        var html = '';
+        list.forEach(function (r) {
+            var foods = (r.foodGroups || []).map(function (g) {
+                var m = FOOD_MAP[g]; return m ? '<span class="tag ' + m[1] + '">' + m[0] + '</span>' : '';
+            }).join('');
+            html += '<div class="history-item">'
+                + '<div class="history-date"><span>📅 ' + esc(r.date) + ' · ' + esc(L.mealType[r.mealType] || '—') + '</span>'
+                + '<button class="delete-btn" onclick="deleteDietRecord(\'' + r.id + '\')">删除</button></div>'
+                + '<div class="history-detail">'
+                + '<p><strong>' + esc(L.recordType[r.recordType] || '记录') + '</strong> · ' + esc(L.lifeScene[r.lifeScene] || '') + ' · ' + esc(L.diningPlace[r.diningPlace] || '') + '</p>'
+                + (foods ? '<p style="margin:4px 0 6px;">' + foods + '</p>' : '')
+                + '<p>份量：' + esc(L.portionSize[r.portionSize] || '—') + ' · 速度：' + esc(L.eatingSpeed[r.eatingSpeed] || '—') + '</p>'
+                + '<p>情绪：' + esc(L.moodBefore[r.moodBefore] || '—') + ' → ' + esc(L.moodAfter[r.moodAfter] || '—') + '</p>'
+                + ((r.waterIntake || r.snackCount || r.sugaryDrinkCount) ? '<p>💧 ' + (+r.waterIntake || 0) + 'ml · 🍪 零食' + (+r.snackCount || 0) + '次 · 🥤 含糖饮料' + (+r.sugaryDrinkCount || 0) + '杯</p>' : '')
+                + ((r.exerciseDuration || r.sleepHours) ? '<p>🏃 运动' + (+r.exerciseDuration || 0) + '分钟 · 😴 睡眠' + (+r.sleepHours || 0) + '小时 · 食欲' + (r.appetiteScore || 3) + '/5</p>' : '')
+                + (r.observations ? '<p style="color:var(--text-light);">📝 ' + esc(r.observations) + '</p>' : '')
+                + (r.careResponse ? '<p style="color:var(--text-light);">💚 ' + esc(r.careResponse) + '</p>' : '')
+                + '</div></div>';
+        });
+        box.innerHTML = html;
+    }
+
+    function renderDietAnalytics() {
+        var list = readStore(STORE_KEYS.diet);
+        $('#totalDays').textContent = list.length;
+        var waterRecs = list.filter(function (r) { return +r.waterIntake > 0; });
+        var avgWater = waterRecs.length ? Math.round(waterRecs.reduce(function (s, r) { return s + (+r.waterIntake); }, 0) / waterRecs.length) : 0;
+        $('#avgWater').textContent = avgWater;
+        var snackN = list.filter(function (r) {
+            return +r.snackCount > 0 || (r.foodGroups || []).some(function (g) { return g.indexOf('snack') === 0; });
+        }).length;
+        var sugN = list.filter(function (r) {
+            return +r.sugaryDrinkCount > 0 || (r.foodGroups || []).indexOf('drink_sugary') > -1;
+        }).length;
+        $('#snackRate').textContent = (list.length ? Math.round(snackN / list.length * 100) : 0) + '%';
+        $('#sugaryRate').textContent = (list.length ? Math.round(sugN / list.length * 100) : 0) + '%';
+        renderFoodChart(list);
+        $('#descAnalysis').textContent = dietSummary(list, avgWater,
+            list.length ? snackN / list.length : 0, list.length ? sugN / list.length : 0);
+    }
+
+    function renderFoodChart(list) {
+        var box = $('#foodGroupChart'), counts = {}, max = 0;
+        list.forEach(function (r) {
+            (r.foodGroups || []).forEach(function (g) {
+                counts[g] = (counts[g] || 0) + 1;
+                if (counts[g] > max) max = counts[g];
+            });
+        });
+        var keys = Object.keys(counts).sort(function (a, b) { return counts[b] - counts[a]; }).slice(0, 10);
+        if (!keys.length) {
+            box.innerHTML = '<p style="text-align:center;font-size:12px;color:var(--text-light);">食物类别出现频率</p>';
+            return;
+        }
+        var html = '<p style="font-size:12px;color:var(--text-light);margin-bottom:6px;">食物类别出现频率</p>';
+        keys.forEach(function (k) {
+            var m = FOOD_MAP[k] || [k, 'tag-staple'];
+            html += '<div class="trend-row"><span style="min-width:64px;">' + m[0] + '</span>'
+                + '<div class="trend-bar"><div class="trend-bar-fill" style="width:' + Math.round(counts[k] / max * 100) + '%"></div></div>'
+                + '<span style="min-width:28px;text-align:right;color:var(--primary);font-weight:700;">' + counts[k] + '</span></div>';
+        });
+        box.innerHTML = html;
+    }
+
+    function dietSummary(list, avgWater, snackRate, sugRate) {
+        if (list.length < 3) return '记录还不多，先专注记好关键餐次与特殊事件，攒到5条以上分析会更有参考价值~';
+        var tips = [];
+        if (avgWater && avgWater < 1200) tips.push('平均饮水量约' + avgWater + 'ml，偏低，建议白天分次补水至1200~1500ml');
+        if (snackRate >= 0.5) tips.push('零食出现频率' + Math.round(snackRate * 100) + '%，可先用水果/酸奶替换一半膨化与甜食零食');
+        if (sugRate >= 0.4) tips.push('含糖饮料出现频率' + Math.round(sugRate * 100) + '%，建议逐步换成白开水或无糖茶');
+        var fastN = list.filter(function (r) { return r.eatingSpeed === 'fast' || r.eatingSpeed === 'very_fast'; }).length;
+        if (fastN / list.length >= 0.4) tips.push('进餐普遍偏快，试试每餐延长到15分钟以上，细嚼慢咽更易有饱腹感');
+        var emoN = list.filter(function (r) { return r.moodBefore === 'stressed' || r.moodBefore === 'bored' || r.moodBefore === 'sad'; }).length;
+        if (emoN / list.length >= 0.3) tips.push('约' + Math.round(emoN / list.length * 100) + '%的记录是情绪性进食，先关心情绪再调整饮食');
+        if (!tips.length) return '整体不错！继续保持规律用餐与均衡搭配，重点关注长期趋势而非单次表现。';
+        return tips.join('；') + '。';
+    }
+
+    function deleteDietRecord(id) {
+        if (!confirm('确定删除这条饮食记录吗？')) return;
+        writeStore(STORE_KEYS.diet, readStore(STORE_KEYS.diet).filter(function (r) { return r.id !== id; }));
+        renderDiet(); showToast('已删除该条记录');
+    }
+
+    // ================= 体格计算核心 =================
+    function calcBMI(w, h) { return +(w / ((h / 100) * (h / 100))).toFixed(1); }
+    function calcWHtR(waist, h) { return +(waist / h).toFixed(2); }
+    // 按年龄性别的简化参考界值（线性近似中国学龄儿童青少年标准，仅供日常参考）
+    function bmiCutoffs(age, gender) {
+        var a = Math.min(Math.max(+age || 12, 6), 18) - 6, m = gender === 'male';
+        return {
+            thin: (m ? 14.0 : 13.6) + a * 0.375,
+            over: (m ? 17.4 : 17.2) + a * (m ? 0.55 : 0.567),
+            obese: (m ? 19.2 : 18.9) + a * (m ? 0.733 : 0.758)
+        };
+    }
+    function bmiStatus(bmi, age, gender) {
+        var c = bmiCutoffs(age, gender);
+        if (bmi < c.thin) return { cls: 'info', label: '偏瘦' };
+        if (bmi < c.over) return { cls: 'normal', label: '正常' };
+        if (bmi < c.obese) return { cls: 'warn', label: '超重' };
+        return { cls: 'danger', label: '肥胖' };
+    }
+    function whtrStatus(w) {
+        if (w < 0.43) return { cls: 'info', label: '偏瘦型' };
+        if (w < 0.50) return { cls: 'normal', label: '正常' };
+        if (w < 0.55) return { cls: 'warn', label: '中心性超重' };
+        return { cls: 'danger', label: '中心性肥胖' };
+    }
+
+    // ================= 身体测量 =================
+    $('#bodyForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        if (!validateForm(this)) return;
+        var rec = collectForm(this);
+        rec.id = uid(); rec.createdAt = new Date().toISOString();
+        var list = readStore(STORE_KEYS.body);
+        list.unshift(rec);
+        if (writeStore(STORE_KEYS.body, list)) { showToast('✅ 测量数据已保存'); resetForm(this); renderBody(); }
+    });
+
+    function renderBody() {
+        var list = readStore(STORE_KEYS.body).slice().sort(byDateDesc);
+        if (!list.length) {
+            $('#latestWeight').textContent = $('#latestHeight').textContent = $('#latestWaist').textContent = '—';
+            $('#assessmentContent').innerHTML = '<p style="text-align:center;color:var(--text-light);padding:12px 0;font-size:13px;">保存测量数据后即可查看评估结果</p>';
+            $('#bodyTrendList').innerHTML = '<p style="text-align:center;color:var(--text-light);padding:16px 0;font-size:13px;">还没有测量记录</p>';
+            return;
+        }
+        var r = list[0];
+        $('#latestWeight').textContent = r.weight;
+        $('#latestHeight').textContent = r.height;
+        $('#latestWaist').textContent = r.waist;
+        renderAssessment(r);
+        renderBodyTrend(list);
+    }
+
+    function renderAssessment(r) {
+        var bmi = calcBMI(+r.weight, +r.height), whtr = calcWHtR(+r.waist, +r.height);
+        var bs = bmiStatus(bmi, +r.age, r.gender), ws = whtrStatus(whtr);
+        var bmiPct = Math.max(2, Math.min(100, Math.round((bmi - 13) / 17 * 100)));
+        var whtrPct = Math.max(2, Math.min(100, Math.round((whtr - 0.35) / 0.30 * 100)));
+        var exCls = (ws.cls === 'danger' || bs.cls === 'danger') ? ' danger'
+            : (ws.cls === 'info' || bs.cls === 'info') ? ' info'
+            : (ws.cls === 'normal' && bs.cls === 'normal') ? ' success' : '';
+        var html = '<p style="font-size:12px;color:var(--text-light);margin-bottom:10px;">最近测量：' + esc(r.date) + ' · ' + (+r.age) + '岁 · ' + esc(L.gender[r.gender] || '') + '</p>'
+            + '<div class="metric-row"><span class="metric-label">BMI</span><span class="metric-val">' + bmi + '</span><span class="metric-status ' + bs.cls + '">' + bs.label + '</span></div>'
+            + '<div class="metric-bar-wrap"><div class="metric-bar-fill ' + bs.cls + '" style="width:' + bmiPct + '%"></div></div>'
+            + '<div class="metric-row" style="margin-top:10px;"><span class="metric-label">腰围身高比</span><span class="metric-val">' + whtr + '</span><span class="metric-status ' + ws.cls + '">' + ws.label + '</span></div>'
+            + '<div class="metric-bar-wrap"><div class="metric-bar-fill ' + ws.cls + '" style="width:' + whtrPct + '%"></div></div>'
+            + '<div class="assessment-explain' + exCls + '">' + assessmentText(bmi, whtr, bs, ws) + '</div>';
+        $('#assessmentContent').innerHTML = html;
+    }
+
+    function assessmentText(bmi, whtr, bs, ws) {
+        var parts = [];
+        if (ws.cls === 'danger') parts.push('<strong>中心性肥胖：</strong>内脏脂肪超标风险高，建议尽快到儿科或临床营养科评估。优先减少含糖饮料与精制主食，保证每天60分钟中高强度运动。');
+        else if (ws.cls === 'warn') parts.push('<strong>中心性超重：</strong>腰围身高比已越过0.5警戒线，建议立刻行动：控制含糖饮料、增加全谷物与蔬菜、规律运动，多数情况3~6个月可回落。');
+        else if (ws.cls === 'info') parts.push('<strong>偏瘦型体型：</strong>WHtR低于0.43，关注营养摄入是否充足，排查挑食、消化吸收与刻意节食，保证优质蛋白与总能量。');
+        if (bs.cls === 'danger') parts.push('BMI达到肥胖参考界值（按年龄性别简化标准），建议专业评估并制定体重管理方案。');
+        else if (bs.cls === 'warn') parts.push('BMI处于超重参考区间，青春期体重上涨本身正常，关键是控制增速。');
+        else if (bs.cls === 'info') parts.push('BMI偏低（消瘦参考区间），可能影响身高潜力与免疫力。');
+        if (bs.cls === 'normal' && ws.cls === 'normal') parts.push('BMI与腰围身高比均在参考范围内，体型匀称，继续保持规律饮食、充足睡眠与运动即可。');
+        if (bs.cls === 'normal' && (ws.cls === 'warn' || ws.cls === 'danger')) parts.push('<strong>注意"隐形"中心性肥胖：</strong>BMI正常但腰围超标，同样需要干预，不能因为体重正常而放松。');
+        parts.push('评估采用简化参考界值（BMI按年龄性别线性近似中国标准，WHtR临界值0.5），仅供日常参考，确诊请以专业机构测量为准。');
+        return parts.join('<br><br>');
+    }
+
+    function renderBodyTrend(list) {
+        var html = '';
+        list.forEach(function (r, i) {
+            var prev = list[i + 1]; // 时间上更早的一条
+            var dw = prev ? (+r.weight - +prev.weight) : null;
+            var dwa = prev ? (+r.waist - +prev.waist) : null;
+            var bmi = calcBMI(+r.weight, +r.height), whtr = calcWHtR(+r.waist, +r.height);
+            var bs = bmiStatus(bmi, +r.age, r.gender), ws = whtrStatus(whtr);
+            var fmt = function (d) { return d === null ? '' : '（' + (d > 0 ? '▲+' : d < 0 ? '▼' : '') + Math.abs(d).toFixed(1) + '）'; };
+            html += '<div class="history-item">'
+                + '<div class="history-date"><span>📅 ' + esc(r.date) + ' · ' + (+r.age) + '岁</span>'
+                + '<button class="delete-btn" onclick="deleteBodyRecord(\'' + r.id + '\')">删除</button></div>'
+                + '<div class="history-detail">'
+                + '<p>体重 <strong>' + r.weight + 'kg</strong>' + fmt(dw) + ' · 身高 <strong>' + r.height + 'cm</strong> · 腰围 <strong>' + r.waist + 'cm</strong>' + fmt(dwa) + '</p>'
+                + '<p>BMI ' + bmi + ' <span class="metric-status ' + bs.cls + '">' + bs.label + '</span> · WHtR ' + whtr + ' <span class="metric-status ' + ws.cls + '">' + ws.label + '</span></p>'
+                + (r.notes ? '<p style="color:var(--text-light);">备注：' + esc(r.notes) + '</p>' : '')
+                + '</div></div>';
+        });
+        $('#bodyTrendList').innerHTML = html;
+    }
+
+    function deleteBodyRecord(id) {
+        if (!confirm('确定删除这条测量记录吗？')) return;
+        writeStore(STORE_KEYS.body, readStore(STORE_KEYS.body).filter(function (r) { return r.id !== id; }));
+        renderBody(); showToast('已删除该条记录');
+    }
+
+    // ================= 营养咨询 =================
+    function stars(n) {
+        n = Math.max(1, Math.min(5, +n || 3));
+        var s = ''; for (var i = 0; i < 5; i++) s += i < n ? '●' : '○';
+        return s;
+    }
+    $('#feedbackForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        if (!validateForm(this)) return;
+        var rec = collectForm(this);
+        rec.id = uid(); rec.createdAt = new Date().toISOString();
+        var list = readStore(STORE_KEYS.feedback);
+        list.unshift(rec);
+        if (writeStore(STORE_KEYS.feedback, list)) { showToast('✅ 咨询记录已保存'); resetForm(this); renderFeedback(); }
+    });
+
+    function renderFeedback() { renderFeedbackHistory(); renderFeedbackAnalytics(); }
+
+    function renderFeedbackHistory() {
+        var list = readStore(STORE_KEYS.feedback).slice().sort(byDateDesc);
+        var box = $('#feedbackHistoryList');
+        if (!list.length) {
+            box.innerHTML = '<p style="text-align:center;color:var(--text-light);padding:16px 0;font-size:13px;">还没有咨询记录</p>';
+            return;
+        }
+        var html = '';
+        list.forEach(function (r) {
+            var checks = (r.checkboxes || []).map(function (c) {
+                return '<span class="tag tag-feedback">' + esc(FB_CHECKS[c] || c) + '</span>';
+            }).join('');
+            html += '<div class="history-item">'
+                + '<div class="history-date"><span>📅 ' + esc(r.date) + ' · ' + esc(L.consultType[r.consultType] || '咨询') + '</span>'
+                + '<button class="delete-btn" onclick="deleteFeedbackRecord(\'' + r.id + '\')">删除</button></div>'
+                + '<div class="history-detail">'
+                + '<p><strong>' + esc(r.consultTopic || '') + '</strong></p>'
+                + (r.nutritionistAdvice ? '<p>💡 ' + esc(r.nutritionistAdvice) + '</p>' : '')
+                + '<p>执行度 ' + stars(r.adherenceLevel) + ' · 体重：' + esc(L.weightChange[r.weightChange] || '—') + ' · 配合度：' + esc(L.childCooperation[r.childCooperation] || '—') + '</p>'
+                + (checks ? '<p style="margin:4px 0 6px;">' + checks + '</p>' : '')
+                + (r.notes ? '<p style="color:var(--text-light);">📝 ' + esc(r.notes) + '</p>' : '')
+                + '</div></div>';
+        });
+        box.innerHTML = html;
+    }
+
+    function renderFeedbackAnalytics() {
+        var list = readStore(STORE_KEYS.feedback);
+        $('#fbTotal').textContent = list.length;
+        var adh = list.filter(function (r) { return r.adherenceLevel != null && r.adherenceLevel !== ''; });
+        $('#fbAvgAdherence').textContent = adh.length
+            ? (adh.reduce(function (s, r) { return s + (+r.adherenceLevel || 0); }, 0) / adh.length).toFixed(1) : '0.0';
+        var act = list.filter(function (r) { return r.childCooperation === 'active'; }).length;
+        $('#fbActiveRate').textContent = (list.length ? Math.round(act / list.length * 100) : 0) + '%';
+        var fam = list.filter(function (r) { return (r.checkboxes || []).indexOf('familySupport') > -1; }).length;
+        $('#fbFamilyRate').textContent = (list.length ? Math.round(fam / list.length * 100) : 0) + '%';
+    }
+
+    function deleteFeedbackRecord(id) {
+        if (!confirm('确定删除这条咨询记录吗？')) return;
+        writeStore(STORE_KEYS.feedback, readStore(STORE_KEYS.feedback).filter(function (r) { return r.id !== id; }));
+        renderFeedback(); showToast('已删除该条记录');
+    }
+
+    // ================= 导出 / 清空 =================
+    function exportAsJSON() { exportData(readStore(STORE_KEYS.diet), '成长食光-饮食记录.json', '饮食记录'); }
+    function backupData() { exportAsJSON(); }
+    function exportBodyJSON() { exportData(readStore(STORE_KEYS.body), '成长食光-身体数据.json', '身体数据'); }
+    function exportFeedbackJSON() { exportData(readStore(STORE_KEYS.feedback), '成长食光-咨询记录.json', '咨询记录'); }
+
+    function clearAllData() {
+        if (!confirmClearBeforeWipe('饮食记录')) return;
+        writeStore(STORE_KEYS.diet, []); renderDiet(); showToast('饮食记录已清空');
+    }
+    function clearBodyData() {
+        if (!confirmClearBeforeWipe('身体测量数据')) return;
+        writeStore(STORE_KEYS.body, []); renderBody(); showToast('身体数据已清空');
+    }
+    function clearFeedbackData() {
+        if (!confirmClearBeforeWipe('咨询记录')) return;
+        writeStore(STORE_KEYS.feedback, []); renderFeedback(); showToast('咨询记录已清空');
+    }
+
+    // ================= 初始化 =================
+    (function init() {
+        $$('input[type="date"]').forEach(function (el) { el.value = todayStr(); }); // 修复原 valueAsDate 在早8点前显示昨天的问题
+        renderDiet();
+        renderBody();
+        renderFeedback();
+        updateBackupUI();
+    })();
+</script>
+</body>
+</html>

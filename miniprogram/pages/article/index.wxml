@@ -1,0 +1,14 @@
+<view class="page" wx:if="{{article}}">
+  <view class="article-symbol">{{article.icon}}</view><view class="eyebrow">{{article.category}} · GROWTH NOTES</view>
+  <view class="title">{{article.title}}</view><view class="subtitle">{{article.subtitle}}</view>
+  <view class="divider"></view>
+  <view class="paragraph" wx:for="{{article.paragraphs}}" wx:key="*this">{{item}}</view>
+  <block wx:if="{{article.tools}}"><view class="notice">选择一个工具，开始记录、现状自评或月度回顾。所有内容直接在小程序内完成，观察结果仅本人可见。</view><view wx:if="{{loading}}" class="state">正在加载成长工具…</view><view wx:if="{{error}}" class="error">{{error}}<button class="button-outline button-small spaced" bindtap="loadTools">重试</button></view><view wx:for="{{groups}}" wx:key="name" wx:for-item="group"><view class="section-title">{{group.name}} <text class="small">{{group.tools.length}} 个工具</text></view><view class="tools"><view class="tool" wx:for="{{group.tools}}" wx:key="id" data-id="{{item.id}}" bindtap="tool"><text>{{item.name}}</text><text class="small">{{item.mode === 'tracker' ? '开始记录' : '开始自评'}} ↗</text></view></view></view></block>
+  <view wx:if="{{article.links.length}}" class="section-title">需求调查与反馈</view>
+  <view wx:for="{{article.links}}" wx:key="formId" class="card row" data-id="{{item.formId}}" bindtap="form"><text>{{item.name}}</text><text class="link">在线填写 →</text></view>
+  <button wx:if="{{article.action === 'journals'}}" class="spaced" bindtap="journals">写下我的一颗小星星 ✧</button>
+  <button wx:if="{{article.service}}" class="spaced" bindtap="service">提交本区域服务需求 →</button>
+  <button wx:if="{{article.toolId}}" class="spaced" bindtap="research">开始成长调查 →</button>
+  <view class="source card spaced"><view class="small">成长健研社 · 青少年身心健康成长服务品牌</view></view>
+</view>
+<view class="page state" wx:else><view class="state-title">没有找到这篇内容</view><view>请返回成长探索，选择一个内容入口。</view></view>

@@ -1,0 +1,67 @@
+.explore-banner {
+  background:#e7eed9;
+  border-radius:28rpx;
+  display:flex;
+  align-items:center;
+  gap:22rpx;
+  padding:28rpx;
+}
+
+.banner-icon {
+  font-size:72rpx;
+  color:#557448;
+}
+
+.explore-banner .section-title {
+  font-size:30rpx;
+  margin:0 0 6rpx;
+}
+
+.filters {
+  margin:34rpx 0 20rpx;
+  white-space:nowrap;
+  width:100%;
+}
+
+.filter-line {
+  display:flex;
+  flex-wrap:nowrap;
+}
+
+.filter-line .chip {
+  flex-shrink:0;
+}
+
+.module {
+  display:flex;
+  align-items:center;
+  gap:22rpx;
+  padding:28rpx 24rpx;
+}
+
+.module-icon {
+  font-size:42rpx;
+  color:#5e7f4d;
+  background:#f0f3e8;
+  width:78rpx;
+  height:78rpx;
+  border-radius:22rpx;
+  text-align:center;
+  line-height:78rpx;
+  flex-shrink:0;
+}
+
+.module-text {
+  flex:1;
+}
+
+.module-title {
+  font-weight:600;
+  font-size:28rpx;
+  margin-bottom:8rpx;
+}
+
+.module-arrow {
+  font-size:32rpx;
+  color:#7e9171;
+}

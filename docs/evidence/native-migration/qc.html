@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#fff8ed">
+    <title>成长健研社 · 青春期成长家庭共评微手账</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #fff8ed;
+            --bg-mid: #ffedd5;
+            --bg-card: rgba(255,255,255,0.72);
+            --border: rgba(251,146,60,0.28);
+            --border-hover: rgba(251,146,60,0.55);
+            --text-primary: #7c2d12;
+            --text-secondary: #9a3412;
+            --text-muted: #c2410c;
+            --accent-sun: #fb923c;
+            --accent-pink: #f472b6;
+            --accent-yellow: #fbbf24;
+            --accent-green: #84cc16;
+            --accent-blue: #38bdf8;
+            --accent-rose: #fb7185;
+            --safe-top: env(safe-area-inset-top,0px);
+            --safe-bottom: env(safe-area-inset-bottom,0px);
+        }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html, body { margin: 0; padding: 0; font-family: 'Nunito','PingFang SC',-apple-system,sans-serif; background: var(--bg-deep); color: var(--text-primary); min-height: 100vh; min-height: 100dvh; overflow-x: hidden; background-image: radial-gradient(ellipse at 20% 0%,#fef3c7 0%,transparent 55%), radial-gradient(ellipse at 80% 100%,#fed7aa 0%,transparent 55%), radial-gradient(ellipse at 0% 80%,#fce7f3 0%,transparent 50%), radial-gradient(ellipse at 100% 20%,#fef9c3 0%,transparent 50%); background-attachment: fixed; }
+        .font-display { font-family: 'Fredoka','PingFang SC',sans-serif; }
+        .stars-bg { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+        .star { position: absolute; background: #fb923c; border-radius: 50%; animation: twinkle var(--dur,3s) ease-in-out infinite; opacity: 0.4; }
+        @keyframes twinkle { 0%,100% { opacity: 0.2; transform: scale(0.8); } 50% { opacity: 0.7; transform: scale(1.3); } }
+        .sun-deco { position: fixed; top: calc(12px + var(--safe-top)); right: 12px; width: 45px; height: 45px; z-index: 1; pointer-events: none; animation: float 6s ease-in-out infinite, spin 30s linear infinite; }
+        @media(min-width:768px){ .sun-deco { top: 24px; right: 24px; width: 70px; height: 70px; } }
+        @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .cloud-deco { position: fixed; border-radius: 100px; background: radial-gradient(circle,rgba(255,255,255,0.7),transparent); filter: blur(30px); pointer-events: none; z-index: 0; animation: drift 20s ease-in-out infinite; }
+        @keyframes drift { 0%,100% { transform: translateX(0); } 50% { transform: translateX(30px); } }
+        .gender-card { background: var(--bg-card); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1.5px solid var(--border); border-radius: 20px; padding: 14px 12px; text-align: center; cursor: pointer; transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s; text-decoration: none; display: block; position: relative; overflow: hidden; box-shadow: 0 4px 20px rgba(251,146,60,0.08); }
+        .gender-card:hover { border-color: var(--border-hover); box-shadow: 0 8px 24px rgba(251,146,60,0.15); transform: translateY(-3px); }
+        .gender-card:active { transform: scale(0.97); }
+        .gender-card .title { font-family: 'Fredoka','PingFang SC',sans-serif; font-size: 0.95rem; font-weight: 700; margin-bottom: 4px; letter-spacing: 0.5px; }
+        .gender-card .desc { font-size: 0.68rem; color: var(--text-secondary); line-height: 1.5; }
+        .gender-card.boy { border-color: rgba(56,189,248,0.35); }
+        .gender-card.boy:hover { border-color: rgba(56,189,248,0.65); box-shadow: 0 8px 24px rgba(56,189,248,0.15); }
+        .gender-card.boy .title { color: #0369a1; }
+        .gender-card.girl { border-color: rgba(244,114,182,0.35); }
+        .gender-card.girl:hover { border-color: rgba(244,114,182,0.65); box-shadow: 0 8px 24px rgba(244,114,182,0.15); }
+        .gender-card.girl .title { color: #be185d; }
+        .disclaimer-box { background: rgba(132,204,22,0.1); border: 1px solid rgba(132,204,22,0.3); border-radius: 14px; padding: 10px 12px; font-size: 0.7rem; line-height: 1.6; color: var(--text-secondary); }
+        .disclaimer-box b { color: #4d7c0f; }
+        .fixed-copyright { position: fixed; bottom: 0; left: 0; right: 0; z-index: 50; padding: 6px 16px; padding-bottom: calc(6px + var(--safe-bottom)); text-align: center; font-size: 0.62rem; color: var(--text-muted); background: rgba(255,248,237,0.95); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-top: 1px solid var(--border); letter-spacing: 0.3px; }
+        .help-link { display: inline-flex; align-items: center; gap: 4px; padding: 5px 10px; border-radius: 10px; background: rgba(56,189,248,0.15); border: 1px solid rgba(56,189,248,0.35); color: #0369a1; text-decoration: none; font-family: 'Fredoka','PingFang SC',sans-serif; font-weight: 600; font-size: 0.7rem; transition: background 0.2s; touch-action: manipulation; white-space: nowrap; }
+        .help-link:active { background: rgba(56,189,248,0.25); }
+        /* 返回主页按钮 */
+        .back-home-link { display: inline-flex; align-items: center; gap: 6px; padding: 7px 16px; border-radius: 14px; background: rgba(251,146,60,0.15); border: 1px solid rgba(251,146,60,0.4); color: var(--accent-sun); text-decoration: none; font-family: 'Fredoka','PingFang SC',sans-serif; font-weight: 600; font-size: 0.78rem; transition: background 0.2s, transform 0.2s, box-shadow 0.2s; touch-action: manipulation; white-space: nowrap; box-shadow: 0 3px 10px rgba(251,146,60,0.12); }
+        .back-home-link:hover { background: rgba(251,146,60,0.25); box-shadow: 0 5px 14px rgba(251,146,60,0.2); }
+        .back-home-link:active { transform: scale(0.96); background: rgba(251,146,60,0.3); }
+        .back-home-link svg { transition: transform 0.2s; }
+        .back-home-link:hover svg { transform: translateX(-2px); }
+
+        /* 弹窗样式 */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(124,45,18,0.45); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); z-index: 100; display: flex; align-items: center; justify-content: center; padding: 16px; opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s; }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .modal-content { background: var(--bg-deep); border: 1px solid var(--border); border-radius: 24px; width: 100%; max-width: 480px; max-height: 85vh; overflow-y: auto; position: relative; padding: 28px 20px 20px; box-shadow: 0 25px 50px -12px rgba(124,45,18,0.25); transform: scale(0.9) translateY(10px); transition: transform 0.3s ease-out; overscroll-behavior: contain; }
+        .modal-overlay.active .modal-content { transform: scale(1) translateY(0); }
+        .modal-close-btn { position: absolute; top: 12px; right: 12px; width: 32px; height: 32px; border-radius: 50%; background: rgba(251,146,60,0.15); border: none; color: var(--text-secondary); font-size: 20px; line-height: 1; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background 0.2s; }
+        .modal-close-btn:active { background: rgba(251,146,60,0.3); }
+        .modal-title { font-family: 'Fredoka','PingFang SC',sans-serif; font-size: 1.25rem; font-weight: 700; text-align: center; margin-bottom: 6px; color: var(--text-primary); }
+        .modal-subtitle { text-align: center; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 20px; }
+        .modal-section { margin-bottom: 16px; padding: 14px 16px; background: rgba(255,255,255,0.6); border-radius: 16px; border: 1px solid var(--border); }
+        .modal-section h3 { font-family: 'Fredoka','PingFang SC',sans-serif; font-size: 0.9rem; font-weight: 700; color: var(--accent-sun); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+        .modal-section p, .modal-section li { font-size: 0.78rem; color: var(--text-secondary); line-height: 1.7; }
+        .modal-section ul { padding-left: 18px; margin: 4px 0; }
+        .path-box { display: flex; gap: 10px; margin-top: 8px; }
+        .path-item { flex: 1; padding: 10px; border-radius: 12px; font-size: 0.72rem; line-height: 1.6; }
+        .path-bad { background: rgba(251,113,133,0.08); border: 1px solid rgba(251,113,133,0.2); color: #9f1239; }
+        .path-good { background: rgba(132,204,22,0.08); border: 1px solid rgba(132,204,22,0.25); color: #3f6212; }
+        .path-item b { display: block; margin-bottom: 4px; font-size: 0.78rem; font-family: 'Fredoka','PingFang SC',sans-serif; }
+    </style>
+</head>
+<body>
+    <div class="stars-bg" id="starsBg"></div>
+    <div class="cloud-deco" style="width:320px;height:320px;top:10%;left:-10%;"></div>
+    <div class="cloud-deco" style="width:400px;height:400px;bottom:-10%;right:-10%;animation-delay:-10s;"></div>
+    <svg class="sun-deco" viewBox="0 0 100 100"><defs><radialGradient id="sunGrad" cx="50%" cy="50%"><stop offset="0%" stop-color="#fef9c3"/><stop offset="50%" stop-color="#fbbf24"/><stop offset="100%" stop-color="#fb923c"/></radialGradient><filter id="sunGlow"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><g filter="url(#sunGlow)"><g stroke="#fbbf24" stroke-width="3" stroke-linecap="round" opacity="0.7"><line x1="50" y1="5" x2="50" y2="18"/><line x1="50" y1="82" x2="50" y2="95"/><line x1="5" y1="50" x2="18" y2="50"/><line x1="82" y1="50" x2="95" y2="50"/><line x1="18" y1="18" x2="27" y2="27"/><line x1="73" y1="73" x2="82" y2="82"/><line x1="82" y1="18" x2="73" y2="27"/><line x1="18" y1="82" x2="27" y2="73"/></g><circle cx="50" cy="50" r="28" fill="url(#sunGrad)"/><circle cx="44" cy="46" r="3" fill="rgba(255,255,255,0.4)"/></g></svg>
+
+    <div class="max-w-2xl mx-auto px-4 md:px-6 py-6 md:py-12 relative z-10" style="padding-bottom:60px;">
+        <header class="mb-5 text-center">
+            <div class="mb-3">
+                <a href="index.html" class="back-home-link">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+                    返回主页
+                </a>
+            </div>
+            <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-full mb-3" style="background:rgba(251,146,60,0.15);border:1px solid var(--border);">
+                <span class="text-[9px] md:text-[10px] font-semibold tracking-wide" style="color:var(--accent-sun);">📱 本地保存 · 隐私安全 · 欢迎家长和孩子一起填写</span>
+            </div>
+            <h1 class="font-display text-xl md:text-3xl font-bold mb-2 tracking-tight" style="line-height:1.2;">青春期成长<span style="background:linear-gradient(135deg,var(--accent-sun),var(--accent-pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">家庭共评微手帐</span></h1>
+            <p class="text-[11px] md:text-xs mb-3" style="color:var(--text-secondary);line-height:1.6;">记录日常观察、课程反馈、亲子对话或专业咨询，一起陪伴成长。（建议每个月记录3-4次）</p>
+            <div class="flex flex-wrap items-center justify-center gap-2 md:gap-3 text-[11px] md:text-xs" style="color:var(--text-secondary);">
+                <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg" style="background:rgba(255,255,255,0.5);"><span class="font-display font-semibold" id="todayDate"></span></div>
+                <!-- 修改为触发弹窗的按钮 -->
+                <button type="button" id="openConceptBtn" class="help-link" style="cursor:pointer;">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+                    设计理念 & 隐私安全
+                </button>
+            </div>
+        </header>
+
+        <div class="disclaimer-box mb-5"><b>开始之前：</b>青春期是成长中的自然阶段，身体和情绪的变化都很正常。这里没有“标准答案”，<b>欢迎家长和孩子一起讨论、共同填写</b>。所有内容只保存在你当前使用的设备上，我们不会收集任何隐私信息。</div>
+
+        <h2 class="font-display text-sm md:text-base font-bold mb-3 text-center tracking-wide" style="color:var(--text-primary);">请选择孩子性别，进入对应的问卷</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-5">
+            <a href="boy.html" class="gender-card boy">
+                <div class="title">男生版</div>
+                <div class="desc">记录男孩的青春期成长<br>包含男生专属的身体变化与心理话题</div>
+            </a>
+            <a href="girl.html" class="gender-card girl">
+                <div class="title">女生版</div>
+                <div class="desc">记录女孩的青春期成长<br>包含女生专属的身体变化与心理话题</div>
+            </a>
+        </div>
+
+        <div class="mt-4 text-center">
+            <p class="text-[10px]" style="color:var(--text-muted);">点击后进入专属问卷，请和孩子一起，根据真实情况耐心填写</p>
+        </div>
+    </div>
+
+    <div class="fixed-copyright">©2026 山东省青少年文化交流中心 & 铃兰心理工作室 版权所有</div>
+
+    <!-- 弹窗内容 -->
+    <div class="modal-overlay" id="conceptModal">
+        <div class="modal-content">
+            <button class="modal-close-btn" id="closeModalBtn" aria-label="关闭">×</button>
+            <div class="modal-title">向阳而生，共赴青春之约</div>
+            <div class="modal-subtitle">用爱与科学，照亮孩子成长的每一个角落</div>
+
+            <!-- 核心理念 -->
+            <div class="modal-section">
+                <h3>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                    核心理念
+                </h3>
+                <p>青春期是生命中最绚丽的拔节生长。我们相信：家长主动沟通、科学传授，方能护航孩子健康蜕变。以开放心态正视身心变化，积极拥抱成长，而非让孩子在网络不良信息中迷失。</p>
+                <div class="path-box">
+                    <div class="path-item path-bad">
+                        <b>❌ 避而不谈</b>
+                        回避话题，孩子只能从网络或同伴那里获取碎片化信息，容易产生羞耻感和焦虑，缺乏安全边界。
+                    </div>
+                    <div class="path-item path-good">
+                        <b>✅ 坦然沟通</b>
+                        开放讨论，科学认知，帮助孩子悦纳身体发育，学会自我保护，健康自信地度过青春期。
+                    </div>
+                </div>
+            </div>
+
+            <!-- 隐私保护 -->
+            <div class="modal-section">
+                <h3>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    隐私至上，本地运行
+                </h3>
+                <p>青春期话题敏感而私密，本手册采用<b style="color:#4d7c0f">完全本地化</b>架构，不联网、不上传、不留痕。孩子的隐私，只属于孩子自己。</p>
+                <ul style="color:#3f6212; margin-top:8px;">
+                    <li>✓ 纯前端运行，无需联网，离线也能用</li>
+                    <li>✓ 数据不外传，没有第三方追踪</li>
+                    <li>✓ 家庭自主掌控，随时可以清除所有记录</li>
+                </ul>
+            </div>
+
+            <!-- 使用说明 -->
+            <div class="modal-section" style="background:rgba(56,189,248,0.05); border-color:rgba(56,189,248,0.2);">
+                <h3 style="color:#0369a1;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                    简单使用说明
+                </h3>
+                <ul style="color:var(--text-secondary); margin-top:4px;">
+                    <li><b>1. 选择版本：</b>根据孩子性别，点击进入“男生版”或“女生版”问卷。</li>
+                    <li><b>2. 共同填写：</b>建议在轻松的氛围下，家长和孩子一起讨论每个问题，再勾选答案。</li>
+                    <li><b>3. 本地保存：</b>填写完成后点击保存，数据只安全地存储在你当前使用的设备上。</li>
+                    <li><b>4. 持续追踪：</b>建议每个月记录3-4次，长期坚持，你会看到孩子成长的清晰轨迹。</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    (function(){
+        // 日期
+        var d=new Date();document.getElementById('todayDate').textContent=d.getFullYear()+'年'+(d.getMonth()+1)+'月'+d.getDate()+'日';
+        // 星星
+        var bg=document.getElementById('starsBg');
+        for(var i=0;i<25;i++){var s=document.createElement('div');s.className='star';s.style.left=Math.random()*100+'%';s.style.top=Math.random()*100+'%';var sz=2+Math.random()*3;s.style.width=sz+'px';s.style.height=sz+'px';s.style.setProperty('--dur',(2+Math.random()*4)+'s');s.style.animationDelay=Math.random()*4+'s';bg.appendChild(s);}
+
+        // 弹窗交互
+        var modal = document.getElementById('conceptModal');
+        var openBtn = document.getElementById('openConceptBtn');
+        var closeBtn = document.getElementById('closeModalBtn');
+
+        openBtn.addEventListener('click', function() {
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+
+        function closeModal() {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        closeBtn.addEventListener('click', closeModal);
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) closeModal();
+        });
+
+        // 阻止弹窗内容滑动时穿透
+        document.querySelector('.modal-content').addEventListener('touchmove', function(e){
+            e.stopPropagation();
+        }, { passive: true });
+
+    })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+<view class="page">
+  <view class="eyebrow">LET’S FIND SUPPORT TOGETHER</view><view class="title">{{form ? form.name : '说说你需要的支持。'}}</view><view class="subtitle">{{form ? form.description : '你的申请由所属区域的工作人员查看，不需要一次说清所有细节。'}}</view>
+  <view class="form-choices spaced"><text class="chip {{!form ? 'active' : ''}}" data-id="" bindtap="chooseForm">服务需求</text><text wx:for="{{forms}}" wx:key="id" class="chip {{form.id === item.id ? 'active' : ''}}" data-id="{{item.id}}" bindtap="chooseForm">{{item.name}}</text></view>
+  <block wx:if="{{form}}"><view wx:for="{{fields}}" wx:key="id" class="form-field"><view wx:if="{{item.section}}" class="field-section">{{item.section}}</view><view class="label">{{index + 1}}. {{item.label}} <text wx:if="{{item.required}}" class="required">*</text></view>
+    <picker wx:if="{{item.type === 'single'}}" mode="selector" range="{{item.pickerOptions}}" range-key="label" value="{{item.selectedIndex}}" data-id="{{item.id}}" bindchange="singleChange" disabled="{{submitting}}"><view class="field row"><text>{{item.selectedLabel}}</text><text>⌄</text></view></picker>
+    <checkbox-group wx:elif="{{item.type === 'multi'}}" data-id="{{item.id}}" bindchange="multiChange"><label wx:for="{{item.options}}" wx:for-item="option" wx:key="key" class="checkbox-option"><checkbox value="{{option.key}}" checked="{{option.checked}}" color="#245c45" disabled="{{submitting}}"/><text>{{option.label}}</text></label></checkbox-group>
+    <textarea wx:elif="{{item.type === 'textarea'}}" class="field textarea" value="{{item.value}}" data-id="{{item.id}}" bindinput="fieldInput" maxlength="{{item.maxlength}}" placeholder="请填写" disabled="{{submitting}}"/>
+    <picker wx:elif="{{item.type === 'date' || item.type === 'time'}}" mode="{{item.type}}" value="{{item.value}}" data-id="{{item.id}}" bindchange="fieldInput" disabled="{{submitting}}"><view class="field row"><text>{{item.value || '请选择'}}</text><text>⌄</text></view></picker>
+    <input wx:else class="field" type="{{item.inputType}}" value="{{item.value}}" data-id="{{item.id}}" bindinput="fieldInput" maxlength="{{item.maxlength}}" placeholder="{{item.type === 'number' ? '请输入数字' : '请填写'}}" disabled="{{submitting}}"/>
+  </view></block>
+  <block wx:else><text class="label">需求类型</text><picker mode="selector" range="{{serviceTypes}}" value="{{typeIndex}}" bindchange="type" disabled="{{submitting}}"><view class="field row"><text>{{serviceTypes[typeIndex]}}</text><text>⌄</text></view></picker>
+  <text class="label">想得到怎样的帮助？</text><textarea class="field textarea" value="{{message}}" bindinput="input" placeholder="写下你的需求或使用反馈，请勿填写额外联系方式。" maxlength="1000" disabled="{{submitting}}"/><view class="count">{{message.length}} / 1000</view></block>
+  <view wx:if="{{error}}" class="error">{{error}}</view><view wx:if="{{success}}" class="notice">需求已提交。你可以在下方查看处理状态。</view>
+  <button bindtap="submit" loading="{{submitting}}" disabled="{{submitting || loading || (!form && !message)}}">{{form ? '提交调查与反馈' : '提交需求'}} →</button>
+  <view class="notice">这里不是即时咨询或紧急救援渠道。面临即时危险时，请立即联系信任的成人与当地紧急服务；提交需求不代表外部机构已接单或预约成功。</view>
+  <view class="row section-title"><text>我的申请</text><text class="link" bindtap="load">刷新</text></view>
+  <view wx:if="{{loading}}" class="state">正在读取申请…</view>
+  <view wx:elif="{{!requests.length}}" class="state">还没有申请记录。</view>
+  <view class="card" wx:for="{{requests}}" wx:key="id"><view class="row"><text>{{item.type}}</text><text class="pill">{{item.statusText}}</text></view><view class="prewrap spaced muted">{{item.message}}</view><view class="small spaced">{{item.displayTime}}</view></view>
+</view>

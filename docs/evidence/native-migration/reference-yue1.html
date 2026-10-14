@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="月拾WE，月亮型成长社群——如月亮般成长：不要求永远圆满，缺过的地方，总会重新亮起来。教孩子表达、理解与思考，让成长文化自然发生。">
+<meta name="theme-color" content="#0B1A2E">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>月拾WE · 月亮型成长社群</title>
+<style>
+:root{
+  --night:#0B1A2E;
+  --night-2:#1A3055;
+  --moon:#F5C451;
+  --moon-dim:#E8B93E;
+  --cream:#FAF7F2;
+  --ink:#243447;
+  --muted:#7A8794;
+  --accent:#E8912D;
+  --card:#FFFFFF;
+  --line:#EFE8DC;
+  --radius:14px;
+  --hairline:1px solid rgba(36,52,71,.06);
+  --shadow:0 4px 18px rgba(0,0,0,.10);
+  --shadow-soft:0 2px 10px rgba(0,0,0,.06);
+  --safe-b:env(safe-area-inset-bottom,0px);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Source Han Sans SC",sans-serif;
+  background:var(--night);color:var(--ink);line-height:1.8;
+  -webkit-font-smoothing:antialiased;letter-spacing:.01em;
+}
+.wrap{max-width:480px;margin:0 auto;padding:0 22px}
+
+/* ============ 固定背景 ============ */
+#bg{
+  position:fixed;inset:0;z-index:-1;
+  background:
+    linear-gradient(180deg,rgba(11,26,46,.90) 0%,rgba(11,26,46,.86) 40%,rgba(26,48,85,.80) 100%),
+    url('back.jpg') center/cover no-repeat,
+    linear-gradient(180deg,#0B1A2E 0%,#1A3055 100%);
+  background-color:#0B1A2E;
+}
+
+/* ============ 弹窗 ============ */
+#modal-mask{
+  display:none;position:fixed;inset:0;z-index:200;
+  background:rgba(8,16,28,.84);
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+}
+#modal-mask.show{display:flex;align-items:center;justify-content:center;padding:28px}
+.modal{
+  background:#fff;border-radius:22px;
+  width:100%;max-width:320px;
+  padding:28px 24px 24px;text-align:center;position:relative;
+  box-shadow:0 24px 70px rgba(0,0,0,.45);
+  animation:pop .28s cubic-bezier(.34,1.2,.64,1);
+}
+@keyframes pop{from{transform:scale(.90);opacity:0}to{transform:scale(1);opacity:1}}
+.modal-close{
+  position:absolute;top:12px;right:14px;
+  width:36px;height:36px;border-radius:50%;
+  background:rgba(36,52,71,.06);color:var(--muted);
+  font-size:16px;line-height:36px;
+  transition:background .2s,transform .18s;
+}
+.modal-close:active{background:rgba(36,52,71,.14);transform:scale(.9)}
+.modal-title{font-size:18px;font-weight:700;color:var(--night);letter-spacing:.06em;margin-bottom:4px}
+.modal-sub{font-size:11px;color:var(--muted);letter-spacing:.10em;margin-bottom:18px}
+.modal-qr{
+  width:200px;height:200px;margin:0 auto 16px;border-radius:16px;
+  border:1px solid var(--line);background:var(--cream);
+  display:flex;align-items:center;justify-content:center;overflow:hidden;
+}
+.modal-qr img{width:100%;height:100%;object-fit:contain;display:block}
+.modal-qr .qr-fallback{font-size:11px;color:var(--muted);padding:20px;line-height:1.7}
+.modal-desc{font-size:13px;color:#5A6875;line-height:1.8;margin-bottom:8px}
+.modal-desc b{color:var(--accent);font-weight:600}
+.modal-note{
+  font-size:11px;color:var(--muted);line-height:1.7;
+  border-top:1px dashed var(--line);padding-top:12px;margin-top:12px;
+}
+
+/* ============ HERO ============ */
+.hero{
+  position:relative;min-height:100vh;min-height:100svh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;overflow:hidden;
+  padding:48px 24px 96px;color:#fff;
+}
+.stars span{
+  position:absolute;width:3px;height:3px;border-radius:50%;
+  background:#fff;opacity:.7;
+  animation:twinkle 3s ease-in-out infinite;
+  will-change:opacity;
+}
+.stars span:nth-child(1){top:12%;left:16%}
+.stars span:nth-child(2){top:8%;left:72%;animation-delay:.8s;width:2px;height:2px}
+.stars span:nth-child(3){top:26%;left:86%;animation-delay:1.6s}
+.stars span:nth-child(4){top:38%;left:10%;animation-delay:.4s;width:2px;height:2px}
+.stars span:nth-child(5){top:20%;left:44%;animation-delay:2.2s;width:2px;height:2px}
+.stars span:nth-child(6){top:64%;left:8%;animation-delay:1.1s}
+.stars span:nth-child(7){top:56%;left:90%;animation-delay:2.8s;width:2px;height:2px}
+.stars span:nth-child(8){top:78%;left:24%;animation-delay:.6s;width:2px;height:2px}
+.stars span:nth-child(9){top:82%;left:78%;animation-delay:1.9s}
+@keyframes twinkle{0%,100%{opacity:.15}50%{opacity:.9}}
+
+.hero .cat{
+  color:var(--moon);font-size:13px;letter-spacing:.55em;text-indent:.55em;
+  font-weight:500;margin-bottom:18px;
+  text-shadow:0 1px 12px rgba(11,26,46,.7);
+}
+.hero h1{
+  color:#fff;font-size:clamp(48px,15vw,72px);font-weight:700;
+  letter-spacing:.04em;line-height:1.15;margin-bottom:22px;
+  text-shadow:0 2px 28px rgba(11,26,46,.7);
+}
+.hero .slogan{
+  color:rgba(255,255,255,.94);font-size:19px;
+  letter-spacing:.38em;text-indent:.38em;margin-bottom:14px;
+  text-shadow:0 1px 14px rgba(11,26,46,.6);
+}
+.hero .phrase{
+  color:rgba(255,255,255,.62);font-size:12.5px;letter-spacing:.18em;
+  text-shadow:0 1px 10px rgba(11,26,46,.6);
+}
+.hero .phrase b{color:rgba(245,196,81,.85);font-weight:500}
+.scroll-hint{
+  position:absolute;bottom:34px;left:50%;
+  color:rgba(255,255,255,.38);font-size:10px;letter-spacing:.32em;
+  animation:bob 2s ease-in-out infinite;
+  text-shadow:0 1px 8px rgba(11,26,46,.7);
+  white-space:nowrap;
+}
+.scroll-hint::after{
+  content:"";display:block;width:1px;height:24px;
+  background:rgba(255,255,255,.30);margin:8px auto 0;
+}
+@keyframes bob{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(6px)}}
+
+/* ============ 内容 ============ */
+.content{position:relative;z-index:1}
+section{padding:52px 0}
+.label{
+  font-size:9px;color:var(--moon);letter-spacing:.45em;font-weight:600;
+  margin-bottom:8px;text-transform:uppercase;
+}
+h2{font-size:22px;font-weight:700;letter-spacing:.02em;margin-bottom:10px;color:#fff}
+.lead{color:rgba(255,255,255,.58);font-size:13.5px;margin-bottom:24px;line-height:1.75}
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .8s ease,transform .8s ease;will-change:opacity,transform}
+.reveal.in{opacity:1;transform:none}
+
+/* 名字故事 */
+.name-card{
+  background:var(--card);border-radius:var(--radius);
+  border:var(--hairline);box-shadow:var(--shadow-soft);
+  padding:18px 17px 16px;margin-bottom:10px;
+}
+.name-card .zi{
+  font-size:25px;font-weight:700;color:var(--night);
+  display:flex;align-items:baseline;gap:10px;margin-bottom:6px;
+}
+.name-card .zi em{font-style:normal;font-size:10.5px;color:var(--accent);letter-spacing:.14em;font-weight:500}
+.name-card p{font-size:12.5px;color:#5A6875;line-height:1.75}
+
+/* 理念大字 */
+.idea{
+  background:rgba(255,255,255,.96);border-radius:22px;
+  padding:42px 22px 38px;text-align:center;color:var(--night);
+  box-shadow:var(--shadow);
+}
+.idea .big{font-size:26px;font-weight:700;letter-spacing:.16em;color:var(--accent);margin-bottom:18px}
+.idea p{color:#5A6875;font-size:13.5px;max-width:300px;margin:0 auto 10px;line-height:1.75}
+.idea .fin{margin-top:22px;font-size:11px;color:var(--muted);letter-spacing:.22em}
+.idea .boat{
+  margin-top:18px;padding-top:16px;border-top:1px dashed var(--line);
+  font-size:12px;color:#5A6875;max-width:280px;
+  margin-left:auto;margin-right:auto;line-height:1.85;
+}
+.idea .boat b{color:var(--accent);font-weight:600}
+
+/* 信条 */
+.creed{
+  background:var(--card);border-radius:var(--radius);
+  border:var(--hairline);box-shadow:var(--shadow-soft);
+  padding:17px 17px 15px;margin-bottom:10px;
+}
+.creed .no{font-size:9px;color:var(--accent);letter-spacing:.30em;font-weight:700;margin-bottom:7px}
+.creed h3{font-size:15px;font-weight:700;color:var(--night);margin-bottom:6px;letter-spacing:.02em}
+.creed p{font-size:12.5px;color:#5A6875;line-height:1.8}
+.creed p b{color:var(--accent);font-weight:600}
+.creed.hi{border-color:rgba(245,196,81,.55);box-shadow:0 4px 18px rgba(245,196,81,.14)}
+
+/* 边界 */
+.boundary{
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);
+  border-radius:var(--radius);padding:14px 16px;margin-bottom:9px;
+  display:flex;gap:11px;align-items:flex-start;
+}
+.boundary .x{
+  flex:none;width:20px;height:20px;border-radius:50%;
+  background:rgba(245,196,81,.16);color:var(--moon);
+  font-size:11px;line-height:20px;text-align:center;margin-top:2px;
+}
+.boundary h3{font-size:13.5px;color:#fff;font-weight:700;margin-bottom:3px}
+.boundary p{font-size:12px;color:rgba(255,255,255,.60);line-height:1.72}
+.only-promise{
+  margin-top:16px;
+  background:linear-gradient(135deg,rgba(245,196,81,.16),rgba(232,145,45,.10));
+  border:1px solid rgba(245,196,81,.42);
+  border-radius:var(--radius);padding:22px 18px;text-align:center;
+}
+.only-promise .op-label{font-size:9.5px;color:var(--moon);letter-spacing:.34em;margin-bottom:10px}
+.only-promise .op-text{font-size:17px;font-weight:700;color:#fff;letter-spacing:.10em;line-height:1.6}
+
+/* 活动室 */
+.room{
+  display:flex;gap:14px;align-items:flex-start;
+  background:var(--card);border-radius:var(--radius);
+  border:var(--hairline);box-shadow:var(--shadow-soft);
+  padding:15px 15px 14px;margin-bottom:10px;
+  transition:transform .18s ease,box-shadow .18s ease;
+}
+.room:active{transform:scale(.98);box-shadow:var(--shadow)}
+.room .ico{
+  flex:none;width:40px;height:40px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+}
+.room .ico.num{font-size:15px;font-weight:700;color:var(--accent);background:#FFF7E6}
+.room h3{font-size:14.5px;font-weight:700;margin-bottom:3px;color:var(--night)}
+.room h3 i{font-style:normal;font-size:10px;color:var(--muted);font-weight:400;letter-spacing:.12em;margin-left:7px}
+.room p{font-size:12.5px;color:#5A6875;line-height:1.7}
+.ico.i1{background:#EEF3FB}
+.ico.i2{background:#FBF0E4}
+.ico.i3{background:#F3EEF9}
+.ico.i4{background:#FDF4D8}
+.ico.i5{background:#EAF5EF}
+.room.flagship{border-color:rgba(245,196,81,.55);box-shadow:0 4px 18px rgba(245,196,81,.16)}
+.rule-note{
+  text-align:center;color:rgba(255,255,255,.58);font-size:12px;
+  padding:16px 10px 0;line-height:1.85;
+  text-shadow:0 1px 10px rgba(11,26,46,.7);
+}
+.rule-note b{color:rgba(255,255,255,.88);font-weight:600}
+
+/* 阶梯 */
+.steps{position:relative;padding-left:22px}
+.steps::before{
+  content:"";position:absolute;left:6px;top:12px;bottom:12px;
+  width:2px;background:linear-gradient(var(--accent),var(--moon));
+  opacity:.55;border-radius:2px;
+}
+.step{position:relative;margin-bottom:20px}
+.step::before{
+  content:"";position:absolute;left:-20px;top:7px;
+  width:9px;height:9px;border-radius:50%;
+  background:var(--accent);
+  box-shadow:0 0 0 2px var(--accent);
+}
+.step h3{font-size:14.5px;font-weight:700;color:#fff}
+.step h3 span{font-size:10.5px;color:rgba(255,255,255,.52);font-weight:400;margin-left:8px;letter-spacing:.06em}
+.step p{font-size:12.5px;color:rgba(255,255,255,.68);margin-top:3px;line-height:1.7}
+.step.final::before{background:var(--moon);box-shadow:0 0 0 2px var(--moon-dim)}
+.steps-fin{font-size:12px;color:rgba(255,255,255,.58);text-align:center;margin-top:4px;line-height:1.7}
+.steps-fin b{color:var(--moon);font-weight:600}
+
+/* 位置 / 合作 */
+.positions{display:flex;gap:8px;margin:18px 0 4px}
+.pos{
+  flex:1;text-align:center;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);
+  border-radius:12px;padding:13px 6px;
+}
+.pos b{display:block;font-size:13px;color:#fff;font-weight:700;margin-bottom:4px}
+.pos span{font-size:10.5px;color:rgba(255,255,255,.52);line-height:1.5;display:block}
+.coop{
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);
+  border-radius:var(--radius);padding:13px 15px;margin-bottom:8px;
+}
+.coop h3{font-size:13px;color:#fff;font-weight:700;margin-bottom:3px}
+.coop h3 i{font-style:normal;font-size:10px;color:var(--moon);font-weight:400;letter-spacing:.10em;margin-left:6px}
+.coop p{font-size:11.5px;color:rgba(255,255,255,.58);line-height:1.7}
+
+/* 谁在带 */
+.who-card{
+  background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.14);
+  border-radius:var(--radius);padding:16px 17px;margin-bottom:10px;
+  color:rgba(255,255,255,.82);
+}
+.who-card h3{font-size:14px;font-weight:700;color:#fff;margin-bottom:5px}
+.who-card h3 i{font-style:normal;font-size:10px;color:var(--moon);font-weight:400;letter-spacing:.12em;margin-left:7px}
+.who-card p{font-size:12.5px;color:rgba(255,255,255,.62);line-height:1.75}
+
+/* ============ 加入 ============ */
+.join-section{padding:60px 0 44px}
+.join-card{
+  background:rgba(255,255,255,.97);border-radius:26px;
+  box-shadow:0 20px 60px rgba(0,0,0,.30);
+  padding:34px 22px 28px;text-align:center;
+}
+.join-card h2{font-size:23px;font-weight:700;color:var(--night);letter-spacing:.05em;margin-bottom:8px}
+.join-card .jc-sub{font-size:12.5px;color:var(--muted);margin-bottom:22px;letter-spacing:.06em;line-height:1.7}
+
+.sec-event{
+  background:var(--cream);border:var(--hairline);
+  border-radius:var(--radius);padding:18px 16px 16px;
+  margin-bottom:18px;position:relative;overflow:hidden;text-align:left;
+}
+.sec-title{font-size:11px;font-weight:700;color:var(--accent);letter-spacing:.28em;margin-bottom:12px}
+.act-status{
+  position:absolute;top:0;right:0;
+  font-size:9px;font-weight:700;padding:5px 14px;
+  border-radius:0 var(--radius) 0 12px;letter-spacing:.12em;
+}
+.act-status.open{background:var(--moon);color:var(--night)}
+.act-date{display:flex;align-items:baseline;gap:8px;margin-bottom:6px}
+.act-date .day{font-size:32px;font-weight:700;color:var(--accent);line-height:1}
+.act-title{font-size:15.5px;font-weight:700;color:var(--night);margin-bottom:5px}
+.act-meta{font-size:12px;color:#5A6875;line-height:1.75}
+.act-meta b{color:var(--accent);font-weight:600}
+.btn-event{
+  display:block;width:100%;
+  background:var(--moon);color:var(--night);
+  font-weight:700;font-size:14.5px;letter-spacing:.20em;text-indent:.20em;
+  padding:14px 0;border-radius:99px;border:none;
+  margin-top:14px;
+  box-shadow:0 6px 20px rgba(245,196,81,.35);
+  transition:transform .18s,box-shadow .18s;
+}
+.btn-event:active{transform:scale(.96);box-shadow:0 3px 12px rgba(245,196,81,.3)}
+.btn-event-note{font-size:10.5px;color:var(--muted);text-align:center;margin-top:8px}
+
+.sec-long{border-top:1px dashed rgba(36,52,71,.16);padding-top:20px}
+.sec-long .sl-title{font-size:15.5px;font-weight:700;color:var(--night);margin-bottom:5px}
+.sec-long .sl-desc{font-size:12.5px;color:#5A6875;line-height:1.9;margin-bottom:14px}
+.sec-long .sl-desc b{color:var(--accent);font-weight:600}
+.sl-badge{
+  display:inline-block;font-size:11px;color:var(--muted);
+  letter-spacing:.14em;padding:7px 16px;border-radius:99px;
+  background:rgba(232,145,45,.07);border:1px dashed rgba(232,145,45,.35);
+  line-height:1.6;
+}
+.sl-badge b{color:var(--accent);font-weight:600}
+
+.join-card .home-link{
+  display:inline-flex;align-items:center;gap:6px;
+  margin-top:16px;padding:10px 24px;border-radius:99px;
+  border:1px solid rgba(232,145,45,.4);
+  color:rgba(232,145,45,.85);
+  font-size:11.5px;letter-spacing:.18em;text-decoration:none;
+  transition:background .2s,color .2s,border-color .2s,transform .15s;
+}
+.join-card .home-link:active{transform:scale(.97);background:rgba(232,145,45,.08)}
+.join-card .home-link svg{opacity:.6}
+.join-card .jc-out{
+  font-size:11.5px;color:var(--muted);letter-spacing:.12em;
+  line-height:2;border-top:1px dashed var(--line);
+  padding-top:14px;margin-top:14px;
+}
+.join-card .jc-out b{color:var(--night);font-weight:600}
+
+footer{
+  color:rgba(255,255,255,.30);text-align:center;
+  font-size:10.5px;letter-spacing:.10em;
+  padding:24px 24px calc(24px + var(--safe-b));
+  line-height:1.9;
+}
+#share-tip{
+  display:none;position:fixed;top:0;left:0;right:0;
+  background:rgba(11,26,46,.94);color:#fff;
+  font-size:12px;text-align:center;padding:10px 16px;z-index:99;
+  letter-spacing:.04em;
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .reveal{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+
+<div id="share-tip">点右上角「···」把月拾WE分享给朋友 ↗</div>
+
+<!-- 弹窗 -->
+<div id="modal-mask">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()" aria-label="关闭">×</button>
+    <div class="modal-title" id="modal-title">体验预约</div>
+    <div class="modal-sub" id="modal-sub">JOIN US</div>
+    <div class="modal-qr">
+      <img src="bm.png" alt="二维码" id="modal-qr-img" onerror="this.parentElement.innerHTML='<div class=qr-fallback>二维码图片缺失<br>请将 bm.png 与本页面放在同一目录</div>'">
+    </div>
+    <p class="modal-desc" id="modal-desc">
+      用微信<b>「扫一扫」</b>扫描二维码<br>
+      添加带领人企业微信
+    </p>
+    <p class="modal-note" id="modal-note">
+      随时可以来，前两周是体验期——<br>来不来，孩子自己说了算。位置给他留着。
+    </p>
+  </div>
+</div>
+
+<div id="bg"></div>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="stars"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+  <p class="cat">月亮型成长社群</p>
+  <h1>月拾WE</h1>
+  <p class="slogan">拾起完整的自己</p>
+  <p class="phrase">如月亮般成长——<b>缺过的地方，总会重新亮起来</b></p>
+  <div class="scroll-hint">向下</div>
+</header>
+
+<div class="content">
+
+<!-- 名字 -->
+<section>
+  <div class="wrap">
+    <div class="reveal">
+      <p class="label">01 · 名字</p>
+      <h2>为什么叫「月拾WE」</h2>
+      <p class="lead">三个字，是三件事。</p>
+    </div>
+    <div class="name-card reveal">
+      <div class="zi">月 <em>不必总是圆满</em></div>
+      <p>月亮不会一直圆，但它每个月都会重新亮起来。成长也一样——我们从不要求孩子“永远阳光”，只陪着他，等下一次月圆。</p>
+    </div>
+    <div class="name-card reveal">
+      <div class="zi">拾 <em>把自己一块块捡回来</em></div>
+      <p>成长不是改掉缺点变成别人，而是把散落的自己——不擅长的、丢过脸的、不开心的——一块块拾回来。捡齐了，就是完整的自己。</p>
+    </div>
+    <div class="name-card reveal">
+      <div class="zi">WE <em>一个人做不到</em></div>
+      <p>自己捡不起自己，弯腰时总需要有人扶一把。在月拾，没有人独自长大：小的被大的带着，大的被小的需要着。</p>
+    </div>
+  </div>
+</section>
+
+<!-- 理念 -->
+<section style="padding-top:8px">
+  <div class="wrap">
+    <div class="idea reveal">
+      <p class="big">如月亮般成长</p>
+      <p>这里没有“永远没问题”的孩子。</p>
+      <p>这里只有——<br>遇到困难时，知道身边有谁；<br>想求助时，知道门朝哪开。</p>
+      <div class="boat">
+        我们首先是一个<b>成长社群</b>。<br>
+        戏剧，是其中最常用的一种语言——<br>
+        <b>戏剧是舟，不是岸。</b><br>
+        借它抵达的，是彼此。
+      </div>
+      <p class="fin">完整，也包括缺过的那部分</p>
+    </div>
+  </div>
+</section>
+
+<!-- 信条 -->
+<section style="padding-top:8px">
+  <div class="wrap">
+    <div class="reveal">
+      <p class="label">02 · 理念</p>
+      <h2>我们相信什么</h2>
+      <p class="lead">教孩子表达、理解与思考，让成长文化自然发生。</p>
+    </div>
+
+    <div class="creed reveal">
+      <p class="no">信念 一</p>
+      <h3>表达是舟，成长是岸</h3>
+      <p>在这里练习说出感受、倾听别人、理解自己；但终点是孩子回到自己的生活里去——教室、家庭、朋友圈、街道。所以这里的一切设计都指向<b>“迁移”而非“留存”</b>：不制造依赖。孩子某天不再需要我们，就是项目最成功的时刻。</p>
+    </div>
+
+    <div class="creed reveal">
+      <p class="no">信念 二</p>
+      <h3>这是一个探索过程，不是一门课程</h3>
+      <p>探索有方向、没有终点。它<b>自愿</b>——来去自由；<b>无标准答案</b>——答案永远是“你的版本”；<b>允许失败</b>——演砸了、画歪了、唱跑了，都是素材，不是事故；<b>以关系为载体</b>——改变发生在“被同伴接住”的瞬间。</p>
+    </div>
+
+    <div class="creed reveal">
+      <p class="no">信念 三</p>
+      <h3>人人有位置</h3>
+      <p>演得好是位置，递道具是位置，安静地坐在角落里也是位置。我们相信：一个孩子先在群体里有一个位置，才可能长出归属感；有了归属感，才可能主动去关心别人。<b>位置的分配不是奖励，是基础设施。</b></p>
+    </div>
+
+    <div class="creed reveal">
+      <p class="no">信念 四</p>
+      <h3>专业退居幕后</h3>
+      <p>成长支持系统在幕后——成长观察、内容审定、家长讲堂、陪伴通道；但在孩子的体验里，这里只有朋友、活动和带领他们的哥哥姐姐。<b>支持网织在看不见的地方，舞台留给孩子。</b></p>
+    </div>
+
+    <div class="creed reveal">
+      <p class="no">信念 五</p>
+      <h3>尊重独立的个体</h3>
+      <p>孩子的故事，由他自己决定说给谁听、说多少；参与方式由他自己选，包括选择“今天不说话”；作品署名权归孩子本人；去留不追问、不挽留、不施压，<b>位置一直留着</b>。我们不用“需要被修复”的眼光看孩子，而把他们当作正在长成的人。</p>
+    </div>
+  </div>
+</section>
+
+<!-- 边界 -->
+<section style="padding-top:8px">
+  <div class="wrap">
+    <div class="reveal">
+      <p class="label">03 · 边界</p>
+      <h2>我们不做什么</h2>
+      <p class="lead">一个项目是什么，一半由它做什么决定，一半由它不做什么决定。</p>
+    </div>
+
+    <div class="boundary reveal">
+      <div class="x">✕</div>
+      <div>
+        <h3>不办课时班、不设学期卡、不按课时计价</h3>
+        <p>成长是一个探索过程，不是一门课程。</p>
+      </div>
+    </div>
+
+    <div class="boundary reveal">
+      <div class="x">✕</div>
+      <div>
+        <h3>不承诺任何技能效果</h3>
+        <p>不“包会”、不“速成”、不“矫正内向”。我们交付的不是焦虑的解药，而是孩子一段被认真对待的时间。</p>
+      </div>
+    </div>
+
+    <div class="boundary reveal">
+      <div class="x">✕</div>
+      <div>
+        <h3>不给青少年贴标签</h3>
+        <p>群名、舞台背景、证书上，只有品牌，没有“问题”。</p>
+      </div>
+    </div>
+
+    <div class="only-promise reveal">
+      <p class="op-label">唯一的承诺</p>
+      <p class="op-text">给孩子一个健康的成长文化</p>
+    </div>
+  </div>
+</section>
+
+<!-- 活动形式 -->
+<section>
+  <div class="wrap">
+    <div class="reveal">
+      <p class="label">04 · 活动形式</p>
+      <h2>从一次体验席位开始</h2>
+      <p class="lead">每一位新来的青少年，都从一次体验席位开始。不需要任何基础，不需要提前说明自己“擅长什么”。先来坐一次台下的位置，看一看这个圈子是怎么转的。喜欢，下一次继续来；不喜欢，也完全没有关系。</p>
+    </div>
+
+    <div class="steps reveal">
+      <div class="step">
+        <h3>微戏剧 <span>通用语</span></h3>
+        <p>最小的戏剧单位：一个动作、一句台词、一个表情。不排戏也能发生戏剧，随时随地都能开始。</p>
+      </div>
+      <div class="step">
+        <h3>低门槛活动 <span>旗舰</span></h3>
+        <p>即兴、读剧、故事剧场。元规则只有一条：“Yes, and”——先接住，再回应。不考试、不面试、不比较。</p>
+      </div>
+      <div class="step">
+        <h3>专项 <span>深入其中</span></h3>
+        <p>论坛剧场、叙事剧场、亲子剧场。在安全的框架里，探索真实的生活议题。</p>
+      </div>
+      <div class="step final">
+        <h3>完整剧目 <span>月芒</span></h3>
+        <p>从创排到展演，从赛事到巡演。出品署名“无框剧场出品”——孩子的作品，被认真对待。</p>
+      </div>
+    </div>
+
+    <p class="steps-fin reveal" style="margin-top:8px">这些不是考试序列，是台阶——<br><b>每一级都允许停留，停留也是成长。</b></p>
+
+    <div class="rule-note reveal" style="padding-top:24px">
+      每场活动六至十五人，设三档参与位：<br>
+      <b>台上（演）· 台侧（协作）· 台下（观看与见证）</b><br>
+      见证也是参与，鼓掌也是位置。
+    </div>
+  </div>
+</section>
+
+<!-- 表达方式 -->
+<section style="padding-top:8px">
+  <div class="wrap">
+    <div class="reveal">
+      <p class="label">05 · 表达方式</p>
+      <h2>每一种表达都被接住</h2>
+      <p class="lead">有的孩子用身体说，有的用故事说，有的用手艺说。总有一种方式，是他的。</p>
+    </div>
+
+    <div class="room flagship reveal">
+      <div class="ico i1">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 14a8 8 0 0 1 16-1.5c.5 3-2 4.5-4.5 4.5H12c-1.5 0-2 1-1.5 2.2.3.8-.5 1.8-1.7 1.3A8 8 0 0 1 4 14z" stroke="#4A6FB5" stroke-width="1.8" stroke-linejoin="round"/><circle cx="9" cy="11" r="1.3" fill="#4A6FB5"/><circle cx="13" cy="9" r="1.3" fill="#4A6FB5"/><circle cx="15.5" cy="12.5" r="1.3" fill="#4A6FB5"/></svg>
+      </div>
+      <div>
+        <h3>戏剧<i>旗舰 · 前期主推</i></h3>
+        <p>即兴游戏、读剧、故事剧场、论坛剧场。在角色里说的话不算数，所以孩子敢说。元规则只有一条：“Yes, and”——先接住，再回应。不考试、不面试、不比较。</p>
+      </div>
+    </div>
+
+    <div class="room reveal">
+      <div class="ico i2">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M9 18V5l11-2v13" stroke="#E8912D" stroke-width="1.8" stroke-linejoin="round"/><circle cx="6.5" cy="18" r="2.5" stroke="#E8912D" stroke-width="1.8"/><circle cx="17.5" cy="16" r="2.5" stroke="#E8912D" stroke-width="1.8"/></svg>
+      </div>
+      <div>
+        <h3>表达<i>音乐 · 绘画 · 舞蹈 · 叙事</i></h3>
+        <p>语言到不了的地方，音乐可以到；说不出口的画面，画笔可以呈现；身体里堵着的力量，舞蹈可以释放。围圈讲故事，说“过”也算发言——听见别人，也被别人听见。</p>
+      </div>
+    </div>
+
+    <div class="room reveal">
+      <div class="ico i5">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M5 8h11v6a5 5 0 0 1-5 5H10a5 5 0 0 1-5-5V8z" stroke="#4C9A6E" stroke-width="1.8" stroke-linejoin="round"/><path d="M16 9h2a2.5 2.5 0 0 1 0 5h-2" stroke="#4C9A6E" stroke-width="1.8"/><path d="M8 5.5c0-1 1-1 1-2M11.5 5.5c0-1 1-1 1-2" stroke="#4C9A6E" stroke-width="1.6" stroke-linecap="round"/></svg>
+      </div>
+      <div>
+        <h3>生活<i>用手艺说</i></h3>
+        <p>做手工、缝扣子、修自行车，每月一顿饭——一起做的饭，一起吃。手上忙起来，心里的话就松了。</p>
+      </div>
+    </div>
+
+    <div class="room reveal">
+      <div class="ico num">月</div>
+      <div>
+        <h3>月亮小课<i>十二讲 · 挂在活动前后</i></h3>
+        <p>每次活动前后，用十分钟聊一个成长小话题——不考试、不留作业，听过就好。十二讲已定稿，随时可以加进来。</p>
+      </div>
+    </div>
+
+    <p class="rule-note reveal">常规活动随时可以来。<br>我们不做技能培训、不办课时班——<br>这是一个<b>探索过程</b>，不是一门课程。</p>
+  </div>
+</section>
+
+<!-- 节奏与仪式 -->
+<section style="padding-top:8px">
+  <div class="wrap">
+    <div class="reveal">
+      <p class="label">06 · 节奏与仪式</p>
+      <h2>每周有一个地方在等我</h2>
+      <p class="lead">成长按季节计，不按课时计。一个孩子可以在同一个位置上待很久，也可以慢慢往上走一层。</p>
+    </div>
+
+    <div class="steps reveal">
+      <div class="step">
+        <h3>时间锚 <span>每周见</span></h3>
+        <p>每周固定的活动时段，雷打不动。对许多孩子而言，“每周一定有一件事在等我”，这本身就是安全感。</p>
+      </div>
+      <div class="step">
+        <h3>三档参与位 <span>一人一位</span></h3>
+        <p>台上的（演）、台侧的（协作）、台下的（观看与见证）。“参与”不等于“表演”。</p>
+      </div>
+      <div class="step">
+        <h3>成长护照 <span>记录每一场</span></h3>
+        <p>记录每一场参与与每一次进阶的社群护照——孩子看得见自己走过的路。</p>
+      </div>
+      <div class="step">
+        <h3>授证之夜 <span>年度仪式</span></h3>
+        <p>带领者与观察师颁证、角色阶梯晋升的年度仪式。进阶，有仪式为证。</p>
+      </div>
+      <div class="step final">
+        <h3>年刊《月亮集》 <span>一年一本</span></h3>
+        <p>社群的一年：孩子写的、画的、演的。仪式是社群的年轮。</p>
+      </div>
+    </div>
+
+    <div class="reveal" style="margin-top:26px">
+      <p class="label">四个固定短语</p>
+      <div class="coop">
+        <h3>围圈</h3>
+        <p>没有一个孩子站在圈外，也没有一个孩子坐在角落里——圆圈是最公平的形状。</p>
+      </div>
+      <div class="coop">
+        <h3>说“过”也算发言</h3>
+        <p>不说话是被允许的参与方式，社群安全感的最低保障。</p>
+      </div>
+      <div class="coop">
+        <h3>位置给你留着</h3>
+        <p>欢迎新队员，也迎接离队后又回来的队员——绝不问“你怎么才来”。</p>
+      </div>
+      <div class="coop">
+        <h3>如月亮般成长</h3>
+        <p>不要求永远圆满，缺过的地方，总会重新亮起来。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 谁在带 -->
+<section style="padding-top:8px">
+  <div class="wrap">
+    <div class="reveal">
+      <p class="label">07 · 谁在带</p>
+      <h2>大学生带着，观察师看着</h2>
+    </div>
+    <div class="who-card reveal">
+      <h3>大学生带领者<i>持证带动</i></h3>
+      <p>经培训认证后上岗，懂戏剧，也懂青少年。不是老师，是哥哥姐姐——他们先蹲下来，再一起站起来。三条轨道真实、体面、自愿：志愿轨、劳务轨、合伙轨。</p>
+    </div>
+    <div class="who-card reveal">
+      <h3>观察师<i>只写行为，不写判断</i></h3>
+      <p>每场活动都有观察师在场，客观记录参与状态与互动质量。不做评判、不贴标签、不与家长直接讨论——只为让支持来得更及时、更无痕。</p>
+    </div>
+    <div class="who-card reveal">
+      <h3>专业支持<i>山东省精神卫生中心儿少医学中心</i></h3>
+      <p>专业支持机构为带领者提供成长培训、内容审定与陪伴通道，让支持网织在看不见的地方，舞台留给孩子。</p>
+    </div>
+  </div>
+</section>
+
+<!-- 家长问答 -->
+<section style="padding-top:8px">
+  <div class="wrap">
+    <div class="reveal">
+      <p class="label">08 · 家长问得最多的事</p>
+      <h2>你可能想问</h2>
+      <p class="lead">我们尽量把话说清楚，不绕弯子。</p>
+    </div>
+
+    <div class="creed reveal">
+      <h3>“月亮型是什么意思？”</h3>
+      <p>如月亮般成长——没有哪个月亮能永远圆，但每个月都会重新圆。我们不要求孩子一直闪闪发光，缺过的地方，总会重新亮起来。</p>
+    </div>
+
+    <div class="creed reveal">
+      <h3>“你们和兴趣班有什么不同？”</h3>
+      <p>我们不教技能，不设课时，不承诺效果。孩子在这里练习表达、倾听、理解自己，然后把这些带回自己的生活。这是一个探索过程，不是一门课程。</p>
+    </div>
+
+    <div class="creed reveal">
+      <h3>“我孩子特别内向/什么都不擅长，能来吗？”</h3>
+      <p>能。每一种表达方式总有合适的——唱歌不面试、画画不考级；实在什么都不想干，坐着当安静位也算参与。我们不问你会什么，只问你想在哪儿。</p>
+    </div>
+
+    <div class="creed reveal">
+      <h3>“孩子来了会变成什么样？”</h3>
+      <p>我们不承诺任何效果——我们能给的是：一个每周都有的位置、一群等他的人、和一次登台。改变是孩子自己长出来的，不是我们教出来的。</p>
+    </div>
+  </div>
+</section>
+
+<!-- 加入 -->
+<section class="join-section">
+  <div class="wrap">
+    <div class="join-card reveal">
+      <h2>JOIN US</h2>
+      <p class="jc-sub">位置给你留着——来把散落的自己，一块一块拾回来</p>
+
+      <div class="sec-event">
+        <p class="sec-title">每周 · 常规活动</p>
+        <span class="act-status open">开放中</span>
+        <div class="act-date"><span class="day">每周</span></div>
+        <div class="act-title">舞台室戏剧工坊</div>
+        <div class="act-meta">10–18岁 · 欢迎来体验</div>
+        <button class="btn-event" onclick="openModal('event')">体验预约</button>
+        <p class="btn-event-note">常规周六活动，随时欢迎来体验</p>
+      </div>
+
+      <div class="sec-long">
+        <div class="sl-title">成为社群成员</div>
+        <div class="sl-desc">
+          不需要报名，也没有门槛——<br>
+          线下参加任意一场活动，领取<b>月拾WE专属身份认证周边</b>，<br>
+          你就是社群的一员了。
+        </div>
+        <span class="sl-badge">戏剧 · 表达 · 生活 · 月亮小课，随你挑 · <b>随时可以来，我们一直在</b></span>
+      </div>
+
+      <a class="home-link" href="index.html">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none"><path d="M3 11.5L12 4l9 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.5 10.5V20h13v-9.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        回主页
+      </a>
+
+      <p class="jc-out"><b>月拾WE 出品：完整的自己。</b></p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  月拾WE · 月亮型成长社群<br>
+  运营：无框剧场｜专业支持：山东省精神卫生中心儿少医学中心
+</footer>
+
+</div>
+
+<script>
+(function(){
+'use strict';
+
+/* ============ 弹窗 ============ */
+var MODAL_CONFIG = {
+  event:{
+    title:'体验预约',
+    sub:'每周 · 舞台室戏剧工坊',
+    qr:'bm.png',
+    desc:'用微信<b>「扫一扫」</b>扫描二维码<br>添加带领人，预约周六活动中的体验',
+    note:'常规周六活动，随时欢迎来体验。'
+  },
+  long:{
+    title:'加入月拾',
+    sub:'JOIN US',
+    qr:'bm.png',
+    desc:'用微信<b>「扫一扫」</b>扫描二维码<br>添加带领人企业微信，安排第一次体验',
+    note:'位置一直在，随时可以来。'
+  }
+};
+
+var mask = document.getElementById('modal-mask');
+
+window.openModal = function(mode){
+  var cfg = MODAL_CONFIG[mode] || MODAL_CONFIG.long;
+  document.getElementById('modal-title').innerHTML = cfg.title;
+  document.getElementById('modal-sub').textContent = cfg.sub;
+  document.getElementById('modal-qr-img').src = cfg.qr;
+  document.getElementById('modal-desc').innerHTML = cfg.desc;
+  document.getElementById('modal-note').innerHTML = cfg.note;
+  mask.classList.add('show');
+  document.body.style.overflow = 'hidden';
+};
+window.closeModal = function(){
+  mask.classList.remove('show');
+  document.body.style.overflow = '';
+};
+
+mask.addEventListener('click', function(e){
+  if (e.target === mask) window.closeModal();
+});
+document.addEventListener('keydown', function(e){
+  if (e.key === 'Escape') window.closeModal();
+});
+
+/* ============ 渐显 ============ */
+(function(){
+  var els = document.querySelectorAll('.reveal');
+  if (!('IntersectionObserver' in window)){
+    els.forEach(function(el){ el.classList.add('in'); });
+    return;
+  }
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if (e.isIntersecting){
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold:.12, rootMargin:'0px 0px -40px 0px' });
+  els.forEach(function(el){ io.observe(el); });
+})();
+
+/* ============ 微信分享提示 ============ */
+(function(){
+  if (navigator.userAgent.toLowerCase().indexOf('micromessenger') > -1){
+    var tip = document.getElementById('share-tip');
+    tip.style.display = 'block';
+    setTimeout(function(){ tip.style.display = 'none'; }, 2500);
+  }
+})();
+
+})();
+</script>
+</body>
+</html>

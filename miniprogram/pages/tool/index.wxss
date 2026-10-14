@@ -1,0 +1,17 @@
+.tool-tabs { display:flex; gap:36rpx; margin:30rpx 0; border-bottom:2rpx solid #e2e7dc; }
+.tool-tabs text { padding:16rpx 0; color:#7b8577; }
+.tool-tabs .selected-tab { border-bottom:4rpx solid #245c45; color:#245c45; font-weight:600; }
+.form-field { margin-top:32rpx; }
+.field-guidance { margin:0 0 16rpx; color:#637456; line-height:1.85; }
+.field-section { font-weight:600; color:#567845; padding:18rpx 22rpx; background:#e9efdf; border-radius:16rpx; }
+.checkbox-option { display:flex; align-items:center; gap:16rpx; padding:18rpx 20rpx; border:1rpx solid #e1e7dc; border-radius:18rpx; margin-bottom:12rpx; background:#fff; }
+.checkbox-option text { flex:1; font-size:26rpx; }
+.number-hint { margin:10rpx 0; }
+.report .section-title { margin-top:0; }
+.metrics { display:flex; flex-wrap:wrap; gap:16rpx; margin:24rpx 0; }
+.metric { background:#edf2e4; border-radius:18rpx; padding:20rpx; flex:1; min-width:42%; }
+.metric>view { font-size:36rpx; font-weight:600; margin:10rpx 0; }
+.report-item { font-size:26rpx; line-height:1.85; color:#62705a; margin:10rpx 0; }
+.record-title { margin:0 0 8rpx; }
+.history-entry { border-top:1rpx solid #edf0e7; padding:18rpx 0; }
+.history-entry>view:last-child { font-size:27rpx; margin-top:6rpx; }

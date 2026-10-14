@@ -1,0 +1,13 @@
+{
+  "appid": "touristappid",
+  "projectname": "成长健研社",
+  "compileType": "miniprogram",
+  "miniprogramRoot": "./",
+  "setting": {
+    "es6": true,
+    "enhance": true,
+    "minified": true,
+    "urlCheck": false
+  },
+  "libVersion": "3.5.0"
+}

@@ -1,0 +1,7 @@
+{
+  "verifiedAt": "2026-10-14T08:42:40.981Z",
+  "profileCount": 32,
+  "sourceComparisonCases": 1600,
+  "sampleSeed": 20261014,
+  "scope": "Offline source scoring and branch comparison; no reference-site writes or WeChat runtime claims"
+}

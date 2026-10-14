@@ -1,0 +1,20 @@
+<view class="page">
+  <view class="eyebrow">A MOMENT FOR YOURSELF · {{today}}</view>
+  <view class="title">停一停，<text>{{'\n'}}</text>听听自己的心情。</view>
+  <view class="subtitle">没有标准答案。选一个最接近此刻的你。</view>
+  <view wx:if="{{loading}}" class="state">正在读取今日记录…</view>
+  <view wx:else>
+    <view class="moods spaced"><view wx:for="{{moods}}" wx:key="score" class="mood {{score === item.score ? 'chosen' : ''}}" data-score="{{item.score}}" bindtap="choose"><view class="face" style="background:{{item.color}}"><text class="eyes">• •</text><text class="mouth {{item.score < 3 ? 'low-mouth' : ''}}">{{item.face}}</text></view><view class="mood-label">{{item.name}}</view></view></view>
+    <view class="mood-answer">{{moodName ? '此刻的我，' + moodName : '每一种心情，都可以留在这里。'}}</view>
+    <view class="section-title">和什么有关？<text class="small">（可多选）</text></view>
+    <view><text wx:for="{{tagOptions}}" wx:key="name" class="chip {{item.selected ? 'active' : ''}}" data-name="{{item.name}}" bindtap="toggleTag">{{item.name}}</text></view>
+    <text class="label">再写一点点 <text class="small">（选填，仅自己可见）</text></text>
+    <textarea class="field textarea" value="{{note}}" bindinput="note" maxlength="500" placeholder="今天发生了什么？有什么想对自己说的？" disabled="{{submitting}}"/>
+    <view class="count">{{note.length}} / 500</view>
+    <view wx:if="{{error}}" class="error">{{error}}<button wx:if="{{!today}}" class="button-outline button-small spaced" bindtap="load">重试</button></view>
+    <view wx:if="{{saved}}" class="notice">心情已保存。{{score < 3 ? '愿意记录下来，已经是照顾自己的一步。可以找一个信任的人聊聊。' : '谢谢你认真感受今天，愿这份小小的能量陪着你。'}}</view>
+    <button class="spaced" bindtap="submit" loading="{{submitting}}" disabled="{{submitting || !score || !today}}">{{saved ? '更新今天的记录' : '把今天轻轻记下'}} →</button>
+    <button wx:if="{{saved}}" class="button-light spaced" bindtap="back">返回今日</button>
+    <view class="safe-note">每天一份记录，再次提交会更新今天的心情。<text>{{'\n'}}</text>备注仅自己可见；心情分数与日期可供区域老师进行关怀。</view>
+  </view>
+</view>

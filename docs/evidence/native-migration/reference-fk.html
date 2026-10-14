@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+<title>成长健研社 · 使用体验反馈</title>
+<style>
+    /* ===== 设计变量 ===== */
+    :root {
+        --primary: #2e7d5a;
+        --ink: #1b3a2b;
+        --ink-deep: #123b29;
+        --ink-soft: #2a6a4c;
+        --muted: #6b8f7d;
+        --border: #e2efe7;
+        --border-hover: #c1ddcf;
+        --bg-soft: #fbfefd;
+        --chip: #e2f0e9;
+        --star: #e9a23b;
+        --star-off: #d8e6de;
+        --error: #c65a4a;
+        --radius: 14px;
+        --pill: 999px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { -webkit-text-size-adjust: 100%; }
+
+    body {
+        background: #eff5f1;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", Roboto, Helvetica, Arial, sans-serif;
+        color: var(--ink);
+        line-height: 1.5;
+        /* 手机：边距更贴边；底部适配全面屏安全区 */
+        padding: 12px 10px 20px;
+        padding-bottom: calc(20px + env(safe-area-inset-bottom));
+        display: flex;
+        justify-content: center;
+        -webkit-tap-highlight-color: transparent;   /* 去掉微信/iOS 点击灰块 */
+        overscroll-behavior-y: contain;             /* 避免触发下拉刷新 */
+    }
+
+    .card {
+        width: 100%;
+        max-width: 700px;
+        background: #fff;
+        border-radius: 20px;
+        box-shadow: 0 8px 24px -14px rgba(20, 50, 30, .14), 0 0 0 1px rgba(200, 225, 210, .35);
+        padding: 18px 16px 20px;
+    }
+
+    /* ===== 头部（手机上一行放得下，放不下自动换行） ===== */
+    .header-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 8px 10px;
+    }
+    .header-title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--ink-deep);
+        letter-spacing: -0.02em;
+    }
+    .tagline {
+        font-size: 0.78rem;
+        color: var(--muted);
+        margin: 2px 0 12px;
+    }
+    .home-link {
+        border: 1px solid #d0e2d8;
+        border-radius: var(--pill);
+        padding: 5px 13px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        color: var(--ink-soft);
+        text-decoration: none;
+        flex-shrink: 0;
+    }
+    .home-link:active { background: #e9f3ed; transform: scale(0.96); }
+
+    /* ===== 说明 ===== */
+    .info-box {
+        background: #f5fbf8;
+        border: 1px solid #e3efe8;
+        border-radius: 12px;
+        padding: 12px 14px;
+        margin-bottom: 20px;
+        font-size: 0.82rem;
+        line-height: 1.6;
+        color: #1e4b36;
+    }
+    .info-box .highlight {
+        background: #e0efe6;
+        padding: 1px 9px;
+        border-radius: var(--pill);
+        font-weight: 500;
+        white-space: nowrap;
+    }
+
+    /* ===== 板块 ===== */
+    .section { margin-bottom: 20px; }
+    .section-title {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 6px 8px;
+        font-size: 1.05rem;
+        font-weight: 600;
+        color: #17513a;
+        margin-bottom: 10px;
+    }
+    .section-title small {
+        font-size: 0.7rem;
+        font-weight: 500;
+        background: var(--chip);
+        color: #1b5a3c;
+        padding: 2px 10px;
+        border-radius: var(--pill);
+        white-space: nowrap;
+    }
+    .sub-group-title {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--ink-soft);
+        margin: 14px 0 8px;
+        padding-left: 9px;
+        border-left: 3px solid #6fb28b;
+    }
+
+    /* ===== 复选项：手机单列，整行都是热区，高度 ≥44px ===== */
+    .option-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 6px;
+    }
+    .opt-item {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        min-height: 44px;
+        background: var(--bg-soft);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 10px 13px;
+        font-size: 0.92rem;
+        cursor: pointer;
+        -webkit-touch-callout: none;   /* 长按不弹菜单 */
+        user-select: none;
+        -webkit-user-select: none;
+        transition: background .15s, border-color .15s;
+    }
+    .opt-item:active { background: #eaf6f0; border-color: var(--border-hover); }
+    .opt-item input {
+        width: 1.2rem;
+        height: 1.2rem;
+        accent-color: #358a62;
+        flex-shrink: 0;
+    }
+    .opt-item label {
+        flex: 1;                        /* label 撑满剩余宽度，点行内任意处均可勾选 */
+        font-weight: 500;
+        color: #1b4e36;
+        cursor: pointer;
+    }
+
+    /* ===== 文本域：16px 防止 iOS/微信聚焦时页面自动放大 ===== */
+    .open-textarea {
+        width: 100%;
+        margin-top: 8px;
+        padding: 12px 14px;
+        border: 1px solid #dbebe3;
+        border-radius: 12px;
+        font: inherit;
+        font-size: 16px;
+        background: var(--bg-soft);
+        color: #153b2b;
+        line-height: 1.55;
+        resize: vertical;
+        min-height: 84px;
+    }
+    .open-textarea::placeholder { color: #8aa99a; }
+    .open-textarea:focus {
+        border-color: #4d9a74;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(77, 154, 116, .12);
+        background: #fff;
+    }
+
+    /* ===== 星级评分：手机竖排，星星加大并扩大点击区 ===== */
+    .rating-block {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        background: var(--bg-soft);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 14px 15px;
+        margin-bottom: 4px;
+        transition: border-color .15s, background .15s;
+    }
+    .rating-block.error {
+        border-color: #d97b6f;
+        background: #fff8f6;
+        box-shadow: 0 0 0 3px rgba(217, 123, 111, .08);
+    }
+    .rating-label { font-weight: 600; color: #1b4e36; font-size: 0.95rem; }
+    .rating-row { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
+    .star-rating { display: flex; gap: 1px; }
+    .star {
+        font-size: 2.2rem;
+        padding: 3px 4px;               /* 用 padding 把热区撑到 ~44px */
+        color: var(--star-off);
+        cursor: pointer;
+        user-select: none;
+        -webkit-user-select: none;
+        -webkit-touch-callout: none;
+        line-height: 1;
+        transition: color .15s, transform .12s;
+    }
+    .star:active { transform: scale(.88); }
+    .star.active { color: var(--star); }
+    .rating-text { font-size: 0.8rem; color: var(--muted); font-weight: 500; }
+    .rating-text.filled { color: #b5741a; font-weight: 600; }
+    .required-star { color: var(--error); font-weight: 700; margin-left: 3px; }
+    .field-error-msg {
+        display: none;
+        width: 100%;
+        font-size: 0.75rem;
+        font-weight: 500;
+        color: var(--error);
+    }
+    .field-error-msg.show { display: block; }
+
+    /* ===== 按钮：手机上主按钮全宽 48px 高，重置降为轻量文字按钮 ===== */
+    .actions { display: flex; flex-direction: column; gap: 6px; margin-top: 18px; }
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        font-weight: 600;
+        cursor: pointer;
+        border-radius: var(--pill);
+        transition: 0.15s;
+        touch-action: manipulation;     /* 消除老内核双击缩放延迟 */
+    }
+    .btn-primary {
+        min-height: 48px;
+        background: var(--primary);
+        border: none;
+        color: #fff;
+        font-size: 1rem;
+        box-shadow: 0 6px 16px rgba(37, 105, 72, .22);
+    }
+    .btn-primary:active { background: #1f6547; transform: scale(.98); }
+    .btn:disabled { opacity: .6; cursor: wait; }
+    .btn-outline {
+        background: none;
+        border: none;
+        color: #5a7f6c;
+        font-size: 0.85rem;
+        font-weight: 500;
+        padding: 9px;
+        min-height: 40px;
+    }
+    .btn-outline:active { color: #2a6a4c; }
+
+    /* ===== 状态预览（保留可长按选择复制，作失败备份） ===== */
+    .json-preview {
+        background: #f4faf7;
+        border: 1px dashed #b8d5c6;
+        border-radius: 12px;
+        padding: 12px 14px;
+        margin-top: 14px;
+        max-height: 180px;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        font-size: 0.72rem;
+        font-family: 'SF Mono', Menlo, Consolas, monospace;
+        white-space: pre-wrap;
+        word-break: break-all;
+        color: #16402e;
+        line-height: 1.55;
+    }
+    .json-preview:empty::before {
+        content: "提交后这里会显示状态";
+        color: #628d76;
+        font-family: inherit;
+        font-size: 0.8rem;
+    }
+    .json-preview.ok {
+        background: #e9f7ef;
+        border: 1px solid #6fbd8f;
+        color: #1d6a45;
+        font-family: inherit;
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+    .json-preview::-webkit-scrollbar { width: 4px; }
+    .json-preview::-webkit-scrollbar-thumb { background: #b8d5c6; border-radius: 10px; }
+
+    .footnote {
+        margin-top: 14px;
+        padding-top: 12px;
+        border-top: 1px solid var(--border);
+        font-size: 0.7rem;
+        color: var(--muted);
+        text-align: center;
+    }
+
+    /* ===== 桌面/大屏增强（手机为主场景，桌面用 min-width 增强） ===== */
+    @media (min-width: 640px) {
+        body { padding: 24px 16px 48px; }
+        .card { border-radius: 24px; padding: 28px 26px; }
+        .header-title { font-size: 1.6rem; }
+        .tagline { font-size: 0.85rem; margin: 4px 0 16px; }
+        .home-link { padding: 7px 18px; font-size: 0.85rem; }
+        .home-link:hover { background: #e9f3ed; border-color: var(--border-hover); }
+        .info-box { padding: 14px 18px; font-size: 0.88rem; margin-bottom: 26px; }
+        .section { margin-bottom: 26px; }
+        .section-title { font-size: 1.15rem; margin-bottom: 14px; }
+        .sub-group-title { margin: 18px 0 10px; }
+        .option-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+        .opt-item { min-height: 0; padding: 9px 12px; font-size: 0.88rem; }
+        .opt-item:hover { background: #f2faf5; border-color: var(--border-hover); }
+        .opt-item input { width: 1.05rem; height: 1.05rem; }
+        .open-textarea { font-size: 0.95rem; min-height: 70px; padding: 12px 16px; }
+        .rating-block {
+            flex-direction: row;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px 18px;
+            padding: 14px 18px;
+        }
+        .rating-row { flex: 1; }
+        .star { font-size: 1.9rem; padding: 0; }
+        .star:hover { transform: scale(1.15); }
+        .rating-text { min-width: 64px; }
+        .actions { flex-direction: row; gap: 12px; margin-top: 20px; }
+        .btn { flex: 1; min-width: 130px; }
+        .btn-primary { min-height: 0; padding: 12px 20px; font-size: 0.95rem; }
+        .btn-outline {
+            background: #fff;
+            border: 1px solid #cee2d7;
+            color: #1b543a;
+            font-size: 0.95rem;
+            font-weight: 600;
+            padding: 12px 20px;
+        }
+        .btn-outline:active { background: #e9f3ed; }
+        .json-preview { padding: 14px 18px; font-size: 0.78rem; max-height: 200px; }
+        .footnote { font-size: 0.75rem; }
+    }
+</style>
+</head>
+<body>
+<div class="card">
+    <!-- 头部 -->
+    <div class="header-row">
+        <h1 class="header-title">使用体验反馈</h1>
+        <a href="index.html" class="home-link">🏠 返回主页</a>
+    </div>
+    <p class="tagline">聚焦使用感受 · 让成长更贴心</p>
+
+    <!-- 说明 -->
+    <div class="info-box">
+        <strong>📌 关于这份反馈</strong><br>
+        我们希望了解您在使用「成长健研社」过程中的真实感受与建议，帮助我们做得更好。
+        <span class="highlight">完全匿名</span>，仅用于产品优化。低年级同学可与家长一同完成，谢谢您的宝贵意见！
+    </div>
+
+    <!-- 1. 成长关注点 -->
+    <div class="section">
+        <h2 class="section-title">1. 成长关注点 <small>当前更关心哪些方面？</small></h2>
+        <div class="option-grid" id="focusOptions"></div>
+        <textarea class="open-textarea" id="focusOpen" placeholder="还有其他关注点？比如：专注力、生涯规划、金钱观、网络素养……都可以写在这里"></textarea>
+    </div>
+
+    <!-- 2. 使用体验 -->
+    <div class="section">
+        <h2 class="section-title">2. 使用体验 <small>界面 · 操作 · 建议</small></h2>
+
+        <div class="rating-block" id="ratingBlock">
+            <div class="rating-label">整体体验评分 <span class="required-star">*</span></div>
+            <div class="rating-row">
+                <div class="star-rating" id="starRating" aria-label="整体体验评分，1到5星"></div>
+                <span class="rating-text" id="ratingText">点击星星</span>
+            </div>
+            <div class="field-error-msg" id="ratingErrorMsg">⚠️ 请先为整体体验评分</div>
+        </div>
+
+        <div class="sub-group-title">做得好的地方（可多选）</div>
+        <div class="option-grid" id="likedOptions"></div>
+
+        <div class="sub-group-title">希望改进的地方（可多选）</div>
+        <div class="option-grid" id="improveOptions"></div>
+
+        <textarea class="open-textarea" id="experienceOpen" placeholder="关于使用体验，还有什么想说的？最喜欢/最不喜欢的细节、希望增加的功能……都欢迎告诉我们"></textarea>
+    </div>
+
+    <!-- 按钮 -->
+    <div class="actions">
+        <button class="btn btn-primary" id="uploadBtn">📤 提交反馈</button>
+        <button class="btn btn-outline" id="resetBtn">🔄 重置</button>
+    </div>
+
+    <!-- 状态/备份预览 -->
+    <div class="json-preview" id="jsonPreview"></div>
+
+    <p class="footnote">点击提交直接上传 · 完全匿名 · 仅用于产品优化</p>
+</div>
+
+<script>
+(function () {
+    /* ====== 上传配置（未改动） ====== */
+    var SURVEY   = 'feedback';
+    var API_PATH = '/api/yanjiu';
+    /* ================================= */
+
+    // ---------- 选项数据 ----------
+    const ITEMS = {
+        focus: [
+            '自我认知与自信', '情绪管理与抗压', '学习习惯与方法', '时间规划与自律',
+            '同伴交往与友谊', '家庭沟通与理解', '兴趣探索与热爱', '目标感与内驱力',
+            '健康作息与身心', '创造力与思维', '抗挫折与韧性', '媒介素养与信息辨别'
+        ],
+        liked: [
+            '界面清爽美观', '操作简单顺畅', '说明清晰易懂', '选项贴近真实情况',
+            '填写轻松、负担小', '手机上填写方便', '配色舒适自然', '反馈及时友好'
+        ],
+        improve: [
+            '选项可以更丰富', '文字说明更简明', '页面打开更快', '排版布局更舒适',
+            '导出数据更简单', '希望有保存草稿功能', '希望按年级定制内容',
+            '更少的滚动与跳转', '增加进度提示'
+        ]
+    };
+
+    const RATING_LABELS = { 1: '需要改进', 2: '一般', 3: '还不错', 4: '满意', 5: '非常满意' };
+
+    const $ = id => document.getElementById(id);
+    const grids = { focus: $('focusOptions'), liked: $('likedOptions'), improve: $('improveOptions') };
+    const focusOpen = $('focusOpen');
+    const experienceOpen = $('experienceOpen');
+    const jsonPreview = $('jsonPreview');
+    const ratingBlock = $('ratingBlock');
+    const ratingErrorMsg = $('ratingErrorMsg');
+    const ratingText = $('ratingText');
+    const starRatingEl = $('starRating');
+    const uploadBtn = $('uploadBtn');
+
+    // ---------- 渲染复选框（选项均为静态常量，innerHTML 安全） ----------
+    for (const group in grids) {
+        grids[group].innerHTML = ITEMS[group].map(text => {
+            const id = group + '-' + text.replace(/[^\u4e00-\u9fa5a-zA-Z0-9]/g, '');
+            return `<div class="opt-item"><input type="checkbox" id="${id}" value="${text}"><label for="${id}">${text}</label></div>`;
+        }).join('');
+    }
+
+    // ---------- 星级评分 ----------
+    starRatingEl.innerHTML = [1, 2, 3, 4, 5].map(i =>
+        `<span class="star" data-value="${i}" role="button" tabindex="0" aria-label="${i} 星">★</span>`
+    ).join('');
+    const starEls = Array.from(starRatingEl.children);
+
+    let currentRating = 0;
+    const paintStars = n => starEls.forEach((s, i) => s.classList.toggle('active', i < n));
+
+    function clearRatingError() {
+        ratingBlock.classList.remove('error');
+        ratingErrorMsg.classList.remove('show');
+    }
+
+    function setRating(n) {
+        currentRating = n;
+        paintStars(n);
+        ratingText.textContent = RATING_LABELS[n] || '';
+        ratingText.classList.add('filled');
+        clearRatingError();
+    }
+
+    starRatingEl.addEventListener('click', e => {
+        if (e.target.classList.contains('star')) setRating(+e.target.dataset.value);
+    });
+    starRatingEl.addEventListener('mouseover', e => {
+        if (e.target.classList.contains('star')) paintStars(+e.target.dataset.value);
+    });
+    starRatingEl.addEventListener('mouseleave', () => paintStars(currentRating));
+    starRatingEl.addEventListener('keydown', e => {
+        if ((e.key === 'Enter' || e.key === ' ') && e.target.classList.contains('star')) {
+            e.preventDefault();
+            setRating(+e.target.dataset.value);
+        }
+    });
+
+    // ---------- 收集与校验 ----------
+    const getChecked = grid => Array.from(grid.querySelectorAll('input:checked'), cb => cb.value);
+
+    function validateRating() {
+        if (currentRating === 0) {
+            ratingBlock.classList.add('error');
+            ratingErrorMsg.classList.add('show');
+            return false;
+        }
+        clearRatingError();
+        return true;
+    }
+
+    // 构建数据（字段结构与原版保持一致，兼容后端）
+    function buildPayload() {
+        return {
+            focus: {
+                selected: getChecked(grids.focus),
+                open: focusOpen.value.trim()
+            },
+            experience: {
+                rating: currentRating,
+                ratingLabel: RATING_LABELS[currentRating] || '',
+                liked: getChecked(grids.liked),
+                improve: getChecked(grids.improve),
+                open: experienceOpen.value.trim()
+            },
+            meta: {
+                collectedAt: new Date().toISOString(),
+                anonymous: true,
+                version: '成长体验反馈 v7 (简约云端版)'
+            }
+        };
+    }
+
+    // ---------- 提交到云端（逻辑未改动） ----------
+    async function handleSubmit() {
+        if (!validateRating()) {
+            ratingBlock.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            return;
+        }
+
+        const data = buildPayload();
+        const origText = uploadBtn.textContent;
+
+        uploadBtn.disabled = true;
+        uploadBtn.textContent = '⏳ 提交中…';
+
+        try {
+            const res = await fetch(API_PATH, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ survey: SURVEY, data: data })
+            });
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+
+            jsonPreview.classList.add('ok');
+            jsonPreview.textContent = '✅ 提交成功，感谢您的反馈！您的想法已送达，我们会认真阅读每一条。';
+            uploadBtn.textContent = '✅ 已提交';
+            setTimeout(function () {
+                uploadBtn.disabled = false;
+                uploadBtn.textContent = origText;
+            }, 2600);
+        } catch (e) {
+            jsonPreview.classList.remove('ok');
+            jsonPreview.textContent = '⚠️ 提交未成功（可能是网络问题）。\n\n可稍后再次点击「提交反馈」重试；\n或长按复制下方内容手动保存备份：\n\n' + JSON.stringify(data, null, 2);
+            uploadBtn.disabled = false;
+            uploadBtn.textContent = '↻ 重试提交';
+            setTimeout(function () { uploadBtn.textContent = origText; }, 3000);
+            jsonPreview.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }
+
+    // ---------- 重置 ----------
+    function resetForm() {
+        document.querySelectorAll('.opt-item input:checked').forEach(cb => cb.checked = false);
+        focusOpen.value = '';
+        experienceOpen.value = '';
+        jsonPreview.textContent = '';
+        jsonPreview.classList.remove('ok');
+        currentRating = 0;
+        paintStars(0);
+        ratingText.textContent = '点击星星';
+        ratingText.classList.remove('filled');
+        clearRatingError();
+    }
+
+    uploadBtn.addEventListener('click', handleSubmit);
+    $('resetBtn').addEventListener('click', () => {
+        if (confirm('重置所有勾选、评分和填写内容？')) resetForm();
+    });
+})();
+</script>
+</body>
+</html>

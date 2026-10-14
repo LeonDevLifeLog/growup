@@ -1,0 +1,78 @@
+{
+  "fetchedAt": "2026-10-14T08:21:05.564847+00:00",
+  "method": "GET only",
+  "pages": [
+    {
+      "id": "ya",
+      "url": "https://sdsqsnwh.cn/cz/ya.html",
+      "file": "docs/evidence/native-migration/ya.html",
+      "bytes": 82966,
+      "status": 200,
+      "sha256": "715a616fba42397309239568d8551f97caf0e2eaf74fcd54b67948462d2b6d81"
+    },
+    {
+      "id": "sm",
+      "url": "https://sdsqsnwh.cn/cz/sm.html",
+      "file": "docs/evidence/native-migration/sm.html",
+      "bytes": 60265,
+      "status": 200,
+      "sha256": "f6668cec7b96d9a6b00a6d50aa6b367fd9422904bdb9df3edc9424a69699c076"
+    },
+    {
+      "id": "pm",
+      "url": "https://sdsqsnwh.cn/cz/pm.html",
+      "file": "docs/evidence/native-migration/pm.html",
+      "bytes": 61025,
+      "status": 200,
+      "sha256": "a183e945d1c72d078b84c37d95c486e1bf842e300c111b083cf92c069a326e57"
+    },
+    {
+      "id": "qz",
+      "url": "https://sdsqsnwh.cn/cz/qz.html",
+      "file": "docs/evidence/native-migration/qz.html",
+      "bytes": 77342,
+      "status": 200,
+      "sha256": "9f53984fbe921c4f0bd948fc35109666b2f2db5df6554dce13eb5e6bdb68ad11"
+    },
+    {
+      "id": "ysd",
+      "url": "https://sdsqsnwh.cn/cz/ysd.html",
+      "file": "docs/evidence/native-migration/ysd.html",
+      "bytes": 64730,
+      "status": 200,
+      "sha256": "244983d1b96a43ef01c836c7f01eb835ec115d6555d2f0bbd0d65e914dbd9492"
+    },
+    {
+      "id": "rj",
+      "url": "https://sdsqsnwh.cn/cz/rj.html",
+      "file": "docs/evidence/native-migration/rj.html",
+      "bytes": 68988,
+      "status": 200,
+      "sha256": "79f00dd3746a93cb855683256ae47b8a4552818db6c8e0e68620aac9262d3ee0"
+    },
+    {
+      "id": "k1",
+      "url": "https://sdsqsnwh.cn/cz/k1.html",
+      "file": "docs/evidence/native-migration/k1.html",
+      "bytes": 40260,
+      "status": 200,
+      "sha256": "b43d47202f6a96b45392dd690ad717622df1fc7cf80e282a9eb05860e75ab48f"
+    },
+    {
+      "id": "qcd",
+      "url": "https://sdsqsnwh.cn/cz/qcd.html",
+      "file": "docs/evidence/native-migration/qcd.html",
+      "bytes": 60567,
+      "status": 200,
+      "sha256": "cf5061eba843481af4711080e5a650dc206a2e329fbc9e91dc7581f80686d7e2"
+    },
+    {
+      "id": "fxd",
+      "url": "https://sdsqsnwh.cn/cz/fxd.html",
+      "file": "docs/evidence/native-migration/fxd.html",
+      "bytes": 52639,
+      "status": 200,
+      "sha256": "fe6ba5a89236220588b9ba2cce77623c32de70ee0821fc51742c73f0a311e1bd"
+    }
+  ]
+}

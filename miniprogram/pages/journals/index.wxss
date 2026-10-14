@@ -1,0 +1,126 @@
+.constellation {
+  height:235rpx;
+  background:#e8eedf;
+  border-radius:30rpx;
+  position:relative;
+  overflow:hidden;
+}
+
+.star {
+  position:absolute;
+  color:#708e53;
+  font-size:46rpx;
+}
+
+.star-1 {
+  left:54rpx;
+  top:30rpx;
+}
+
+.star-2 {
+  left:182rpx;
+  top:97rpx;
+  font-size:35rpx;
+}
+
+.star-3 {
+  right:120rpx;
+  top:35rpx;
+  font-size:59rpx;
+}
+
+.star-4 {
+  right:44rpx;
+  bottom:24rpx;
+  font-size:32rpx;
+}
+
+.star-line {
+  position:absolute;
+  left:95rpx;
+  top:92rpx;
+  width:150rpx;
+  height:1rpx;
+  background:#bdcfac;
+  transform:rotate(28deg);
+}
+
+.constellation-label {
+  position:absolute;
+  left:34rpx;
+  bottom:24rpx;
+  color:#6a7c59;
+  font-size:23rpx;
+}
+
+.big-number {
+  font-size:48rpx;
+  color:#36563c;
+  margin-right:8rpx;
+  font-weight:600;
+}
+
+.journal-tabs {
+  display:flex;
+  gap:36rpx;
+  margin:34rpx 0 26rpx;
+  border-bottom:2rpx solid #e3e8dd;
+}
+
+.journal-tab {
+  padding:18rpx 0;
+  color:#798775;
+}
+
+.active-tab {
+  border-bottom:4rpx solid #245c45;
+  color:#245c45;
+  font-weight:700;
+}
+
+.journal-title {
+  font-size:31rpx;
+  font-weight:700;
+  margin:18rpx 0;
+}
+
+.journal-content {
+  font-size:27rpx;
+  line-height:1.9;
+  color:#62705a;
+}
+
+.mood-dot {
+  width:76rpx;
+  height:76rpx;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:50%;
+  font-size:34rpx;
+  font-weight:600;
+  color:#4d6741;
+}
+
+.record-mood {
+  font-weight:600;
+}
+
+.editor-title {
+  margin:0 0 16rpx;
+}
+
+.goal-field { min-height:150rpx; }
+.map-stats { display:flex; justify-content:space-around; text-align:center; margin:30rpx 0; }
+.map-stats text { font-size:44rpx; font-weight:600; }
+.relationship-map { position:relative; height:580rpx; width:686rpx; margin-left:-1rpx; background:#eaf0df; border-radius:32rpx; overflow:hidden; }
+.map-edge { position:absolute; height:2rpx; background:#bdcea9; transform-origin:left center; }
+.map-node { position:absolute; width:80rpx; min-height:80rpx; border-radius:50%; background:#d5e7a7; color:#46653a; text-align:center; padding:8rpx 2rpx; z-index:2; }
+.map-node>view { font-size:30rpx; font-weight:600; }
+.map-node>text { font-size:20rpx; word-break:break-word; }
+.map-caption { position:absolute; bottom:22rpx; left:0; width:100%; text-align:center; font-size:20rpx; color:#849773; }
+.map-metric { font-size:36rpx; margin:12rpx 0; }
+.connection { display:flex; justify-content:space-between; gap:20rpx; padding:20rpx; border-bottom:1rpx solid #e2e9da; font-size:26rpx; }
+
+.canvas-preview { width:686rpx; background:#eaf0df; border-radius:26rpx; overflow:hidden; }
+.star-map-canvas { width:686rpx; height:780rpx; }

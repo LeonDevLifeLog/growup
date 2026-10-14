@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="format-detection" content="telephone=no,email=no,address=no">
+<meta name="theme-color" content="#fff8f2">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="x5-orientation" content="portrait">
+<meta name="screen-orientation" content="portrait">
+<title>元气便利店 · 山东省精神卫生中心儿少病房</title>
+<style>
+:root{
+  --bg:#fff8f2;--card:#fff;
+  --text:#3d342e;--soft:#6b5d52;--mute:#9c8b7e;--faint:#bfafa3;
+  --line:rgba(160,130,100,.13);
+  --accent:#ff7b5c;--accent-2:#ffb347;
+  --grad:linear-gradient(135deg,#ffb347 0%,#ff7b5c 48%,#ff6b9d 100%);
+  --grad-soft:linear-gradient(135deg,#fff3e0 0%,#ffe6df 100%);
+  --serif:'Noto Serif SC','Songti SC','Source Han Serif SC',serif;
+  --sans:-apple-system,BlinkMacSystemFont,'PingFang SC','HarmonyOS Sans SC','Helvetica Neue','Microsoft YaHei',sans-serif;
+  --ease:cubic-bezier(.22,1,.36,1);
+  --spring:cubic-bezier(.34,1.56,.64,1);
+  --safe-t:env(safe-area-inset-top,0px);
+  --safe-b:env(safe-area-inset-bottom,0px);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{
+  font:400 16px/1.7 var(--sans);color:var(--text);background:var(--bg);
+  min-height:100%;overflow-x:hidden;overscroll-behavior-y:none;
+  touch-action:manipulation;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+  padding-bottom:6.4rem;padding-bottom:calc(6.4rem + var(--safe-b));
+}
+body::before{
+  content:'';position:fixed;top:0;right:0;bottom:0;left:0;z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(circle at 12% 8%,rgba(255,179,71,.20),transparent 42%),
+    radial-gradient(circle at 88% 14%,rgba(255,107,157,.15),transparent 40%),
+    radial-gradient(circle at 78% 82%,rgba(120,190,255,.12),transparent 45%),
+    radial-gradient(circle at 10% 88%,rgba(255,123,92,.12),transparent 42%),
+    linear-gradient(180deg,#fffaf5 0%,#fff4ec 55%,#ffeede 100%);
+}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+button:active{transform:scale(.96)}
+/* ---------- 顶栏 ---------- */
+.site-nav{
+  position:sticky;top:0;z-index:50;
+  display:flex;align-items:center;justify-content:space-between;gap:.6rem;
+  padding:.7rem 1.15rem;padding-top:calc(.7rem + var(--safe-t));
+  background:rgba(255,250,245,.86);
+  -webkit-backdrop-filter:blur(20px) saturate(180%);
+  backdrop-filter:blur(20px) saturate(180%);
+  border-bottom:1px solid rgba(255,255,255,.7);
+}
+.brand{font-family:var(--serif);font-size:1.1rem;font-weight:700;letter-spacing:.02em;display:flex;align-items:center}
+.brand-dot{
+  width:8px;height:8px;border-radius:50%;margin-right:.45rem;flex-shrink:0;
+  background:linear-gradient(135deg,#ffb347,#ff6b9d);
+  animation:dot-glow 2.4s ease-in-out infinite;
+}
+@keyframes dot-glow{
+  0%,100%{box-shadow:0 0 0 3px rgba(255,123,92,.18)}
+  50%{box-shadow:0 0 0 6px rgba(255,123,92,.06)}
+}
+.nav-right{display:flex;align-items:center;gap:.55rem}
+.nav-date{font-size:.72rem;color:var(--mute);font-variant-numeric:tabular-nums;font-weight:500}
+.music-btn{
+  width:36px;height:36px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1rem;line-height:1;color:var(--accent);
+  background:var(--grad-soft);box-shadow:inset 0 0 0 1px rgba(255,123,92,.25);
+  transition:transform .3s var(--spring),background .3s var(--ease),color .3s var(--ease);
+}
+.music-btn.is-on{background:var(--grad);color:#fff;animation:music-pulse 2.4s ease-out infinite}
+@keyframes music-pulse{
+  0%{box-shadow:0 0 0 0 rgba(255,107,157,.5),0 6px 14px -6px rgba(255,107,157,.7)}
+  70%{box-shadow:0 0 0 10px rgba(255,107,157,0),0 6px 14px -6px rgba(255,107,157,.7)}
+  100%{box-shadow:0 0 0 0 rgba(255,107,157,0),0 6px 14px -6px rgba(255,107,157,.7)}
+}
+/* ---------- 头部 ---------- */
+.hero{padding:1.5rem 1.3rem .4rem;text-align:center}
+.hero-label{
+  display:inline-block;font-size:.66rem;letter-spacing:.14em;font-weight:600;
+  color:var(--accent);background:rgba(255,123,92,.09);
+  padding:.26rem .72rem;border-radius:999px;margin-bottom:.7rem;
+}
+.hero h1{
+  font-family:var(--serif);font-size:1.72rem;font-weight:700;line-height:1.4;
+  letter-spacing:-.01em;margin-bottom:.5rem;
+  display:flex;flex-wrap:wrap;justify-content:center;align-items:baseline;
+}
+.hero h1 .grad{
+  font-style:italic;margin-left:.28rem;
+  background:var(--grad);-webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;color:transparent;
+}
+.hero-sub{font-size:.85rem;line-height:1.8;color:var(--soft);max-width:360px;margin:0 auto}
+/* ---------- 货架 ---------- */
+.shelf{max-width:640px;margin:0 auto;padding:.9rem 1rem 1.2rem}
+.shelf-head{display:flex;align-items:center;justify-content:space-between;gap:.6rem;margin-bottom:.85rem;padding:0 .3rem}
+.shelf-title{font-family:var(--serif);font-size:.88rem;font-weight:600;color:var(--mute);position:relative;padding-left:.85rem}
+.shelf-title::before{
+  content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);
+  width:4px;height:15px;border-radius:3px;background:linear-gradient(180deg,#ffb347,#ff6b9d);
+}
+.concept-mini{
+  flex-shrink:0;padding:.42rem .85rem;border-radius:999px;
+  font-size:.72rem;font-weight:600;color:var(--accent);
+  background:rgba(255,255,255,.85);border:1px solid rgba(255,123,92,.32);
+  transition:transform .26s var(--ease),background .26s var(--ease);
+}
+.concept-mini:active{background:rgba(255,240,232,.9)}
+/* ---------- 留言卡 ---------- */
+.note-card{
+  position:relative;overflow:hidden;background:var(--card);
+  border-radius:26px;padding:1.35rem 1.15rem 1.05rem;min-height:200px;
+  box-shadow:0 2px 4px rgba(255,123,92,.05),
+             0 18px 40px -18px rgba(255,107,157,.35),
+             0 8px 20px -14px rgba(255,179,71,.4);
+  transition:opacity .22s var(--ease),transform .22s var(--ease);
+  -webkit-backface-visibility:hidden;backface-visibility:hidden;
+}
+.note-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--grad)}
+.note-card.is-fading{opacity:0;transform:translateY(14px) scale(.985)}
+.note-loading,.note-empty{text-align:center;color:var(--faint);font-size:.9rem;padding:2.8rem 0}
+.note-empty-icon{font-size:2.2rem;line-height:1;margin-bottom:.7rem}
+.note-top{display:flex;align-items:center;flex-wrap:wrap;gap:.45rem;margin-bottom:1rem}
+.note-tag{
+  padding:.22rem .7rem;border-radius:999px;font-size:.68rem;font-weight:700;letter-spacing:.03em;
+  color:#fff;background:var(--grad);box-shadow:0 4px 10px -4px rgba(255,107,157,.55);
+}
+.note-group{font-size:.68rem;color:var(--faint);font-weight:500}
+.note-main{display:flex;align-items:flex-start}
+.note-avatar{
+  width:44px;height:44px;border-radius:50%;flex-shrink:0;margin-right:.85rem;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--serif);font-size:1.1rem;font-weight:700;color:#fff;
+  background:linear-gradient(135deg,#ffd89b 0%,#ff9a76 60%,#ff8fb8 100%);
+  box-shadow:0 8px 18px -8px rgba(255,123,92,.7),inset 0 1px 0 rgba(255,255,255,.5);
+}
+.note-main-body{flex:1;min-width:0}
+.note-nick{display:flex;align-items:baseline;flex-wrap:wrap;gap:.5rem;font-size:.92rem;font-weight:700;margin-bottom:.4rem}
+.note-time{font-size:.66rem;color:var(--faint);font-weight:500}
+.note-text{
+  font-family:var(--serif);font-size:1.02rem;line-height:1.88;color:var(--soft);
+  white-space:pre-wrap;word-wrap:break-word;word-break:break-word;
+}
+.note-foot{
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem .6rem;
+  margin-top:1.05rem;padding-top:.85rem;
+  border-top:1px dashed rgba(255,123,92,.22);
+  font-size:.72rem;color:var(--faint);
+}
+.note-foot-actions{display:flex;align-items:center;gap:.5rem}
+.reply-count{font-weight:600;color:var(--mute)}
+/* ---------- 按钮（通用） ---------- */
+.like-btn{
+  display:inline-flex;align-items:center;line-height:1;
+  padding:.36rem .72rem;border-radius:999px;
+  font-size:.78rem;font-weight:700;font-variant-numeric:tabular-nums;color:var(--mute);
+  background:rgba(255,240,232,.9);
+  transition:background .24s var(--ease),color .24s var(--ease),box-shadow .24s var(--ease),transform .22s var(--ease);
+  -webkit-user-select:none;user-select:none;
+}
+.like-btn .like-icon{
+  display:inline-block;font-size:.95rem;line-height:1;margin-right:.28rem;
+  filter:grayscale(1) opacity(.42);transition:filter .32s var(--ease);
+}
+.like-btn .like-icon::before{content:'🍬'}
+.like-btn.is-liked{
+  color:#ff5c8a;background:linear-gradient(135deg,#fff0dd,#ffdee9);
+  box-shadow:0 6px 14px -8px rgba(255,92,138,.75);
+}
+.like-btn.is-liked .like-icon{filter:grayscale(0) opacity(1) drop-shadow(0 0 5px rgba(255,140,90,.6))}
+.like-btn.is-pop .like-icon{animation:like-pop .52s var(--spring)}
+@keyframes like-pop{
+  0%{transform:scale(1) rotate(0)}
+  30%{transform:scale(1.55) rotate(-16deg)}
+  60%{transform:scale(.86) rotate(9deg)}
+  100%{transform:scale(1) rotate(0)}
+}
+.like-btn.is-cooling{cursor:default;opacity:.88}
+.like-btn.is-cooling:active{transform:none}
+.like-btn--sm{font-size:.68rem;padding:.22rem .56rem}
+.like-btn--sm .like-icon{font-size:.82rem;margin-right:.22rem}
+.reply-btn{
+  padding:.36rem .75rem;border-radius:999px;
+  font-size:.78rem;font-weight:700;color:var(--accent);
+  background:rgba(255,240,232,.9);
+  transition:background .22s var(--ease),color .22s var(--ease),transform .22s var(--ease);
+}
+.reply-btn:active{background:var(--accent);color:#fff}
+/* ---------- 回复 ---------- */
+.replies{
+  margin-top:1rem;padding-left:.75rem;
+  border-left:2px solid rgba(255,179,71,.3);
+  display:flex;flex-direction:column;
+}
+.replies--flat{padding-left:0;border-left:none}
+.reply-item{display:flex;align-items:flex-start}
+.reply-item+.reply-item{margin-top:.85rem}
+.reply-avatar{
+  width:28px;height:28px;border-radius:50%;flex-shrink:0;margin-right:.55rem;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.74rem;font-weight:700;color:#fff;
+  background:linear-gradient(135deg,#ffe0b2,#ffb8a8);
+  box-shadow:0 4px 10px -5px rgba(255,123,92,.6);
+}
+.reply-main{flex:1;min-width:0}
+.reply-head{display:flex;align-items:baseline;flex-wrap:wrap;gap:.45rem;margin-bottom:.1rem}
+.reply-nick{font-size:.82rem;font-weight:700}
+.reply-time{font-size:.63rem;color:var(--faint)}
+.reply-text{font-size:.88rem;line-height:1.7;color:var(--soft);white-space:pre-wrap;word-wrap:break-word;word-break:break-word}
+.reply-to{color:var(--accent);font-weight:700}
+.reply-actions{margin-top:.24rem;display:flex;align-items:center;flex-wrap:wrap;gap:.4rem}
+.reply-actions .reply-btn{font-size:.68rem;padding:.22rem .56rem}
+/* ---------- 温馨提示 ---------- */
+.warm-tip{max-width:640px;margin:.2rem auto 0;padding:0 1rem}
+.warm-tip-inner{
+  display:flex;align-items:flex-start;
+  padding:1.05rem;border-radius:20px;
+  background:linear-gradient(135deg,#fff8e8 0%,#fff1ea 100%);
+  border:1px solid rgba(255,179,71,.32);
+  box-shadow:0 12px 28px -18px rgba(255,123,92,.55);
+}
+.warm-tip-icon{
+  width:36px;height:36px;flex-shrink:0;margin-right:.75rem;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;font-size:1.1rem;line-height:1;
+  background:var(--grad-soft);box-shadow:inset 0 0 0 1px rgba(255,179,71,.35);
+}
+.warm-tip-title{font-family:var(--serif);font-size:.9rem;font-weight:700;margin-bottom:.2rem}
+.warm-tip-text{font-size:.82rem;line-height:1.78;color:var(--soft)}
+.warm-tip-text strong{color:var(--accent);font-weight:700}
+.app-footer{text-align:center;padding:.9rem 1rem 1rem;font-size:.7rem;color:var(--faint)}
+/* ---------- 底部操作栏 ---------- */
+.write-bar{
+  position:fixed;left:0;right:0;bottom:0;z-index:60;
+  display:flex;gap:.6rem;
+  padding:.65rem 1rem;
+  padding-bottom:calc(.65rem + var(--safe-b));
+  background:linear-gradient(180deg,rgba(255,250,245,.78) 0%,rgba(255,250,245,.97) 32%,rgba(255,250,245,.99) 100%);
+  -webkit-backdrop-filter:blur(18px) saturate(180%);
+  backdrop-filter:blur(18px) saturate(180%);
+  transform:translateZ(0);-webkit-backface-visibility:hidden;backface-visibility:hidden;
+  transition:transform .22s var(--ease);
+}
+body.keyboard-open .write-bar{transform:translateY(120%)}
+.action-btn{
+  flex:1;min-width:0;white-space:nowrap;
+  display:flex;align-items:center;justify-content:center;
+  padding:.88rem .4rem;border-radius:999px;
+  font-size:.94rem;font-weight:700;letter-spacing:.01em;
+  -webkit-user-select:none;user-select:none;
+  transition:transform .24s var(--spring),box-shadow .26s var(--ease),background .3s var(--ease),color .3s var(--ease);
+}
+.action-btn--primary{flex:1.35;color:#fff;background:var(--grad);
+  box-shadow:0 12px 26px -10px rgba(255,107,157,.7),0 6px 16px -8px rgba(255,123,92,.6),inset 0 1px 0 rgba(255,255,255,.4);
+}
+.action-btn--ghost{color:var(--accent);background:rgba(255,255,255,.95);
+  box-shadow:inset 0 0 0 1.5px rgba(255,123,92,.35),0 8px 20px -12px rgba(255,123,92,.6);
+}
+.action-icon{display:inline-block;font-size:1.02rem;line-height:1;margin-right:.3rem;transition:transform .5s var(--spring)}
+.action-btn--ghost:active .action-icon{transform:rotate(220deg)}
+.action-btn--primary:active .action-icon{transform:rotate(-16deg) scale(1.15)}
+/* ---------- 弹窗 ---------- */
+.modal-overlay{
+  position:fixed;top:0;right:0;bottom:0;left:0;z-index:200;
+  display:flex;align-items:flex-end;justify-content:center;
+  background:rgba(61,52,46,.5);
+  opacity:0;pointer-events:none;transition:opacity .3s var(--ease);
+}
+.modal-overlay.is-open{opacity:1;pointer-events:auto}
+.modal-card{
+  position:relative;width:100%;max-width:640px;overflow:hidden;
+  padding:1.25rem 1.2rem;padding-bottom:calc(1.25rem + var(--safe-b));
+  border-radius:28px 28px 0 0;background:var(--bg);
+  transform:translateY(100%);transition:transform .4s var(--ease);
+  -webkit-backface-visibility:hidden;backface-visibility:hidden;
+}
+.modal-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--grad)}
+.modal-overlay.is-open .modal-card{transform:translateY(0)}
+.modal-card--tall{max-height:88vh;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.85rem}
+.modal-header span{font-family:var(--serif);font-weight:700;font-size:1.05rem}
+.modal-close{
+  font-size:1.7rem;line-height:1;color:var(--mute);
+  padding:0 .35rem;transition:transform .22s var(--spring);
+}
+.modal-close:active{transform:rotate(90deg) scale(.9)}
+.modal-hint{
+  font-size:.76rem;line-height:1.65;color:var(--mute);
+  padding:.7rem .85rem;margin-bottom:.9rem;border-radius:14px;
+  background:var(--grad-soft);border-left:3px solid var(--accent-2);
+}
+.modal-input,.modal-textarea{
+  display:block;width:100%;margin-bottom:.7rem;
+  padding:.78rem .9rem;border-radius:14px;
+  font-size:16px;font-family:var(--sans);color:var(--text);
+  background:#fff;border:1.5px solid rgba(160,130,100,.16);
+  outline:none;-webkit-appearance:none;appearance:none;
+  transition:border-color .24s var(--ease),box-shadow .24s var(--ease);
+}
+.modal-textarea{min-height:100px;line-height:1.7;resize:none}
+.modal-input:focus,.modal-textarea:focus{
+  border-color:rgba(255,123,92,.6);
+  box-shadow:0 0 0 4px rgba(255,123,92,.1);
+}
+.modal-footer{display:flex;justify-content:flex-end;margin-top:.3rem}
+.modal-submit{
+  padding:.68rem 2rem;border-radius:999px;
+  font-size:.95rem;font-weight:700;color:#fff;background:var(--grad);
+  box-shadow:0 10px 22px -8px rgba(255,107,157,.65),inset 0 1px 0 rgba(255,255,255,.35);
+  transition:transform .24s var(--spring),opacity .24s var(--ease);
+}
+.modal-submit:disabled{opacity:.55;box-shadow:none}
+/* ---------- 话题选择 ---------- */
+.picker{margin-bottom:.9rem}
+.picker-step{margin-bottom:.9rem}
+.picker-step:last-child{margin-bottom:0}
+.picker-step-title{display:flex;align-items:center;font-size:.8rem;font-weight:700;margin-bottom:.55rem}
+.step-num{
+  display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;
+  width:18px;height:18px;margin-right:.45rem;border-radius:50%;
+  font-size:.66rem;font-weight:700;color:#fff;background:var(--grad);
+}
+.speaker-chips{display:flex;gap:.5rem}
+.speaker-chip{
+  flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:.7rem .2rem;border-radius:16px;
+  font-size:.82rem;font-weight:700;color:var(--soft);
+  background:#fff;border:1.5px solid rgba(160,130,100,.14);
+  transition:all .24s var(--ease);-webkit-user-select:none;user-select:none;
+}
+.speaker-chip .emoji{font-size:1.25rem;line-height:1;margin-bottom:.28rem}
+.speaker-chip.is-active{
+  color:var(--accent);
+  background:linear-gradient(135deg,#fff3e0,#ffe6df);
+  border-color:rgba(255,123,92,.55);
+  box-shadow:0 8px 18px -10px rgba(255,107,157,.65);
+}
+.listener-chips{display:flex;flex-wrap:wrap;gap:.4rem}
+.listener-chip{
+  padding:.45rem .92rem;border-radius:999px;
+  font-size:.8rem;font-weight:600;color:var(--soft);
+  background:#fff;border:1.5px solid rgba(160,130,100,.14);
+  transition:all .24s var(--ease);-webkit-user-select:none;user-select:none;
+}
+.listener-chip.is-active{
+  color:#fff;background:var(--grad);border-color:transparent;
+  box-shadow:0 8px 18px -8px rgba(255,107,157,.7);
+}
+.picker-preview{
+  display:flex;align-items:center;margin-top:.55rem;
+  padding:.55rem .75rem;border-radius:12px;
+  font-size:.76rem;color:var(--mute);line-height:1.6;background:var(--grad-soft);
+}
+.picker-preview .preview-value{color:var(--accent);font-weight:700;margin-left:.2rem}
+/* ---------- 本店须知 ---------- */
+.modal-overlay--center{align-items:center;padding:1.4rem}
+.concept-card{
+  position:relative;width:100%;max-width:400px;max-height:82vh;overflow:hidden;
+  display:flex;flex-direction:column;
+  padding:1.9rem 1.5rem 1.4rem;border-radius:26px;background:var(--bg);
+  box-shadow:0 24px 60px -12px rgba(61,52,46,.35);
+  opacity:0;transform:translateY(24px) scale(.95);
+  transition:transform .4s var(--ease),opacity .4s var(--ease);
+}
+.concept-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--grad)}
+.modal-overlay--center.is-open .concept-card{opacity:1;transform:translateY(0) scale(1)}
+.concept-close{
+  position:absolute;top:.7rem;right:.85rem;
+  font-size:1.6rem;line-height:1;color:var(--mute);
+  transition:transform .22s var(--spring);
+}
+.concept-close:active{transform:rotate(90deg) scale(.9)}
+.concept-icon{font-size:2.4rem;text-align:center;line-height:1}
+.concept-title{font-family:var(--serif);font-size:1.28rem;font-weight:700;text-align:center;margin:.65rem 0 .3rem}
+.concept-subtitle{font-size:.75rem;font-weight:500;color:var(--mute);text-align:center;margin-bottom:.95rem}
+.concept-scroll{overflow-y:auto;-webkit-overflow-scrolling:touch;padding-right:.2rem}
+.concept-item{display:flex;align-items:flex-start;padding:.85rem 0;border-bottom:1px solid var(--line)}
+.concept-item:last-of-type{border-bottom:none;padding-bottom:.5rem}
+.concept-emoji{
+  width:42px;height:42px;flex-shrink:0;margin-right:.9rem;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;font-size:1.2rem;
+  background:var(--grad-soft);
+}
+.concept-item h4{font-family:var(--serif);font-size:.95rem;font-weight:700;margin-bottom:.25rem}
+.concept-item p{font-size:.83rem;line-height:1.7;color:var(--soft)}
+.concept-ending{
+  margin-top:1rem;padding-top:1rem;border-top:1px solid var(--line);
+  text-align:center;font-size:.8rem;font-style:italic;color:var(--mute);
+}
+/* ---------- Toast ---------- */
+#toast{
+  position:fixed;left:50%;bottom:6.8rem;bottom:calc(6.8rem + var(--safe-b));
+  z-index:500;max-width:82vw;pointer-events:none;
+  padding:.6rem 1.15rem;border-radius:999px;
+  font-size:.83rem;font-weight:500;line-height:1.5;text-align:center;
+  color:#fff8f2;background:rgba(61,52,46,.94);
+  box-shadow:0 12px 26px -10px rgba(0,0,0,.35);
+  opacity:0;transform:translate(-50%,14px);
+  transition:opacity .3s var(--ease),transform .32s var(--spring);
+  word-wrap:break-word;
+}
+#toast.is-show{opacity:1;transform:translate(-50%,0)}
+@media (max-width:360px){
+  .hero h1{font-size:1.55rem}
+  .note-text{font-size:.98rem}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+
+<audio id="bgm" src="back.mp3" loop preload="auto" webkit-playsinline playsinline></audio>
+
+<nav class="site-nav">
+  <span class="brand"><span class="brand-dot"></span>元气便利店</span>
+  <div class="nav-right">
+    <span class="nav-date" id="todayDate">—</span>
+    <button class="music-btn" id="musicBtn" type="button" aria-label="背景音乐" title="背景音乐">♪</button>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-label">元气便利店 · For everyone</div>
+  <h1><span>烦恼放下</span><span class="grad">元气带走</span></h1>
+  <p class="hero-sub">一家24小时不打烊的小店。说不出口的话，写下来放上货架。你写的，都有人认真听。</p>
+</header>
+
+<main class="shelf">
+  <div class="shelf-head">
+    <span class="shelf-title" id="shelfTitle">货架上的心里话</span>
+    <button class="concept-mini" id="openConceptBtn" type="button">本店须知</button>
+  </div>
+  <article class="note-card" id="noteCard">
+    <div class="note-loading">正在整理货架…</div>
+  </article>
+</main>
+
+<section class="warm-tip">
+  <div class="warm-tip-inner">
+    <div class="warm-tip-icon">🫧</div>
+    <div class="warm-tip-body">
+      <div class="warm-tip-title">记得照顾好自己</div>
+      <p class="warm-tip-text">
+        如果翻到让你不舒服的留言，或者心里突然有点难受，随时可以找<strong>护士姐姐哥哥、医生</strong>，或者<strong>爸爸妈妈</strong>说说话。别一个人扛着，我们都在你身边<span>♡</span>
+      </p>
+    </div>
+  </div>
+</section>
+
+<footer class="app-footer">© 山东省精神卫生中心儿少病房 · 24h 为你亮灯</footer>
+
+<div class="write-bar" id="writeBar">
+  <button class="action-btn action-btn--ghost" id="nextBtn" type="button">
+    <span class="action-icon">⟳</span><span>换一条</span>
+  </button>
+  <button class="action-btn action-btn--primary" id="writeBtn" type="button">
+    <span class="action-icon">✎</span><span>我也写一个</span>
+  </button>
+</div>
+
+<!-- 回复弹窗 -->
+<div class="modal-overlay" id="replyModal">
+  <div class="modal-card">
+    <div class="modal-header">
+      <span id="replyModalTitle">回复</span>
+      <button class="modal-close" data-close="replyModal" type="button">×</button>
+    </div>
+    <div class="modal-hint">这里没有评判，什么情绪都可以说。起个化名就好，对彼此温柔一点～</div>
+    <input type="text" id="replyNick" class="modal-input" placeholder="昵称（不填就是神秘顾客）" maxlength="20" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+    <textarea id="replyContent" class="modal-textarea" placeholder="想说的，写下来就好……" maxlength="500"></textarea>
+    <div class="modal-footer">
+      <button class="modal-submit" id="replySubmit" type="button">上架留言</button>
+    </div>
+  </div>
+</div>
+
+<!-- 写留言弹窗 -->
+<div class="modal-overlay" id="writeModal">
+  <div class="modal-card modal-card--tall">
+    <div class="modal-header">
+      <span>我也写一个</span>
+      <button class="modal-close" data-close="writeModal" type="button">×</button>
+    </div>
+    <div class="modal-hint">先选「我是谁」，再选「想对谁说」，最后写下想说的话就好。用化名，对彼此温柔一点～</div>
+    <div class="picker" id="topicPicker"></div>
+    <input type="text" id="writeNick" class="modal-input" placeholder="昵称（不填就是神秘顾客）" maxlength="20" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+    <textarea id="writeContent" class="modal-textarea" placeholder="想说的，写下来就好……" maxlength="500"></textarea>
+    <div class="modal-footer">
+      <button class="modal-submit" id="writeSubmit" type="button">上架</button>
+    </div>
+  </div>
+</div>
+
+<!-- 本店须知 -->
+<div class="modal-overlay modal-overlay--center" id="conceptModal">
+  <div class="concept-card">
+    <button class="concept-close" data-close="conceptModal" type="button">×</button>
+    <div class="concept-icon">🏪</div>
+    <h3 class="concept-title">本店须知</h3>
+    <div class="concept-subtitle">24h 营业 · 全年无休</div>
+    <div class="concept-scroll">
+      <div class="concept-item"><div class="concept-emoji">🎭</div><div><h4>不问你是谁</h4><p>不用会员卡，不用真名。化名随便起，心里话随便说——没人知道你是谁，但有人听见你。</p></div></div>
+      <div class="concept-item"><div class="concept-emoji">🍬</div><div><h4>传递元气</h4><p>给戳中你的留言送一颗「元气糖」吧。就像偷偷往对方购物篮里塞颗糖，善意会一直传下去。糖送出去就不会收回，第二天还能再送一颗哦。</p></div></div>
+      <div class="concept-item"><div class="concept-emoji">🍃</div><div><h4>来去自由</h4><p>没有排行榜，没有粉丝数。写完就走，店里替你收着，你只管往前走。</p></div></div>
+      <div class="concept-item"><div class="concept-emoji">🛒</div><div><h4>货架每天上新</h4><p>每次来都能翻到不一样的心声。不用怕错过——你此刻遇见的，就是刚刚好。</p></div></div>
+      <div class="concept-item"><div class="concept-emoji">📦</div><div><h4>寄存烦恼，不必取回</h4><p>写一次就够了。落笔那一刻，烦恼就寄存在这儿了。两手空空，轻装出发～</p></div></div>
+      <div class="concept-item"><div class="concept-emoji">🫧</div><div><h4>不舒服就找人聊聊</h4><p>如果看到让你难受的内容，或者心里堵得慌，随时可以找护士、医生或者爸妈说说。不用自己扛，我们都在。</p></div></div>
+    </div>
+    <div class="concept-ending">“烦恼留下，元气带走。”</div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ================= 配置 ================= */
+  var APP_ID = 'ersao_ward';
+  var FILTER_MODE = 'mask';
+  var SENSITIVE_WORDS = [
+    '死亡','自杀','轻生','殉情','想死','去死',
+    '自残','自伤','割腕','跳楼','上吊','安眠药','烧炭',
+    '杀人','放火','杀死','焚烧','纵火',
+    '傻逼','煞笔','滚蛋','他妈的'
+  ];
+
+  var TOPICS = [
+    { group:'🎧 少年说', id:'kid_self',   speaker:'kid',    listener:'self',   tag:'致自己', listenerLabel:'对自己', title:'和自己说说话' },
+    { group:'🎧 少年说', id:'kid_parent', speaker:'kid',    listener:'parent', tag:'致爸妈', listenerLabel:'对爸妈', title:'说不出口的话' },
+    { group:'🎧 少年说', id:'kid_doc',    speaker:'kid',    listener:'doc',    tag:'致医护', listenerLabel:'对医护', title:'哥哥姐姐听我说' },
+    { group:'🏠 爸妈说', id:'par_kid',    speaker:'parent', listener:'kid',    tag:'致孩子', listenerLabel:'对孩子', title:'爸妈想对你说' },
+    { group:'🏠 爸妈说', id:'par_doc',    speaker:'parent', listener:'doc',    tag:'致医护', listenerLabel:'对医护', title:'想说给你们听' },
+    { group:'🩺 医护说', id:'doc_kid',    speaker:'doc',    listener:'kid',    tag:'致孩子', listenerLabel:'对孩子', title:'看你们好起来真好' },
+    { group:'🩺 医护说', id:'doc_par',    speaker:'doc',    listener:'parent', tag:'致家长', listenerLabel:'对家长', title:'我们是队友' }
+  ];
+
+  var SPEAKERS = [
+    { key:'kid',    label:'少年', emoji:'🎧' },
+    { key:'parent', label:'爸妈', emoji:'🏠' },
+    { key:'doc',    label:'医护', emoji:'🩺' }
+  ];
+
+  var TOPIC_MAP = {};
+  for (var _i = 0; _i < TOPICS.length; _i++) TOPIC_MAP[TOPICS[_i].id] = TOPICS[_i];
+
+  var MAX_NEST_DEPTH = 3;
+  var NICK_KEY = 'ersao_nick';
+  var CLIENT_KEY = 'ersao_client_id';
+  /* 送糖规则：只能送、不能收回；送出后 24 小时可再送一颗 */
+  var LIKE_LOG_KEY = 'ersao_like_log';
+  var LIKE_COOLDOWN_MS = 24 * 60 * 60 * 1000;
+
+  /* ================= 本地存储 ================= */
+  function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+
+  function getClientId() {
+    var id = lsGet(CLIENT_KEY);
+    if (!id) {
+      id = 'c_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 10);
+      lsSet(CLIENT_KEY, id);
+    }
+    return id;
+  }
+  function loadNick() { return lsGet(NICK_KEY) || ''; }
+
+  function likeLog() {
+    try {
+      var o = JSON.parse(lsGet(LIKE_LOG_KEY) || '{}');
+      return (o && typeof o === 'object' && !Array.isArray(o)) ? o : {};
+    } catch (e) { return {}; }
+  }
+  function getLikeTs(id) {
+    var n = Number(likeLog()[String(id)]);
+    return (isFinite(n) && n > 0) ? n : 0;
+  }
+  function setLikeTs(id, ts) {
+    var l = likeLog();
+    l[String(id)] = ts;
+    lsSet(LIKE_LOG_KEY, JSON.stringify(l));
+  }
+  function removeLikeTs(id) {
+    var l = likeLog();
+    delete l[String(id)];
+    lsSet(LIKE_LOG_KEY, JSON.stringify(l));
+  }
+  function isCooling(id) {
+    var ts = getLikeTs(id);
+    return ts > 0 && (Date.now() - ts) < LIKE_COOLDOWN_MS;
+  }
+  function formatCooldownText(ms) {
+    var totalMin = Math.max(1, Math.ceil(ms / 60000));
+    var h = Math.floor(totalMin / 60), m = totalMin % 60;
+    if (h > 0) return m > 0 ? (h + ' 小时 ' + m + ' 分钟') : (h + ' 小时');
+    return m + ' 分钟';
+  }
+
+  /* ================= 工具 ================= */
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (m) {
+      return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m];
+    });
+  }
+  function firstChar(s) {
+    var t = String(s == null ? '' : s).trim();
+    return t ? t.charAt(0) : '神';
+  }
+  function maskWords(text) {
+    var out = String(text);
+    for (var i = 0; i < SENSITIVE_WORDS.length; i++) {
+      try {
+        out = out.replace(
+          new RegExp(SENSITIVE_WORDS[i].replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi'),
+          '✱✱'
+        );
+      } catch (e) {}
+    }
+    return out;
+  }
+  function tsVal(c) {
+    var t = c && c.created_at;
+    if (typeof t === 'number') return t;
+    var n = Number(t);
+    if (isFinite(n) && n > 0) return n;
+    var p = Date.parse(String(t || '').replace(' ', 'T'));
+    return isNaN(p) ? 0 : p;
+  }
+  function formatTime(ts) {
+    if (ts === null || ts === undefined || ts === '') return '';
+    var t = Number(ts);
+    if (!isFinite(t) || t <= 0) t = Date.parse(String(ts).replace(' ', 'T'));
+    var d = new Date(t);
+    if (isNaN(d.getTime())) return '';
+    var p = function (n) { return n < 10 ? '0' + n : '' + n; };
+    return d.getFullYear() + '/' + (d.getMonth() + 1) + '/' + d.getDate() + ' ' + p(d.getHours()) + ':' + p(d.getMinutes());
+  }
+
+  /* ================= 状态 ================= */
+  var ALL = [], ROOTS = [], CHILDREN = {}, BY_ID = {};
+  var currentRootId = null;
+  var replyContext = null;
+  var selectedTopicId = 'kid_self';
+  var currentSpeaker = 'kid';
+  var currentListener = 'self';
+
+  function findComment(id) {
+    if (id == null) return null;
+    var k = String(id);
+    return BY_ID[k] || BY_ID[Number(k)] || null;
+  }
+
+  /* ================= 送糖 ================= */
+  function likeState(id) {
+    var c = findComment(id);
+    var count = 0, liked = false;
+    if (c) {
+      var n = Number(c.like_count);
+      count = (isFinite(n) && n > 0) ? Math.floor(n) : 0;
+      liked = !!c.liked_by_me;
+    }
+    if (getLikeTs(id) > 0) liked = true; // 本地记录过 → 永远保持已送
+    return { liked: liked, count: count };
+  }
+
+  function likeButtonHtml(id, extraClass) {
+    var st = likeState(id);
+    var key = String(id);
+    var cooling = isCooling(key) ? ' is-cooling' : '';
+    return '<button class="like-btn' + (extraClass ? ' ' + extraClass : '') +
+             (st.liked ? ' is-liked' : '') + cooling +
+             '" data-id="' + esc(key) + '" type="button"' +
+             ' aria-pressed="' + (st.liked ? 'true' : 'false') + '" aria-label="送一颗元气糖">' +
+             '<span class="like-icon"></span><span class="like-count">' + st.count + '</span>' +
+           '</button>';
+  }
+
+  function syncLikeButtons(id, liked, count) {
+    var key = String(id);
+    var cooling = isCooling(key);
+    var btns = document.querySelectorAll('.like-btn');
+    for (var i = 0; i < btns.length; i++) {
+      var b = btns[i];
+      if (b.getAttribute('data-id') !== key) continue;
+      b.classList.toggle('is-liked', liked);
+      b.classList.toggle('is-cooling', cooling);
+      b.setAttribute('aria-pressed', liked ? 'true' : 'false');
+      var num = b.querySelector('.like-count');
+      if (num) num.textContent = count;
+    }
+  }
+
+  function handleLike(id, btn) {
+    if (!id || !btn) return;
+    var key = String(id);
+    if (btn.dataset.likePending === '1') return;
+
+    var now = Date.now();
+    var oldTs = getLikeTs(key);
+
+    if (oldTs > 0 && now - oldTs < LIKE_COOLDOWN_MS) {
+      toast('这颗糖已经送出去啦，' + formatCooldownText(LIKE_COOLDOWN_MS - (now - oldTs)) + '后再来送下一颗 ♡');
+      return;
+    }
+
+    btn.dataset.likePending = '1';
+
+    var prev = likeState(key);
+    var nextCount = prev.count + 1;   // 永远 +1，永不 -1
+
+    var c = findComment(key);
+    if (c) { c.like_count = nextCount; c.liked_by_me = true; }
+    setLikeTs(key, now);
+    syncLikeButtons(key, true, nextCount);
+
+    btn.classList.remove('is-pop');
+    void btn.offsetWidth;
+    btn.classList.add('is-pop');
+    setTimeout(function () { btn.classList.remove('is-pop'); }, 560);
+
+    function cleanup() { btn.dataset.likePending = ''; }
+    function rollback() {
+      var cc = findComment(key);
+      if (cc) { cc.like_count = prev.count; cc.liked_by_me = prev.liked; }
+      if (oldTs > 0) setLikeTs(key, oldTs); else removeLikeTs(key);
+      syncLikeButtons(key, prev.liked, prev.count);
+      toast('网络不太好，待会儿再试 ♡');
+    }
+
+    sendLikeRequest(key, 0, function (data) {
+      if (!data) { rollback(); cleanup(); return; }
+
+      if (data.cooling) {
+        var remain = Number(data.retry_after_ms);
+        if (isFinite(remain) && remain > 0 && remain <= LIKE_COOLDOWN_MS) {
+          setLikeTs(key, Date.now() - (LIKE_COOLDOWN_MS - remain));
+          toast('这颗糖刚刚才送过，' + formatCooldownText(remain) + '后再来送下一颗 ♡');
+        }
+      }
+
+      var realCount = Number(data.like_count);
+      if (!isFinite(realCount) || realCount < 0) realCount = nextCount;
+      var realLiked = !!data.liked || getLikeTs(key) > 0;
+
+      var cc = findComment(key);
+      if (cc) { cc.like_count = realCount; cc.liked_by_me = realLiked; }
+      syncLikeButtons(key, realLiked, realCount);
+      cleanup();
+    });
+  }
+
+  function sendLikeRequest(key, attempt, done) {
+    fetch('/api/comments/' + encodeURIComponent(key) + '/like', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ client_id: getClientId() }),
+      cache: 'no-store'
+    })
+      .then(function (res) {
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        return res.json();
+      })
+      .then(function (data) {
+        // 兼容旧版「切换式」后端：若被当成取消，自动补发一次
+        if (data && data.liked === false && attempt === 0) {
+          sendLikeRequest(key, 1, done);
+          return;
+        }
+        done(data || {});
+      })
+      .catch(function () { done(null); });
+  }
+
+  /* ================= Toast ================= */
+  var toastTimer = null;
+  function toast(msg) {
+    var el = document.getElementById('toast');
+    if (!el) {
+      el = document.createElement('div');
+      el.id = 'toast';
+      document.body.appendChild(el);
+    }
+    el.textContent = msg;
+    el.className = 'is-show';
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { el.className = ''; }, 2200);
+  }
+
+  /* ================= 话题 ================= */
+  function topicsBySpeaker(speaker) {
+    var out = [];
+    for (var i = 0; i < TOPICS.length; i++) {
+      if (TOPICS[i].speaker === speaker) out.push(TOPICS[i]);
+    }
+    return out;
+  }
+  function findTopic(speaker, listener) {
+    for (var i = 0; i < TOPICS.length; i++) {
+      if (TOPICS[i].speaker === speaker && TOPICS[i].listener === listener) return TOPICS[i];
+    }
+    return null;
+  }
+  function applyTopic(speaker, listener) {
+    var t = findTopic(speaker, listener);
+    if (!t) return;
+    currentSpeaker = speaker;
+    currentListener = listener;
+    selectedTopicId = t.id;
+  }
+
+  /* ================= 拉取数据 ================= */
+  function fetchTopic(t) {
+    return fetch(
+      '/api/comments?app_id=' + encodeURIComponent(APP_ID) +
+      '&topic_id=' + encodeURIComponent(t.id) +
+      '&client_id=' + encodeURIComponent(getClientId()),
+      { cache: 'no-store' }
+    )
+      .then(function (res) {
+        if (!res.ok) return [];
+        return res.json().then(function (data) {
+          var arr = Array.isArray(data) ? data : (data && Array.isArray(data.comments) ? data.comments : []);
+          return arr.map(function (c) {
+            c.topic_id = t.id;
+            // 从服务器恢复冷却计时（换设备/清缓存后仍可提示剩余时间）
+            var lastAt = Number(c.my_last_like_at);
+            if (isFinite(lastAt) && lastAt > 0 && !getLikeTs(c.id)) setLikeTs(c.id, lastAt);
+            return c;
+          });
+        });
+      })
+      .catch(function () { return []; });
+  }
+
+  function fetchAllComments() {
+    return Promise.all(TOPICS.map(fetchTopic)).then(function (results) {
+      var all = [];
+      for (var i = 0; i < results.length; i++) {
+        for (var j = 0; j < results[i].length; j++) all.push(results[i][j]);
+      }
+      all.sort(function (a, b) { return tsVal(a) - tsVal(b); });
+
+      BY_ID = {};
+      CHILDREN = {};
+      for (var k = 0; k < all.length; k++) {
+        var c = all[k];
+        c.__key = String(c.id);
+        c.parent_id = (c.parent_id == null || c.parent_id === '') ? null : c.parent_id;
+        BY_ID[c.__key] = c;
+        if (c.parent_id) {
+          var pk = String(c.parent_id);
+          (CHILDREN[pk] || (CHILDREN[pk] = [])).push(c);
+        }
+      }
+      ALL = all;
+      ROOTS = all.filter(function (c) {
+        return !c.parent_id || !BY_ID[String(c.parent_id)];
+      });
+      return all;
+    });
+  }
+
+  function countReplies(id) {
+    var kids = CHILDREN[String(id)] || [];
+    var n = 0;
+    for (var i = 0; i < kids.length; i++) n += 1 + countReplies(kids[i].id);
+    return n;
+  }
+
+  function pickRandom() {
+    if (!ROOTS.length) return null;
+    var pool = ROOTS.filter(function (r) { return String(r.id) !== String(currentRootId); });
+    var list = pool.length ? pool : ROOTS;
+    return list[Math.floor(Math.random() * list.length)];
+  }
+
+  /* ================= 渲染 ================= */
+  function renderNote(root) {
+    var card = document.getElementById('noteCard');
+    if (!root) {
+      card.innerHTML =
+        '<div class="note-empty">' +
+          '<div class="note-empty-icon">🛒</div>' +
+          '<p>货架还空着。<br>来放第一条心里话吧～</p>' +
+        '</div>';
+      return;
+    }
+
+    var topic = TOPIC_MAP[root.topic_id] || {};
+    var nick = root.nick || '神秘顾客';
+    var total = countReplies(root.id);
+
+    card.innerHTML =
+      '<div class="note-top">' +
+        (topic.tag ? '<span class="note-tag">' + esc(topic.tag) + '</span>' : '') +
+        (topic.group ? '<span class="note-group">' + esc(topic.group) + '</span>' : '') +
+      '</div>' +
+      '<div class="note-main">' +
+        '<div class="note-avatar">' + esc(firstChar(nick)) + '</div>' +
+        '<div class="note-main-body">' +
+          '<div class="note-nick">' +
+            '<span>' + esc(nick) + '</span>' +
+            '<span class="note-time">' + formatTime(root.created_at) + '</span>' +
+          '</div>' +
+          '<div class="note-text">' + esc(root.content) + '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="note-foot">' +
+        '<div class="note-foot-actions">' +
+          likeButtonHtml(root.id, '') +
+          '<button class="reply-btn" data-id="' + esc(root.id) + '" data-nick="' + esc(nick) + '" type="button">↩ 回复</button>' +
+        '</div>' +
+        '<span class="reply-count">' + (total ? '💬 ' + total + ' 条回声' : '还没有回声') + '</span>' +
+      '</div>' +
+      renderReplies(root.id, 1);
+
+    bindCardActions(card);
+  }
+
+  function renderReplies(parentId, depth) {
+    var kids = CHILDREN[String(parentId)] || [];
+    if (!kids.length) return '';
+    var flat = depth >= MAX_NEST_DEPTH;
+    var html = '<div class="replies' + (flat ? ' replies--flat' : '') + '">';
+    for (var i = 0; i < kids.length; i++) html += renderReply(kids[i], depth);
+    return html + '</div>';
+  }
+
+  function renderReply(c, depth) {
+    var nick = c.nick || '神秘顾客';
+    var parent = c.parent_id ? BY_ID[String(c.parent_id)] : null;
+    var replyTo = parent
+      ? '<span class="reply-to">回复 @' + esc(parent.nick || '神秘顾客') + '：</span>'
+      : '';
+    return '<div class="reply-item">' +
+        '<div class="reply-avatar">' + esc(firstChar(nick)) + '</div>' +
+        '<div class="reply-main">' +
+          '<div class="reply-head">' +
+            '<span class="reply-nick">' + esc(nick) + '</span>' +
+            '<span class="reply-time">' + formatTime(c.created_at) + '</span>' +
+          '</div>' +
+          '<div class="reply-text">' + replyTo + esc(c.content) + '</div>' +
+          '<div class="reply-actions">' +
+            likeButtonHtml(c.id, 'like-btn--sm') +
+            '<button class="reply-btn" data-id="' + esc(c.id) + '" data-nick="' + esc(nick) + '" type="button">回复</button>' +
+          '</div>' +
+          renderReplies(c.id, depth + 1) +
+        '</div>' +
+      '</div>';
+  }
+
+  function bindCardActions(scope) {
+    var btns = scope.querySelectorAll('.reply-btn, .like-btn');
+    for (var i = 0; i < btns.length; i++) {
+      (function (b) {
+        if (b.classList.contains('reply-btn')) {
+          b.onclick = function () {
+            openReply(b.getAttribute('data-id'), b.getAttribute('data-nick'));
+          };
+        } else {
+          b.onclick = function (e) {
+            if (e && e.stopPropagation) e.stopPropagation();
+            handleLike(b.getAttribute('data-id'), b);
+          };
+        }
+      })(btns[i]);
+    }
+  }
+
+  function showRoot(root) {
+    currentRootId = root ? root.id : null;
+    renderNote(root);
+  }
+
+  function updateShelfTitle() {
+    document.getElementById('shelfTitle').textContent =
+      ROOTS.length ? '货架上的心里话 · 共 ' + ROOTS.length + ' 条' : '货架上的心里话';
+  }
+
+  function onNext() {
+    if (!ROOTS.length) { toast('货架还空着，来写第一条吧 ✎'); return; }
+    var pool = ROOTS.filter(function (r) { return String(r.id) !== String(currentRootId); });
+    if (!pool.length) { toast('就这一条啦，写点新的吧 ✎'); return; }
+
+    var next = pool[Math.floor(Math.random() * pool.length)];
+    var card = document.getElementById('noteCard');
+    card.classList.add('is-fading');
+    setTimeout(function () {
+      showRoot(next);
+      card.classList.remove('is-fading');
+    }, 220);
+  }
+
+  /* ================= 回复 ================= */
+  function openReply(id, nick) {
+    var target = findComment(id);
+    if (!target) { toast('这条留言已经不在了'); return; }
+    replyContext = { targetId: target.id, topicId: target.topic_id, nick: nick || target.nick || '神秘顾客' };
+    document.getElementById('replyModalTitle').textContent = '回复 @' + replyContext.nick;
+    document.getElementById('replyNick').value = loadNick();
+    document.getElementById('replyContent').value = '';
+    openModal('replyModal', document.getElementById('replyContent'));
+  }
+
+  function handleReplySubmit() {
+    if (!replyContext || !replyContext.targetId || !replyContext.topicId) {
+      toast('找不到要回复的留言了');
+      return;
+    }
+    var nickRaw = document.getElementById('replyNick').value.trim() || '神秘顾客';
+    var contentRaw = document.getElementById('replyContent').value.trim();
+    if (!contentRaw) { toast('写点什么再上架吧'); return; }
+
+    var ctx = replyContext;
+
+    function send(content, nick) {
+      var btn = document.getElementById('replySubmit');
+      submitComment({ topicId: ctx.topicId, parentId: ctx.targetId, nick: nick, content: content }, btn)
+        .then(function (ok) {
+          if (!ok) return;
+          lsSet(NICK_KEY, nick);
+          document.getElementById('replyContent').value = '';
+          closeModal('replyModal');
+          replyContext = null;
+          return refreshKeepCurrent().then(function () { toast('回声已上架 🌱'); });
+        });
+    }
+
+    if (FILTER_MODE === 'mask') {
+      var mc = maskWords(contentRaw), mn = maskWords(nickRaw);
+      if (mc !== contentRaw || mn !== nickRaw) {
+        showMaskConfirm(mc, mn, function () { send(mc, mn); });
+        return;
+      }
+    }
+    send(contentRaw, nickRaw);
+  }
+
+  /* ================= 写留言 ================= */
+  function renderTopicPicker() {
+    var picker = document.getElementById('topicPicker');
+    var html = '<div class="picker-step">' +
+      '<div class="picker-step-title"><span class="step-num">1</span>我是谁</div>' +
+      '<div class="speaker-chips">';
+
+    for (var s = 0; s < SPEAKERS.length; s++) {
+      var sp = SPEAKERS[s];
+      html += '<button class="speaker-chip' + (sp.key === currentSpeaker ? ' is-active' : '') +
+              '" data-speaker="' + esc(sp.key) + '" type="button">' +
+                '<span class="emoji">' + sp.emoji + '</span><span>' + esc(sp.label) + '</span>' +
+              '</button>';
+    }
+    html += '</div></div>';
+
+    var candidates = topicsBySpeaker(currentSpeaker);
+    html += '<div class="picker-step">' +
+      '<div class="picker-step-title"><span class="step-num">2</span>我想对谁说</div>' +
+      '<div class="listener-chips">';
+    for (var l = 0; l < candidates.length; l++) {
+      var c = candidates[l];
+      html += '<button class="listener-chip' + (c.listener === currentListener ? ' is-active' : '') +
+              '" data-listener="' + esc(c.listener) + '" type="button">' + esc(c.listenerLabel) + '</button>';
+    }
+    html += '</div></div>';
+
+    var current = TOPIC_MAP[selectedTopicId] || TOPICS[0];
+    html += '<div class="picker-preview"><span>将放进：</span>' +
+            '<span class="preview-value">' + esc(current.group) + ' · ' + esc(current.tag) + '</span></div>';
+
+    picker.innerHTML = html;
+
+    var speakerBtns = picker.querySelectorAll('.speaker-chip');
+    for (var a = 0; a < speakerBtns.length; a++) {
+      speakerBtns[a].onclick = function () {
+        var sp = this.getAttribute('data-speaker');
+        var cands = topicsBySpeaker(sp);
+        if (!cands.length) return;
+        if (findTopic(sp, currentListener)) applyTopic(sp, currentListener);
+        else applyTopic(sp, cands[0].listener);
+        renderTopicPicker();
+      };
+    }
+
+    var listenerBtns = picker.querySelectorAll('.listener-chip');
+    for (var b = 0; b < listenerBtns.length; b++) {
+      listenerBtns[b].onclick = function () {
+        applyTopic(currentSpeaker, this.getAttribute('data-listener'));
+        renderTopicPicker();
+      };
+    }
+  }
+
+  function openWrite() {
+    document.getElementById('writeNick').value = loadNick();
+    document.getElementById('writeContent').value = '';
+    renderTopicPicker();
+    openModal('writeModal', document.getElementById('writeContent'));
+  }
+
+  function handleWriteSubmit() {
+    var nickRaw = document.getElementById('writeNick').value.trim() || '神秘顾客';
+    var contentRaw = document.getElementById('writeContent').value.trim();
+    if (!selectedTopicId) { toast('先选一下「我是谁 / 对谁说」吧'); return; }
+    if (!contentRaw) { toast('写点什么再上架吧'); return; }
+
+    function send(content, nick) {
+      var btn = document.getElementById('writeSubmit');
+      var beforeIds = {};
+      for (var i = 0; i < ROOTS.length; i++) beforeIds[String(ROOTS[i].id)] = 1;
+
+      submitComment({ topicId: selectedTopicId, parentId: null, nick: nick, content: content }, btn)
+        .then(function (ok) {
+          if (!ok) return;
+          lsSet(NICK_KEY, nick);
+          document.getElementById('writeContent').value = '';
+          closeModal('writeModal');
+          return fetchAllComments().then(function () {
+            updateShelfTitle();
+            var mine = null;
+            for (var j = 0; j < ROOTS.length; j++) {
+              if (!beforeIds[String(ROOTS[j].id)]) { mine = ROOTS[j]; break; }
+            }
+            showRoot(mine || pickRandom());
+            toast('上架啦，谢谢你的分享 🌱');
+          });
+        });
+    }
+
+    if (FILTER_MODE === 'mask') {
+      var mc = maskWords(contentRaw), mn = maskWords(nickRaw);
+      if (mc !== contentRaw || mn !== nickRaw) {
+        showMaskConfirm(mc, mn, function () { send(mc, mn); });
+        return;
+      }
+    }
+    send(contentRaw, nickRaw);
+  }
+
+  /* ================= 提交 / 刷新 ================= */
+  function submitComment(data, btn) {
+    var oldLabel = btn ? btn.textContent : '';
+    if (btn) { btn.disabled = true; btn.textContent = '上架中…'; }
+
+    return fetch('/api/comments', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        app_id: APP_ID,
+        topic_id: data.topicId,
+        parent_id: data.parentId,
+        nick: data.nick,
+        content: data.content
+      }),
+      cache: 'no-store'
+    })
+      .then(function (res) {
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        return res.json().catch(function () { return {}; });
+      })
+      .then(function () { return true; })
+      .catch(function () {
+        toast('网络不太好，没发出去，再试一次 ♡');
+        return false;
+      })
+      .then(function (ok) {
+        if (btn) { btn.disabled = false; btn.textContent = oldLabel; }
+        return ok;
+      });
+  }
+
+  function refreshKeepCurrent() {
+    var keepId = currentRootId;
+    return fetchAllComments().then(function () {
+      updateShelfTitle();
+      var root = keepId != null ? findComment(keepId) : null;
+      showRoot(root || pickRandom());
+    });
+  }
+
+  /* ================= 弹窗 ================= */
+  function openModal(id, focusEl) {
+    var overlay = document.getElementById(id);
+    if (!overlay) return;
+    overlay.classList.add('is-open');
+    if (focusEl) {
+      setTimeout(function () { try { focusEl.focus(); } catch (e) {} }, 380);
+    }
+  }
+  function closeModal(id) {
+    var overlay = document.getElementById(id);
+    if (!overlay) return;
+    overlay.classList.remove('is-open');
+    var a = document.activeElement;
+    if (a && (a.tagName === 'INPUT' || a.tagName === 'TEXTAREA')) a.blur();
+  }
+
+  /* 敏感词打码确认弹窗（动态创建） */
+  var maskModalEl = null;
+  function showMaskConfirm(maskedContent, maskedNick, onConfirm) {
+    if (!maskModalEl) {
+      maskModalEl = document.createElement('div');
+      maskModalEl.className = 'modal-overlay modal-overlay--center';
+      maskModalEl.id = 'maskModal';
+      maskModalEl.innerHTML =
+        '<div class="concept-card" style="max-width:360px">' +
+          '<div class="concept-icon">🛡️</div>' +
+          '<h3 class="concept-title">小提醒</h3>' +
+          '<div class="concept-subtitle">有些词我们轻轻挡了一下，发出前先看看～</div>' +
+          '<div id="maskPreview" style="font-size:.85rem;line-height:1.8;color:var(--soft);background:#fff;border-radius:14px;padding:.85rem;border:1px dashed rgba(255,123,92,.35);white-space:pre-wrap;word-break:break-word;margin-bottom:.9rem;max-height:40vh;overflow-y:auto"></div>' +
+          '<div style="display:flex;gap:.6rem">' +
+            '<button type="button" id="maskCancel" style="flex:1;padding:.68rem;border-radius:999px;font-weight:700;font-size:.9rem;color:var(--mute);background:#fff;box-shadow:inset 0 0 0 1.5px rgba(160,130,100,.2)">改一改</button>' +
+            '<button type="button" id="maskOk" style="flex:1.3;padding:.68rem;border-radius:999px;font-weight:700;font-size:.9rem;color:#fff;background:linear-gradient(135deg,#ffb347,#ff7b5c 48%,#ff6b9d);box-shadow:0 10px 22px -8px rgba(255,107,157,.65)">就这样发</button>' +
+          '</div>' +
+        '</div>';
+      document.body.appendChild(maskModalEl);
+      document.getElementById('maskCancel').onclick = function () {
+        maskModalEl.classList.remove('is-open');
+      };
+      document.getElementById('maskOk').onclick = function () {
+        maskModalEl.classList.remove('is-open');
+        var fn = maskModalEl.__onConfirm;
+        maskModalEl.__onConfirm = null;
+        if (fn) fn();
+      };
+    }
+    document.getElementById('maskPreview').textContent = '【' + maskedNick + '】\n\n' + maskedContent;
+    maskModalEl.__onConfirm = onConfirm;
+    maskModalEl.classList.add('is-open');
+  }
+
+  /* ================= 初始化 ================= */
+  function init() {
+    /* 日期 */
+    var d = new Date();
+    var weeks = ['日', '一', '二', '三', '四', '五', '六'];
+    document.getElementById('todayDate').textContent =
+      (d.getMonth() + 1) + '月' + d.getDate() + '日 · 周' + weeks[d.getDay()];
+
+    /* 底部操作 */
+    document.getElementById('nextBtn').onclick = onNext;
+    document.getElementById('writeBtn').onclick = openWrite;
+    document.getElementById('openConceptBtn').onclick = function () { openModal('conceptModal'); };
+    document.getElementById('replySubmit').onclick = handleReplySubmit;
+    document.getElementById('writeSubmit').onclick = handleWriteSubmit;
+
+    /* ---------- 背景音乐 ---------- */
+    var bgm = document.getElementById('bgm');
+    var musicBtn = document.getElementById('musicBtn');
+    var bgmUserPaused = false;
+    bgm.loop = true;
+
+    function setMusicUI(on) {
+      musicBtn.classList.toggle('is-on', on);
+      musicBtn.textContent = on ? '♫' : '♪';
+      var label = on ? '暂停背景音乐' : '播放背景音乐';
+      musicBtn.setAttribute('aria-label', label);
+      musicBtn.title = label;
+    }
+
+    function playBgm() {
+      if (!bgm.paused) { setMusicUI(true); return Promise.resolve(true); }
+      var p;
+      try { p = bgm.play(); } catch (e) { p = null; }
+      if (!p || typeof p.then !== 'function') { setMusicUI(true); return Promise.resolve(true); }
+      return p.then(function () { setMusicUI(true); return true; })
+              .catch(function () { setMusicUI(false); return false; });
+    }
+
+    // 任意点击 / 触摸 / 按键都尝试播放（浏览器策略要求必须在用户操作里调用）
+    function autoPlayBgm() {
+      if (bgmUserPaused || !bgm.paused) return;
+      playBgm();
+    }
+    ['click', 'touchstart', 'pointerdown', 'keydown'].forEach(function (evt) {
+      document.addEventListener(evt, autoPlayBgm, { passive: true });
+    });
+
+    musicBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      if (e.preventDefault) e.preventDefault();
+      if (bgm.paused) {
+        bgmUserPaused = false;
+        playBgm().then(function (ok) { if (!ok) toast('音乐还没准备好，稍后再试试 ♪'); });
+      } else {
+        bgmUserPaused = true;
+        bgm.pause();
+        setMusicUI(false);
+      }
+    });
+
+    setMusicUI(false);
+
+    /* 弹窗关闭：事件委托 */
+    document.addEventListener('click', function (e) {
+      var t = e.target;
+      if (!t || !t.classList) return;
+      if (t.classList.contains('modal-overlay') && t.classList.contains('is-open')) {
+        closeModal(t.id);
+      }
+      var closeId = t.getAttribute && t.getAttribute('data-close');
+      if (closeId) closeModal(closeId);
+    });
+
+    /* Esc 关闭 */
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' || e.keyCode === 27) {
+        var opens = document.querySelectorAll('.modal-overlay.is-open');
+        for (var i = 0; i < opens.length; i++) opens[i].classList.remove('is-open');
+      }
+    });
+
+    /* 键盘弹起时收起底部栏 */
+    document.addEventListener('focusin', function (e) {
+      var tag = e.target && e.target.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA') document.body.classList.add('keyboard-open');
+    });
+    document.addEventListener('focusout', function () {
+      setTimeout(function () {
+        var a = document.activeElement, tag = a && a.tagName;
+        if (tag !== 'INPUT' && tag !== 'TEXTAREA') document.body.classList.remove('keyboard-open');
+      }, 80);
+    });
+
+    /* 首次加载货架 */
+    fetchAllComments().then(function () {
+      updateShelfTitle();
+      showRoot(pickRandom());
+    });
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>

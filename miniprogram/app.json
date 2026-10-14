@@ -1,0 +1,36 @@
+{
+  "pages": [
+    "pages/login/index",
+    "pages/home/index",
+    "pages/explore/index",
+    "pages/journals/index",
+    "pages/treehole/index",
+    "pages/profile/index",
+    "pages/checkin/index",
+    "pages/article/index",
+    "pages/service/index",
+    "pages/tool/index"
+  ],
+  "window": {
+    "navigationBarTitleText": "成长健研社",
+    "navigationBarBackgroundColor": "#f7f8f2",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#f7f8f2",
+    "backgroundTextStyle": "dark"
+  },
+  "tabBar": {
+    "color": "#7a857e",
+    "selectedColor": "#245c45",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "white",
+    "list": [
+      { "pagePath": "pages/home/index", "text": "今日" },
+      { "pagePath": "pages/explore/index", "text": "探索" },
+      { "pagePath": "pages/journals/index", "text": "星图" },
+      { "pagePath": "pages/treehole/index", "text": "树洞" },
+      { "pagePath": "pages/profile/index", "text": "我的" }
+    ]
+  },
+  "sitemapLocation": "sitemap.json",
+  "style": "v2"
+}

@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+<title>成长健研社 · 青少年成长需求分析</title>
+<style>
+    /* ===== 设计变量 ===== */
+    :root {
+        --primary: #2a7f9e;
+        --ink: #1a3c4f;
+        --ink-deep: #0e3a4f;
+        --ink-soft: #2b5d78;
+        --muted: #6c8fa0;
+        --border: #e2eff7;
+        --border-hover: #c1ddec;
+        --bg-soft: #fbfeff;
+        --chip: #e2eff7;
+        --error: #c65a4a;
+        --error-border: #d97b6f;
+        --error-bg: #fff8f6;
+        --radius: 14px;
+        --pill: 999px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { -webkit-text-size-adjust: 100%; }
+
+    body {
+        background: #edf4f9;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", Roboto, Helvetica, Arial, sans-serif;
+        color: var(--ink);
+        line-height: 1.5;
+        padding: 12px 10px 20px;
+        padding-bottom: calc(20px + env(safe-area-inset-bottom));  /* 全面屏安全区 */
+        display: flex;
+        justify-content: center;
+        -webkit-tap-highlight-color: transparent;   /* 去掉微信/iOS 点击灰块 */
+        overscroll-behavior-y: contain;             /* 避免触发下拉刷新 */
+    }
+
+    .card {
+        width: 100%;
+        max-width: 700px;
+        background: #fff;
+        border-radius: 20px;
+        box-shadow: 0 8px 24px -14px rgba(20, 50, 70, .16), 0 0 0 1px rgba(200, 225, 240, .4);
+        padding: 18px 16px 20px;
+    }
+
+    /* ===== 头部 ===== */
+    .header-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 8px 10px;
+    }
+    .header-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--ink-deep);
+        letter-spacing: -0.02em;
+    }
+    .tagline {
+        font-size: 0.76rem;
+        color: var(--muted);
+        margin: 2px 0 12px;
+    }
+    .home-link {
+        border: 1px solid #cfe0ec;
+        border-radius: var(--pill);
+        padding: 5px 13px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        color: #1e5d7d;
+        text-decoration: none;
+        flex-shrink: 0;
+    }
+    .home-link:active { background: #e8f2f9; transform: scale(0.96); }
+
+    /* ===== 说明 ===== */
+    .info-box {
+        background: #f6fbff;
+        border: 1px solid #e4eff7;
+        border-radius: 12px;
+        padding: 12px 14px;
+        margin-bottom: 18px;
+        font-size: 0.82rem;
+        line-height: 1.6;
+        color: #1b4b63;
+    }
+    .info-box strong { color: #0f4059; font-weight: 600; }
+    .info-box .highlight {
+        background: #e0edf6;
+        padding: 1px 8px;
+        border-radius: var(--pill);
+        font-weight: 500;
+    }
+    .info-note {
+        margin-top: 8px;
+        font-size: 0.76rem;
+        color: var(--muted);
+    }
+
+    /* ===== 学校 / 年级：标签在上、控件全宽（手机友好） ===== */
+    .info-row {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 12px;
+        background: var(--bg-soft);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 14px 15px;
+        margin-bottom: 20px;
+    }
+    .form-item { display: flex; flex-direction: column; gap: 6px; }
+    .form-label { font-size: 0.88rem; font-weight: 600; color: #1b4c64; }
+    .form-input, .form-select {
+        width: 100%;
+        min-height: 48px;
+        padding: 12px 14px;
+        border: 1px solid #d3e3ee;
+        border-radius: 12px;
+        font: inherit;
+        font-size: 16px;          /* ≥16px 防止 iOS/微信聚焦自动放大 */
+        background-color: #fff;
+        color: #0f3347;
+        transition: border-color .15s, box-shadow .15s;
+    }
+    .form-select {
+        appearance: none;
+        -webkit-appearance: none;
+        padding-right: 38px;
+        /* 自绘下拉箭头，统一 iOS/Android 原生样式差异 */
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%236fa3c0' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 14px center;
+    }
+    .form-input:focus, .form-select:focus {
+        border-color: #4d97b5;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(77, 151, 181, .12);
+    }
+    .info-row.error .form-input,
+    .info-row.error .form-select {
+        border-color: var(--error-border);
+        background-color: var(--error-bg);
+        box-shadow: 0 0 0 3px rgba(217, 123, 111, .08);
+    }
+    .required-star { color: var(--error); font-weight: 700; margin-left: 3px; }
+    .field-error-msg {
+        display: none;
+        grid-column: 1 / -1;
+        font-size: 0.75rem;
+        font-weight: 500;
+        color: var(--error);
+    }
+    .field-error-msg.show { display: block; }
+
+    /* ===== 板块 ===== */
+    .section { margin-bottom: 20px; }
+    .section-title {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 6px 8px;
+        font-size: 1.05rem;
+        font-weight: 600;
+        color: #124b68;
+        margin-bottom: 12px;
+    }
+    .section-title small {
+        font-size: 0.7rem;
+        font-weight: 500;
+        background: var(--chip);
+        color: #175271;
+        padding: 2px 10px;
+        border-radius: var(--pill);
+        white-space: nowrap;
+    }
+    .section-tip {
+        display: block;
+        font-size: 0.8rem;
+        color: var(--ink-soft);
+        background: #f0f7fc;
+        padding: 10px 12px;
+        border-radius: 12px;
+        margin-bottom: 10px;
+        line-height: 1.55;
+    }
+
+    /* ===== 复选项：手机单列整行，触控热区 ≥44px ===== */
+    .option-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 6px;
+        margin-bottom: 4px;
+    }
+    .opt-item {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        min-height: 44px;
+        background: var(--bg-soft);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 10px 13px;
+        font-size: 0.92rem;
+        cursor: pointer;
+        -webkit-touch-callout: none;
+        user-select: none;
+        -webkit-user-select: none;
+        transition: background .15s, border-color .15s;
+    }
+    .opt-item:active { background: #eaf4fb; border-color: var(--border-hover); }
+    .opt-item input {
+        width: 1.2rem;
+        height: 1.2rem;
+        accent-color: #2a7f9e;
+        flex-shrink: 0;
+    }
+    .opt-item label {
+        flex: 1;                        /* label 撑满剩余宽度，点行内任意处均可勾选 */
+        font-weight: 500;
+        color: #1a4b61;
+        cursor: pointer;
+        line-height: 1.4;
+    }
+    .opt-item input:checked + label { color: #0d4059; }
+
+    /* ===== 文本域 ===== */
+    .open-textarea {
+        width: 100%;
+        margin-top: 8px;
+        padding: 12px 14px;
+        border: 1px solid #d3e6f0;
+        border-radius: 12px;
+        font: inherit;
+        font-size: 16px;
+        background-color: var(--bg-soft);
+        color: #0f3347;
+        line-height: 1.55;
+        resize: vertical;
+        min-height: 84px;
+    }
+    .open-textarea::placeholder { color: #8aa9bb; }
+    .open-textarea:focus {
+        border-color: #4d97b5;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(77, 151, 181, .12);
+        background-color: #fff;
+    }
+
+    /* ===== 按钮：主按钮全宽独占一行，导出/重置各占半行 ===== */
+    .actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin-top: 18px;
+    }
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        font-weight: 600;
+        cursor: pointer;
+        border-radius: var(--pill);
+        transition: 0.15s;
+        touch-action: manipulation;
+    }
+    .actions .btn { min-height: 44px; }
+    .btn:disabled { opacity: .6; cursor: not-allowed; }
+    .btn-primary {
+        grid-column: 1 / -1;            /* 手机上占满整行 */
+        min-height: 48px;
+        background: var(--primary);
+        border: none;
+        color: #fff;
+        font-size: 1rem;
+        box-shadow: 0 6px 16px rgba(42, 127, 158, .22);
+    }
+    .btn-primary:active { background: #1c6985; transform: scale(.98); }
+    .btn-outline {
+        background: #fff;
+        border: 1px solid #cee2ee;
+        color: #1b4a62;
+        font-size: 0.92rem;
+    }
+    .btn-outline:active { background: #e8f2f9; }
+    .btn-ghost {                        /* 重置降为轻量文字按钮，防误触 */
+        background: none;
+        border: none;
+        color: #5a7f8c;
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+    .btn-ghost:active { color: #2b5d78; }
+
+    /* ===== 提交状态 ===== */
+    .submit-status {
+        display: none;
+        margin-top: 12px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        text-align: center;
+        padding: 12px 16px;
+        border-radius: 12px;
+        line-height: 1.5;
+    }
+    .submit-status.loading { display: block; background: #eef6fb; color: #1e5d7d; }
+    .submit-status.success { display: block; background: #e9f7ef; color: #1a7a4a; }
+    .submit-status.error { display: block; background: #fdeceb; color: var(--error); }
+
+    /* ===== 数据预览（保留可长按选择复制） ===== */
+    .json-preview {
+        background: #f4f9fd;
+        border: 1px dashed #b3cee0;
+        border-radius: 12px;
+        padding: 12px 14px;
+        margin-top: 14px;
+        max-height: 180px;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        font-size: 0.72rem;
+        font-family: 'SF Mono', Menlo, Consolas, monospace;
+        white-space: pre-wrap;
+        word-break: break-all;
+        color: #134157;
+        line-height: 1.55;
+    }
+    .json-preview:empty::before {
+        content: "📋 数据预览区 — 点击「导出」生成";
+        color: #4d748d;
+        font-family: inherit;
+        font-size: 0.8rem;
+    }
+    .json-preview::-webkit-scrollbar { width: 4px; }
+    .json-preview::-webkit-scrollbar-thumb { background: #b3cee0; border-radius: 10px; }
+
+    .footnote {
+        margin-top: 14px;
+        padding-top: 12px;
+        border-top: 1px solid var(--border);
+        font-size: 0.7rem;
+        color: var(--muted);
+        text-align: center;
+    }
+
+    /* ===== 确认弹窗（手机适配） ===== */
+    .modal-mask {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(14, 45, 62, .5);
+        z-index: 100;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+    }
+    .modal-mask.show { display: flex; }
+    .modal {
+        background: #fff;
+        border-radius: 20px;
+        max-width: 520px;
+        width: 100%;
+        max-height: 86vh;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+        padding: 20px 16px 18px;
+        box-shadow: 0 25px 60px rgba(0, 30, 50, .25);
+    }
+    .modal::-webkit-scrollbar { width: 5px; }
+    .modal::-webkit-scrollbar-thumb { background: #b3cee0; border-radius: 10px; }
+    .modal-title { font-size: 1.1rem; font-weight: 700; color: var(--ink-deep); }
+    .modal-sub { font-size: 0.8rem; color: #4e738b; margin: 4px 0 14px; line-height: 1.5; }
+    .cf-row {
+        display: flex;
+        flex-direction: column;     /* 手机：标签与内容上下排 */
+        gap: 2px;
+        padding: 10px 12px;
+        background: #f8fcff;
+        border: 1px solid #e8f2f9;
+        border-radius: 12px;
+        margin-bottom: 8px;
+        font-size: 0.85rem;
+        line-height: 1.55;
+    }
+    .cf-label { font-weight: 600; color: #124b68; font-size: 0.8rem; }
+    .cf-warn { color: #b9770e; font-weight: 600; }
+    .cf-open { font-size: 0.75rem; color: #4e738b; margin-top: 4px; }
+    .cf-note { font-size: 0.75rem; color: #4e738b; margin: 8px 2px 14px; line-height: 1.5; }
+    .modal-btns { display: flex; gap: 10px; }
+    .modal-btns .btn { flex: 1; min-height: 46px; }
+
+    /* ===== 桌面/大屏增强 ===== */
+    @media (min-width: 640px) {
+        body { padding: 24px 16px 48px; }
+        .card { border-radius: 24px; padding: 28px 26px; }
+        .header-title { font-size: 1.6rem; }
+        .tagline { font-size: 0.85rem; margin: 4px 0 16px; }
+        .home-link { padding: 7px 18px; font-size: 0.85rem; }
+        .home-link:hover { background: #e8f2f9; border-color: #b3cee0; }
+        .info-box { padding: 16px 20px; font-size: 0.9rem; margin-bottom: 24px; }
+        .info-note { font-size: 0.82rem; }
+        .info-row { grid-template-columns: 1fr 1fr; gap: 14px; padding: 16px 18px; }
+        .form-label { font-size: 0.9rem; }
+        .form-input, .form-select { min-height: 46px; padding: 11px 16px; font-size: 0.95rem; }
+        .form-select { padding-right: 40px; }
+        .section { margin-bottom: 26px; }
+        .section-title { font-size: 1.15rem; margin-bottom: 14px; }
+        .section-tip { font-size: 0.85rem; margin-bottom: 12px; }
+        .option-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+        .opt-item { min-height: 0; padding: 9px 12px; font-size: 0.88rem; }
+        .opt-item:hover { background: #f2f9ff; border-color: #c1ddec; }
+        .opt-item input { width: 1.05rem; height: 1.05rem; }
+        .open-textarea { font-size: 0.95rem; min-height: 72px; padding: 12px 16px; }
+        .actions { grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 20px; }
+        .actions .btn { min-height: 0; padding: 12px 20px; font-size: 0.95rem; }
+        .btn-primary { grid-column: auto; }
+        .submit-status { font-size: 0.9rem; }
+        .json-preview { padding: 14px 18px; font-size: 0.78rem; max-height: 200px; }
+        .footnote { font-size: 0.75rem; }
+        .modal { padding: 26px 24px 22px; }
+        .modal-title { font-size: 1.2rem; }
+        .modal-sub { font-size: 0.85rem; }
+        .cf-row { flex-direction: row; gap: 12px; padding: 12px 14px; font-size: 0.9rem; }
+        .cf-label { flex: 0 0 96px; font-size: 0.85rem; }
+        .cf-open { font-size: 0.78rem; }
+        .cf-note { font-size: 0.78rem; }
+        .modal-btns .btn { min-height: 0; }
+    }
+</style>
+</head>
+<body>
+<div class="card">
+    <!-- 头部 -->
+    <div class="header-row">
+        <h1 class="header-title">青少年成长需求分析</h1>
+        <a href="index.html" class="home-link">🏠 返回主页</a>
+    </div>
+    <p class="tagline">内在力量 · 外在支持 · 家庭成长 ｜ R2成长支持架构设计理念</p>
+
+    <!-- 说明 -->
+    <div class="info-box">
+        <strong>📌 关于这份需求分析</strong><br>
+        一共三个部分，约 3~5 分钟。第 1、2 部分<span class="highlight">由青少年</span>填写；第 3 部分<span class="highlight">建议家长与孩子聊一聊后再填</span>；为了更好地服务孩子和家庭，可以使用<span class="highlight">右上角返回主页提供的Star-Track短期工具</span>简单分析成长现状后如实选择和填写。填完后核对无误点击<span class="highlight">「提交上传」</span>即可；网络不好时可用「导出」保存后交给老师。
+        <p class="info-note">请勿填写姓名等个人信息；手机、平板、电脑均可填写。</p>
+    </div>
+
+    <!-- 学校 / 年级 -->
+    <div class="info-row" id="infoRow">
+        <div class="form-item">
+            <label class="form-label" for="schoolName">学校 <span class="required-star">*</span></label>
+            <input type="text" class="form-input" id="schoolName" placeholder="例如：市第一实验小学">
+        </div>
+        <div class="form-item">
+            <label class="form-label" for="gradeSelect">年级 <span class="required-star">*</span></label>
+            <select class="form-select" id="gradeSelect">
+                <option value="">请选择</option>
+                <option value="一年级">一年级</option>
+                <option value="二年级">二年级</option>
+                <option value="三年级">三年级</option>
+                <option value="四年级">四年级</option>
+                <option value="五年级">五年级</option>
+                <option value="六年级">六年级</option>
+                <option value="七年级">七年级</option>
+                <option value="八年级">八年级</option>
+                <option value="九年级">九年级</option>
+                <option value="高一">高一</option>
+                <option value="高二">高二</option>
+                <option value="高三">高三</option>
+                <option value="其他">其他</option>
+            </select>
+        </div>
+        <div class="field-error-msg" id="fieldErrorMsg">⚠️ 请填写学校并选择年级</div>
+    </div>
+
+    <!-- 1. 内在力量 -->
+    <div class="section">
+        <h2 class="section-title">1. 内在力量 <small>我想成为的样子</small></h2>
+        <div class="option-grid" id="internalOptions"></div>
+        <textarea class="open-textarea" id="internalOpen" placeholder="还有哪些希望自己进步的地方？比如：更勇敢、更独立、上课更专注……想到什么写什么"></textarea>
+    </div>
+
+    <!-- 2. 外在支持 -->
+    <div class="section">
+        <h2 class="section-title">2. 外在支持 <small>学校 · 家庭 · 同伴给我的帮助</small></h2>
+        <div class="option-grid" id="externalOptions"></div>
+        <textarea class="open-textarea" id="externalOpen" placeholder="对学校或家里还有什么期待？比如：图书馆、春游、和爸爸妈妈一起运动……想到什么写什么"></textarea>
+    </div>
+
+    <!-- 3. 家庭成长 -->
+    <div class="section">
+        <h2 class="section-title">3. 家庭成长 <small>我们家需要的帮助</small></h2>
+        <p class="section-tip">这部分建议先和爸爸妈妈聊一聊：在成长过程中，我们家遇到了什么困难、想得到什么帮助？商量好后一起勾选。</p>
+        <div class="option-grid" id="familyOptions"></div>
+        <textarea class="open-textarea" id="familyOpen" placeholder="和爸爸妈妈商量后写下：我们家还需要什么帮助？比如：爸爸想学会辅导作业不发火、想知道孩子顶嘴怎么办……什么样的困难都可以写"></textarea>
+    </div>
+
+    <!-- 按钮 -->
+    <div class="actions">
+        <button class="btn btn-primary" id="submitBtn">☁️ 提交上传</button>
+        <button class="btn btn-outline" id="exportBtn">💾 导出</button>
+        <button class="btn btn-ghost" id="resetBtn">🔄 重置</button>
+    </div>
+
+    <div class="submit-status" id="submitStatus"></div>
+
+    <div class="json-preview" id="jsonPreview"></div>
+    <p class="footnote">不搜集任何个人信息 · 数据统计用于成长服务</p>
+</div>
+
+<!-- 确认弹窗 -->
+<div class="modal-mask" id="modalMask">
+    <div class="modal" role="dialog" aria-modal="true">
+        <div class="modal-title">📋 提交前请核对</div>
+        <div class="modal-sub">确认以下内容无误后再提交，提交后短时间内无法重复提交</div>
+        <div id="confirmList"></div>
+        <div class="modal-btns">
+            <button class="btn btn-outline" id="modalCancel">← 返回修改</button>
+            <button class="btn btn-primary" id="modalConfirm">✓ 确认无误，提交</button>
+        </div>
+    </div>
+</div>
+
+<script>
+(function () {
+    // 本设备提交冷却（毫秒），与服务器同步
+    const CLIENT_COOLDOWN_MS = 10 * 60 * 1000;
+
+    // ---------- 选项数据 ----------
+    const ITEMS = {
+        internal: [
+            '更自信，相信"我能行"',
+            '找到适合自己的学习方法',
+            '学会安排时间，学玩两不误',
+            '紧张、生气、难过时能调节好',
+            '遇到困难和失败不放弃',
+            '更了解自己（优点、目标）',
+            '上课敢发言，敢说出想法',
+            '保持好奇，愿意探索新事物'
+        ],
+        external: [
+            '老师多鼓励我、愿意听我说',
+            '同学友好，能交到好朋友',
+            '上课更有趣、能听得懂',
+            '作业量合适，有时间玩和运动',
+            '学校饭菜更好吃、更有营养',
+            '社团和课外活动更丰富',
+            '校园更安全、设施更好',
+            '爸爸妈妈多听我说、多鼓励我',
+            '爸爸妈妈多陪陪我',
+            '别总拿我和别人家孩子比'
+        ],
+        family: [
+            '亲子之间更好地倾听与沟通',
+            '帮孩子管理情绪和压力的方法',
+            '培养学习习惯和专注力的方法',
+            '合理安排作息和手机使用',
+            '更有效的表扬与批评方式',
+            '家里大人教育观念不一致时怎么办',
+            '想了解这个年龄段孩子的成长特点',
+            '遇到难题时，有专业指导的渠道'
+        ]
+    };
+
+    const $ = id => document.getElementById(id);
+    const grids = { internal: $('internalOptions'), external: $('externalOptions'), family: $('familyOptions') };
+
+    const schoolInput   = $('schoolName');
+    const gradeSelect   = $('gradeSelect');
+    const internalOpen  = $('internalOpen');
+    const externalOpen  = $('externalOpen');
+    const familyOpen    = $('familyOpen');
+    const jsonPreview   = $('jsonPreview');
+    const infoRow       = $('infoRow');
+    const fieldErrorMsg = $('fieldErrorMsg');
+    const submitBtn     = $('submitBtn');
+    const submitStatus  = $('submitStatus');
+    const modalMask     = $('modalMask');
+    const confirmList   = $('confirmList');
+
+    // HTML 转义：选项文本含引号（如 相信"我能行"），写入 value 属性前必须转义
+    const esc = s => String(s).replace(/[&<>"']/g, c =>
+        ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+    // ---------- 渲染复选框（静态常量，innerHTML 安全） ----------
+    for (const group in grids) {
+        grids[group].innerHTML = ITEMS[group].map(text => {
+            const id = group + '-' + text.replace(/[^\u4e00-\u9fa5a-zA-Z0-9]/g, '');
+            return `<div class="opt-item"><input type="checkbox" id="${id}" value="${esc(text)}"><label for="${id}">${esc(text)}</label></div>`;
+        }).join('');
+    }
+
+    const getChecked = grid => Array.from(grid.querySelectorAll('input:checked'), cb => cb.value);
+
+    // ---------- 校验 ----------
+    function validateSchoolAndGrade() {
+        const bad = !schoolInput.value.trim() || !gradeSelect.value;
+        infoRow.classList.toggle('error', bad);
+        fieldErrorMsg.classList.toggle('show', bad);
+        return !bad;
+    }
+
+    // 出错后再次输入/选择即清除错误
+    const revalidate = () => { if (infoRow.classList.contains('error')) validateSchoolAndGrade(); };
+    schoolInput.addEventListener('input', revalidate);
+    gradeSelect.addEventListener('change', revalidate);
+
+    // 构建数据（字段结构与原版保持一致，兼容后端）
+    function buildPayload() {
+        return {
+            school: schoolInput.value.trim() || '未填写',
+            grade: gradeSelect.value || '未选择',
+            internal: { selected: getChecked(grids.internal), open: internalOpen.value.trim() },
+            external: { selected: getChecked(grids.external), open: externalOpen.value.trim() },
+            family:   { selected: getChecked(grids.family),   open: familyOpen.value.trim() },
+            meta: {
+                collectedAt: new Date().toISOString(),
+                version: '成长需求探索 v8 (精致简约版)'
+            }
+        };
+    }
+
+    // ---------- 确认弹窗 ----------
+    function sectionRow(no, title, sel, openText) {
+        const checkedHtml = sel.length
+            ? `勾选 <b>${sel.length}</b> 项：<br>${esc(sel.join('、'))}`
+            : `<span class="cf-warn">⚠️ 未勾选任何选项，确定这样提交吗？</span>`;
+        const shortOpen = openText ? esc(openText.slice(0, 40)) + (openText.length > 40 ? '…' : '') : '';
+        const openHtml = openText
+            ? `<div class="cf-open">已填写补充："${shortOpen}"</div>`
+            : `<div class="cf-open">补充题未填写</div>`;
+        return `<div class="cf-row"><div class="cf-label">第${no}部分 · ${title}</div><div>${checkedHtml}${openHtml}</div></div>`;
+    }
+
+    function openConfirmModal() {
+        if (!validateSchoolAndGrade()) {
+            infoRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            return;
+        }
+
+        const last = Number(localStorage.getItem('growthLastSubmitTs') || 0);
+        if (last && (Date.now() - last) < CLIENT_COOLDOWN_MS) {
+            const remainMin = Math.ceil((CLIENT_COOLDOWN_MS - (Date.now() - last)) / 60000);
+            submitStatus.className = 'submit-status error';
+            submitStatus.textContent = `本设备 ${remainMin} 分钟内刚提交过。如需重新填写，请先点击「重置」`;
+            submitStatus.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            return;
+        }
+
+        confirmList.innerHTML =
+            `<div class="cf-row"><div class="cf-label">学校 / 年级</div><div>${esc(schoolInput.value.trim())} · ${esc(gradeSelect.value)}</div></div>` +
+            sectionRow('1', '内在力量', getChecked(grids.internal), internalOpen.value.trim()) +
+            sectionRow('2', '外在支持', getChecked(grids.external), externalOpen.value.trim()) +
+            sectionRow('3', '家庭成长', getChecked(grids.family), familyOpen.value.trim()) +
+            `<div class="cf-note">如需修改，请点「返回修改」；确认无误后点「确认无误，提交」。</div>`;
+
+        modalMask.classList.add('show');
+        document.body.style.overflow = 'hidden';   // 弹窗期间锁定背景滚动
+    }
+
+    function closeModal() {
+        modalMask.classList.remove('show');
+        document.body.style.overflow = '';
+    }
+
+    // ---------- 确认后真正提交（上传逻辑未改动） ----------
+    async function doSubmit() {
+        closeModal();
+        submitBtn.disabled = true;
+        submitBtn.textContent = '⏳ 提交中…';
+        submitStatus.className = 'submit-status loading';
+        submitStatus.textContent = '⏳ 正在提交，请稍候…';
+        submitStatus.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+        try {
+            const res = await fetch('/api/submit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(buildPayload())
+            });
+            const r = await res.json().catch(() => ({ ok: false, msg: '服务器响应异常（接口可能未部署）' }));
+
+            if (r.ok) {
+                localStorage.setItem('growthLastSubmitTs', String(Date.now()));
+                submitBtn.textContent = '✅ 已提交';
+                submitStatus.className = 'submit-status success';
+                submitStatus.textContent = '提交成功！感谢你和家人的参与，问卷已完成';
+            } else {
+                submitBtn.disabled = false;
+                submitBtn.textContent = '☁️ 提交上传';
+                submitStatus.className = 'submit-status error';
+                submitStatus.textContent = '提交未成功：' + (r.msg || '未知错误') + (r.rate ? '' : '。可点击「导出」保存数据交给老师');
+            }
+        } catch (e) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = '☁️ 提交上传';
+            submitStatus.className = 'submit-status error';
+            submitStatus.textContent = '网络异常，提交未成功。请点击「导出」保存数据交给老师';
+        }
+    }
+
+    // ---------- 导出 ----------
+    function handleExport() {
+        if (!validateSchoolAndGrade()) {
+            infoRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            return;
+        }
+        const data = buildPayload();
+        const jsonString = JSON.stringify(data, null, 2);
+        jsonPreview.textContent = jsonString;
+        try {
+            const blob = new Blob([jsonString], { type: 'application/json;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `成长需求_${data.school}_${data.grade}_${new Date().toISOString().slice(0, 10)}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            setTimeout(() => URL.revokeObjectURL(url), 3000);
+        } catch (e) {
+            console.warn('下载异常，预览已生成', e);
+            alert('JSON已生成，可手动复制预览内容。');
+        }
+    }
+
+    // ---------- 重置 ----------
+    function resetForm() {
+        document.querySelectorAll('.opt-item input').forEach(cb => cb.checked = false);
+        internalOpen.value = '';
+        externalOpen.value = '';
+        familyOpen.value = '';
+        jsonPreview.textContent = '';
+        submitBtn.disabled = false;
+        submitBtn.textContent = '☁️ 提交上传';
+        submitStatus.className = 'submit-status';
+        submitStatus.textContent = '';
+        infoRow.classList.remove('error');
+        fieldErrorMsg.classList.remove('show');
+        localStorage.removeItem('growthLastSubmitTs');
+        closeModal();
+    }
+
+    submitBtn.addEventListener('click', openConfirmModal);
+    $('modalConfirm').addEventListener('click', doSubmit);
+    $('modalCancel').addEventListener('click', closeModal);
+    modalMask.addEventListener('click', e => {
+        if (e.target === modalMask) closeModal();
+    });
+    $('exportBtn').addEventListener('click', handleExport);
+    $('resetBtn').addEventListener('click', () => {
+        if (confirm('重置所有勾选和填写内容？')) resetForm();
+    });
+})();
+</script>
+</body>
+</html>

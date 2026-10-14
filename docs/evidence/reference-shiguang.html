@@ -1,0 +1,2618 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="format-detection" content="telephone=no,email=no,address=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="星图">
+<meta name="theme-color" content="#F4F2FB">
+<title>STARMAP · 星图</title>
+<meta name="description" content="点亮成长的星图">
+<script>
+(function(){
+  try{
+    var t=localStorage.getItem('starmap_theme');
+    if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);
+  }catch(e){}
+})();
+</script>
+<style>
+:root{
+  color-scheme: light;
+  --paper:#F4F2FB;--ink:#1E1B2E;--muted:#8E8AA0;--line:#EAE7F2;
+  --deep:#2A1B54;--violet:#6D3EE6;--soft:#EDE9FE;--vink:#6D3EE6;--pink:#F472B6;
+  --r-lg:20px;--r-md:14px;--r-sm:10px;
+  --sh:0 1px 2px rgba(109,62,230,.04),0 6px 24px rgba(109,62,230,.06);
+  --sb:env(safe-area-inset-bottom,0px);--st:env(safe-area-inset-top,0px);
+  --card-bg:linear-gradient(180deg,#fff,#FDFCFF);
+  --card-bg-solid:#fff;
+  --input-bg:#fff;
+  --tabbar-bg:rgba(255,255,255,.94);
+  --tabbar-border:rgba(234,231,242,.9);
+  --body-bg-1:rgba(139,92,246,.11);--body-bg-2:rgba(244,114,182,.08);
+  --star-1:rgba(109,62,230,.45);--star-2:rgba(244,114,182,.4);
+  --star-3:rgba(139,92,246,.4);--star-4:rgba(244,114,182,.35);
+  --star-5:rgba(109,62,230,.38);--star-grid:rgba(139,92,246,.07);
+  --note-bg:#F0FDF4;--note-border:#BBF7D0;--note-text:#166534;--note-bold:#15803D;
+  --goal-bg:linear-gradient(135deg,#FFFBEB,#FEF3C7);--goal-border:#FDE68A;
+  --goal-text:#92400E;--goal-sub:#A16207;--goal-txt:#78350F;
+  --quote-bg:linear-gradient(135deg,#EDE9FE,#FCE7F3);--quote-border:rgba(196,181,253,.5);
+  --quote-text:#5B4A8A;
+  --followup-bg:linear-gradient(135deg,#F5F3FF,#EDE9FE);--followup-border:#C4B5FD;
+  --followup-text:#5B4A8A;
+  --chip-default:#F7F5FF;
+  --chip-text:#4A4238;
+  --mini-text:#4A4238;
+}
+[data-theme="dark"]{
+  color-scheme: dark;
+  --paper:#0D0920;--ink:#EDE9FE;--muted:#9B94B8;--line:rgba(139,92,246,.15);
+  --deep:#DDD6FE;--soft:rgba(139,92,246,.2);--vink:#B79CFF;--pink:#F9A8D4;
+  --sh:0 1px 2px rgba(0,0,0,.3),0 6px 24px rgba(0,0,0,.28);
+  --card-bg:linear-gradient(180deg,#1A1430,#1E1838);
+  --card-bg-solid:#1A1430;
+  --input-bg:#241C42;
+  --tabbar-bg:rgba(13,9,32,.92);
+  --tabbar-border:rgba(139,92,246,.18);
+  --body-bg-1:rgba(139,92,246,.14);--body-bg-2:rgba(244,114,182,.1);
+  --star-1:rgba(196,181,253,.55);--star-2:rgba(244,114,182,.5);
+  --star-3:rgba(167,139,250,.5);--star-4:rgba(244,114,182,.45);
+  --star-5:rgba(196,181,253,.5);--star-grid:rgba(167,139,250,.08);
+  --note-bg:rgba(16,185,129,.1);--note-border:rgba(16,185,129,.28);
+  --note-text:#6EE7B7;--note-bold:#A7F3D0;
+  --goal-bg:linear-gradient(135deg,rgba(245,158,11,.12),rgba(245,158,11,.06));
+  --goal-border:rgba(245,158,11,.3);
+  --goal-text:#FCD34D;--goal-sub:#FCD34D;--goal-txt:#FDE68A;
+  --quote-bg:linear-gradient(135deg,rgba(167,139,250,.18),rgba(244,114,182,.12));
+  --quote-border:rgba(196,181,253,.22);--quote-text:#C4B5FD;
+  --followup-bg:linear-gradient(135deg,rgba(167,139,250,.16),rgba(167,139,250,.1));
+  --followup-border:rgba(167,139,250,.3);--followup-text:#C4B5FD;
+  --chip-default:rgba(139,92,246,.14);
+  --chip-text:#DDD6FE;--mini-text:#DDD6FE;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+body{
+  background:var(--paper);color:var(--ink);min-height:100dvh;
+  font:14px/1.6 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+  -webkit-font-smoothing:antialiased;overscroll-behavior-y:none;touch-action:manipulation;
+  transition:background .25s ease,color .25s ease;
+}
+body::before{
+  content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background-image:
+    radial-gradient(ellipse 520px 380px at 8% -2%,var(--body-bg-1),transparent 62%),
+    radial-gradient(ellipse 460px 340px at 102% 30%,var(--body-bg-2),transparent 62%),
+    radial-gradient(1.6px 1.6px at 14% 16%,var(--star-1),transparent),
+    radial-gradient(1.5px 1.5px at 84% 12%,var(--star-2),transparent),
+    radial-gradient(1.6px 1.6px at 62% 46%,var(--star-3),transparent),
+    radial-gradient(1.3px 1.3px at 24% 68%,var(--star-4),transparent),
+    radial-gradient(1.5px 1.5px at 78% 80%,var(--star-5),transparent),
+    radial-gradient(var(--star-grid) 1px,transparent 1px);
+  background-size:100% 100%,100% 100%,100% 100%,100% 100%,100% 100%,100% 100%,100% 100%,34px 34px;
+}
+::selection{background:#DDD6FE;color:#2A1B54}
+button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit}
+input,textarea,select{font-family:inherit;font-size:16px;color:inherit;outline:none;-webkit-appearance:none;appearance:none}
+
+/* 布局 */
+.app{max-width:480px;margin:0 auto;padding:16px 16px calc(92px + var(--sb))}
+.card{background:var(--card-bg);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--sh)}
+.sec-t{display:flex;align-items:center;gap:6px;font-size:14px;font-weight:800;padding:14px 16px 4px}
+.sec-t .sub{font-size:11px;color:var(--muted);font-weight:500}
+
+/* 顶部 */
+.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.brand{font-size:10px;letter-spacing:.22em;color:var(--muted);font-weight:800}
+.top-right{display:flex;align-items:center;gap:6px}
+.home{font-size:12px;color:var(--vink);text-decoration:none;font-weight:700;padding:8px 4px}
+.theme-btn{
+  width:34px;height:34px;border-radius:50%;
+  background:var(--soft);color:var(--vink);
+  font-size:15px;display:grid;place-items:center;
+  transition:transform .15s;line-height:1;
+}
+.theme-btn:active{transform:scale(.9)}
+.head{text-align:center;padding:6px 0 18px;position:relative}
+.head h1{font-size:27px;font-weight:900;letter-spacing:.08em;color:var(--deep);display:inline-flex;align-items:center;gap:6px;text-shadow:0 0 26px rgba(139,92,246,.18)}
+.head h1 .star{color:#8B5CF6;font-size:15px;filter:drop-shadow(0 0 6px rgba(139,92,246,.6))}
+.head .tag{font-size:12px;color:var(--muted);margin-top:6px;letter-spacing:.1em;font-weight:600}
+.head .deco{position:absolute;font-size:12px;color:var(--violet);opacity:.6;pointer-events:none}
+.head .deco:nth-child(2){opacity:.45}
+
+/* 提示条 */
+.banner{display:none;align-items:flex-start;gap:9px;border-radius:var(--r-md);padding:12px 13px;margin-bottom:12px;font-size:12px;line-height:1.75}
+.banner.show{display:flex}
+.banner .ic{font-size:15px;line-height:1.5;flex-shrink:0}
+.banner .bd{flex:1;min-width:0}
+.banner .t{font-weight:900;font-size:12.5px}
+.banner .p{margin-top:4px}
+.banner .acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:9px}
+.banner .eb{display:inline-flex;align-items:center;gap:4px;background:var(--input-bg);font-size:12px;font-weight:800;border-radius:999px;padding:8px 15px;min-height:36px;transition:transform .1s}
+.banner .eb:active{transform:scale(.95)}
+.banner.wx{background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.28);color:var(--note-text)}
+.banner.wx .t{color:var(--note-bold)}.banner.wx .eb{color:var(--note-text);border:1px solid rgba(16,185,129,.3)}
+.banner.ios{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);color:var(--goal-sub)}
+.banner.ios .t{color:var(--goal-text)}.banner.ios .eb{color:var(--goal-sub);border:1px solid rgba(245,158,11,.3)}
+.banner.blue{background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.28);color:#1E40AF}
+.banner.blue .t{color:#1D4ED8}.banner.blue .eb{color:#1E40AF;border:1px solid rgba(59,130,246,.3)}
+.banner.blue b{color:#1D4ED8}
+[data-theme="dark"] .banner.blue{color:#93C5FD}
+[data-theme="dark"] .banner.blue .t{color:#BFDBFE}
+[data-theme="dark"] .banner.blue .eb{color:#BFDBFE;border-color:rgba(59,130,246,.4)}
+[data-theme="dark"] .banner.blue b{color:#BFDBFE}
+
+/* 语录卡 */
+.quote{display:flex;align-items:flex-start;gap:9px;margin-bottom:12px;padding:13px 13px 13px 15px;border-radius:var(--r-md);
+  background:var(--quote-bg);border:1px solid var(--quote-border);
+  transition:transform .1s;-webkit-user-select:none;user-select:none;min-height:56px}
+.quote:active{transform:scale(.985)}
+.quote .qi{font-size:16px;line-height:1.5;flex-shrink:0}
+.quote .qt{flex:1;font-size:12.5px;line-height:1.75;color:var(--quote-text);font-weight:600}
+.quote .qt b{color:var(--vink)}
+.quote .qs{flex-shrink:0;font-size:10px;color:#A78BFA;font-weight:800;background:var(--input-bg);border-radius:999px;padding:3px 9px;box-shadow:0 1px 3px rgba(139,92,246,.12)}
+
+/* 隐私提示（首页已移除，样式保留备用） */
+.note{display:flex;align-items:flex-start;gap:8px;background:var(--note-bg);border:1px solid var(--note-border);border-radius:var(--r-md);padding:11px 12px;margin-bottom:12px;font-size:11.5px;line-height:1.7;color:var(--note-text)}
+.note .ic{font-size:14px;line-height:1.5;flex-shrink:0}
+.note b{color:var(--note-bold)}
+
+/* 小目标 */
+.goal{padding:14px 16px;margin-bottom:12px;background:var(--goal-bg);border:1px solid var(--goal-border)}
+.goal .gt{font-size:13px;font-weight:900;color:var(--goal-text);display:flex;align-items:center;gap:5px}
+.goal .gp{font-size:11.5px;color:var(--goal-sub);line-height:1.7;margin-top:5px}
+.goal .txt{font-size:15px;font-weight:800;color:var(--goal-txt);margin-top:7px;word-break:break-word}
+.goal .stat{font-size:11.5px;color:var(--goal-sub);margin-top:8px;padding-top:8px;border-top:1px dashed var(--goal-border);line-height:1.7}
+.goal .stat b{color:var(--goal-text)}
+.btn-amber{background:linear-gradient(135deg,#F59E0B,#FBBF24);color:#fff;font-size:12.5px;font-weight:800;border-radius:999px;padding:10px 20px;min-height:40px;box-shadow:0 3px 10px rgba(245,158,11,.28);transition:transform .1s}
+.btn-amber:active{transform:scale(.94)}
+.btn-amber.ghost{background:var(--input-bg);color:var(--goal-text);border:1px solid var(--goal-border);box-shadow:none}
+.goal-acts{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.goal-inrow{display:flex;gap:8px;margin-top:10px;align-items:center}
+.goal-inrow input{flex:1;background:var(--input-bg);border:1px solid var(--goal-border);border-radius:12px;padding:11px 12px}
+.goal-inrow input:focus{border-color:#F59E0B;box-shadow:0 0 0 3px rgba(245,158,11,.1)}
+
+/* 速记卡 */
+.quick{border-radius:var(--r-lg);padding:18px;margin-bottom:12px;position:relative;overflow:hidden;
+  background:linear-gradient(135deg,#4C1D95,#6D3EE6 55%,#8B5CF6);
+  box-shadow:0 8px 28px rgba(76,29,149,.28),inset 0 0 0 1px rgba(255,255,255,.06)}
+[data-theme="dark"] .quick{background:linear-gradient(135deg,#3a1560,#5426b8 55%,#6d3ee6)}
+.quick::before{content:'✦';position:absolute;right:-12px;top:-14px;font-size:92px;color:rgba(255,255,255,.07);transform:rotate(15deg);pointer-events:none}
+.quick .qt{font-size:13px;font-weight:800;color:rgba(255,255,255,.95);margin-bottom:10px;position:relative}
+.qrow{display:flex;gap:8px;align-items:center;position:relative}
+.qrow input{flex:1;background:rgba(255,255,255,.96);border:0;border-radius:14px;padding:13px 14px;box-shadow:0 2px 10px rgba(0,0,0,.12);transition:box-shadow .15s;color:#1E1B2E}
+.qrow input:focus{box-shadow:0 2px 10px rgba(0,0,0,.12),0 0 0 3px rgba(196,181,253,.55)}
+.qrow input::placeholder{color:#B0A8C8}
+.qrow button{flex-shrink:0;background:rgba(255,255,255,.96);color:#6D3EE6;border-radius:14px;padding:13px 20px;font-size:14px;font-weight:800;box-shadow:0 2px 10px rgba(0,0,0,.12);transition:transform .1s;min-height:48px}
+.qrow button:active{transform:scale(.94)}
+.qmore{margin-top:10px;color:rgba(255,255,255,.85);font-size:12px;font-weight:700;padding:8px 0;min-height:36px;display:flex;align-items:center;gap:4px;position:relative}
+.qmore .ar{transition:transform .2s}
+.qmore.open .ar{transform:rotate(180deg)}
+.qpriv{margin-top:6px;font-size:10.5px;color:rgba(255,255,255,.75);font-weight:600;position:relative;line-height:1.6}
+
+/* 追问卡 */
+.followup{display:none;background:var(--followup-bg);border:1px solid var(--followup-border);border-radius:var(--r-md);padding:13px 14px;margin-bottom:12px}
+.followup.show{display:block}
+.followup .fh{display:flex;align-items:flex-start;gap:8px;margin-bottom:9px}
+.followup .fi{font-size:16px;line-height:1.4;flex-shrink:0}
+.followup .fq{flex:1;font-size:12.5px;line-height:1.7;color:var(--followup-text);font-weight:700}
+.followup .fr{display:flex;gap:8px}
+.followup .fr input{flex:1;background:var(--input-bg);border:1px solid var(--followup-border);border-radius:12px;padding:11px 12px}
+.followup .fr input:focus{border-color:#8B5CF6;box-shadow:0 0 0 3px rgba(139,92,246,.1)}
+.followup .fr button{flex-shrink:0;background:linear-gradient(135deg,#8B5CF6,#A78BFA);color:#fff;border-radius:12px;padding:11px 17px;font-size:13px;font-weight:800;box-shadow:0 3px 10px rgba(139,92,246,.22);transition:transform .1s;min-height:44px}
+.followup .fr button:active{transform:scale(.94)}
+.followup .skip{font-size:11.5px;color:var(--muted);font-weight:700;padding:8px 0 0;text-decoration:underline;text-underline-offset:3px}
+
+/* 详情面板 */
+.detail{max-height:0;overflow:hidden;opacity:0;transition:max-height .35s ease,opacity .25s ease,margin .25s}
+.detail.open{max-height:2000px;opacity:1;margin-bottom:12px}
+.datecard{display:flex;align-items:center;justify-content:space-between;padding:13px 18px;margin-bottom:12px}
+.datecard .d1{font-size:14px;font-weight:800;color:var(--deep)}
+.datecard .d2{font-size:11px;color:var(--muted);margin-top:2px}
+.datecard .fire{font-size:12px;font-weight:700;color:var(--vink)}
+.lbl{font-size:12.5px;font-weight:800;margin:16px 4px 9px;display:flex;align-items:center;gap:5px;flex-wrap:wrap;color:var(--deep)}
+.lbl .mini{font-size:11px;color:var(--muted);font-weight:500}
+.moods{display:flex;justify-content:space-between;padding:12px 8px}
+.mood{display:flex;flex-direction:column;align-items:center;gap:5px;flex:1;min-width:0;padding:4px}
+.mood .face{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;font-size:21px;transition:transform .15s,box-shadow .15s}
+.mood .ml{font-size:10.5px;color:var(--muted);font-weight:600}
+.mood.on .face{transform:scale(1.12);box-shadow:0 0 0 2.5px var(--ink),0 4px 12px rgba(109,62,230,.2)}
+.mood.on .ml{color:var(--ink);font-weight:800}
+.ints{display:flex;gap:8px;padding:11px 14px}
+.ints button{flex:1;background:var(--chip-default);border:1px solid var(--line);border-radius:12px;padding:11px 4px;font-size:12px;font-weight:700;color:var(--muted);transition:.12s;min-height:42px}
+.ints button:active{transform:scale(.95)}
+.ints button.on{background:var(--soft);border-color:#C4B5FD;color:var(--vink);font-weight:800;box-shadow:0 2px 8px rgba(139,92,246,.15)}
+.tags{padding:13px 14px;display:flex;flex-wrap:wrap;gap:8px}
+.chip{border-radius:999px;padding:9px 14px;font-size:12.5px;font-weight:600;color:var(--chip-text);transition:.12s;min-height:38px}
+[data-theme="dark"] .chip{background:rgba(139,92,246,.14) !important;color:var(--chip-text)}
+.chip:active{transform:scale(.93)}
+.chip .ck{display:none;margin-right:2px}
+.chip.on{box-shadow:inset 0 0 0 2px var(--ink),0 2px 6px rgba(0,0,0,.06);font-weight:800}
+.chip.on .ck{display:inline}
+.chip.add{background:var(--soft);color:var(--vink);font-weight:800;border:1px dashed #C4B5FD}
+.prompt{display:flex;align-items:center;gap:7px;color:var(--muted);font-size:12px;margin:16px 4px 8px;line-height:1.5;flex-wrap:wrap}
+.prompt button{margin-left:auto;color:var(--vink);font-size:11.5px;font-weight:700;padding:8px 4px;min-height:36px}
+textarea.paper{width:100%;min-height:150px;max-height:42vh;resize:vertical;line-height:28px;font-size:16px;
+  border:1px solid var(--line);border-radius:16px;padding:6px 15px 12px;transition:border-color .15s,box-shadow .15s;
+  background:var(--input-bg);color:var(--ink)}
+textarea.paper:focus{border-color:#C4B5FD;box-shadow:0 0 0 3px rgba(139,92,246,.08)}
+textarea.paper::placeholder{color:var(--muted);opacity:.75}
+.saverow{display:flex;align-items:center;justify-content:space-between;margin-top:12px;gap:10px}
+.wc{font-size:12px;color:var(--muted)}
+.save{background:linear-gradient(135deg,#6D3EE6,#8B5CF6 55%,#A78BFA);color:#fff;font-size:15px;font-weight:800;letter-spacing:.04em;border-radius:999px;padding:13px 32px;min-height:48px;box-shadow:0 6px 18px rgba(109,62,230,.32);transition:transform .1s}
+.save:active{transform:scale(.95)}
+.privacy{display:flex;align-items:center;justify-content:center;gap:5px;font-size:11px;color:var(--muted);margin-top:16px}
+
+/* 指南卡 */
+.guide{margin-top:12px;padding:14px 16px 15px}
+.guide .gt{font-size:12.5px;font-weight:900;margin-bottom:9px;display:flex;align-items:center;gap:5px;color:var(--deep)}
+.guide .gt .s{color:#8B5CF6}
+.grow{display:flex;gap:8px;font-size:11.5px;color:var(--muted);line-height:1.7;margin-top:5px;align-items:flex-start}
+.grow i{flex-shrink:0;font-style:normal;font-weight:900;line-height:1.7}
+.grow .x{color:#F87171}.grow .ok{color:#34D399}
+
+/* 日记页 */
+.jhead{display:flex;align-items:center;padding:14px 4px 12px;gap:6px;flex-wrap:wrap}
+.jhead h2{font-size:16px;font-weight:900;color:var(--deep)}
+.jhead .cnt{font-size:11.5px;color:var(--muted);font-weight:600;margin-right:auto}
+.jhead .clear{font-size:11.5px;color:var(--muted);font-weight:700;padding:9px 10px;min-height:38px;
+  background:var(--soft);border-radius:999px;color:var(--vink)}
+.jhead .clear.review{background:linear-gradient(135deg,rgba(244,114,182,.15),rgba(139,92,246,.15));color:var(--pink);font-weight:800}
+.jsearch{padding:2px 4px 8px}
+.jsearch input{width:100%;background:var(--input-bg);border:1px solid var(--line);border-radius:999px;
+  padding:10px 16px;font-size:14px;box-shadow:var(--sh);color:var(--ink)}
+.jsearch input:focus{border-color:#C4B5FD;box-shadow:0 0 0 3px rgba(139,92,246,.1)}
+.jfilters{display:flex;gap:6px;overflow-x:auto;margin-top:8px;padding-bottom:4px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.jfilters::-webkit-scrollbar{display:none}
+.jfilters button{flex-shrink:0;font-size:11.5px;font-weight:700;padding:6px 12px;border-radius:999px;
+  background:var(--input-bg);border:1px solid var(--line);color:var(--muted);min-height:32px;transition:.12s}
+.jfilters button.on{background:var(--soft);border-color:#C4B5FD;color:var(--vink);font-weight:800}
+.entry{position:relative;margin-bottom:18px;padding:16px 16px 12px;cursor:pointer;transition:transform .1s}
+.entry:active{transform:scale(.985)}
+.entry::before{content:'';position:absolute;top:-7px;left:50%;width:76px;height:15px;transform:translateX(-50%) rotate(-2deg);background:var(--tape,#DDD6FE);opacity:.7;border-radius:2px}
+[data-theme="dark"] .entry::before{opacity:.35}
+.etop{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.eface{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-size:17px;flex-shrink:0}
+.edate{font-size:13px;font-weight:800}
+.etime{font-size:10.5px;color:var(--muted);margin-top:1px}
+.etags{display:flex;flex-wrap:wrap;gap:5px;margin-left:auto;justify-content:flex-end}
+.mini{font-size:10px;font-weight:700;color:var(--mini-text);border-radius:999px;padding:3px 8px}
+[data-theme="dark"] .mini{background:rgba(139,92,246,.18) !important}
+.etxt{font-size:13.5px;line-height:1.75;color:var(--ink);margin-top:11px;word-break:break-word;opacity:.85;
+  display:-webkit-box;-webkit-line-clamp:4;line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.entry.open .etxt{-webkit-line-clamp:unset;line-clamp:unset;overflow:visible}
+.efu{margin-top:9px;padding:8px 11px;background:var(--soft);border-left:3px solid #A78BFA;border-radius:0 10px 10px 0;font-size:12px;color:var(--followup-text);line-height:1.7;word-break:break-word}
+.efu b{color:var(--vink);font-size:11px}
+.efoot{display:flex;align-items:center;justify-content:space-between;margin-top:8px}
+.efoot .more{font-size:10.5px;color:var(--muted)}
+.del{display:none;align-items:center;gap:4px;color:var(--pink);font-size:11.5px;font-weight:700;padding:8px 4px;min-height:38px}
+.del svg{width:13px;height:13px}
+.entry.open .del{display:inline-flex}
+.jempty{padding:46px 20px 40px;text-align:center}
+.jempty .big{font-size:34px;margin-bottom:12px}
+.jempty p{font-size:13px;color:var(--muted);line-height:1.8}
+.gowrite{margin-top:16px;background:var(--soft);color:var(--vink);font-size:13px;font-weight:800;border-radius:999px;padding:12px 26px;min-height:44px;box-shadow:0 3px 10px rgba(139,92,246,.14);transition:transform .1s}
+.gowrite:active{transform:scale(.95)}
+.jhint{display:flex;align-items:flex-start;gap:6px;font-size:11.5px;color:var(--muted);line-height:1.7;padding:2px 10px 4px}
+.jhint .ic{font-size:14px;line-height:1.4}
+.jhint b{color:var(--followup-text)}
+.jconsult{margin-top:12px;padding:15px 16px 16px;text-align:center}
+.jconsult .t{font-size:13.5px;font-weight:900}
+.jconsult p{font-size:11.5px;color:var(--muted);line-height:1.75;margin:7px 0 13px}
+.jconsult button{background:var(--soft);color:var(--vink);font-size:12.5px;font-weight:800;border-radius:999px;padding:11px 24px;min-height:42px;transition:transform .1s}
+.jconsult button:active{transform:scale(.94)}
+
+/* 洞察页 */
+.stats{display:flex;gap:9px;margin-bottom:12px}
+.pill{flex:1;text-align:center;padding:13px 4px 11px;background:var(--card-bg)}
+.pill .n{font-size:21px;font-weight:900;color:var(--vink)}
+.pill .l{font-size:10.5px;color:var(--muted);font-weight:600;margin-top:3px}
+.sec-card{margin-bottom:12px;overflow:hidden}
+#spark{width:100%;display:block;padding:4px 8px 0}
+.cap{font-size:11px;color:var(--muted);text-align:center;padding:2px 12px 12px;line-height:1.7}
+.bar{display:flex;align-items:center;gap:9px;padding:6px 16px}
+.bar .bar-i{flex:1;height:10px;border-radius:999px;background:var(--chip-default);overflow:hidden}
+.bar .bar-i i{display:block;height:100%;border-radius:999px}
+.bar .ct{flex-shrink:0;font-size:11px;color:var(--muted);font-weight:700;width:16px;text-align:right}
+.bars{padding:4px 0 10px}
+#net{width:100%;display:block;touch-action:manipulation;border-radius:0 0 var(--r-lg) var(--r-lg);background:transparent}
+#net g,#net line{transition:opacity .2s ease}
+#net .dim{opacity:.08 !important}
+#net .netnode{transform-box:fill-box;transform-origin:center;cursor:pointer}
+#net .netedge{cursor:pointer}
+#netinfo{background:var(--followup-bg);border-radius:var(--r-md);margin:4px 14px 14px;padding:12px 14px;font-size:12px;line-height:1.75;color:var(--ink)}
+#netinfo .nt{font-weight:800;color:var(--deep);font-size:12.5px}
+#netinfo .hint{color:var(--muted);font-size:11px;display:block;margin-top:5px}
+#netinfo .bigline{display:block;margin:6px 0;padding:7px 10px;background:var(--input-bg);border-radius:9px;font-size:11.5px;color:var(--quote-text);border-left:3px solid #A78BFA}
+.nethelp{margin:0 14px 6px;border-radius:12px;background:var(--chip-default);overflow:hidden}
+.nethelp .toggle{width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px;font-size:12px;font-weight:800;color:var(--vink);text-align:left;min-height:44px}
+.nethelp .toggle:active{background:var(--soft)}
+.nethelp .ar{font-size:11px;color:#A78BFA;transition:transform .2s}
+.nethelp.open .ar{transform:rotate(180deg)}
+.nethelp .body{max-height:0;overflow:hidden;transition:max-height .3s,padding .3s;padding:0 12px;font-size:11.5px;line-height:1.7;color:var(--ink)}
+.nethelp.open .body{max-height:640px;padding:2px 12px 12px}
+.nr{display:flex;align-items:center;gap:7px;margin-top:7px;font-weight:700}
+.nr .dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;box-shadow:0 0 0 1.5px var(--card-bg-solid),0 0 0 2.5px var(--line)}
+.nr .ln{width:16px;height:3px;border-radius:2px;flex-shrink:0}
+.nr .dash{width:16px;height:0;flex-shrink:0;border-top:2px dashed var(--muted)}
+.nsub{font-size:11px;color:var(--muted);font-weight:600;margin:3px 0 0 19px;line-height:1.65}
+.ntip{margin-top:10px;padding-top:9px;border-top:1px dashed var(--line);font-size:11px;color:var(--muted);line-height:1.8}
+.cmp{padding:4px 14px 14px}
+.cmprow{display:flex;align-items:stretch;gap:8px;margin-top:10px}
+.cmpcol{flex:1;background:var(--input-bg);border:1px solid var(--line);border-radius:14px;padding:11px 12px;min-width:0}
+.cmpcol.now{background:var(--followup-bg);border-color:var(--followup-border);box-shadow:0 2px 12px rgba(139,92,246,.08)}
+.cmplbl{font-size:10.5px;color:var(--muted);font-weight:800;letter-spacing:.04em;margin-bottom:7px}
+.cmpcol.now .cmplbl{color:var(--vink)}
+.cmpline{font-size:12px;line-height:1.9;color:var(--ink);word-break:break-word;opacity:.9}
+.cmpline b{color:var(--deep);font-weight:800}
+.cmpline .up{color:#059669;font-weight:800}
+.cmpline .dn{color:#D97706;font-weight:800}
+[data-theme="dark"] .cmpline .up{color:#6EE7B7}
+[data-theme="dark"] .cmpline .dn{color:#FCD34D}
+.ins{display:flex;gap:11px;padding:13px 15px}
+.ins+.ins{border-top:1px dashed var(--line)}
+.ins .ic{font-size:20px;line-height:1.3;flex-shrink:0}
+.ins .t{font-size:13px;font-weight:800}
+.ins .b{font-size:12px;color:var(--muted);line-height:1.75;margin-top:3px;word-break:break-word}
+.ins .b b{color:var(--deep)}
+.data{padding:14px 16px;text-align:center}
+.data p{font-size:11.5px;color:var(--muted);line-height:1.75}
+.data p b{color:var(--note-bold)}
+.envnow{margin-top:10px;font-size:11.5px;font-weight:700;color:#1E40AF;background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.28);border-radius:10px;padding:9px 10px;line-height:1.7;text-align:left}
+[data-theme="dark"] .envnow{color:#BFDBFE}
+.bkstat{margin:10px 0 4px;padding:9px 10px;border-radius:10px;font-size:11.5px;line-height:1.7;font-weight:700;text-align:left}
+.bkstat.ok{background:var(--note-bg);color:var(--note-text);border:1px solid var(--note-border)}
+.bkstat.warn{background:rgba(245,158,11,.1);color:var(--goal-sub);border:1px solid rgba(245,158,11,.3)}
+.bkstat.danger{background:rgba(239,68,68,.1);color:#DC2626;border:1px solid rgba(239,68,68,.3)}
+[data-theme="dark"] .bkstat.danger{color:#FCA5A5}
+.xbtn{margin-top:9px;width:100%;border-radius:999px;padding:12px 16px;font-size:12.5px;font-weight:800;min-height:44px;transition:transform .1s}
+.xbtn:active{transform:scale(.97)}
+.xbtn.primary{background:var(--soft);color:var(--vink);box-shadow:0 2px 8px rgba(139,92,246,.14)}
+.xbtn.secondary{background:var(--chip-default);color:var(--vink)}
+.xhint{font-size:10.5px;color:var(--muted);margin-top:8px;line-height:1.6;text-align:left}
+.empty{padding:44px 24px;text-align:center}
+.empty .big{font-size:34px;margin-bottom:12px}
+.empty p{font-size:13px;color:var(--muted);line-height:1.9}
+
+/* 云同步卡片 */
+.sync-card{margin-bottom:12px}
+.sync-body{padding:4px 16px 16px}
+.sync-status{font-size:12px;font-weight:800;margin-bottom:10px}
+.sync-lead{font-size:12.5px;font-weight:800;color:var(--ink);margin-bottom:6px;line-height:1.6}
+.sync-desc{font-size:11.5px;line-height:1.75;color:var(--muted)}
+.sync-desc b{color:var(--ink)}
+.sync-tips{font-size:11.5px;line-height:1.85;color:var(--muted);padding-left:4px;margin:2px 0 2px}
+.sync-tips li{list-style:none;position:relative;padding-left:15px}
+.sync-tips li::before{content:'·';position:absolute;left:2px;color:#A78BFA;font-weight:900;font-size:16px;line-height:1.3}
+.sync-tips b{color:var(--quote-text)}
+.sync-code-row{display:flex;align-items:center;gap:10px;margin:8px 0 10px;padding:12px 14px;
+  background:var(--followup-bg);border:1px solid var(--followup-border);border-radius:12px}
+.sync-code-label{font-size:10.5px;color:var(--muted);font-weight:800;letter-spacing:.04em}
+.sync-code{font-size:17px;font-weight:900;color:var(--vink);letter-spacing:.06em;
+  font-family:Menlo,Consolas,monospace;margin-top:2px;word-break:break-all}
+.sync-copy{margin-left:auto;background:var(--input-bg);color:var(--vink);font-size:12px;font-weight:800;
+  border-radius:999px;padding:8px 15px;min-height:34px;flex-shrink:0;
+  box-shadow:0 1px 4px rgba(139,92,246,.15);transition:transform .1s}
+.sync-copy:active{transform:scale(.94)}
+.sync-acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.sync-acts .xbtn{margin-top:0;flex:1;min-width:0}
+.sync-last{font-size:11px;color:var(--muted);margin-top:10px;text-align:center}
+.sync-badge{display:inline-block;font-size:10px;font-weight:800;padding:2px 8px;border-radius:999px;
+  margin-left:6px;vertical-align:middle}
+.sync-badge.ok{background:rgba(16,185,129,.15);color:#059669}
+.sync-badge.syncing{background:var(--soft);color:var(--vink)}
+.sync-badge.err{background:rgba(245,158,11,.15);color:#B45309}
+.sync-badge.off{background:var(--chip-default);color:var(--muted)}
+[data-theme="dark"] .sync-badge.ok{color:#6EE7B7}
+[data-theme="dark"] .sync-badge.err{color:#FCD34D}
+
+/* 星图深色星空主题 */
+.starfield-card{
+  background:radial-gradient(ellipse 200% 90% at 50% -10%, #4c2d8f 0%, #2a1b54 35%, #1a1033 70%, #0d0620 100%);
+  border:1px solid rgba(139,92,246,.3);
+  position:relative;
+}
+[data-theme="dark"] .starfield-card{
+  background:radial-gradient(ellipse 200% 90% at 50% -10%, #3a2070 0%, #1a1035 35%, #0d0620 70%, #05030f 100%);
+  border-color:rgba(139,92,246,.42);
+}
+.starfield-card::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background-image:
+    radial-gradient(1.5px 1.5px at 12% 18%,rgba(255,255,255,.7),transparent),
+    radial-gradient(1px 1px at 78% 12%,rgba(196,181,253,.8),transparent),
+    radial-gradient(1.2px 1.2px at 32% 62%,rgba(244,114,182,.6),transparent),
+    radial-gradient(1px 1px at 88% 78%,rgba(167,139,250,.7),transparent),
+    radial-gradient(1.3px 1.3px at 55% 88%,rgba(255,255,255,.5),transparent),
+    radial-gradient(1px 1px at 8% 82%,rgba(196,181,253,.6),transparent),
+    radial-gradient(1.2px 1.2px at 68% 38%,rgba(255,255,255,.4),transparent),
+    radial-gradient(1px 1px at 45% 12%,rgba(167,139,250,.55),transparent);
+  z-index:1;
+}
+.starfield-card .sec-t{color:#fff;position:relative;z-index:2}
+.starfield-card .sec-t .sub{color:rgba(196,181,253,.75)}
+.starfield-card #net{position:relative;z-index:2;background:transparent}
+.starfield-card #netinfo{
+  position:relative;z-index:2;
+  background:linear-gradient(180deg,rgba(109,62,230,.18),rgba(109,62,230,.1));
+  border:1px solid rgba(139,92,246,.22);color:#DDD6FE;
+}
+.starfield-card #netinfo .nt{color:#fff}
+.starfield-card #netinfo .hint{color:rgba(196,181,253,.65)}
+.starfield-card #netinfo .bigline{background:rgba(255,255,255,.07);color:#DDD6FE;border-left:3px solid #A78BFA}
+.starfield-card .nethelp{background:rgba(255,255,255,.06);border:1px solid rgba(139,92,246,.2);position:relative;z-index:2}
+.starfield-card .nethelp .toggle{color:#C4B5FD}
+.starfield-card .nethelp .toggle:active{background:rgba(139,92,246,.2)}
+.starfield-card .nethelp .body{color:#C4B5FD}
+.starfield-card .nethelp .ar{color:#A78BFA}
+.starfield-card .nsub{color:rgba(196,181,253,.6)}
+.starfield-card .ntip{color:rgba(196,181,253,.6);border-top-color:rgba(139,92,246,.2)}
+.starfield-card .nr .dot{box-shadow:0 0 0 1.5px rgba(255,255,255,.2),0 0 0 2.5px rgba(139,92,246,.3)}
+
+#net .netnode{transform-box:fill-box;transform-origin:center;animation:starIn .45s cubic-bezier(.34,1.56,.64,1) both;cursor:pointer}
+@keyframes starIn{0%{transform:scale(.3);opacity:0}100%{transform:scale(1);opacity:1}}
+#net .netedge{cursor:pointer;animation:fadeIn .5s ease both}
+@keyframes fadeIn{from{opacity:0}}
+#net .dim{opacity:.08 !important;transition:opacity .2s}
+#net .netnode,#net .netedge{transition:opacity .2s ease}
+
+/* 弹层 */
+.ov{position:fixed;inset:0;z-index:150;background:rgba(42,27,84,.5);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  opacity:0;pointer-events:none;transition:opacity .25s;display:flex;align-items:flex-end;justify-content:center}
+.ov.show{opacity:1;pointer-events:auto}
+[data-theme="dark"] .ov{background:rgba(0,0,0,.6)}
+.sheet{width:100%;max-width:480px;max-height:88dvh;background:var(--card-bg-solid);border-radius:24px 24px 0 0;
+  transform:translateY(100%);transition:transform .32s cubic-bezier(.22,1,.36,1);display:flex;flex-direction:column;
+  padding-bottom:var(--sb);box-shadow:0 -8px 32px rgba(42,27,84,.22);color:var(--ink)}
+.ov.show .sheet{transform:none}
+.sheet::before{content:'';display:block;width:36px;height:4px;border-radius:99px;background:#DDD6FE;margin:10px auto 0;flex-shrink:0}
+[data-theme="dark"] .sheet::before{background:rgba(167,139,250,.4)}
+.shead{padding:12px 18px;display:flex;gap:12px;align-items:flex-start;border-bottom:1px solid var(--line);flex-shrink:0}
+.stitle{font-size:16px;font-weight:900;color:var(--deep)}
+.ssub{font-size:11px;color:var(--muted);margin-top:3px;line-height:1.5}
+.sclose{margin-left:auto;background:var(--soft);width:36px;height:36px;border-radius:50%;font-size:15px;color:var(--muted);flex-shrink:0;display:grid;place-items:center}
+.sclose:active{transform:scale(.9)}
+.sbody{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding-bottom:10px}
+.stip{margin:12px 16px 2px;background:var(--soft);border-radius:12px;padding:12px 13px;font-size:11.5px;line-height:1.75;color:var(--quote-text)}
+.stip b{color:var(--vink)}
+.ssec{font-size:13px;font-weight:900;padding:15px 18px 8px;display:flex;align-items:center;gap:6px;color:var(--deep)}
+.ssec .mini{font-size:10.5px;color:var(--muted);font-weight:600}
+.ssec.row2{justify-content:space-between}
+.sall{font-size:11.5px;font-weight:800;color:var(--vink);padding:8px 4px;min-height:38px}
+.sfield{margin:0 16px 10px}
+.sfield label{font-size:11px;font-weight:800;color:var(--muted);display:block;margin-bottom:5px}
+.sfield input,.sfield select,.sfield textarea{width:100%;background:var(--input-bg);border:1px solid var(--line);border-radius:12px;padding:11px 12px;resize:none;color:var(--ink)}
+.sfield input:focus,.sfield select:focus,.sfield textarea:focus{border-color:#C4B5FD;box-shadow:0 0 0 3px rgba(139,92,246,.08)}
+.slist{padding:0 10px 6px}
+.sitem{display:flex;gap:10px;padding:11px;border-radius:12px;cursor:pointer;align-items:flex-start}
+.sitem.on{background:var(--soft)}
+.scheck{width:22px;height:22px;border-radius:7px;border:1.5px solid var(--muted);flex-shrink:0;display:grid;place-items:center;margin-top:2px;transition:.12s;background:var(--input-bg)}
+.sitem.on .scheck{background:#8B5CF6;border-color:#8B5CF6}
+.scheck svg{width:12px;height:12px;color:#fff;opacity:0;transform:scale(.4);transition:.15s}
+.sitem.on .scheck svg{opacity:1;transform:scale(1)}
+.smain{flex:1;min-width:0}
+.sl1{display:flex;align-items:center;gap:7px}
+.sdate{font-size:12px;font-weight:800}
+.sface{font-size:14px}
+.sprev{font-size:11.5px;color:var(--muted);margin-top:3px;line-height:1.55;word-break:break-word;display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.sfoot{padding:12px 18px calc(14px + var(--sb));border-top:1px solid var(--line);flex-shrink:0}
+.sgo{width:100%;background:linear-gradient(135deg,#6D3EE6,#8B5CF6 55%,#A78BFA);color:#fff;font-size:15px;font-weight:800;border-radius:999px;padding:14px;min-height:50px;box-shadow:0 6px 18px rgba(109,62,230,.3);transition:transform .1s,opacity .15s}
+.sgo:active{transform:scale(.97)}
+.sgo:disabled{opacity:.4;box-shadow:none}
+.cfov{position:fixed;inset:0;z-index:300;background:rgba(42,27,84,.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  opacity:0;pointer-events:none;transition:opacity .25s;display:grid;place-items:center;padding:20px}
+[data-theme="dark"] .cfov{background:rgba(0,0,0,.65)}
+.cfov.show{opacity:1;pointer-events:auto}
+.cfbox{width:100%;max-width:400px;background:var(--card-bg-solid);color:var(--ink);border-radius:20px;padding:20px 20px 16px;transform:scale(.94);transition:transform .25s;box-shadow:0 20px 50px rgba(42,27,84,.3)}
+.cfov.show .cfbox{transform:scale(1)}
+.cft{font-size:16px;font-weight:900;color:var(--deep);line-height:1.5}
+.cfp{font-size:12.5px;color:var(--ink);opacity:.85;line-height:1.75;margin-top:10px}
+.cfp b{color:#B91C1C}
+[data-theme="dark"] .cfp b{color:#FCA5A5}
+.cftip{display:block;margin-top:8px;padding:9px 11px;background:rgba(59,130,246,.1);border-radius:10px;color:#1E40AF;font-size:11.5px;line-height:1.7}
+[data-theme="dark"] .cftip{color:#BFDBFE}
+.cfacts{display:flex;flex-direction:column;gap:8px;margin-top:16px}
+.cfbtn{width:100%;font-size:14px;font-weight:800;border-radius:12px;padding:13px;min-height:46px;transition:transform .1s}
+.cfbtn:active{transform:scale(.97)}
+.cfbtn.primary{background:linear-gradient(135deg,#6D3EE6,#8B5CF6);color:#fff;box-shadow:0 4px 14px rgba(109,62,230,.25)}
+.cfbtn.blue{background:rgba(59,130,246,.15);color:#1E40AF}
+[data-theme="dark"] .cfbtn.blue{color:#BFDBFE}
+.cfbtn.danger{background:rgba(239,68,68,.15);color:#B91C1C}
+[data-theme="dark"] .cfbtn.danger{color:#FCA5A5}
+.cfbtn.ghost{background:var(--soft);color:var(--vink)}
+
+/* 回顾模式 */
+.review-hero{
+  margin:12px 16px 14px;padding:18px 18px 16px;border-radius:16px;
+  background:linear-gradient(135deg,rgba(139,92,246,.15),rgba(244,114,182,.12));
+  border:1px solid var(--followup-border);text-align:center;
+}
+.review-hero .rh-i{font-size:34px;line-height:1}
+.review-hero .rh-t{font-size:16px;font-weight:900;color:var(--deep);margin-top:8px}
+.review-hero .rh-s{font-size:11.5px;color:var(--muted);margin-top:5px;line-height:1.7}
+.review-hero .rh-stat{display:flex;gap:8px;margin-top:12px}
+.review-hero .rh-stat > div{flex:1;padding:8px 4px;border-radius:10px;background:var(--input-bg)}
+.review-hero .rh-stat .n{font-size:17px;font-weight:900;color:var(--vink)}
+.review-hero .rh-stat .l{font-size:10px;color:var(--muted);font-weight:700;margin-top:2px}
+
+.review-month{margin:0 16px 10px;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--input-bg)}
+.review-month-head{width:100%;display:flex;align-items:center;gap:12px;padding:14px 14px;text-align:left;cursor:pointer}
+.review-month-head:active{background:var(--soft)}
+.review-ml{flex:1;min-width:0}
+.review-ym{font-size:14px;font-weight:900;color:var(--deep);letter-spacing:.02em}
+.review-meta{font-size:11px;color:var(--muted);margin-top:3px;font-weight:600}
+.review-mface{font-size:22px;line-height:1;flex-shrink:0}
+.review-mar{font-size:12px;color:var(--muted);transition:transform .2s;flex-shrink:0}
+.review-month.open .review-mar{transform:rotate(180deg)}
+.review-mbody{max-height:0;overflow:hidden;transition:max-height .35s ease;background:var(--card-bg-solid)}
+.review-month.open .review-mbody{max-height:3000px}
+.review-mrow{display:flex;gap:10px;padding:10px 14px;border-top:1px dashed var(--line)}
+.review-mrow:first-child{border-top:1px solid var(--line)}
+.review-mrow .rm-face{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:14px;flex-shrink:0}
+.review-mrow .rm-main{flex:1;min-width:0}
+.review-mrow .rm-date{font-size:10.5px;color:var(--muted);font-weight:700}
+.review-mrow .rm-text{font-size:12.5px;line-height:1.65;color:var(--ink);margin-top:3px;word-break:break-word}
+.review-mrow .rm-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px}
+.review-mrow .rm-tag{font-size:9.5px;font-weight:700;padding:2px 7px;border-radius:999px;background:var(--soft);color:var(--vink)}
+.review-empty{padding:44px 24px;text-align:center}
+.review-empty .big{font-size:34px;margin-bottom:12px}
+.review-empty p{font-size:12.5px;color:var(--muted);line-height:1.9}
+
+/* 底部导航 */
+.tabbar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;z-index:90;
+  background:var(--tabbar-bg);backdrop-filter:blur(16px) saturate(180%);-webkit-backdrop-filter:blur(16px) saturate(180%);
+  border-top:1px solid var(--tabbar-border);display:flex;padding:6px 8px calc(6px + var(--sb))}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10.5px;font-weight:700;color:var(--muted);padding:6px 0 4px;position:relative;min-height:52px}
+.tab .ic{width:42px;height:28px;border-radius:10px;display:grid;place-items:center;transition:background .15s,box-shadow .15s}
+.tab svg{width:19px;height:19px}
+.tab.active{color:var(--vink)}
+.tab.active .ic{background:var(--soft);box-shadow:0 2px 8px rgba(139,92,246,.18)}
+.badge{position:absolute;top:1px;right:calc(50% - 26px);background:linear-gradient(135deg,#F472B6,#F9A8D4);color:#fff;
+  font-size:9px;font-weight:800;min-width:16px;height:16px;border-radius:999px;display:none;align-items:center;justify-content:center;padding:0 4px;box-shadow:0 2px 6px rgba(244,114,182,.3)}
+.badge.show{display:flex}
+.page{display:none}
+.page.active{display:block}
+#toast{position:fixed;top:calc(18px + var(--st));left:50%;transform:translateX(-50%) translateY(-14px);background:rgba(42,27,84,.96);color:#fff;
+  padding:11px 20px;border-radius:999px;font-size:13px;font-weight:700;max-width:86vw;text-align:center;opacity:0;pointer-events:none;
+  transition:.25s;z-index:400;line-height:1.5;box-shadow:0 8px 24px rgba(42,27,84,.3)}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top">
+    <span class="brand">STARMAP · 星图</span>
+    <div class="top-right">
+      <button type="button" class="theme-btn" id="theme-btn" aria-label="切换主题" title="切换主题">◐</button>
+      <a class="home" href="../cz/index.html">‹ 主页</a>
+    </div>
+  </div>
+
+  <header class="head">
+    <span class="deco" style="left:14%;top:22px;">✦</span>
+    <span class="deco" style="right:16%;top:40px;">✧</span>
+    <h1>STARMAP<span class="star">✦</span></h1>
+    <p class="tag">点亮成长的星图</p>
+  </header>
+
+  <div class="banner" id="env-banner">
+    <span class="ic" id="eb-ic">⚠️</span>
+    <div class="bd"><div class="t" id="eb-t"></div><div class="p" id="eb-p"></div>
+      <button type="button" class="eb" id="eb-btn" style="display:none"></button></div>
+  </div>
+
+  <div class="banner blue" id="split-banner">
+    <span class="ic">🧭</span>
+    <div class="bd">
+      <div class="t">不同应用打开，是两套「本地数据」</div>
+      <div class="p">在微信、Safari、Chrome… 里打开星图，各自的记录<b>互不相通</b>，就像住进了不同房间。<br>以前的记录没丢，只是留在另一个应用里。建议以后<b>固定用同一个入口</b>；想两边都看到，到「我的星图」页开启<b>云同步</b>，用同步码把两边合到一起。</div>
+      <div class="acts">
+        <button type="button" class="eb" id="split-merge">🔀 去合并别处的记录</button>
+        <button type="button" class="eb" id="split-go">第一次用，知道了</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="banner blue" id="care-banner">
+    <span class="ic">🧹</span>
+    <div class="bd">
+      <div class="t">别不小心弄丢你的星图</div>
+      <div class="p">记录默认住在<b>当前浏览器的小抽屉</b>里——<b>清缓存、删浏览记录、用无痕模式</b>都可能把它带走。<br>建议：到「我的星图」页开启<b>云同步</b>（自动备份，换手机也能找回），或者<b>定期导出</b>一份 .json 文件留底。</div>
+      <div class="acts">
+        <button type="button" class="eb" id="care-go">📤 去导出</button>
+        <button type="button" class="eb" id="care-btn">知道了</button>
+      </div>
+    </div>
+  </div>
+
+  <section id="page-record" class="page active">
+    <div class="quote" id="quote-card" role="button" aria-label="换一句鼓励语">
+      <span class="qi" id="quote-ic">🌱</span>
+      <span class="qt" id="quote-text"></span>
+      <span class="qs">换</span>
+    </div>
+
+    <div class="card goal" id="goal-card"><div id="goal-view"></div></div>
+
+    <div class="quick">
+      <div class="qt">✏️ 现在脑子里在想什么？</div>
+      <div class="qrow">
+        <input type="text" id="quick-input" placeholder="一句话就行，回车即存" maxlength="200" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="done">
+        <button type="button" id="quick-save">存</button>
+      </div>
+      <button type="button" class="qmore" id="quick-more"><span class="ar">▾</span> 想细选心情和标签？</button>
+      <div class="qpriv">🔒 默认只存本地；开启云同步后，每条会自动备份到云端</div>
+    </div>
+
+    <div class="quick-moods" id="quick-moods" style="padding:0 4px 14px;text-align:center">
+      <div style="font-size:11.5px;color:var(--muted);font-weight:600;margin-bottom:8px">😶 只想记一下心情？</div>
+      <div class="qm-row" id="qm-row" style="display:flex;justify-content:space-around;gap:6px"></div>
+    </div>
+
+    <div class="followup" id="followup-card">
+      <div class="fh"><span class="fi" id="fu-ic">💭</span><span class="fq" id="fu-q"></span></div>
+      <div class="fr">
+        <input type="text" id="fu-input" placeholder="想说什么就写，不想写就跳过" maxlength="200" autocomplete="off">
+        <button type="button" id="fu-save">记下</button>
+      </div>
+      <button type="button" class="skip" id="fu-skip">这次先跳过</button>
+    </div>
+
+    <div class="detail" id="detail-panel">
+      <div class="datecard card">
+        <div><div class="d1" id="today-date">今天</div><div class="d2">想到哪写到哪，不用打草稿</div></div>
+        <span class="fire" id="rec-streak"></span>
+      </div>
+
+      <div class="lbl">🏷️ 现在的心情</div>
+      <div class="card moods" id="mood-row"></div>
+
+      <div class="lbl" id="int-label" style="display:none">💪 这个感觉有多强</div>
+      <div class="card ints" id="int-row" style="display:none">
+        <button type="button" data-i="1">🌤 轻轻</button>
+        <button type="button" class="on" data-i="2">🌥 一般</button>
+        <button type="button" data-i="3">⛈ 很强烈</button>
+      </div>
+
+      <div class="lbl">🧩 今天涉及什么<span class="mini">（可多选，也可以不选）</span></div>
+      <div class="card tags" id="tag-row"></div>
+
+      <div class="prompt"><span>🌙</span><span id="prompt-text"></span><button type="button" id="btn-prompt">换一个</button></div>
+
+      <textarea id="ta" class="paper" placeholder="随便写点什么……&quot;今天数学课差点睡着，放学和同桌去买了奶茶，回家被说了两句，有点烦但奶茶好喝&quot; —— 这样就很好"></textarea>
+
+      <div class="saverow">
+        <span class="wc" id="wc">0 字</span>
+        <button type="button" class="save" id="btn-save">存了 ✦</button>
+      </div>
+      <p class="privacy">🔒 只存你手机上，我啥也看不见</p>
+    </div>
+
+    <div class="card guide">
+      <div class="gt"><span class="s">✦</span>它不是日记，也不是作业</div>
+      <div class="grow"><i class="x">✗</i><span>不必天天写，不必有文采——三行也行，一句话也算数</span></div>
+      <div class="grow"><i class="x">✗</i><span>不是专业记录——没有表格、没有量表，想到哪写到哪</span></div>
+      <div class="grow"><i class="ok">✓</i><span>只是流水账——你的星图，就是从这些碎碎念里亮起来的</span></div>
+    </div>
+  </section>
+
+  <section id="page-journal" class="page">
+    <div class="jhead">
+      <h2>我写过的</h2><span class="cnt" id="j-count"></span>
+      <button type="button" class="clear review" id="btn-review">✨ 回顾</button>
+      <button type="button" class="clear" id="btn-clear">清空</button>
+    </div>
+    <div class="jsearch">
+      <input type="search" id="j-search" placeholder="🔍 搜一搜写过什么…" autocomplete="off">
+      <div class="jfilters" id="j-filters"></div>
+    </div>
+    <div id="j-list"></div>
+
+    <div class="card jconsult" id="consult-card" style="display:none">
+      <div class="t">💬 想和成长分析师聊聊？</div>
+      <p>勾选你愿意分享的记录，导出数据文件带给分析师<br>让这张星图先替你说几句，不用从头讲起</p>
+      <button type="button" id="btn-consult">打包给分析师看</button>
+    </div>
+
+    <div class="jhint">
+      <span class="ic">💡</span>
+      <span>想让记录更安心，可以<b>到「我的星图」页开启云同步</b>——自动备份，换手机也能找回；也可以<b>每 30 天到「我的星图」页导出一次</b>，导出成 .json 文件发给成长分析师，或粘贴到微信「文件传输助手」自己留存。</span>
+    </div>
+  </section>
+
+  <section id="page-insight" class="page">
+    <div id="insight-wrap">
+
+      <div class="card sync-card" id="sync-card">
+        <div class="sec-t">☁️ 云同步<span class="sub">让星图跟着你走，换设备也不怕丢</span></div>
+        <div class="sync-body" id="sync-body"></div>
+      </div>
+
+      <div class="card sec-card starfield-card">
+        <div class="sec-t">🌌 我的星图<span class="sub">越常一起出现的词，线越亮</span></div>
+        <div class="nethelp" id="nethelp">
+          <button type="button" class="toggle" id="nh-toggle"><span>💡 第一次看？点这里，30 秒看懂这张星图</span><span class="ar">▾</span></button>
+          <div class="body">
+            <div class="nr"><span class="dot" style="background:#fff"></span><span>中间的白点「我」＝ <b>这张星图的起点</b></span></div>
+            <div class="nr"><span class="dot" style="background:#C4B5FD"></span><span>周围的彩色星星 ＝ <b>一颗颗星</b></span></div>
+            <div class="nsub">· 星越大 → 写得越多<br>· 越靠近中心 → 最近越常亮</div>
+            <div class="nr"><span class="ln" style="background:#A78BFA"></span><span>从中心射出的光线 ＝ <b>这颗星和成长的关系</b></span></div>
+            <div class="nsub">· 线越粗 → 出现得越多</div>
+            <div class="nr"><span class="dash" style="border-top-color:rgba(196,181,253,.7)"></span><span>星星之间的虚线 ＝ <b>两颗星之间的联系</b></span></div>
+            <div class="nsub">· 线越亮 → 越常一起出现</div>
+            <div class="ntip">👆 点任意一颗星 → 看它的小档案<br>👆 点两颗星之间的线 → 看它们一起出现的故事<br>👆 点中间「我」→ 恢复全貌</div>
+          </div>
+        </div>
+        <svg id="net" viewBox="0 0 320 320"></svg>
+        <div id="netinfo"></div>
+      </div>
+
+      <div class="card sec-card" id="compare-card" style="display:none">
+        <div class="sec-t">🌱 这张星图怎么亮起来的<span class="sub">早期 vs 最近</span></div>
+        <div class="cmp" id="compare-box"></div>
+      </div>
+
+      <div class="stats">
+        <div class="card pill"><div class="n" id="st-total">0</div><div class="l">写过的</div></div>
+        <div class="card pill"><div class="n" id="st-week">0</div><div class="l">最近7天</div></div>
+        <div class="card pill"><div class="n" id="st-streak">0</div><div class="l">连续天数</div></div>
+      </div>
+
+      <div class="card sec-card" id="bar-card">
+        <div class="sec-t">🔥 星图上最亮的<span class="sub">按最近活跃度排</span></div>
+        <div class="bars" id="bar-list"></div>
+      </div>
+
+      <div class="card sec-card" id="sp-card">
+        <div class="sec-t">📈 情绪这一维</div>
+        <svg id="spark" viewBox="0 0 300 72"></svg>
+        <p class="cap" id="spark-cap"></p>
+      </div>
+
+      <div class="card" id="ins-card">
+        <div class="sec-t">💡 星图在说什么</div>
+        <div id="ins-list"></div>
+      </div>
+
+      <div class="card data">
+        <p>🔒 <b>记录默认只存在你手机浏览器里</b>——不上传服务器、<b>不关联手机号 / 微信号</b>，我们也看不到内容。<br>想换手机也能看到，请开启上方<b>云同步</b>（云端用随机同步码隔离）；不开启的话，记得<b>每 30 天导出一次</b> .json 文件留底。</p>
+        <div class="envnow" id="env-now"></div>
+        <div class="bkstat" id="export-status"></div>
+        <button type="button" class="xbtn primary" id="btn-export">📤 导出我的记录</button>
+        <button type="button" class="xbtn secondary" id="btn-merge">🔀 合并另一边的记录</button>
+        <button type="button" class="xbtn secondary" id="btn-export2">✨ 打包给成长分析师（可选记录）</button>
+        <button type="button" class="xbtn secondary" id="btn-savemap">🖼 保存星图为图片</button>
+        <input type="file" id="merge-file" accept=".json,application/json" style="display:none">
+        <p class="xhint" id="export-hint">💡 云同步和导出是两条路：<b>云同步</b>让记录自动跟着你走；<b>导出</b>是把记录存成 .json 文件发出去或留底。建议<b>每 30 天</b>也导出一次，双保险</p>
+      </div>
+    </div>
+
+    <div class="card empty" id="empty-insight" style="display:none">
+      <div class="big">🌌</div>
+      <p>这张星图还没有亮。<br>要不……先写一句今天最想吐槽的？<br>写满 3 天，它就会开始亮起第一批星。</p>
+    </div>
+  </section>
+</div>
+
+<div class="cfov" id="cf-overlay">
+  <div class="cfbox">
+    <div class="cft" id="cf-t"></div>
+    <div class="cfp" id="cf-p"></div>
+    <div class="cfacts" id="cf-acts"></div>
+  </div>
+</div>
+
+<div class="ov" id="ex-overlay">
+  <div class="sheet">
+    <div class="shead">
+      <div><div class="stitle">带记录去找成长分析师</div><div class="ssub">导出后，可选择性携带这份文件找专业成长分析师</div></div>
+      <button type="button" class="sclose" id="ex-close" aria-label="关闭">✕</button>
+    </div>
+    <div class="sbody">
+      <div class="stip">📄 将生成一份 <b>JSON 数据文件</b>：包含你勾选的记录、基本情况，以及自动整理的主题统计与情绪分布。<br><br>🔒 <b>文件只在你本机生成和保存</b>，不会自动发送给任何人。<b>完全由你决定</b>要不要给、给谁看。</div>
+      <div class="ssec">👤 关于你<span class="mini">选填，都可以留空</span></div>
+      <div class="sfield"><label>称呼</label><input id="ex-name" maxlength="12" placeholder="成长分析师怎么称呼你比较好？"></div>
+      <div class="sfield"><label>学段</label>
+        <select id="ex-age">
+          <option value="">不愿透露</option><option>小学高年级</option><option>初中</option>
+          <option>高中</option><option>大学及以上</option><option>家长</option>
+        </select>
+      </div>
+      <div class="sfield"><label>这次想聊什么</label><textarea id="ex-note" rows="2" maxlength="200" placeholder="例如：最近总是睡不好，想聊聊睡眠和考试压力……"></textarea></div>
+      <div class="ssec row2"><span>📋 选择记录 <span class="mini" id="ex-sel-count"></span></span><button type="button" class="sall" id="ex-all">全不选</button></div>
+      <div class="slist" id="ex-list"></div>
+    </div>
+    <div class="sfoot"><button type="button" class="sgo" id="ex-go">导出 JSON 文件</button></div>
+  </div>
+</div>
+
+<div class="ov" id="bk-overlay">
+  <div class="sheet">
+    <div class="shead">
+      <div><div class="stitle" id="bk-title">导出记录</div><div class="ssub" id="bk-sub"></div></div>
+      <button type="button" class="sclose" id="bk-close" aria-label="关闭">✕</button>
+    </div>
+    <div class="sbody" id="bk-body"></div>
+    <div class="sfoot" id="bk-foot"></div>
+  </div>
+</div>
+
+<div class="ov" id="review-overlay">
+  <div class="sheet">
+    <div class="shead">
+      <div><div class="stitle">✨ 回顾</div><div class="ssub">翻翻你走过的时光</div></div>
+      <button type="button" class="sclose" id="review-close" aria-label="关闭">✕</button>
+    </div>
+    <div class="sbody" id="review-body"></div>
+  </div>
+</div>
+
+<nav class="tabbar">
+  <button type="button" class="tab active" data-tab="record">
+    <span class="ic"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.5L16.732 3.732z"/></svg></span>
+    <span>记一笔</span>
+  </button>
+  <button type="button" class="tab" data-tab="journal">
+    <span class="ic"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg></span>
+    <span>我写过的</span>
+    <span class="badge" id="badge-journal"></span>
+  </button>
+  <button type="button" class="tab" data-tab="insight">
+    <span class="ic"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg></span>
+    <span>我的星图</span>
+  </button>
+</nav>
+
+<div id="toast"></div>
+
+<script>
+(function(){
+'use strict';
+
+/* ============ 基础工具 ============ */
+const $ = id => document.getElementById(id);
+const $$ = (s, r) => Array.prototype.slice.call((r || document).querySelectorAll(s));
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const pad = n => n < 10 ? '0' + n : '' + n;
+const dayKey = ts => { const d = new Date(ts); return d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate()); };
+const fmtDate = ts => { const d = new Date(ts); return d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate()); };
+const fmtTime = ts => { const d = new Date(ts); return pad(d.getHours()) + ':' + pad(d.getMinutes()); };
+const fmtFull = ts => fmtDate(ts) + ' ' + fmtTime(ts);
+const stampName = () => { const d = new Date(); return '' + d.getFullYear() + pad(d.getMonth()+1) + pad(d.getDate()) + '-' + pad(d.getHours()) + pad(d.getMinutes()); };
+function dateLabel(ts){
+  const now = new Date();
+  if (dayKey(ts) === dayKey(now.getTime())) return '今天';
+  if (dayKey(ts) === dayKey(now.getTime() - 864e5)) return '昨天';
+  const d = new Date(ts);
+  return (d.getMonth()+1) + '月' + d.getDate() + '日 · 周' + '日一二三四五六'[d.getDay()];
+}
+const simpleHash = s => { let h = 0; for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0; return (h >>> 0).toString(36); };
+
+let toastTimer;
+function toast(msg){
+  const el = $('toast'); el.textContent = msg; el.classList.add('show');
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove('show'), 2800);
+}
+function confirmDialog(title, html, buttons){
+  $('cf-t').innerHTML = title || '';
+  $('cf-p').innerHTML = html || '';
+  const acts = $('cf-acts'); acts.innerHTML = '';
+  (buttons && buttons.length ? buttons : [{ text: '知道了', cls: 'primary' }]).forEach(b => {
+    const btn = document.createElement('button');
+    btn.type = 'button'; btn.className = 'cfbtn ' + (b.cls || 'ghost'); btn.innerHTML = b.text;
+    btn.addEventListener('click', () => { $('cf-overlay').classList.remove('show'); if (b.fn) b.fn(); });
+    acts.appendChild(btn);
+  });
+  $('cf-overlay').classList.add('show');
+}
+
+/* ============ 环境检测 ============ */
+const ENV = (() => {
+  const ua = navigator.userAgent || '';
+  if (/MicroMessenger/i.test(ua)) return { id: 'wechat', name: '微信内置浏览器' };
+  if (/QQ\/|MQQBrowser/i.test(ua)) return { id: 'qq', name: '手机QQ' };
+  if (/iPhone|iPad|iPod/i.test(ua)) {
+    if (/FxiOS/i.test(ua)) return { id: 'ios-firefox', name: 'iPhone 上的 Firefox' };
+    if (/CriOS/i.test(ua)) return { id: 'ios-chrome', name: 'iPhone 上的 Chrome' };
+    if (/EdgiOS/i.test(ua)) return { id: 'ios-edge', name: 'iPhone 上的 Edge' };
+    return { id: 'ios-safari', name: 'iPhone 的 Safari' };
+  }
+  if (/Android/i.test(ua)) {
+    if (/HuaweiBrowser|HUAWEI/i.test(ua)) return { id: 'android-huawei', name: '华为浏览器' };
+    if (/MiuiBrowser/i.test(ua)) return { id: 'android-mi', name: '小米浏览器' };
+    if (/HeyTapBrowser/i.test(ua)) return { id: 'android-oppo', name: 'OPPO 浏览器' };
+    if (/VivoBrowser/i.test(ua)) return { id: 'android-vivo', name: 'vivo 浏览器' };
+    if (/Quark/i.test(ua)) return { id: 'android-quark', name: '夸克浏览器' };
+    if (/baiduboxapp/i.test(ua)) return { id: 'android-baidu', name: '百度App' };
+    if (/Chrome/i.test(ua)) return { id: 'android-chrome', name: '手机 Chrome 浏览器' };
+    return { id: 'android-browser', name: '安卓浏览器' };
+  }
+  return { id: 'desktop', name: '电脑浏览器' };
+})();
+const IS_WECHAT = ENV.id === 'wechat';
+const IS_IOS = (() => {
+  const ua = navigator.userAgent || '';
+  return /iPhone|iPad|iPod/i.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+})();
+
+/* ============ 数据层 ============ */
+const K = { E:'starmap_entries', G:'starmap_goal', X:'starmap_last_export',
+            C:'starmap_care_ack', S:'starmap_split_hint', T:'starmap_storage_token',
+            CT:'starmap_custom_tags', TH:'starmap_theme' };
+const CARE_INTERVAL = 14 * 864e5;
+
+function loadEntries(){
+  try { const a = JSON.parse(localStorage.getItem(K.E) || '[]'); return Array.isArray(a) ? a : []; }
+  catch (e) { return []; }
+}
+function saveEntries(a){ try { localStorage.setItem(K.E, JSON.stringify(a)); } catch (e) { toast('存储失败，浏览器空间可能已满'); } }
+let entries = loadEntries();
+
+function getToken(){
+  try {
+    let t = localStorage.getItem(K.T);
+    if (!t) { t = 'st' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8); localStorage.setItem(K.T, t); }
+    return t;
+  } catch (e) { return 'unknown'; }
+}
+
+const MOODS = [
+  { k:'great', f:'😄', l:'很好',   s:5, bg:'#A7F3D0' },
+  { k:'good',  f:'🙂', l:'不错',   s:4, bg:'#D9F99D' },
+  { k:'ok',    f:'😐', l:'一般',   s:3, bg:'#FDE68A' },
+  { k:'low',   f:'😔', l:'低落',   s:2, bg:'#FED7AA' },
+  { k:'awful', f:'😭', l:'很难过', s:1, bg:'#FECACA' }
+];
+const moodInfo = k => MOODS.find(m => m.k === k) || MOODS[2];
+const moodKeyFromLabel = l => (MOODS.find(m => m.l === l) || {}).k || '';
+const INT_LABELS = ['', '轻轻', '一般', '很强烈'];
+
+const TAGS = [
+  { t:'学校', c:'#EDE9FE' }, { t:'学习压力', c:'#FDE68A' }, { t:'朋友', c:'#DBEAFE' },
+  { t:'家人', c:'#FED7AA' }, { t:'睡眠', c:'#C7D2FE' },     { t:'爱好', c:'#DCFCE7' },
+  { t:'身体', c:'#FEE2E2' }, { t:'情绪', c:'#FBCFE8' },     { t:'考试', c:'#E9D5FF' },
+  { t:'其他', c:'#E5E7EB' }
+];
+const tagColor = t => (TAGS.find(x => x.t === t) || { c:'#E9E5FF' }).c;
+
+function calcStreak(){
+  const days = {};
+  entries.forEach(e => { days[dayKey(e.time)] = true; });
+  let n = 0; const d = new Date();
+  if (!days[dayKey(d.getTime())]) {
+    d.setDate(d.getDate() - 1);
+    if (!days[dayKey(d.getTime())]) return 0;
+  }
+  while (days[dayKey(d.getTime())]) { n++; d.setDate(d.getDate() - 1); }
+  return n;
+}
+function tagStats(){
+  const now = Date.now(), map = {};
+  entries.forEach(e => (e.tags || []).forEach(t => {
+    const w = 1 + Math.max(0, 1 - (now - e.time) / (30 * 864e5));
+    const m = map[t] || (map[t] = { count: 0, weight: 0, last: 0 });
+    m.count++; m.weight += w;
+    if (e.time > m.last) m.last = e.time;
+  }));
+  return map;
+}
+const findEntry = id => entries.find(e => e.id === id);
+
+/* ============ 文案素材 ============ */
+const QUOTES = [
+  { i:'🌱', t:'不用每天都有进步，<b>活着本身就在生长</b>' },
+  { i:'🌙', t:'情绪不是敌人，它只是<b>来给你送信的</b>' },
+  { i:'✦',  t:'你写下的每一句，<b>都是星图上的一点光</b>' },
+  { i:'☁️', t:'阴天也算数，<b>阴天有阴天的功课</b>' },
+  { i:'🫧', t:'先把今天过完，<b>就已经很了不起</b>' },
+  { i:'🏮', t:'不必和别人比亮度，<b>每颗星有自己的轨道</b>' },
+  { i:'🎧', t:'难过的时候，<b>先照顾情绪，再处理事情</b>' },
+  { i:'🛫', t:'改变从很小的地方开始，<b>比如今晚早睡十分钟</b>' },
+  { i:'🌊', t:'潮水有涨有落，<b>你也一样，落是为了再涨</b>' },
+  { i:'🧸', t:'对自己好一点，<b>你已经在很努力了</b>' }
+];
+const PROMPTS = [
+  '今天有什么事在你脑子里转了很久？',
+  '如果给今天的情绪配个天气，是晴、多云还是雨？',
+  '最近有什么事让你小小的开心？',
+  '有没有一句话，你今天特别想说但没说出口？',
+  '今天身体感觉怎么样——累吗，睡够了吗？',
+  '如果明天的自己能给今天的你留一句话，会是什么？'
+];
+const FUS = [
+  { i:'💭', q:'写下来之后，现在感觉和刚才比有什么变化吗？' },
+  { i:'🔍', q:'这件事里，最让你在意的是哪个部分？' },
+  { i:'🤝', q:'如果好朋友遇到一样的事，你会怎么安慰 TA？' },
+  { i:'⏭', q:'明天回头看今天这段，你猜自己会怎么想？' },
+  { i:'🌈', q:'给这段心情配一个天气的话，是晴、多云还是下雨？' }
+];
+
+/* ============ 主题管理 ============ */
+function getTheme(){
+  try { return localStorage.getItem(K.TH) || 'auto'; } catch(e) { return 'auto'; }
+}
+function applyThemeIcon(t){
+  const btn = $('theme-btn');
+  if (!btn) return;
+  if (t === 'auto') {
+    const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    btn.textContent = '◐';
+    btn.title = '跟随系统（当前' + (isDark ? '夜间' : '浅色') + '）';
+  } else if (t === 'dark') {
+    btn.textContent = '🌙';
+    btn.title = '夜间模式';
+  } else {
+    btn.textContent = '☀️';
+    btn.title = '浅色模式';
+  }
+}
+function setTheme(t){
+  try {
+    if (t === 'auto') {
+      localStorage.removeItem(K.TH);
+      document.documentElement.removeAttribute('data-theme');
+    } else {
+      localStorage.setItem(K.TH, t);
+      document.documentElement.setAttribute('data-theme', t);
+    }
+  } catch(e){}
+  applyThemeIcon(t);
+  try {
+    const meta = document.querySelector('meta[name="theme-color"]');
+    const isDark = t === 'dark' || (t === 'auto' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    if (meta) meta.setAttribute('content', isDark ? '#0D0920' : '#F4F2FB');
+  } catch(e){}
+}
+function cycleTheme(){
+  const cur = getTheme();
+  const next = cur === 'auto' ? 'light' : cur === 'light' ? 'dark' : 'auto';
+  setTheme(next);
+  const names = { auto: '跟随系统', light: '浅色', dark: '夜间' };
+  toast('🌓 主题：' + names[next]);
+}
+
+/* ============ 记录页 ============ */
+const ui = { mood: null, intensity: 2, tags: {} };
+
+function renderQuote(){ const q = QUOTES[quoteIdx]; $('quote-ic').textContent = q.i; $('quote-text').innerHTML = q.t; }
+let quoteIdx = Math.floor(Math.random() * QUOTES.length);
+let promptIdx = Math.floor(Math.random() * PROMPTS.length);
+const setPrompt = () => { $('prompt-text').textContent = PROMPTS[promptIdx]; };
+
+function buildMoodRow(){
+  $('mood-row').innerHTML = MOODS.map(m =>
+    `<button type="button" class="mood" data-m="${m.k}"><span class="face" style="background:${m.bg}">${m.f}</span><span class="ml">${m.l}</span></button>`
+  ).join('');
+}
+function loadCustomTags(){
+  try { return JSON.parse(localStorage.getItem(K.CT) || '[]'); } catch (e) { return []; }
+}
+function buildTagRow(){
+  const custom = loadCustomTags();
+  const all = TAGS.concat(custom.map(t => ({ t, c:'#E9E5FF' })));
+  $('tag-row').innerHTML = all.map(t =>
+    `<button type="button" class="chip" data-t="${esc(t.t)}" style="background:${t.c}"><span class="ck">✓</span>${esc(t.t)}</button>`
+  ).join('') + `<button type="button" class="chip add" id="tag-add">＋ 自定义</button>`;
+  $('tag-add').addEventListener('click', () => {
+    const name = prompt('给这个标签起个名（2～6 字最好记）\n例如：猫、追星、画画、老友', '');
+    if (!name) return;
+    const t = name.trim().slice(0, 6);
+    if (!t) return;
+    const list = loadCustomTags();
+    if (list.indexOf(t) >= 0 || TAGS.some(x => x.t === t)) { toast('这个标签已经有啦'); return; }
+    list.push(t);
+    try { localStorage.setItem(K.CT, JSON.stringify(list)); } catch (e) {}
+    buildTagRow();
+    toast('✦ 新标签已加入');
+  });
+}
+function buildQuickMoods(){
+  const row = $('qm-row');
+  if (!row) return;
+  row.innerHTML = MOODS.map(m =>
+    `<button type="button" data-k="${m.k}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 4px;border-radius:14px;background:var(--card-bg);border:1px solid var(--line);box-shadow:var(--sh);transition:transform .12s">
+      <span style="font-size:26px;line-height:1">${m.f}</span>
+      <span style="font-size:10px;color:var(--muted);font-weight:700">${m.l}</span>
+    </button>`
+  ).join('');
+  row.addEventListener('click', ev => {
+    const b = ev.target.closest && ev.target.closest('button');
+    if (!b) return;
+    const k = b.dataset.k;
+    const m = moodInfo(k);
+    const e = newEntry({ text: '（今天心情' + m.l + '）', mood: k, face: m.f });
+    entries.unshift(e); saveEntries(entries); markPending(e.id); dataChanged();
+    toast(m.f + ' 记下这一刻');
+  });
+}
+function setDateCard(){
+  const d = new Date();
+  $('today-date').textContent = (d.getMonth()+1) + '月' + d.getDate() + '日 · 周' + '日一二三四五六'[d.getDay()];
+  const s = calcStreak();
+  $('rec-streak').textContent = s > 0 ? '🔥 连续 ' + s + ' 天' : '';
+}
+function resetDetail(){
+  $('ta').value = ''; $('wc').textContent = '0 字';
+  ui.mood = null; ui.intensity = 2; ui.tags = {};
+  $$('.mood', $('mood-row')).forEach(b => b.classList.remove('on'));
+  $$('.ints button', $('int-row')).forEach(c => c.classList.remove('on'));
+  const mid = $('int-row').querySelector('[data-i="2"]'); if (mid) mid.classList.add('on');
+  $$('.chip', $('tag-row')).forEach(c => c.classList.remove('on'));
+  $('int-row').style.display = 'none'; $('int-label').style.display = 'none';
+}
+
+let currentFuId = null;
+function showFollowup(e){
+  currentFuId = e.id;
+  const f = FUS[Math.floor(Math.random() * FUS.length)];
+  $('fu-ic').textContent = f.i; $('fu-q').textContent = f.q; $('fu-input').value = '';
+  $('followup-card').classList.add('show');
+  setTimeout(() => { try { $('followup-card').scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (err) {} }, 150);
+}
+function newEntry(fields){
+  return Object.assign({
+    id: 'e' + Date.now() + Math.floor(Math.random() * 1000),
+    time: Date.now(), text: '', mood: null, face: '',
+    intensity: null, tags: [], followup: '', src: ENV.id
+  }, fields);
+}
+function quickSave(){
+  const v = $('quick-input').value.trim();
+  if (!v) { toast('写点什么再存嘛 ✦'); return; }
+  const e = newEntry({ text: v });
+  entries.unshift(e); saveEntries(entries); markPending(e.id); dataChanged();
+  $('quick-input').value = ''; showFollowup(e); toast('✦ 存好了');
+}
+function saveDetail(){
+  const v = $('ta').value.trim();
+  if (!v) { toast('先写点什么吧，一句话也算 ✦'); return; }
+  const e = newEntry({
+    text: v, mood: ui.mood,
+    face: ui.mood ? moodInfo(ui.mood).f : '',
+    intensity: ui.mood ? ui.intensity : null,
+    tags: Object.keys(ui.tags)
+  });
+  entries.unshift(e); saveEntries(entries); markPending(e.id); dataChanged();
+  resetDetail(); showFollowup(e); toast('✦ 存好了');
+}
+
+/* ============ 小目标 ============ */
+const loadGoal = () => { try { return JSON.parse(localStorage.getItem(K.G) || 'null'); } catch (e) { return null; } };
+const saveGoal = g => { try { g ? localStorage.setItem(K.G, JSON.stringify(g)) : localStorage.removeItem(K.G); } catch (e) {} };
+
+function renderGoal(){
+  const g = loadGoal(), box = $('goal-view');
+  if (!g || !g.text) {
+    box.innerHTML = `<div class="gt"><span>🎯</span>定一个本周小目标</div>
+      <div class="gp">不用宏大，「连续写 3 天」「这周早睡两次」这种就算</div>
+      <button type="button" class="btn-amber" id="goal-start" style="margin-top:10px">写一个试试</button>`;
+    $('goal-start').addEventListener('click', () => goalEdit(''));
+    return;
+  }
+  const day = Math.max(1, Math.floor((Date.now() - g.created) / 864e5) + 1);
+  const n = entries.filter(e => e.time >= g.created).length;
+  box.innerHTML = `<div class="gt"><span>🎯</span>我的小目标 · 第 ${day} 天</div>
+    <div class="txt">${esc(g.text)}</div>
+    <div class="stat">定下于 ${fmtDate(g.created)} · 期间写了 <b>${n}</b> 条记录</div>
+    <div class="goal-acts">
+      <button type="button" class="btn-amber ghost" id="goal-edit">改一改</button>
+      <button type="button" class="btn-amber ghost" id="goal-del">放下它</button>
+    </div>`;
+  $('goal-edit').addEventListener('click', () => goalEdit(g.text));
+  $('goal-del').addEventListener('click', () => {
+    confirmDialog('放下这个目标？', '记录不会被删，只是不再显示这个目标。', [
+      { text: '先留着', cls: 'ghost' },
+      { text: '放下它', cls: 'primary', fn: () => { saveGoal(null); renderGoal(); } }
+    ]);
+  });
+}
+function goalEdit(prefill){
+  const box = $('goal-view');
+  box.innerHTML = `<div class="gt"><span>🎯</span>写下来，让它看得见</div>
+    <div class="goal-inrow">
+      <input type="text" id="goal-input" maxlength="30" placeholder="例如：这周连续写 3 天" value="${esc(prefill)}">
+      <button type="button" class="btn-amber" id="goal-ok">存</button>
+    </div>`;
+  const input = $('goal-input');
+  const ok = () => {
+    const v = input.value.trim();
+    if (!v) { toast('写点什么吧 ✦'); return; }
+    const old = loadGoal();
+    saveGoal({ text: v, created: old && old.created ? old.created : Date.now() });
+    renderGoal(); toast('✦ 目标已挂上星空');
+  };
+  $('goal-ok').addEventListener('click', ok);
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); ok(); } });
+  try { input.focus(); } catch (e) {}
+}
+
+/* ============ 日记页 ============ */
+const jFilter = { q: '', tag: '' };
+
+function renderJournal(){
+  $('j-count').textContent = entries.length ? '共 ' + entries.length + ' 条' : '';
+  const list = $('j-list');
+
+  const stats = tagStats();
+  const allTags = Object.keys(stats).sort((a,b) => stats[b].count - stats[a].count);
+  const usedTags = allTags.length ? ['全部', ...allTags.slice(0, 8)] : [];
+  $('j-filters').innerHTML = usedTags.map(t => {
+    const val = t === '全部' ? '' : t;
+    const on = (jFilter.tag === val) ? ' on' : '';
+    return `<button type="button" data-tag="${esc(val)}" class="${on.trim()}">${esc(t)}</button>`;
+  }).join('');
+  $$('#j-filters button').forEach(b => {
+    b.addEventListener('click', () => { jFilter.tag = b.dataset.tag; renderJournal(); });
+  });
+
+  let filtered = entries;
+  if (jFilter.q) {
+    const q = jFilter.q.toLowerCase();
+    filtered = filtered.filter(e =>
+      (e.text || '').toLowerCase().includes(q) ||
+      (e.followup || '').toLowerCase().includes(q) ||
+      (e.tags || []).some(t => t.toLowerCase().includes(q))
+    );
+  }
+  if (jFilter.tag) filtered = filtered.filter(e => (e.tags || []).indexOf(jFilter.tag) >= 0);
+
+  if (!entries.length) {
+    list.innerHTML = `<div class="card jempty"><div class="big">🗒️</div>
+      <p>这里还空着。<br>想到什么，先去「记一笔」写下第一句吧。</p>
+      <button type="button" class="gowrite" id="go-write">去写一句 ✦</button></div>`;
+    $('go-write').addEventListener('click', () => switchTab('record'));
+    $('consult-card').style.display = 'none';
+    return;
+  }
+  if (!filtered.length) {
+    list.innerHTML = `<div class="card jempty"><div class="big">🔍</div>
+      <p>没找到匹配的记录。<br>换个关键词，或点「全部」看所有记录。</p></div>`;
+    $('consult-card').style.display = '';
+    return;
+  }
+
+  const tapes = ['#DDD6FE', '#FBCFE8', '#BFDBFE', '#FDE68A', '#BBF7D0'];
+  list.innerHTML = filtered.map((e, i) => {
+    const m = e.mood ? moodInfo(e.mood) : null;
+    const chips = (e.tags || []).map(t => `<span class="mini" style="background:${tagColor(t)}">${esc(t)}</span>`).join('');
+    const fu = e.followup ? `<div class="efu"><b>后来 · </b>${esc(e.followup)}</div>` : '';
+    const inten = e.intensity ? ' · ' + INT_LABELS[e.intensity] : '';
+    return `<div class="entry card" style="--tape:${tapes[i % tapes.length]}">
+      <div class="etop">
+        <div class="eface" style="background:${m ? m.bg : '#EDE9FE'}">${e.face || '✦'}</div>
+        <div><div class="edate">${dateLabel(e.time)}</div><div class="etime">${fmtTime(e.time)}${inten}</div></div>
+        <div class="etags">${chips}</div>
+      </div>
+      <div class="etxt">${esc(e.text)}</div>${fu}
+      <div class="efoot"><span class="more">点开全文</span>
+        <button type="button" class="del" data-id="${e.id}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>删除</button>
+      </div></div>`;
+  }).join('');
+
+  $$('.entry', list).forEach(card => {
+    card.addEventListener('click', ev => {
+      if (ev.target.closest && ev.target.closest('.del')) return;
+      card.classList.toggle('open');
+    });
+  });
+  $$('.del', list).forEach(btn => {
+    btn.addEventListener('click', ev => {
+      ev.stopPropagation();
+      const id = btn.dataset.id;
+      confirmDialog('删除这一条？', '删除后<b>无法找回</b>。已经导出发给成长分析师或存在「文件传输助手」的内容不受影响。', [
+        { text: '先留着', cls: 'ghost' },
+        { text: '删除', cls: 'danger', fn: () => {
+          entries = entries.filter(e => e.id !== id);
+          saveEntries(entries);
+          clearPending([id]);
+          syncDelete(id);
+          dataChanged(); toast('已删除');
+        }}
+      ]);
+    });
+  });
+  $('consult-card').style.display = '';
+}
+
+/* ============ 回顾模式 ============ */
+function openReview(){
+  const body = $('review-body');
+  if (!entries.length) {
+    body.innerHTML = `<div class="review-empty"><div class="big">✨</div>
+      <p>还没有可以回顾的记录。<br>先去「记一笔」写下几句，<br>过段时间回来，你会看到自己走过的路。</p></div>`;
+    $('review-overlay').classList.add('show');
+    return;
+  }
+
+  const byMonth = {};
+  entries.forEach(e => {
+    const d = new Date(e.time);
+    const key = d.getFullYear() + '-' + pad(d.getMonth()+1);
+    (byMonth[key] || (byMonth[key] = [])).push(e);
+  });
+  const keys = Object.keys(byMonth).sort().reverse();
+
+  const totalMood = {};
+  entries.forEach(e => { if (e.mood) totalMood[e.mood] = (totalMood[e.mood]||0) + 1; });
+  const topMoodKey = Object.keys(totalMood).sort((a,b) => totalMood[b]-totalMood[a])[0];
+  const topMood = topMoodKey ? moodInfo(topMoodKey) : null;
+
+  const monthCards = keys.map(k => {
+    const [y, m] = k.split('-');
+    const list = byMonth[k];
+    const mc = {};
+    list.forEach(e => { if (e.mood) mc[e.mood] = (mc[e.mood]||0) + 1; });
+    const mk = Object.keys(mc).sort((a,b) => mc[b]-mc[a])[0];
+    const mInfo = mk ? moodInfo(mk) : null;
+    const tc = {};
+    list.forEach(e => (e.tags||[]).forEach(t => { tc[t] = (tc[t]||0) + 1; }));
+    const ttop = Object.keys(tc).sort((a,b) => tc[b]-tc[a]).slice(0, 3);
+    const tagLine = ttop.length ? ttop.map(t => '「' + t + '」').join(' ') : '（没选标签）';
+
+    const rows = list.map(e => {
+      const mi = e.mood ? moodInfo(e.mood) : null;
+      const tagMini = (e.tags||[]).slice(0, 3).map(t =>
+        `<span class="rm-tag">${esc(t)}</span>`).join('');
+      const text = e.text.length > 80 ? e.text.slice(0, 80) + '…' : e.text;
+      return `<div class="review-mrow">
+        <div class="rm-face" style="background:${mi ? mi.bg : 'rgba(139,92,246,.15)'}">${e.face || '✦'}</div>
+        <div class="rm-main">
+          <div class="rm-date">${pad(new Date(e.time).getDate())}日 · ${fmtTime(e.time)}</div>
+          <div class="rm-text">${esc(text)}</div>
+          ${tagMini ? `<div class="rm-tags">${tagMini}</div>` : ''}
+        </div>
+      </div>`;
+    }).join('');
+
+    return `<div class="review-month">
+      <button type="button" class="review-month-head">
+        <div class="review-ml">
+          <div class="review-ym">${y} 年 ${parseInt(m)} 月</div>
+          <div class="review-meta">${list.length} 条 · 最常出现 ${tagLine}</div>
+        </div>
+        <span class="review-mface">${mInfo ? mInfo.f : '✦'}</span>
+        <span class="review-mar">▾</span>
+      </button>
+      <div class="review-mbody">${rows}</div>
+    </div>`;
+  }).join('');
+
+  body.innerHTML = `
+    <div class="review-hero">
+      <div class="rh-i">${topMood ? topMood.f : '✨'}</div>
+      <div class="rh-t">你走过的时光</div>
+      <div class="rh-s">从 ${fmtDate(entries[entries.length-1].time)} 到现在</div>
+      <div class="rh-stat">
+        <div><div class="n">${entries.length}</div><div class="l">条记录</div></div>
+        <div><div class="n">${keys.length}</div><div class="l">个月份</div></div>
+        <div><div class="n">${calcStreak()}</div><div class="l">连续天数</div></div>
+      </div>
+    </div>
+    ${monthCards}
+  `;
+
+  $$('.review-month-head').forEach(head => {
+    head.addEventListener('click', () => {
+      head.parentNode.classList.toggle('open');
+    });
+  });
+
+  const firstMonth = document.querySelector('.review-month');
+  if (firstMonth) firstMonth.classList.add('open');
+
+  $('review-overlay').classList.add('show');
+}
+
+/* ============ 洞察页 ============ */
+function renderStats(){
+  $('st-total').textContent = entries.length;
+  const now = Date.now();
+  $('st-week').textContent = entries.filter(e => now - e.time < 7 * 864e5).length;
+  $('st-streak').textContent = calcStreak();
+}
+function renderBars(){
+  const stats = tagStats();
+  const names = Object.keys(stats).sort((a, b) => stats[b].weight - stats[a].weight);
+  const box = $('bar-list');
+  if (!names.length) { box.innerHTML = '<p class="cap">写记录时选上「今天涉及什么」，这里就会亮起来</p>'; return; }
+  const top = names.slice(0, 6);
+  const max = stats[top[0]].weight;
+  const colors = ['#8B5CF6', '#F472B6', '#22D3EE', '#A3E635', '#FB923C', '#A78BFA'];
+  box.innerHTML = top.map((n, i) => {
+    const w = Math.max(8, Math.round(stats[n].weight / max * 100));
+    return `<div class="bar"><span class="mini" style="background:${tagColor(n)}">${esc(n)}</span>
+      <span class="bar-i"><i style="width:${w}%;background:${colors[i % colors.length]}"></i></span>
+      <span class="ct">${stats[n].count}</span></div>`;
+  }).join('');
+}
+function renderSpark(){
+  const svg = $('spark');
+  const pts = entries.slice().sort((a, b) => b.time - a.time).slice(0, 30).reverse()
+    .map(e => e.mood ? moodInfo(e.mood).s : 3);
+  if (pts.length < 2) {
+    svg.innerHTML = '';
+    $('spark-cap').textContent = '多写几条（带上心情），情绪曲线就会亮起来';
+    return;
+  }
+  const W = 300, H = 72, P = 9, step = (W - 2 * P) / (pts.length - 1);
+  let d = '', dots = '';
+  pts.forEach((v, i) => {
+    const x = P + i * step, y = P + (5 - v) * (H - 2 * P) / 4;
+    d += (i ? 'L' : 'M') + x.toFixed(1) + ' ' + y.toFixed(1) + ' ';
+    const col = v >= 4 ? '#34D399' : v === 3 ? '#FBBF24' : '#FB7185';
+    dots += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3" fill="${col}" stroke="var(--card-bg-solid)" stroke-width="1.5"/>`;
+  });
+  svg.innerHTML = `<path d="${d}" fill="none" stroke="#8B5CF6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity=".55"/>${dots}`;
+  $('spark-cap').textContent = '最近 ' + pts.length + ' 条记录的情绪起伏 —— 有高有低，都是正常的 ✦';
+}
+
+/* ---- 星图网络（星空美化 · 性能优化版）---- */
+const NS = 'http://www.w3.org/2000/svg';
+
+function starPath(cx, cy, r) {
+  const k = r * 0.28;
+  const x = cx.toFixed(1), y = cy.toFixed(1);
+  const xa = (cx - r).toFixed(1), xb = (cx + r).toFixed(1);
+  const ya = (cy - r).toFixed(1), yb = (cy + r).toFixed(1);
+  const xk1 = (cx + k).toFixed(1), xk2 = (cx - k).toFixed(1);
+  const yk1 = (cy + k).toFixed(1), yk2 = (cy - k).toFixed(1);
+  return `M ${x} ${ya} Q ${xk1} ${yk2} ${xb} ${y} Q ${xk1} ${yk1} ${x} ${yb} Q ${xk2} ${yk1} ${xa} ${y} Q ${xk2} ${yk2} ${x} ${ya} Z`;
+}
+
+const STAR_COLORS = [
+  '#FBBF24', '#F472B6', '#A78BFA', '#34D399', '#22D3EE',
+  '#818CF8', '#FB923C', '#E879F9', '#60A5FA', '#F87171'
+];
+
+function renderNet(){
+  const svg = $('net'); svg.innerHTML = '';
+  const stats = tagStats();
+  const names = Object.keys(stats).sort((a, b) => stats[b].weight - stats[a].weight).slice(0, 10);
+  const CX = 160, CY = 160;
+
+  if (!names.length) {
+    const g = document.createElementNS(NS, 'g');
+    g.innerHTML =
+      `<circle cx="${CX}" cy="${CY}" r="34" fill="rgba(167,139,250,.1)"/>` +
+      `<circle cx="${CX}" cy="${CY}" r="16" fill="none" stroke="rgba(167,139,250,.35)" stroke-width="1" stroke-dasharray="3 3"/>` +
+      `<circle cx="${CX}" cy="${CY}" r="6" fill="rgba(196,181,253,.6)"/>`;
+    svg.appendChild(g);
+    const t = document.createElementNS(NS, 'text');
+    t.setAttribute('x', CX); t.setAttribute('y', CY + 68);
+    t.setAttribute('text-anchor', 'middle');
+    t.setAttribute('font-size', '11');
+    t.setAttribute('fill', 'rgba(196,181,253,.55)');
+    t.textContent = '写几条带标签的记录，星图就会亮起来';
+    svg.appendChild(t);
+    showNetDefault();
+    return;
+  }
+
+  const n = names.length;
+  const layers = [];
+  if (n <= 3) layers.push({ r: 88, items: names });
+  else if (n <= 6) {
+    const split = Math.ceil(n / 2);
+    layers.push({ r: 76, items: names.slice(0, split) });
+    layers.push({ r: 118, items: names.slice(split) });
+  } else {
+    const n1 = Math.max(2, Math.ceil(n * 0.3));
+    const n2 = Math.max(2, Math.ceil(n * 0.4));
+    layers.push({ r: 74, items: names.slice(0, n1) });
+    layers.push({ r: 110, items: names.slice(n1, n1 + n2) });
+    layers.push({ r: 142, items: names.slice(n1 + n2) });
+  }
+  const pos = {};
+  layers.forEach((layer, li) => {
+    const cnt = layer.items.length;
+    if (!cnt) return;
+    const baseAngle = -Math.PI / 2 + li * (Math.PI / cnt);
+    layer.items.forEach((name, i) => {
+      const angle = baseAngle + i * 2 * Math.PI / cnt;
+      pos[name] = { x: CX + Math.cos(angle) * layer.r, y: CY + Math.sin(angle) * layer.r };
+    });
+  });
+
+  const pair = {};
+  entries.forEach(e => {
+    const ts = (e.tags || []).filter(t => names.indexOf(t) >= 0);
+    for (let i = 0; i < ts.length; i++)
+      for (let j = i + 1; j < ts.length; j++) {
+        const k = ts[i] + '||' + ts[j];
+        pair[k] = (pair[k] || 0) + 1;
+      }
+  });
+  const maxPair = Math.max(1, ...Object.values(pair));
+
+  Object.keys(pair).forEach(k => {
+    const [a, b] = k.split('||');
+    const pa = pos[a], pb = pos[b];
+    if (!pa || !pb) return;
+    const ratio = pair[k] / maxPair;
+    const line = document.createElementNS(NS, 'line');
+    line.setAttribute('x1', pa.x.toFixed(1)); line.setAttribute('y1', pa.y.toFixed(1));
+    line.setAttribute('x2', pb.x.toFixed(1)); line.setAttribute('y2', pb.y.toFixed(1));
+    line.setAttribute('stroke', '#C4B5FD');
+    line.setAttribute('stroke-width', (0.8 + 1.6 * ratio).toFixed(2));
+    line.setAttribute('stroke-linecap', 'round');
+    line.setAttribute('stroke-dasharray', '2 5');
+    line.setAttribute('opacity', (0.18 + 0.5 * ratio).toFixed(2));
+    line.setAttribute('class', 'netedge');
+    line.setAttribute('data-a', a); line.setAttribute('data-b', b);
+    line.addEventListener('click', ev => { ev.stopPropagation(); showPairInfo(a, b); });
+    svg.appendChild(line);
+  });
+
+  names.forEach((name, i) => {
+    const p = pos[name], c = stats[name].count;
+    const color = STAR_COLORS[i % STAR_COLORS.length];
+    const line = document.createElementNS(NS, 'line');
+    line.setAttribute('x1', CX); line.setAttribute('y1', CY);
+    line.setAttribute('x2', p.x.toFixed(1)); line.setAttribute('y2', p.y.toFixed(1));
+    line.setAttribute('stroke', color);
+    line.setAttribute('stroke-width', (1 + Math.min(2.8, c * 0.4)).toFixed(2));
+    line.setAttribute('stroke-linecap', 'round');
+    line.setAttribute('opacity', (0.28 + Math.min(0.4, c * 0.05)).toFixed(2));
+    line.setAttribute('class', 'netedge');
+    line.setAttribute('data-tag', name);
+    line.addEventListener('click', ev => { ev.stopPropagation(); showNodeInfo(name); });
+    svg.appendChild(line);
+  });
+
+  const gMe = document.createElementNS(NS, 'g');
+  gMe.setAttribute('class', 'netnode');
+  gMe.setAttribute('data-node', '我');
+  gMe.innerHTML =
+    `<circle cx="${CX}" cy="${CY}" r="32" fill="rgba(167,139,250,.1)"/>` +
+    `<circle cx="${CX}" cy="${CY}" r="22" fill="rgba(167,139,250,.18)"/>` +
+    `<circle cx="${CX}" cy="${CY}" r="14" fill="rgba(196,181,253,.32)"/>` +
+    `<circle cx="${CX}" cy="${CY}" r="10" fill="#DDD6FE"/>` +
+    `<circle cx="${CX}" cy="${CY}" r="6.5" fill="#fff"/>` +
+    `<text x="${CX}" y="${CY + 3}" text-anchor="middle" font-size="8" fill="#2A1B54" font-weight="800">我</text>`;
+  gMe.addEventListener('click', ev => { ev.stopPropagation(); showNetDefault(); });
+  svg.appendChild(gMe);
+
+  names.forEach((name, i) => {
+    const p = pos[name];
+    const c = stats[name].count;
+    const r = 8 + Math.min(9, c * 1.2);
+    const color = STAR_COLORS[i % STAR_COLORS.length];
+    const g = document.createElementNS(NS, 'g');
+    g.setAttribute('class', 'netnode');
+    g.setAttribute('data-node', name);
+    g.setAttribute('style', `animation-delay:${(i * 0.04).toFixed(2)}s`);
+    const px = p.x.toFixed(1), py = p.y.toFixed(1);
+
+    const halo = document.createElementNS(NS, 'circle');
+    halo.setAttribute('cx', px); halo.setAttribute('cy', py);
+    halo.setAttribute('r', (r * 2.1).toFixed(1));
+    halo.setAttribute('fill', color); halo.setAttribute('opacity', '.1');
+    g.appendChild(halo);
+
+    const halo2 = document.createElementNS(NS, 'circle');
+    halo2.setAttribute('cx', px); halo2.setAttribute('cy', py);
+    halo2.setAttribute('r', (r * 1.45).toFixed(1));
+    halo2.setAttribute('fill', color); halo2.setAttribute('opacity', '.2');
+    g.appendChild(halo2);
+
+    const star = document.createElementNS(NS, 'path');
+    star.setAttribute('d', starPath(p.x, p.y, r));
+    star.setAttribute('fill', color);
+    g.appendChild(star);
+
+    const dot = document.createElementNS(NS, 'circle');
+    dot.setAttribute('cx', (p.x - r * 0.18).toFixed(1));
+    dot.setAttribute('cy', (p.y - r * 0.18).toFixed(1));
+    dot.setAttribute('r', (r * 0.22).toFixed(1));
+    dot.setAttribute('fill', '#fff'); dot.setAttribute('opacity', '.85');
+    g.appendChild(dot);
+
+    const t = document.createElementNS(NS, 'text');
+    t.setAttribute('x', px);
+    t.setAttribute('y', (p.y + r + 13).toFixed(1));
+    t.setAttribute('text-anchor', 'middle');
+    t.setAttribute('font-size', '10');
+    t.setAttribute('fill', '#E9E5FF');
+    t.setAttribute('font-weight', '700');
+    t.textContent = name;
+    g.appendChild(t);
+
+    g.addEventListener('click', ev => { ev.stopPropagation(); showNodeInfo(name); });
+    svg.appendChild(g);
+  });
+
+  showNetDefault();
+}
+function dimNet(sel){
+  const svg = $('net');
+  $$('.netnode', svg).forEach(g => g.classList.toggle('dim', !!sel && g.getAttribute('data-node') !== sel));
+  $$('.netedge', svg).forEach(l => {
+    let keep = false;
+    if (sel) {
+      if (l.getAttribute('data-tag') === sel) keep = true;
+      if (l.getAttribute('data-a') === sel || l.getAttribute('data-b') === sel) keep = true;
+    }
+    l.classList.toggle('dim', !!sel && !keep);
+  });
+}
+function dimPair(a, b){
+  const svg = $('net');
+  $$('.netnode', svg).forEach(g => {
+    const dn = g.getAttribute('data-node');
+    g.classList.toggle('dim', dn !== a && dn !== b && dn !== '我');
+  });
+  $$('.netedge', svg).forEach(l => {
+    const da = l.getAttribute('data-a'), db = l.getAttribute('data-b');
+    l.classList.toggle('dim', !((da === a && db === b) || (da === b && db === a)));
+  });
+}
+function showNetDefault(){
+  dimNet(null);
+  $('netinfo').innerHTML = '<span class="nt">这是你的星图</span> —— 每颗星是你写过的话题，写得越多星越大，最近常写的离「我」越近。' +
+    '<span class="hint">👆 点一颗星看它的档案 · 点虚线看两颗星的故事 · 点「我」恢复全貌</span>';
+}
+function showNodeInfo(n){
+  dimNet(n);
+  const st = tagStats()[n];
+  const related = entries.filter(e => (e.tags || []).indexOf(n) >= 0);
+  const sample = related.slice(0, 2).map(e => {
+    const t = e.text.length > 40 ? e.text.slice(0, 40) + '…' : e.text;
+    return `<span class="bigline">${dateLabel(e.time)} · ${esc(t)}</span>`;
+  }).join('');
+  $('netinfo').innerHTML = `<span class="nt">${esc(n)}</span> · 共出现 <b>${st.count}</b> 次，最近一次 ${fmtDate(st.last)}` +
+    '<span class="hint">点两颗星之间的虚线看它们的故事 · 点「我」恢复全貌</span>' + sample;
+}
+function showPairInfo(a, b){
+  dimPair(a, b);
+  const both = entries.filter(e => {
+    const t = e.tags || [];
+    return t.indexOf(a) >= 0 && t.indexOf(b) >= 0;
+  });
+  const lines = both.slice(0, 3).map(e => {
+    const t = e.text.length > 36 ? e.text.slice(0, 36) + '…' : e.text;
+    return `<span class="bigline">${dateLabel(e.time)} · ${esc(t)}</span>`;
+  }).join('');
+  $('netinfo').innerHTML = `<span class="nt">「${esc(a)}」×「${esc(b)}」</span> —— 一起出现了 <b>${both.length}</b> 次` +
+    lines + '<span class="hint">点「我」恢复全貌</span>';
+}
+
+function renderCompare(){
+  const card = $('compare-card');
+  if (entries.length < 6) { card.style.display = 'none'; return; }
+  card.style.display = '';
+  const sorted = entries.slice().sort((a, b) => a.time - b.time);
+  const mid = Math.floor(sorted.length / 2);
+  const earlyArr = sorted.slice(0, mid), lateArr = sorted.slice(mid);
+  const cm = arr => {
+    const m = {};
+    arr.forEach(e => (e.tags || []).forEach(t => { m[t] = (m[t] || 0) + 1; }));
+    return m;
+  };
+  const em = cm(earlyArr), lm = cm(lateArr);
+  const top = m => Object.keys(m).sort((a, b) => m[b] - m[a]).slice(0, 4);
+  const line = (t, c, other, isLate) => {
+    let mark = '';
+    if (!other) mark = isLate ? ' <span class="up">新亮起</span>' : ' <span class="dn">渐暗了</span>';
+    else if (c > other) mark = ' <span class="up">↑ 变亮</span>';
+    else if (c < other) mark = ' <span class="dn">↓ 变暗</span>';
+    return `<div class="cmpline">「<b>${esc(t)}」</b> × ${c}${mark}</div>`;
+  };
+  const eHtml = top(em).map(t => line(t, em[t], lm[t], false)).join('') || '<div class="cmpline">（早期没选标签）</div>';
+  const lHtml = top(lm).map(t => line(t, lm[t], em[t], true)).join('') || '<div class="cmpline">（最近没选标签）</div>';
+  $('compare-box').innerHTML = `<div class="cmprow">
+    <div class="cmpcol"><div class="cmplbl">🌱 早期 ${earlyArr.length} 条</div>${eHtml}</div>
+    <div class="cmpcol now"><div class="cmplbl">🌟 最近 ${lateArr.length} 条</div>${lHtml}</div></div>`;
+}
+
+function renderInsights(){
+  const box = $('ins-list');
+  if (!entries.length) { box.innerHTML = ''; return; }
+  const items = [];
+  const streak = calcStreak();
+  items.push({
+    i: '✦', t: '你已经写了 ' + entries.length + ' 条',
+    b: streak > 1 ? `连续 ${streak} 天都在写——星图就是这样一点点亮起来的。` : '不用着急，一天一条也是光。'
+  });
+  const stats = tagStats();
+  const names = Object.keys(stats).sort((a, b) => stats[b].weight - stats[a].weight);
+  if (names.length) {
+    items.push({
+      i: '🌌', t: `「${esc(names[0])}」是你最亮的星`,
+      b: `它出现了 ${stats[names[0]].count} 次` + (names[1] ? `，和「${esc(names[1])}」也常常一起出现。` : '。')
+    });
+  }
+  const mc = {};
+  entries.forEach(e => { if (e.mood) mc[e.mood] = (mc[e.mood] || 0) + 1; });
+  const mk = Object.keys(mc).sort((a, b) => mc[b] - mc[a])[0];
+  if (mk) items.push({ i: moodInfo(mk).f, t: '最常见的情绪：' + moodInfo(mk).l, b: `出现 ${mc[mk]} 次。情绪没有好坏，都是信号。` });
+
+  const sortedE = entries.slice().sort((a, b) => a.time - b.time);
+  if (sortedE.length >= 6) {
+    const half = Math.floor(sortedE.length / 2);
+    const avg = arr => {
+      let s = 0, n = 0;
+      arr.forEach(e => { if (e.mood) { s += moodInfo(e.mood).s; n++; } });
+      return n ? s / n : 0;
+    };
+    const a1 = avg(sortedE.slice(0, half)), a2 = avg(sortedE.slice(half));
+    if (a1 && a2 && Math.abs(a2 - a1) >= 0.35) {
+      items.push(a2 > a1
+        ? { i: '🌤', t: '最近比早期亮了一些', b: '情绪均值在往上走，星图看见了。' }
+        : { i: '🌧', t: '最近比早期沉了一些', b: '低落不丢人——它值得被看见。想聊聊的话，可以导出记录带给成长分析师。' });
+    }
+  }
+  items.push({
+    i: '☁️', t: '想跨设备也能看到？开启云同步',
+    b: '点上方「云同步」卡片里的「开启云同步」，系统会给你一串<b>同步码</b>——抄在备忘录里，换手机时输入这串码就能找回全部记录。'
+  });
+  box.innerHTML = items.map(it =>
+    `<div class="ins"><span class="ic">${it.i}</span><div><div class="t">${it.t}</div><div class="b">${it.b}</div></div></div>`
+  ).join('');
+}
+
+function renderInsightAll(){
+  const has = entries.length > 0;
+  $('insight-wrap').style.display = has ? '' : 'none';
+  $('empty-insight').style.display = has ? 'none' : '';
+  if (!has) return;
+  renderStats(); renderBars(); renderSpark(); renderNet(); renderCompare(); renderInsights();
+}
+function updateBadge(){
+  const b = $('badge-journal');
+  if (entries.length) { b.textContent = entries.length > 99 ? '99+' : entries.length; b.classList.add('show'); }
+  else b.classList.remove('show');
+}
+function dataChanged(){
+  renderJournal(); updateBadge(); renderInsightAll(); setDateCard();
+  if (!_suppressSync) scheduleSync();
+}
+
+/* ============ 下载 / 复制能力 ============ */
+const CAN_DOWNLOAD = (() => { try { return 'download' in document.createElement('a'); } catch (e) { return false; } })();
+const CAN_SHARE_FILE = (() => {
+  try {
+    if (typeof File === 'undefined' || !navigator.share || !navigator.canShare) return false;
+    return navigator.canShare({ files: [new File(['{}'], 'x.json', { type: 'application/json' })] });
+  } catch (e) { return false; }
+})();
+function triggerDownload(url, filename){
+  if (!CAN_DOWNLOAD) return false;
+  try {
+    const a = document.createElement('a');
+    a.href = url; a.download = filename; a.rel = 'noopener';
+    a.style.cssText = 'position:fixed;left:-9999px;top:-9999px;opacity:0';
+    document.body.appendChild(a); a.click();
+    setTimeout(() => { try { document.body.removeChild(a); } catch (e) {} }, 3000);
+    return true;
+  } catch (e) { return false; }
+}
+function makeBlobUrl(text, mime){
+  try { return URL.createObjectURL(new Blob([text], { type: mime || 'application/json;charset=utf-8' })); }
+  catch (e) { return null; }
+}
+function shareTextFile(text, filename, mime, title){
+  try {
+    if (!CAN_SHARE_FILE) return false;
+    const file = new File([text], filename, { type: mime || 'application/json' });
+    if (!navigator.canShare({ files: [file] })) return false;
+    navigator.share({ files: [file], title: title || '星图记录' }).catch(() => {});
+    return true;
+  } catch (e) { return false; }
+}
+function dataURLtoBlob(dataurl){
+  const arr = String(dataurl).split(',');
+  const mime = (arr[0].match(/:(.*?);/) || [])[1] || 'image/png';
+  const bstr = atob(arr[1] || '');
+  let n = bstr.length;
+  const u8 = new Uint8Array(n);
+  while (n--) u8[n] = bstr.charCodeAt(n);
+  return new Blob([u8], { type: mime });
+}
+function legacyCopy(text){
+  const ta = document.createElement('textarea');
+  ta.value = text; ta.setAttribute('readonly', '');
+  ta.style.cssText = 'position:fixed;left:-9999px;top:0;opacity:0';
+  document.body.appendChild(ta);
+  let ok = false;
+  try {
+    if (IS_IOS) {
+      const range = document.createRange();
+      range.selectNodeContents(ta);
+      const sel = window.getSelection();
+      if (sel) { sel.removeAllRanges(); sel.addRange(range); }
+      ta.setSelectionRange(0, 999999);
+    } else { ta.focus(); ta.select(); }
+    ok = document.execCommand('copy');
+  } catch (e) { ok = false; }
+  try { document.body.removeChild(ta); } catch (e) {}
+  return ok;
+}
+function copyText(text, cb){
+  if (!IS_WECHAT && navigator.clipboard && navigator.clipboard.writeText && window.isSecureContext) {
+    navigator.clipboard.writeText(text).then(() => cb(true), () => cb(legacyCopy(text)));
+    return;
+  }
+  cb(legacyCopy(text));
+}
+
+/* ============ 导出状态 ============ */
+function markExported(){ try { localStorage.setItem(K.X, String(Date.now())); } catch (e) {} updateExportStatus(); }
+function updateExportStatus(){
+  const el = $('export-status'); if (!el) return;
+  let t = 0;
+  try { t = parseInt(localStorage.getItem(K.X) || '0', 10) || 0; } catch (e) {}
+  if (!t) {
+    el.className = 'bkstat warn';
+    el.innerHTML = '⏳ 还没有导出过 —— 可以<b>开启云同步</b>自动备份，也可以在这里导出一份 .json 文件留存';
+    return;
+  }
+  const days = Math.floor((Date.now() - t) / 864e5);
+  const when = fmtFull(t);
+  if (days >= 90) { el.className = 'bkstat danger'; el.innerHTML = `🚨 上次导出已是 <b>${days} 天前</b> —— 万一清理浏览器或换手机，记录可能说没就没，建议马上导出一份`; }
+  else if (days >= 30) { el.className = 'bkstat warn'; el.innerHTML = `⚠️ 上次导出：${when}（<b>${days} 天前</b>），已满一个月，建议再导出一份`; }
+  else { el.className = 'bkstat ok'; el.innerHTML = `✅ 上次导出：${when}（${days >= 1 ? days + ' 天前，放心' : '就在最近，放心'}）`; }
+}
+
+/* ============ 导出 / 合并面板 ============ */
+let currentJSON = '', currentFilename = '';
+const closeExportSheet = () => $('bk-overlay').classList.remove('show');
+
+function showExportSheet(jsonText, filename, isFull){
+  currentJSON = jsonText;
+  currentFilename = filename || ('星图记录-' + stampName() + '.json');
+  const n = entries.length;
+
+  $('bk-title').textContent = '导出记录';
+  let sub = '', tip = '', foot = '';
+
+  if (IS_WECHAT) {
+    if (IS_IOS) {
+      sub = 'iPhone 版微信不能下载文件，请用下面任一方式保存';
+      tip = '📱 <b>iPhone 版微信的内核不支持下载文件</b>，点「下载」不会有反应，这不是页面坏了。<br><br>' +
+        `<b>① 复制保存（最快）</b>：点下方「<b>复制 JSON</b>」，然后打开微信「<b>文件传输助手</b>」或备忘录，粘贴发送${isFull && n ? `（当前共 <b>${n}</b> 条记录）` : ''}，就永久留住了。<br><br>` +
+        '<b>② 下载成 .json 文件</b>：点右上角「<b>···</b>」→「<b>在浏览器打开</b>」，用 Safari 重新打开本页，再点一次「导出我的记录」，就能直接下载。';
+      foot += '<button type="button" class="sgo" id="bk-copy">📋 复制 JSON（推荐）</button>';
+      if (CAN_SHARE_FILE) foot += '<button type="button" class="xbtn secondary" id="bk-share">📤 分享 / 存储到文件</button>';
+    } else {
+      sub = '点「下载 JSON 文件」，把记录存到手机';
+      tip = '💬 <b>安卓微信</b>一般可以直接下载：点下方「<b>下载 JSON 文件</b>」，文件会存进手机「<b>下载 / 文件管理</b>」里。<br><br>' +
+        '如果点了没反应、或提示「已阻止下载」，说明微信内核拦住了，请点右上角「<b>···</b>」→「<b>在浏览器打开</b>」，回来再导出一次即可。<br><br>' +
+        `<b>或者</b>点「<b>复制 JSON</b>」，粘贴到微信「<b>文件传输助手</b>」发给自己${isFull && n ? `（当前共 <b>${n}</b> 条记录）` : ''}，一样能长期保存。`;
+      if (CAN_DOWNLOAD) foot += '<button type="button" class="sgo" id="bk-download">⬇️ 下载 JSON 文件</button>';
+      foot += '<button type="button" class="xbtn secondary" id="bk-copy">📋 复制 JSON</button>';
+      if (CAN_SHARE_FILE) foot += '<button type="button" class="xbtn secondary" id="bk-share">📤 分享 / 存储到文件</button>';
+    }
+  } else if (IS_IOS) {
+    sub = 'iPhone / iPad 请用下面任一方式保存';
+    tip = '📱 iPhone / iPad 上可以这样保存：<br><br>' +
+      '<b>① 存进「文件」App（推荐）</b>：点下方「<b>分享 / 存储到文件</b>」，在系统面板里选「<b>存储到“文件”</b>」，之后随时能翻出来，也能发给成长分析师。<br><br>' +
+      `<b>② 复制保存</b>：点「<b>复制 JSON</b>」，粘贴到「备忘录」或微信「文件传输助手」发给自己${isFull && n ? `（当前共 <b>${n}</b> 条记录）` : ''}。`;
+    if (CAN_SHARE_FILE) foot += '<button type="button" class="sgo" id="bk-share">📤 分享 / 存储到文件</button>';
+    foot += '<button type="button" class="xbtn secondary" id="bk-copy">📋 复制 JSON</button>';
+  } else {
+    sub = '当前浏览器不支持直接下载，请复制保存';
+    tip = '当前浏览器不支持直接下载文件。请点下方「<b>复制 JSON</b>」，粘贴到备忘录或微信「<b>文件传输助手</b>」保存。';
+    foot += '<button type="button" class="sgo" id="bk-copy">📋 复制 JSON</button>';
+  }
+  foot += '<button type="button" class="xbtn secondary" id="bk-done">我已保存好</button>';
+
+  $('bk-sub').textContent = sub;
+  $('bk-body').innerHTML =
+    `<div class="stip">${tip}</div>
+     <div class="ssec">📄 JSON 内容<span class="mini">点一下全选，也可长按手动复制</span></div>
+     <div class="sfield"><textarea id="bk-textarea" readonly rows="8" style="font-size:11px;line-height:1.6;font-family:Menlo,Consolas,monospace;-webkit-user-select:text;user-select:text">${esc(jsonText)}</textarea></div>`;
+  $('bk-foot').innerHTML = foot;
+  $('bk-overlay').classList.add('show');
+
+  const ta = $('bk-textarea');
+  if (ta) ta.addEventListener('click', function(){ try { this.focus(); this.setSelectionRange(0, this.value.length); } catch (e) {} });
+
+  if ($('bk-download')) $('bk-download').addEventListener('click', () => {
+    const url = makeBlobUrl(currentJSON);
+    if (url && triggerDownload(url, currentFilename)) {
+      if (isFull) markExported();
+      toast('📤 已开始下载，可在手机「下载 / 文件管理」里找到');
+      setTimeout(() => { try { URL.revokeObjectURL(url); } catch (e) {} }, 60000);
+    } else toast('这个环境不支持下载，请用「复制 JSON」或点右上角「在浏览器打开」');
+  });
+
+  if ($('bk-share')) $('bk-share').addEventListener('click', () => {
+    if (shareTextFile(currentJSON, currentFilename, 'application/json', '星图记录')) {
+      if (isFull) markExported();
+      toast('在弹出面板里选「存储到“文件”」即可长期保存');
+    } else toast('分享不可用，请用「复制 JSON」保存');
+  });
+
+  $('bk-copy').addEventListener('click', () => {
+    copyText(currentJSON, ok => {
+      if (ok) {
+        if (isFull) markExported();
+        toast(isFull ? '✅ 已复制！去「文件传输助手」或备忘录粘贴保存' : '✅ 已复制！粘贴发给成长分析师，或发到「文件传输助手」留存');
+      } else toast('自动复制失败，请长按上方内容 → 全选 → 拷贝');
+      const t = $('bk-textarea');
+      if (t) { try { t.focus(); t.setSelectionRange(0, t.value.length); } catch (e) {} }
+    });
+  });
+
+  $('bk-done').addEventListener('click', closeExportSheet);
+}
+
+function deliverJSON(jsonText, filename, isFull){
+  filename = filename || ('星图记录-' + stampName() + '.json');
+  if (IS_WECHAT) { showExportSheet(jsonText, filename, isFull); return; }
+  const url = makeBlobUrl(jsonText);
+  if (url && triggerDownload(url, filename)) {
+    if (isFull) markExported();
+    toast(IS_IOS ? '📤 已下载，可在「文件」App →「下载」里找到' : `📤 已下载「${filename}」`);
+    setTimeout(() => { try { URL.revokeObjectURL(url); } catch (e) {} }, 60000);
+    return;
+  }
+  showExportSheet(jsonText, filename, isFull);
+}
+
+const exportEntry = e => ({
+  id: e.id, ts: e.time, date: fmtDate(e.time), time: fmtTime(e.time),
+  mood: e.mood ? moodInfo(e.mood).l : '', moodKey: e.mood || '',
+  face: e.face || '', intensity: e.intensity ? INT_LABELS[e.intensity] : '',
+  intensityVal: e.intensity || 0, tags: e.tags || [], text: e.text,
+  followup: e.followup || '', src: e.src || ''
+});
+function buildFullJSON(){
+  const tagCount = {}, moodCount = {};
+  entries.forEach(e => {
+    (e.tags || []).forEach(t => { tagCount[t] = (tagCount[t] || 0) + 1; });
+    if (e.mood) moodCount[e.mood] = (moodCount[e.mood] || 0) + 1;
+  });
+  const times = entries.map(e => e.time).sort((a, b) => a - b);
+  return {
+    app: 'starmap', kind: 'full', version: 2,
+    exportedAt: new Date().toISOString(),
+    source: { name: ENV.name, envId: ENV.id, token: getToken() },
+    summary: {
+      entryCount: entries.length, streak: calcStreak(),
+      timeRange: times.length ? { from: fmtDate(times[0]), to: fmtDate(times[times.length - 1]) } : null,
+      topTags: Object.keys(tagCount).sort((a, b) => tagCount[b] - tagCount[a]).slice(0, 10).map(t => ({ tag: t, count: tagCount[t] })),
+      moodDistribution: moodCount
+    },
+    entries: entries.slice().sort((a, b) => b.time - a.time).map(exportEntry)
+  };
+}
+
+function showImageSheet(url){
+  $('bk-title').textContent = '保存星图';
+  $('bk-sub').textContent = '长按图片即可保存到手机相册';
+  $('bk-body').innerHTML =
+    `<div class="stip">🖼 <b>长按下面的图片</b> →「<b>存储到照片</b>」，就存进手机相册了。可以发给成长分析师，也可以自己留念。</div>
+     <div class="sfield" style="text-align:center"><img src="${url}" style="width:100%;max-width:320px;border-radius:14px;border:1px solid var(--line);box-shadow:0 4px 18px rgba(109,62,230,.12)"></div>`;
+  let foot = '';
+  if (!IS_WECHAT && CAN_SHARE_FILE) foot += '<button type="button" class="sgo" id="bk-img-share">📤 分享 / 存储图片</button>';
+  foot += `<button type="button" class="sgo" id="bk-img-done"${foot ? ' style="margin-top:8px"' : ''}>好的，关闭</button>`;
+  $('bk-foot').innerHTML = foot;
+  $('bk-overlay').classList.add('show');
+
+  if ($('bk-img-share')) $('bk-img-share').addEventListener('click', () => {
+    try {
+      const f = new File([dataURLtoBlob(url)], '我的星图-' + stampName() + '.png', { type: 'image/png' });
+      if (navigator.canShare && navigator.canShare({ files: [f] })) navigator.share({ files: [f], title: '我的星图' }).catch(() => {});
+      else toast('分享不可用，请长按图片保存');
+    } catch (e) { toast('分享不可用，请长按图片保存'); }
+  });
+  $('bk-img-done').addEventListener('click', closeExportSheet);
+}
+function saveStarMap(){
+  if (!entries.length) { toast('星图还空着，先写几条再来保存 ✦'); return; }
+  try {
+    const svg = $('net');
+    const clone = svg.cloneNode(true);
+    clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+    clone.setAttribute('width', '320'); clone.setAttribute('height', '320');
+    $$('.dim', clone).forEach(el => el.classList.remove('dim'));
+    const xml = new XMLSerializer().serializeToString(clone);
+    const img = new Image();
+    img.onload = () => {
+      try {
+        const W = 640, H = 720;
+        const c = document.createElement('canvas'); c.width = W; c.height = H;
+        const ctx = c.getContext('2d');
+        const bgGrad = ctx.createLinearGradient(0, 0, 0, H);
+        bgGrad.addColorStop(0, '#2A1B54');
+        bgGrad.addColorStop(0.5, '#1A1033');
+        bgGrad.addColorStop(1, '#0D0620');
+        ctx.fillStyle = bgGrad; ctx.fillRect(0, 0, W, H);
+        for (let i = 0; i < 50; i++) {
+          const sx = Math.random() * W, sy = Math.random() * 640;
+          const r = Math.random() * 1.2 + 0.3;
+          ctx.beginPath(); ctx.arc(sx, sy, r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(255,255,255,${(0.3 + Math.random() * 0.5).toFixed(2)})`;
+          ctx.fill();
+        }
+        ctx.drawImage(img, 0, 0, W, 640);
+        ctx.textAlign = 'center';
+        ctx.fillStyle = '#DDD6FE';
+        ctx.font = 'bold 22px -apple-system,"PingFang SC",sans-serif';
+        ctx.fillText('STARMAP · 我的星图', W / 2, 672);
+        ctx.fillStyle = '#A78BFA';
+        ctx.font = '16px -apple-system,"PingFang SC",sans-serif';
+        ctx.fillText(fmtDate(Date.now()) + ' · 共 ' + entries.length + ' 条记录', W / 2, 698);
+        const url = c.toDataURL('image/png');
+        if (IS_IOS || IS_WECHAT || !CAN_DOWNLOAD) { showImageSheet(url); return; }
+        try {
+          const a = document.createElement('a');
+          a.href = url; a.download = '我的星图-' + stampName() + '.png'; a.style.display = 'none';
+          document.body.appendChild(a); a.click();
+          setTimeout(() => { try { document.body.removeChild(a); } catch (e) {} }, 3000);
+          toast('🖼 星图已保存，可在相册/下载中找到');
+        } catch (err) { showImageSheet(url); }
+      } catch (e) { toast('生成图片失败，可以截屏保存星图'); }
+    };
+    img.onerror = () => toast('生成图片失败，可以截屏保存星图');
+    img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(xml);
+  } catch (e) { toast('生成图片失败，可以截屏保存星图'); }
+}
+
+function normMerged(raw){
+  let ts = raw.ts || raw.time || (raw.date ? Date.parse(raw.date + 'T' + (raw.time || '12:00')) : NaN);
+  if (!ts || isNaN(ts)) ts = Date.now();
+  const id = raw.id || ('mg' + ts.toString(36) + '_' + simpleHash(String(raw.text || '') + '|' + (raw.date || '')));
+  const mk = raw.moodKey || moodKeyFromLabel(raw.mood || '') || '';
+  return {
+    id, time: ts, text: String(raw.text || ''),
+    mood: mk || null,
+    face: raw.face || (mk ? moodInfo(mk).f : ''),
+    intensity: raw.intensityVal || null,
+    tags: Array.isArray(raw.tags) ? raw.tags.map(String) : [],
+    followup: raw.followup || '',
+    src: raw.src || 'merged'
+  };
+}
+function applyMerge(text){
+  let s = String(text || '').replace(/^\ufeff/, '').trim();
+  if (!s) { toast('内容是空的'); return; }
+  const a = s.indexOf('{'), b = s.lastIndexOf('}');
+  if (a > 0 && b > a) s = s.slice(a, b + 1);
+  let obj;
+  try { obj = JSON.parse(s); } catch (e) { toast('不是有效的 JSON，请确认内容复制完整'); return; }
+  if (!obj || obj.app !== 'starmap' || !Array.isArray(obj.entries) || !obj.entries.length) {
+    toast('这不是星图导出的记录文件'); return;
+  }
+  const exist = {};
+  entries.forEach(e => { exist[e.id] = true; });
+  const add = [];
+  let skip = 0;
+  obj.entries.forEach(r => {
+    const e = normMerged(r);
+    if (exist[e.id]) skip++;
+    else { add.push(e); exist[e.id] = true; }
+  });
+  if (!add.length) { toast('这边的记录已全部包含，没有需要合并的新内容 ✦'); closeExportSheet(); return; }
+  const from = (obj.source && obj.source.name) ? obj.source.name : '另一边';
+  confirmDialog(`合并 ${add.length} 条记录？`,
+    `来自「<b>${esc(from)}</b>」的 <b>${add.length}</b> 条新记录将加入这里${skip ? `，另有 ${skip} 条重复的自动跳过` : ''}。<br>你现有的记录<b>不会被删除或修改</b>。`, [
+      { text: '先取消', cls: 'ghost' },
+      { text: '✅ 合并', cls: 'primary', fn: () => {
+        entries = entries.concat(add).sort((x, y) => y.time - x.time);
+        saveEntries(entries);
+        add.forEach(e => markPending(e.id));
+        dataChanged(); closeExportSheet();
+        toast('✅ 已合并 ' + add.length + ' 条记录');
+      }}
+    ]);
+}
+function openMergeSheet(){
+  $('bk-title').textContent = '合并另一边的记录';
+  $('bk-sub').textContent = '微信和浏览器里的数据互不相通，用这里把两边拼起来';
+  $('bk-body').innerHTML =
+    `<div class="stip">🔀 如果你在<b>另一个应用</b>（比如微信 / Safari / Chrome）里也用过星图：先把那边的记录「<b>导出我的记录</b>」（微信里是「复制 JSON」，粘贴到「文件传输助手」发给自己即可），然后在这里<b>选择那个 .json 文件</b>或<b>粘贴内容</b>。<br><br>两边记录会合并到一起，<b>重复的自动跳过，不会删除、不会覆盖</b>你现有的任何记录。</div>
+     <div class="ssec">📄 方式一：选择导出的 JSON 文件</div>
+     <div class="sfield"><button type="button" class="xbtn secondary" id="mg-pick" style="margin-top:0">📁 选择 .json 文件（微信里可从聊天文件选）</button></div>
+     <div class="ssec">📋 方式二：粘贴导出的内容</div>
+     <div class="sfield"><textarea id="mg-paste" rows="5" placeholder="把另一边「复制 JSON」得到的内容，整段粘贴到这里……"></textarea></div>`;
+  $('bk-foot').innerHTML = '<button type="button" class="sgo" id="mg-go">🔀 开始合并</button>';
+  $('bk-overlay').classList.add('show');
+
+  $('mg-pick').addEventListener('click', () => $('merge-file').click());
+  $('mg-go').addEventListener('click', () => {
+    const ta = $('mg-paste');
+    if (!ta || !ta.value.trim()) { toast('先选择文件，或粘贴另一边导出的内容'); return; }
+    applyMerge(ta.value);
+  });
+}
+
+let consultList = [], consultSel = {};
+function openConsult(){
+  if (!entries.length) { toast('还没有记录，先去「记一笔」吧 ✦'); return; }
+  consultList = entries.slice().sort((a, b) => b.time - a.time);
+  consultSel = {};
+  consultList.forEach((_, i) => { consultSel[i] = true; });
+  renderConsultList();
+  $('ex-overlay').classList.add('show');
+}
+function syncSelCount(){
+  let n = 0;
+  consultList.forEach((_, i) => { if (consultSel[i]) n++; });
+  $('ex-sel-count').textContent = `已选 ${n} / ${consultList.length} 条`;
+  $('ex-all').textContent = (n === consultList.length) ? '全不选' : '全选';
+}
+function renderConsultList(){
+  const list = $('ex-list');
+  list.innerHTML = consultList.map((e, i) => {
+    const prev = e.text.length > 42 ? e.text.slice(0, 42) + '…' : e.text;
+    return `<div class="sitem${consultSel[i] ? ' on' : ''}" data-i="${i}">
+      <div class="scheck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></div>
+      <div class="smain"><div class="sl1"><span class="sdate">${fmtDate(e.time)}</span><span class="sface">${e.face || '✦'}</span></div>
+      <div class="sprev">${esc(prev) || '（无文字）'}</div></div></div>`;
+  }).join('');
+  $$('.sitem', list).forEach(item => {
+    item.addEventListener('click', () => {
+      const i = parseInt(item.dataset.i, 10);
+      consultSel[i] = !consultSel[i];
+      item.classList.toggle('on', !!consultSel[i]);
+      syncSelCount();
+    });
+  });
+  syncSelCount();
+}
+function buildConsultJSON(profile, picked){
+  const tagCount = {}, moodCount = {};
+  picked.forEach(e => {
+    (e.tags || []).forEach(t => { tagCount[t] = (tagCount[t] || 0) + 1; });
+    if (e.mood) moodCount[e.mood] = (moodCount[e.mood] || 0) + 1;
+  });
+  const times = picked.map(e => e.time).sort((a, b) => a - b);
+  return {
+    app: 'starmap', kind: 'consult', version: 2,
+    exportedAt: new Date().toISOString(),
+    source: { name: ENV.name, envId: ENV.id, token: getToken() },
+    profile,
+    summary: {
+      entryCount: picked.length,
+      timeRange: times.length ? { from: fmtDate(times[0]), to: fmtDate(times[times.length - 1]) } : null,
+      topTags: Object.keys(tagCount).sort((a, b) => tagCount[b] - tagCount[a]).slice(0, 10).map(t => ({ tag: t, count: tagCount[t] })),
+      moodDistribution: moodCount
+    },
+    entries: picked.map(exportEntry)
+  };
+}
+
+/* ============ 云同步 ============ */
+const SYNC_K = {
+    PENDING:  'starmap_pending_sync',
+    LAST:     'starmap_last_sync',
+    CODE:     'starmap_sync_code',
+    UID:      'starmap_user_id_override'
+};
+function getSyncCode() { try { return localStorage.getItem(SYNC_K.CODE) || ''; } catch (e) { return ''; } }
+function setSyncCode(c) { try { c ? localStorage.setItem(SYNC_K.CODE, c) : localStorage.removeItem(SYNC_K.CODE); } catch (e) {} }
+function getUserId() {
+    try { const o = localStorage.getItem(SYNC_K.UID); if (o) return o; } catch (e) {}
+    return getToken();
+}
+function setUserId(id) { try { localStorage.setItem(SYNC_K.UID, id); } catch (e) {} }
+function getPending() { try { return JSON.parse(localStorage.getItem(SYNC_K.PENDING) || '[]'); } catch (e) { return []; } }
+function savePending(list) { try { localStorage.setItem(SYNC_K.PENDING, JSON.stringify(list)); } catch (e) {} }
+function markPending(id) {
+    const p = getPending();
+    if (!p.includes(id)) { p.push(id); savePending(p); }
+}
+function clearPending(ids) {
+    const set = new Set(ids);
+    savePending(getPending().filter(x => !set.has(x)));
+}
+function markAllPending() { savePending(entries.map(e => e.id)); }
+
+const syncState = { running: false, status: 'idle', error: '' };
+let syncTimer = null;
+let _suppressSync = false;
+
+function scheduleSync() {
+    if (!getSyncCode()) return;
+    clearTimeout(syncTimer);
+    syncTimer = setTimeout(runSync, 800);
+}
+async function runSync() {
+    if (syncState.running) return;
+    if (!getSyncCode()) return;
+    syncState.running = true;
+    setSyncStatus('syncing');
+    try {
+        await syncPush();
+        await syncPull();
+        try { localStorage.setItem(SYNC_K.LAST, String(Date.now())); } catch (e) {}
+        setSyncStatus('ok');
+    } catch (e) {
+        console.warn('sync failed:', e);
+        setSyncStatus('error', e.message || '网络错误');
+    } finally {
+        syncState.running = false;
+    }
+}
+async function syncPush() {
+    const pending = getPending();
+    if (!pending.length) return;
+    const toPush = pending.map(id => entries.find(e => e.id === id)).filter(Boolean);
+    if (!toPush.length) { clearPending(pending); return; }
+    const payload = toPush.map(e => ({
+        id: e.id, time: e.time, text: e.text || '', mood: e.mood || null,
+        face: e.face || '', intensity: e.intensity || null, tags: e.tags || [],
+        followup: e.followup || '', src: e.src || '',
+        updatedAt: Date.now(), isDeleted: 0
+    }));
+    const res = await fetch('/api/sync?token=' + encodeURIComponent(getUserId()), {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ entries: payload })
+    });
+    if (!res.ok) throw new Error('上传失败 (' + res.status + ')');
+    clearPending(pending);
+}
+async function syncPull() {
+    const res = await fetch('/api/sync?token=' + encodeURIComponent(getUserId()));
+    if (!res.ok) throw new Error('拉取失败 (' + res.status + ')');
+    const data = await res.json();
+    const cloud = data.entries || [];
+    const localIds = new Set(entries.map(e => e.id));
+    const added = [];
+    cloud.forEach(c => {
+        if (!localIds.has(c.id)) {
+            added.push({
+                id: c.id, time: c.time, text: c.text,
+                mood: c.mood, face: c.face, intensity: c.intensity,
+                tags: c.tags || [], followup: c.followup || '', src: c.src || ''
+            });
+        }
+    });
+    if (added.length) {
+        entries = entries.concat(added).sort((a, b) => b.time - a.time);
+        saveEntries(entries);
+        _suppressSync = true;
+        try { dataChanged(); } finally { _suppressSync = false; }
+    }
+    return added.length;
+}
+async function syncDelete(id) {
+    if (!getSyncCode()) return;
+    try {
+        await fetch('/api/sync?token=' + encodeURIComponent(getUserId()), {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ entries: [{
+                id, time: Date.now(), text: '',
+                isDeleted: 1, updatedAt: Date.now()
+            }]})
+        });
+    } catch (e) {}
+}
+async function registerSync() {
+    try {
+        const res = await fetch('/api/register', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userId: getToken() })
+        });
+        const data = await res.json();
+        if (!res.ok || !data.syncCode) throw new Error(data.error || '生成失败');
+        setSyncCode(data.syncCode);
+        markAllPending();
+        toast('✅ 云同步已开启');
+        renderSyncCard();
+        runSync();
+    } catch (e) { toast('开启失败：' + e.message); }
+}
+async function bindSync(rawCode) {
+    const code = String(rawCode || '').trim().toUpperCase();
+    if (!code) return;
+    try {
+        const res = await fetch('/api/bind', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ syncCode: code })
+        });
+        const data = await res.json();
+        if (!res.ok || !data.userId) throw new Error(data.error || '同步码无效');
+        setUserId(data.userId);
+        setSyncCode(code);
+        markAllPending();
+        await runSync();
+        renderSyncCard();
+        toast('✅ 已绑定，记录已同步');
+    } catch (e) { toast('绑定失败：' + e.message); }
+}
+function setSyncStatus(status, err) {
+    syncState.status = status;
+    syncState.error = err || '';
+    renderSyncCard();
+}
+function renderSyncCard() {
+    const box = $('sync-body');
+    if (!box) return;
+    const code = getSyncCode();
+    const last = parseInt(localStorage.getItem(SYNC_K.LAST) || '0', 10) || 0;
+    const lastLine = last ? `<div class="sync-last">上次同步成功：${fmtFull(last)}</div>` : '';
+
+    let badge = '<span class="sync-badge off">未开启</span>';
+    if (syncState.status === 'syncing') badge = '<span class="sync-badge syncing">☁️ 同步中…</span>';
+    else if (syncState.status === 'error') badge = '<span class="sync-badge err">⚠️ 同步失败</span>';
+    else if (syncState.status === 'ok') badge = '<span class="sync-badge ok">✅ 已同步</span>';
+
+    if (!code) {
+        box.innerHTML = `
+            <div class="sync-status">当前状态：${badge}</div>
+            <div class="sync-lead">开启后，星图会自动备份到云端</div>
+            <ul class="sync-tips">
+                <li>你写下的<b>每一条记录</b>都会自动上传，换手机、换浏览器也能找回</li>
+                <li>开启时会给你一串<b>同步码</b>——它就是你的「钥匙」，换设备时输入它就能取回记录</li>
+                <li>云端用<b>随机码</b>隔离，不关联手机号 / 微信号，<b>我们也看不到内容</b></li>
+            </ul>
+            <div class="sync-acts">
+                <button type="button" class="xbtn primary" id="sync-register">☁️ 开启云同步（第一次用）</button>
+                <button type="button" class="xbtn secondary" id="sync-bind">🔑 我有同步码（换设备用）</button>
+            </div>
+            ${lastLine}
+        `;
+        $('sync-register').addEventListener('click', registerSync);
+        $('sync-bind').addEventListener('click', () => {
+            const input = prompt(
+                '请输入你之前保存的「同步码」。\n\n' +
+                '· 它长这样：STAR-XXXX-XXXX（12 位，字母 + 数字）\n' +
+                '· 输入后，云端记录会全部拉回来，并在本设备自动继续同步\n' +
+                '· 如果你是第一次用云同步，请点「开启云同步」，而不是这里'
+            );
+            if (input) bindSync(input);
+        });
+    } else {
+        box.innerHTML = `
+            <div class="sync-status">当前状态：${badge}</div>
+            <div class="sync-lead">🔑 这是你的「钥匙」——请保存好</div>
+            <div class="sync-code-row">
+                <div style="min-width:0">
+                    <div class="sync-code-label">同步码</div>
+                    <div class="sync-code">${esc(code)}</div>
+                </div>
+                <button type="button" class="sync-copy" id="sync-copy">复制</button>
+            </div>
+            <ul class="sync-tips">
+                <li><b>请抄下来或截图存到备忘录</b>——这是换设备找回记录的唯一凭据，丢了就找不回来</li>
+                <li>换手机 / 换浏览器时，在那边点<b>「我有同步码」</b>，输入这串码即可取回全部记录</li>
+                <li><b>不要发给别人</b>——知道这串码的人都能看到你的记录</li>
+            </ul>
+            <div class="sync-acts">
+                <button type="button" class="xbtn secondary" id="sync-now">🔄 立即同步一次</button>
+            </div>
+            ${lastLine}
+        `;
+        $('sync-copy').addEventListener('click', () => {
+            copyText(code, ok => toast(ok ? '✅ 同步码已复制，请粘贴到备忘录保存' : '复制失败，请手动抄下来'));
+        });
+        $('sync-now').addEventListener('click', runSync);
+    }
+}
+
+/* ============ Tab 切换 ============ */
+function switchTab(name){
+  $$('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
+  $$('.page').forEach(p => p.classList.toggle('active', p.id === 'page-' + name));
+  window.scrollTo(0, 0);
+}
+
+/* ============ 环境提示 ============ */
+function envCheck(){
+  if (IS_WECHAT) {
+    const b = $('env-banner');
+    b.className = 'banner wx show';
+    $('eb-ic').textContent = '💬';
+    $('eb-t').textContent = '在微信里也能放心用';
+    $('eb-p').innerHTML = '记录照常只保存在你这台设备上。想跨设备同步，可在「我的星图」页开启<b>云同步</b>。点「导出我的记录」时：<b>安卓微信</b>可直接下载 .json 文件到手机；<b>iPhone 版微信</b>受微信内核限制不能下载，会引导你「一键复制」或「在浏览器打开」后下载。';
+    return;
+  }
+  if (IS_IOS) {
+    const b = $('env-banner');
+    b.className = 'banner ios show';
+    $('eb-ic').textContent = '📱';
+    $('eb-t').textContent = 'iPhone / iPad 使用提示';
+    $('eb-p').innerHTML = '点「导出我的记录」会<b>直接下载 .json 文件</b>，文件保存在「<b>文件</b>」App →「<b>下载</b>」里；也可以点「分享 / 存储到文件」自己选位置。保存星图时<b>长按图片</b>即可存进相册。想跨设备同步，可在「我的星图」页开启<b>云同步</b>。';
+  }
+}
+
+/* ============ 定期温和提醒 ============ */
+function initCareBanner(){
+  if (entries.length < 3) return;
+  let last = 0;
+  try { last = parseInt(localStorage.getItem(K.C) || '0', 10) || 0; } catch (e) {}
+  if (last && Date.now() - last < CARE_INTERVAL) return;
+  const ack = () => {
+    $('care-banner').classList.remove('show');
+    try { localStorage.setItem(K.C, String(Date.now())); } catch (e) {}
+  };
+  $('care-btn').addEventListener('click', ack);
+  $('care-go').addEventListener('click', () => {
+    ack(); switchTab('insight');
+    setTimeout(() => {
+      const dc = document.querySelector('.sync-card');
+      if (dc && dc.scrollIntoView) { try { dc.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e) {} }
+    }, 250);
+  });
+  setTimeout(() => $('care-banner').classList.add('show'), 1600);
+}
+
+/* ============ 新入口首次引导 ============ */
+function initSplitHint(){
+  let need = false;
+  try { need = !localStorage.getItem(K.S); } catch (e) {}
+  if (!need || entries.length > 0) { getToken(); return; }
+  try { localStorage.setItem(K.S, '1'); } catch (e) {}
+  getToken();
+  $('split-go').addEventListener('click', () => $('split-banner').classList.remove('show'));
+  $('split-merge').addEventListener('click', () => { $('split-banner').classList.remove('show'); openMergeSheet(); });
+  setTimeout(() => $('split-banner').classList.add('show'), 800);
+}
+
+/* ============ 初始化 ============ */
+function init(){
+  // 主题
+  setTheme(getTheme());
+  $('theme-btn').addEventListener('click', cycleTheme);
+  if (window.matchMedia) {
+    const mq = window.matchMedia('(prefers-color-scheme: dark)');
+    if (mq.addEventListener) mq.addEventListener('change', () => { if (getTheme() === 'auto') setTheme('auto'); });
+  }
+
+  renderQuote(); setPrompt(); setDateCard();
+  renderGoal(); buildMoodRow(); buildTagRow(); buildQuickMoods();
+  $('env-now').innerHTML = `📍 当前入口：<b>${esc(ENV.name)}</b> —— 记录存在这里；换应用打开会是另一套数据。<br>想跨设备，请到上方开启<b>云同步</b>；或两边各自导出后用「合并」拼起来。`;
+
+  /* 记录页 */
+  $('quote-card').addEventListener('click', () => { quoteIdx = (quoteIdx + 1) % QUOTES.length; renderQuote(); });
+  $('quick-save').addEventListener('click', quickSave);
+  $('quick-input').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); quickSave(); } });
+  const qp = $('quick-more'), panel = $('detail-panel');
+  qp.addEventListener('click', () => {
+    const open = panel.classList.toggle('open');
+    qp.classList.toggle('open', open);
+    if (open) setTimeout(() => { try { panel.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (e) {} }, 120);
+  });
+  $('fu-save').addEventListener('click', () => {
+    const v = $('fu-input').value.trim();
+    if (!v) { toast('不想写就点「跳过」～'); return; }
+    const e = findEntry(currentFuId);
+    if (e) { e.followup = v; saveEntries(entries); markPending(e.id); dataChanged(); }
+    $('followup-card').classList.remove('show'); currentFuId = null;
+    toast('✦ 记下了');
+  });
+  $('fu-skip').addEventListener('click', () => { $('followup-card').classList.remove('show'); currentFuId = null; });
+
+  $('mood-row').addEventListener('click', ev => {
+    const btn = ev.target.closest && ev.target.closest('.mood');
+    if (!btn) return;
+    const key = btn.dataset.m;
+    if (ui.mood === key) {
+      ui.mood = null; btn.classList.remove('on');
+      $('int-row').style.display = 'none'; $('int-label').style.display = 'none';
+    } else {
+      ui.mood = key;
+      $$('.mood', $('mood-row')).forEach(b => b.classList.remove('on'));
+      btn.classList.add('on');
+      $('int-row').style.display = ''; $('int-label').style.display = '';
+    }
+  });
+  $('int-row').addEventListener('click', ev => {
+    const c = ev.target.closest && ev.target.closest('.ints button');
+    if (!c) return;
+    ui.intensity = parseInt(c.dataset.i, 10);
+    $$('.ints button', $('int-row')).forEach(x => x.classList.remove('on'));
+    c.classList.add('on');
+  });
+  $('tag-row').addEventListener('click', ev => {
+    const c = ev.target.closest && ev.target.closest('.chip');
+    if (!c || c.id === 'tag-add') return;
+    const t = c.dataset.t;
+    if (ui.tags[t]) { delete ui.tags[t]; c.classList.remove('on'); }
+    else { ui.tags[t] = true; c.classList.add('on'); }
+  });
+  $('btn-prompt').addEventListener('click', () => {
+    let i;
+    do { i = Math.floor(Math.random() * PROMPTS.length); } while (i === promptIdx && PROMPTS.length > 1);
+    promptIdx = i; setPrompt();
+  });
+  $('ta').addEventListener('input', function(){ $('wc').textContent = this.value.length + ' 字'; });
+  $('btn-save').addEventListener('click', saveDetail);
+
+  /* 日记页 */
+  $('j-search').addEventListener('input', function(){
+    jFilter.q = this.value.trim();
+    renderJournal();
+  });
+  $('btn-review').addEventListener('click', openReview);
+  $('btn-clear').addEventListener('click', () => {
+    if (!entries.length) { toast('还没有记录'); return; }
+    confirmDialog(`清空全部 ${entries.length} 条记录？`,
+      '清空后<b>无法恢复</b>。已经导出、发给成长分析师或存在「文件传输助手」的内容不受影响；如果已开启云同步，云端记录也需要另行处理。' +
+      '<span class="cftip">💡 拿不准的话，先去「我的星图」页导出或确认已开启云同步，再清空</span>', [
+        { text: '取消', cls: 'ghost' },
+        { text: '确认清空', cls: 'danger', fn: () => {
+          entries.forEach(e => clearPending([e.id]));
+          entries = []; saveEntries(entries); dataChanged(); toast('已清空');
+        }}
+      ]);
+  });
+  $('btn-consult').addEventListener('click', openConsult);
+
+  /* 洞察页 */
+  $('nh-toggle').addEventListener('click', () => $('nethelp').classList.toggle('open'));
+
+  /* 导出 */
+  $('btn-export').addEventListener('click', () => {
+    if (!entries.length) { toast('先写几条记录，再导出吧 ✦'); return; }
+    deliverJSON(JSON.stringify(buildFullJSON(), null, 2), '星图记录-' + stampName() + '.json', true);
+  });
+  $('btn-export2').addEventListener('click', openConsult);
+  $('btn-savemap').addEventListener('click', saveStarMap);
+
+  /* 合并 */
+  $('btn-merge').addEventListener('click', openMergeSheet);
+  $('merge-file').addEventListener('change', function(){
+    const f = this.files && this.files[0];
+    this.value = '';
+    if (!f) return;
+    if (f.size > 20 * 1024 * 1024) { toast('文件太大，应该不是星图导出的'); return; }
+    const r = new FileReader();
+    r.onload = () => applyMerge(String(r.result || ''));
+    r.onerror = () => toast('文件读取失败，请重试');
+    r.readAsText(f, 'utf-8');
+  });
+
+  /* 打包面板 */
+  $('ex-close').addEventListener('click', () => $('ex-overlay').classList.remove('show'));
+  $('ex-overlay').addEventListener('click', function(ev){ if (ev.target === this) this.classList.remove('show'); });
+  $('ex-all').addEventListener('click', () => {
+    const anyOff = consultList.some((_, i) => !consultSel[i]);
+    consultList.forEach((_, i) => { consultSel[i] = anyOff; });
+    renderConsultList();
+  });
+  $('ex-go').addEventListener('click', () => {
+    const picked = [];
+    consultList.forEach((e, i) => { if (consultSel[i]) picked.push(e); });
+    if (!picked.length) { toast('至少勾选一条记录，或点「全选」'); return; }
+    const profile = {
+      name: ($('ex-name').value || '').trim(),
+      stage: ($('ex-age').value || '').trim(),
+      topic: ($('ex-note').value || '').trim()
+    };
+    deliverJSON(JSON.stringify(buildConsultJSON(profile, picked), null, 2), '星图-给分析师-' + stampName() + '.json', false);
+  });
+
+  /* 导出 / 合并面板关闭 */
+  $('bk-close').addEventListener('click', closeExportSheet);
+  $('bk-overlay').addEventListener('click', function(ev){ if (ev.target === this) closeExportSheet(); });
+
+  /* 回顾面板关闭 */
+  $('review-close').addEventListener('click', () => $('review-overlay').classList.remove('show'));
+  $('review-overlay').addEventListener('click', function(ev){ if (ev.target === this) this.classList.remove('show'); });
+
+  /* Tabs */
+  $$('.tab').forEach(tab => tab.addEventListener('click', () => switchTab(tab.dataset.tab)));
+
+  /* 环境文案微调 */
+  if (IS_WECHAT) {
+    $('export-hint').innerHTML = '💡 <b>云同步</b>让记录自动跟着你走；<b>导出</b>是把记录存成 .json 文件发出去或留底。<br>在微信里点「导出我的记录」：<b>安卓</b>可直接下载到手机；<b>iPhone</b>会引导「复制 JSON」或「在浏览器打开」后下载。<br>建议两者都用：<b>开启云同步 + 每 30 天导出一次</b>，双保险';
+  } else if (IS_IOS) {
+    $('export-hint').innerHTML = '💡 <b>云同步</b>让记录自动跟着你走；<b>导出</b>是把记录存成 .json 文件（存到「文件」App →「下载」）。<br>保存星图时<b>长按图片</b>存进相册。<br>建议两者都用：<b>开启云同步 + 每 30 天导出一次</b>，双保险';
+  }
+
+  envCheck();
+  dataChanged();
+  updateExportStatus();
+  initSplitHint();
+  initCareBanner();
+
+  /* 云同步初始化 */
+  renderSyncCard();
+  if (getSyncCode()) setTimeout(runSync, 1200);
+  window.addEventListener('online', () => { if (getSyncCode()) runSync(); });
+}
+
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+else init();
+
+})();
+</script>
+</body>
+</html>

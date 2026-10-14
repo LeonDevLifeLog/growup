@@ -1,0 +1,5684 @@
+{
+  "evidence_id": "ev_455460c9d316a769bbeda2c4629da63e470894e0aecd7f518564fb713116e366",
+  "subject": null,
+  "provider": {
+    "id": "rea-cdp-browser",
+    "name": "REA Chrome DevTools Protocol observation provider",
+    "version": "2"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.web-page-inspection",
+  "operation": "inspect_web_page",
+  "parameters": {
+    "cdp_endpoint": "http://127.0.0.1:9333",
+    "allowed_origins": [
+      "https://sdsqsnwh.cn"
+    ],
+    "target_id": "26C8FBB4E297649B57B14E9F88FB9F66",
+    "observation_ms": 500,
+    "include_accessibility_text": true,
+    "include_console_text": false,
+    "include_json_body_shapes": false,
+    "include_websocket_shapes": false,
+    "include_storage_keys": false,
+    "include_storage_fingerprints": false,
+    "include_script_sources": false
+  },
+  "raw_result": null,
+  "normalized_result": {
+    "browser": {
+      "product": "Chrome/155.0.8059.79",
+      "protocol_version": "1.3",
+      "revision": "537.36 (@a49e2e3d4addfd84e765b52afe230bedb81096db)",
+      "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+      "js_version": "15.5.35.23"
+    },
+    "target": {
+      "target_id": "26C8FBB4E297649B57B14E9F88FB9F66",
+      "type": "page",
+      "title": "成长健研社 · 青少年近期压力与韧性观察分析",
+      "url": "https://sdsqsnwh.cn/cz/ya",
+      "origin": "https://sdsqsnwh.cn",
+      "attached": false
+    },
+    "capture_window": {
+      "started_at": "2026-10-14T07:34:46.890Z",
+      "ended_at": "2026-10-14T07:34:47.424Z",
+      "observation_ms": 500
+    },
+    "completeness": {
+      "status": "policy_filtered",
+      "conditions": [
+        "attach_limited",
+        "policy_filtered"
+      ],
+      "policy_filtered_sections": [
+        "console_text",
+        "json_body_shapes",
+        "metadata",
+        "resources",
+        "script_sources",
+        "storage_keys",
+        "websocket_shapes"
+      ],
+      "attach_limited_sections": [
+        "console_events",
+        "metadata",
+        "network_requests",
+        "websocket_connections",
+        "websocket_frames"
+      ],
+      "truncated_sections": [],
+      "unavailable_sections": [],
+      "excluded": [
+        {
+          "section": "console_text",
+          "reason": "not_approved",
+          "count": null
+        },
+        {
+          "section": "json_body_shapes",
+          "reason": "not_approved",
+          "count": null
+        },
+        {
+          "section": "metadata",
+          "reason": "disallowed_origin",
+          "count": 3
+        },
+        {
+          "section": "resources",
+          "reason": "disallowed_origin",
+          "count": 26
+        },
+        {
+          "section": "script_sources",
+          "reason": "not_approved",
+          "count": 2
+        },
+        {
+          "section": "storage_keys",
+          "reason": "not_approved",
+          "count": null
+        },
+        {
+          "section": "websocket_shapes",
+          "reason": "not_approved",
+          "count": null
+        }
+      ],
+      "dropped_events": {
+        "scripts": 0,
+        "network_requests": 0,
+        "console_events": 0,
+        "websocket_connections": 0,
+        "websocket_frames": 0,
+        "webmcp_tools": 0,
+        "timeline_events": 0,
+        "total": 0
+      }
+    },
+    "frames": [
+      {
+        "frame_id": "26C8FBB4E297649B57B14E9F88FB9F66",
+        "parent_frame_id": null,
+        "url": "https://sdsqsnwh.cn/cz/ya",
+        "origin": "https://sdsqsnwh.cn"
+      }
+    ],
+    "dom": {
+      "total_nodes": 449,
+      "nodes": [
+        {
+          "index": 0,
+          "parent_index": -1,
+          "node_type": 9,
+          "node_name": "#document",
+          "node_value_length": 0,
+          "attribute_names": []
+        },
+        {
+          "index": 1,
+          "parent_index": 0,
+          "node_type": 10,
+          "node_name": "html",
+          "node_value_length": 0,
+          "attribute_names": []
+        },
+        {
+          "index": 2,
+          "parent_index": 0,
+          "node_type": 1,
+          "node_name": "HTML",
+          "node_value_length": 0,
+          "attribute_names": [
+            "lang"
+          ]
+        },
+        {
+          "index": 3,
+          "parent_index": 2,
+          "node_type": 1,
+          "node_name": "HEAD",
+          "node_value_length": 0,
+          "attribute_names": []
+        },
+        {
+          "index": 4,
+          "parent_index": 3,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 1,
+          "attribute_names": []
+        },
+        {
+          "index": 5,
+          "parent_index": 3,
+          "node_type": 1,
+          "node_name": "META",
+          "node_value_length": 0,
+          "attribute_names": [
+            "charset"
+          ]
+        },
+        {
+          "index": 6,
+          "parent_index": 3,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 1,
+          "attribute_names": []
+        },
+        {
+          "index": 7,
+          "parent_index": 3,
+          "node_type": 1,
+          "node_name": "META",
+          "node_value_length": 0,
+          "attribute_names": [
+            "name",
+            "content"
+          ]
+        },
+        {
+          "index": 8,
+          "parent_index": 3,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 1,
+          "attribute_names": []
+        },
+        {
+          "index": 9,
+          "parent_index": 3,
+          "node_type": 1,
+          "node_name": "META",
+          "node_value_length": 0,
+          "attribute_names": [
+            "name",
+            "content"
+          ]
+        },
+        {
+          "index": 10,
+          "parent_index": 3,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 1,
+          "attribute_names": []
+        },
+        {
+          "index": 11,
+          "parent_index": 3,
+          "node_type": 1,
+          "node_name": "META",
+          "node_value_length": 0,
+          "attribute_names": [
+            "name",
+            "content"
+          ]
+        },
+        {
+          "index": 12,
+          "parent_index": 3,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 1,
+          "attribute_names": []
+        },
+        {
+          "index": 13,
+          "parent_index": 3,
+          "node_type": 1,
+          "node_name": "TITLE",
+          "node_value_length": 0,
+          "attribute_names": []
+        },
+        {
+          "index": 14,
+          "parent_index": 13,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 22,
+          "attribute_names": []
+        },
+        {
+          "index": 15,
+          "parent_index": 3,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 1,
+          "attribute_names": []
+        },
+        {
+          "index": 16,
+          "parent_index": 3,
+          "node_type": 1,
+          "node_name": "LINK",
+          "node_value_length": 0,
+          "attribute_names": [
+            "rel",
+            "href"
+          ]
+        },
+        {
+          "index": 17,
+          "parent_index": 3,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 1,
+          "attribute_names": []
+        },
+        {
+          "index": 18,
+          "parent_index": 3,
+          "node_type": 1,
+          "node_name": "LINK",
+          "node_value_length": 0,
+          "attribute_names": [
+            "rel",
+            "href",
+            "crossorigin"
+          ]
+        },
+        {
+          "index": 19,
+          "parent_index": 3,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 1,
+          "attribute_names": []
+        },
+        {
+          "index": 20,
+          "parent_index": 3,
+          "node_type": 1,
+          "node_name": "LINK",
+          "node_value_length": 0,
+          "attribute_names": [
+            "href",
+            "rel",
+            "media",
+            "onload"
+          ]
+        },
+        {
+          "index": 21,
+          "parent_index": 3,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 1,
+          "attribute_names": []
+        },
+        {
+          "index": 22,
+          "parent_index": 3,
+          "node_type": 1,
+          "node_name": "NOSCRIPT",
+          "node_value_length": 0,
+          "attribute_names": []
+        },
+        {
+          "index": 23,
+          "parent_index": 22,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 152,
+          "attribute_names": []
+        },
+        {
+          "index": 24,
+          "parent_index": 3,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 1,
+          "attribute_names": []
+        },
+        {
+          "index": 25,
+          "parent_index": 3,
+          "node_type": 1,
+          "node_name": "STYLE",
+          "node_value_length": 0,
+          "attribute_names": []
+        },
+        {
+          "index": 26,
+          "parent_index": 25,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 20023,
+          "attribute_names": []
+        },
+        {
+          "index": 27,
+          "parent_index": 3,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 1,
+          "attribute_names": []
+        },
+        {
+          "index": 28,
+          "parent_index": 2,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 1,
+          "attribute_names": []
+        },
+        {
+          "index": 29,
+          "parent_index": 2,
+          "node_type": 1,
+          "node_name": "BODY",
+          "node_value_length": 0,
+          "attribute_names": []
+        },
+        {
+          "index": 30,
+          "parent_index": 29,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 2,
+          "attribute_names": []
+        },
+        {
+          "index": 31,
+          "parent_index": 29,
+          "node_type": 1,
+          "node_name": "HEADER",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 32,
+          "parent_index": 31,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 3,
+          "attribute_names": []
+        },
+        {
+          "index": 33,
+          "parent_index": 31,
+          "node_type": 1,
+          "node_name": "DIV",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 34,
+          "parent_index": 33,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 5,
+          "attribute_names": []
+        },
+        {
+          "index": 35,
+          "parent_index": 33,
+          "node_type": 1,
+          "node_name": "BUTTON",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class",
+            "id",
+            "type",
+            "aria-label"
+          ]
+        },
+        {
+          "index": 36,
+          "parent_index": 35,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 7,
+          "attribute_names": []
+        },
+        {
+          "index": 37,
+          "parent_index": 35,
+          "node_type": 1,
+          "node_name": "svg",
+          "node_value_length": 0,
+          "attribute_names": [
+            "viewBox",
+            "fill",
+            "stroke",
+            "stroke-width",
+            "stroke-linecap",
+            "stroke-linejoin"
+          ]
+        },
+        {
+          "index": 38,
+          "parent_index": 37,
+          "node_type": 1,
+          "node_name": "path",
+          "node_value_length": 0,
+          "attribute_names": [
+            "d"
+          ]
+        },
+        {
+          "index": 39,
+          "parent_index": 35,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 7,
+          "attribute_names": []
+        },
+        {
+          "index": 40,
+          "parent_index": 35,
+          "node_type": 1,
+          "node_name": "SPAN",
+          "node_value_length": 0,
+          "attribute_names": []
+        },
+        {
+          "index": 41,
+          "parent_index": 40,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 2,
+          "attribute_names": []
+        },
+        {
+          "index": 42,
+          "parent_index": 35,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 5,
+          "attribute_names": []
+        },
+        {
+          "index": 43,
+          "parent_index": 33,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 5,
+          "attribute_names": []
+        },
+        {
+          "index": 44,
+          "parent_index": 33,
+          "node_type": 1,
+          "node_name": "DIV",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class",
+            "id",
+            "hidden"
+          ]
+        },
+        {
+          "index": 45,
+          "parent_index": 44,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 7,
+          "attribute_names": []
+        },
+        {
+          "index": 46,
+          "parent_index": 44,
+          "node_type": 1,
+          "node_name": "SPAN",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 47,
+          "parent_index": 46,
+          "node_type": 1,
+          "node_name": "I",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 48,
+          "parent_index": 46,
+          "node_type": 1,
+          "node_name": "SPAN",
+          "node_value_length": 0,
+          "attribute_names": [
+            "id"
+          ]
+        },
+        {
+          "index": 49,
+          "parent_index": 48,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 4,
+          "attribute_names": []
+        },
+        {
+          "index": 50,
+          "parent_index": 44,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 7,
+          "attribute_names": []
+        },
+        {
+          "index": 51,
+          "parent_index": 44,
+          "node_type": 1,
+          "node_name": "SPAN",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 52,
+          "parent_index": 51,
+          "node_type": 1,
+          "node_name": "B",
+          "node_value_length": 0,
+          "attribute_names": [
+            "id"
+          ]
+        },
+        {
+          "index": 53,
+          "parent_index": 52,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 1,
+          "attribute_names": []
+        },
+        {
+          "index": 54,
+          "parent_index": 51,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 1,
+          "attribute_names": []
+        },
+        {
+          "index": 55,
+          "parent_index": 51,
+          "node_type": 1,
+          "node_name": "SPAN",
+          "node_value_length": 0,
+          "attribute_names": [
+            "id"
+          ]
+        },
+        {
+          "index": 56,
+          "parent_index": 55,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 2,
+          "attribute_names": []
+        },
+        {
+          "index": 57,
+          "parent_index": 44,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 5,
+          "attribute_names": []
+        },
+        {
+          "index": 58,
+          "parent_index": 33,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 5,
+          "attribute_names": []
+        },
+        {
+          "index": 59,
+          "parent_index": 33,
+          "node_type": 1,
+          "node_name": "SPAN",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class",
+            "id"
+          ]
+        },
+        {
+          "index": 60,
+          "parent_index": 59,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 19,
+          "attribute_names": []
+        },
+        {
+          "index": 61,
+          "parent_index": 33,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 3,
+          "attribute_names": []
+        },
+        {
+          "index": 62,
+          "parent_index": 31,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 3,
+          "attribute_names": []
+        },
+        {
+          "index": 63,
+          "parent_index": 31,
+          "node_type": 1,
+          "node_name": "DIV",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class",
+            "id",
+            "hidden"
+          ]
+        },
+        {
+          "index": 64,
+          "parent_index": 63,
+          "node_type": 1,
+          "node_name": "I",
+          "node_value_length": 0,
+          "attribute_names": [
+            "id"
+          ]
+        },
+        {
+          "index": 65,
+          "parent_index": 31,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 1,
+          "attribute_names": []
+        },
+        {
+          "index": 66,
+          "parent_index": 29,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 2,
+          "attribute_names": []
+        },
+        {
+          "index": 67,
+          "parent_index": 29,
+          "node_type": 1,
+          "node_name": "MAIN",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class",
+            "id"
+          ]
+        },
+        {
+          "index": 68,
+          "parent_index": 67,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 4,
+          "attribute_names": []
+        },
+        {
+          "index": 69,
+          "parent_index": 67,
+          "node_type": 8,
+          "node_name": "#comment",
+          "node_value_length": 21,
+          "attribute_names": []
+        },
+        {
+          "index": 70,
+          "parent_index": 67,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 3,
+          "attribute_names": []
+        },
+        {
+          "index": 71,
+          "parent_index": 67,
+          "node_type": 1,
+          "node_name": "SECTION",
+          "node_value_length": 0,
+          "attribute_names": [
+            "id",
+            "class"
+          ]
+        },
+        {
+          "index": 72,
+          "parent_index": 71,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 5,
+          "attribute_names": []
+        },
+        {
+          "index": 73,
+          "parent_index": 71,
+          "node_type": 1,
+          "node_name": "DIV",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 74,
+          "parent_index": 73,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 7,
+          "attribute_names": []
+        },
+        {
+          "index": 75,
+          "parent_index": 73,
+          "node_type": 1,
+          "node_name": "DIV",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 76,
+          "parent_index": 75,
+          "node_type": 1,
+          "node_name": "I",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 77,
+          "parent_index": 75,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 17,
+          "attribute_names": []
+        },
+        {
+          "index": 78,
+          "parent_index": 73,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 7,
+          "attribute_names": []
+        },
+        {
+          "index": 79,
+          "parent_index": 73,
+          "node_type": 1,
+          "node_name": "H1",
+          "node_value_length": 0,
+          "attribute_names": []
+        },
+        {
+          "index": 80,
+          "parent_index": 79,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 5,
+          "attribute_names": []
+        },
+        {
+          "index": 81,
+          "parent_index": 79,
+          "node_type": 1,
+          "node_name": "BR",
+          "node_value_length": 0,
+          "attribute_names": []
+        },
+        {
+          "index": 82,
+          "parent_index": 79,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 6,
+          "attribute_names": []
+        },
+        {
+          "index": 83,
+          "parent_index": 79,
+          "node_type": 1,
+          "node_name": "EM",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 84,
+          "parent_index": 83,
+          "node_type": 1,
+          "node_name": "::after",
+          "node_value_length": 0,
+          "attribute_names": []
+        },
+        {
+          "index": 85,
+          "parent_index": 83,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 4,
+          "attribute_names": []
+        },
+        {
+          "index": 86,
+          "parent_index": 73,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 7,
+          "attribute_names": []
+        },
+        {
+          "index": 87,
+          "parent_index": 73,
+          "node_type": 1,
+          "node_name": "P",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 88,
+          "parent_index": 87,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 72,
+          "attribute_names": []
+        },
+        {
+          "index": 89,
+          "parent_index": 73,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 7,
+          "attribute_names": []
+        },
+        {
+          "index": 90,
+          "parent_index": 73,
+          "node_type": 1,
+          "node_name": "DIV",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class",
+            "aria-hidden"
+          ]
+        },
+        {
+          "index": 91,
+          "parent_index": 90,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 9,
+          "attribute_names": []
+        },
+        {
+          "index": 92,
+          "parent_index": 90,
+          "node_type": 1,
+          "node_name": "svg",
+          "node_value_length": 0,
+          "attribute_names": [
+            "viewBox",
+            "fill"
+          ]
+        },
+        {
+          "index": 93,
+          "parent_index": 92,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 11,
+          "attribute_names": []
+        },
+        {
+          "index": 94,
+          "parent_index": 92,
+          "node_type": 1,
+          "node_name": "circle",
+          "node_value_length": 0,
+          "attribute_names": [
+            "cx",
+            "cy",
+            "r",
+            "stroke",
+            "stroke-width",
+            "stroke-dasharray",
+            "opacity"
+          ]
+        },
+        {
+          "index": 95,
+          "parent_index": 92,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 11,
+          "attribute_names": []
+        },
+        {
+          "index": 96,
+          "parent_index": 92,
+          "node_type": 1,
+          "node_name": "path",
+          "node_value_length": 0,
+          "attribute_names": [
+            "d",
+            "stroke",
+            "stroke-width",
+            "stroke-linecap",
+            "stroke-linejoin"
+          ]
+        },
+        {
+          "index": 97,
+          "parent_index": 92,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 11,
+          "attribute_names": []
+        },
+        {
+          "index": 98,
+          "parent_index": 92,
+          "node_type": 1,
+          "node_name": "path",
+          "node_value_length": 0,
+          "attribute_names": [
+            "d",
+            "stroke",
+            "stroke-width",
+            "stroke-linecap"
+          ]
+        },
+        {
+          "index": 99,
+          "parent_index": 92,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 9,
+          "attribute_names": []
+        },
+        {
+          "index": 100,
+          "parent_index": 90,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 7,
+          "attribute_names": []
+        },
+        {
+          "index": 101,
+          "parent_index": 73,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 5,
+          "attribute_names": []
+        },
+        {
+          "index": 102,
+          "parent_index": 71,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 6,
+          "attribute_names": []
+        },
+        {
+          "index": 103,
+          "parent_index": 71,
+          "node_type": 1,
+          "node_name": "DIV",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 104,
+          "parent_index": 103,
+          "node_type": 1,
+          "node_name": "I",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 105,
+          "parent_index": 103,
+          "node_type": 1,
+          "node_name": "SPAN",
+          "node_value_length": 0,
+          "attribute_names": []
+        },
+        {
+          "index": 106,
+          "parent_index": 105,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 9,
+          "attribute_names": []
+        },
+        {
+          "index": 107,
+          "parent_index": 103,
+          "node_type": 1,
+          "node_name": "I",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 108,
+          "parent_index": 71,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 6,
+          "attribute_names": []
+        },
+        {
+          "index": 109,
+          "parent_index": 71,
+          "node_type": 1,
+          "node_name": "DIV",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class",
+            "id"
+          ]
+        },
+        {
+          "index": 110,
+          "parent_index": 109,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 7,
+          "attribute_names": []
+        },
+        {
+          "index": 111,
+          "parent_index": 109,
+          "node_type": 1,
+          "node_name": "DIV",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class",
+            "data-age",
+            "role",
+            "tabindex"
+          ]
+        },
+        {
+          "index": 112,
+          "parent_index": 111,
+          "node_type": 1,
+          "node_name": "::before",
+          "node_value_length": 0,
+          "attribute_names": []
+        },
+        {
+          "index": 113,
+          "parent_index": 111,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 9,
+          "attribute_names": []
+        },
+        {
+          "index": 114,
+          "parent_index": 111,
+          "node_type": 1,
+          "node_name": "SPAN",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 115,
+          "parent_index": 114,
+          "node_type": 1,
+          "node_name": "svg",
+          "node_value_length": 0,
+          "attribute_names": [
+            "viewBox",
+            "fill",
+            "stroke",
+            "stroke-width",
+            "stroke-linecap",
+            "stroke-linejoin"
+          ]
+        },
+        {
+          "index": 116,
+          "parent_index": 115,
+          "node_type": 1,
+          "node_name": "path",
+          "node_value_length": 0,
+          "attribute_names": [
+            "d"
+          ]
+        },
+        {
+          "index": 117,
+          "parent_index": 115,
+          "node_type": 1,
+          "node_name": "path",
+          "node_value_length": 0,
+          "attribute_names": [
+            "d"
+          ]
+        },
+        {
+          "index": 118,
+          "parent_index": 111,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 9,
+          "attribute_names": []
+        },
+        {
+          "index": 119,
+          "parent_index": 111,
+          "node_type": 1,
+          "node_name": "SPAN",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 120,
+          "parent_index": 119,
+          "node_type": 1,
+          "node_name": "SPAN",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 121,
+          "parent_index": 120,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 4,
+          "attribute_names": []
+        },
+        {
+          "index": 122,
+          "parent_index": 119,
+          "node_type": 1,
+          "node_name": "SPAN",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 123,
+          "parent_index": 122,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 8,
+          "attribute_names": []
+        },
+        {
+          "index": 124,
+          "parent_index": 111,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 9,
+          "attribute_names": []
+        },
+        {
+          "index": 125,
+          "parent_index": 111,
+          "node_type": 1,
+          "node_name": "SPAN",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 126,
+          "parent_index": 125,
+          "node_type": 1,
+          "node_name": "svg",
+          "node_value_length": 0,
+          "attribute_names": [
+            "viewBox",
+            "fill",
+            "stroke",
+            "stroke-width",
+            "stroke-linecap",
+            "stroke-linejoin"
+          ]
+        },
+        {
+          "index": 127,
+          "parent_index": 126,
+          "node_type": 1,
+          "node_name": "path",
+          "node_value_length": 0,
+          "attribute_names": [
+            "d"
+          ]
+        },
+        {
+          "index": 128,
+          "parent_index": 111,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 7,
+          "attribute_names": []
+        },
+        {
+          "index": 129,
+          "parent_index": 109,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 7,
+          "attribute_names": []
+        },
+        {
+          "index": 130,
+          "parent_index": 109,
+          "node_type": 1,
+          "node_name": "DIV",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class",
+            "data-age",
+            "role",
+            "tabindex"
+          ]
+        },
+        {
+          "index": 131,
+          "parent_index": 130,
+          "node_type": 1,
+          "node_name": "::before",
+          "node_value_length": 0,
+          "attribute_names": []
+        },
+        {
+          "index": 132,
+          "parent_index": 130,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 9,
+          "attribute_names": []
+        },
+        {
+          "index": 133,
+          "parent_index": 130,
+          "node_type": 1,
+          "node_name": "SPAN",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 134,
+          "parent_index": 133,
+          "node_type": 1,
+          "node_name": "svg",
+          "node_value_length": 0,
+          "attribute_names": [
+            "viewBox",
+            "fill",
+            "stroke",
+            "stroke-width",
+            "stroke-linecap",
+            "stroke-linejoin"
+          ]
+        },
+        {
+          "index": 135,
+          "parent_index": 134,
+          "node_type": 1,
+          "node_name": "circle",
+          "node_value_length": 0,
+          "attribute_names": [
+            "cx",
+            "cy",
+            "r"
+          ]
+        },
+        {
+          "index": 136,
+          "parent_index": 134,
+          "node_type": 1,
+          "node_name": "path",
+          "node_value_length": 0,
+          "attribute_names": [
+            "d"
+          ]
+        },
+        {
+          "index": 137,
+          "parent_index": 130,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 9,
+          "attribute_names": []
+        },
+        {
+          "index": 138,
+          "parent_index": 130,
+          "node_type": 1,
+          "node_name": "SPAN",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 139,
+          "parent_index": 138,
+          "node_type": 1,
+          "node_name": "SPAN",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 140,
+          "parent_index": 139,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 4,
+          "attribute_names": []
+        },
+        {
+          "index": 141,
+          "parent_index": 138,
+          "node_type": 1,
+          "node_name": "SPAN",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 142,
+          "parent_index": 141,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 9,
+          "attribute_names": []
+        },
+        {
+          "index": 143,
+          "parent_index": 130,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 9,
+          "attribute_names": []
+        },
+        {
+          "index": 144,
+          "parent_index": 130,
+          "node_type": 1,
+          "node_name": "SPAN",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 145,
+          "parent_index": 144,
+          "node_type": 1,
+          "node_name": "svg",
+          "node_value_length": 0,
+          "attribute_names": [
+            "viewBox",
+            "fill",
+            "stroke",
+            "stroke-width",
+            "stroke-linecap",
+            "stroke-linejoin"
+          ]
+        },
+        {
+          "index": 146,
+          "parent_index": 145,
+          "node_type": 1,
+          "node_name": "path",
+          "node_value_length": 0,
+          "attribute_names": [
+            "d"
+          ]
+        },
+        {
+          "index": 147,
+          "parent_index": 130,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 7,
+          "attribute_names": []
+        },
+        {
+          "index": 148,
+          "parent_index": 109,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 7,
+          "attribute_names": []
+        },
+        {
+          "index": 149,
+          "parent_index": 109,
+          "node_type": 1,
+          "node_name": "DIV",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class",
+            "data-age",
+            "role",
+            "tabindex"
+          ]
+        },
+        {
+          "index": 150,
+          "parent_index": 149,
+          "node_type": 1,
+          "node_name": "::before",
+          "node_value_length": 0,
+          "attribute_names": []
+        },
+        {
+          "index": 151,
+          "parent_index": 149,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 9,
+          "attribute_names": []
+        },
+        {
+          "index": 152,
+          "parent_index": 149,
+          "node_type": 1,
+          "node_name": "SPAN",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 153,
+          "parent_index": 152,
+          "node_type": 1,
+          "node_name": "svg",
+          "node_value_length": 0,
+          "attribute_names": [
+            "viewBox",
+            "fill",
+            "stroke",
+            "stroke-width",
+            "stroke-linecap",
+            "stroke-linejoin"
+          ]
+        },
+        {
+          "index": 154,
+          "parent_index": 153,
+          "node_type": 1,
+          "node_name": "path",
+          "node_value_length": 0,
+          "attribute_names": [
+            "d"
+          ]
+        },
+        {
+          "index": 155,
+          "parent_index": 153,
+          "node_type": 1,
+          "node_name": "path",
+          "node_value_length": 0,
+          "attribute_names": [
+            "d"
+          ]
+        },
+        {
+          "index": 156,
+          "parent_index": 149,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 9,
+          "attribute_names": []
+        },
+        {
+          "index": 157,
+          "parent_index": 149,
+          "node_type": 1,
+          "node_name": "SPAN",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 158,
+          "parent_index": 157,
+          "node_type": 1,
+          "node_name": "SPAN",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 159,
+          "parent_index": 158,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 4,
+          "attribute_names": []
+        },
+        {
+          "index": 160,
+          "parent_index": 157,
+          "node_type": 1,
+          "node_name": "SPAN",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 161,
+          "parent_index": 160,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 9,
+          "attribute_names": []
+        },
+        {
+          "index": 162,
+          "parent_index": 149,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 9,
+          "attribute_names": []
+        },
+        {
+          "index": 163,
+          "parent_index": 149,
+          "node_type": 1,
+          "node_name": "SPAN",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 164,
+          "parent_index": 163,
+          "node_type": 1,
+          "node_name": "svg",
+          "node_value_length": 0,
+          "attribute_names": [
+            "viewBox",
+            "fill",
+            "stroke",
+            "stroke-width",
+            "stroke-linecap",
+            "stroke-linejoin"
+          ]
+        },
+        {
+          "index": 165,
+          "parent_index": 164,
+          "node_type": 1,
+          "node_name": "path",
+          "node_value_length": 0,
+          "attribute_names": [
+            "d"
+          ]
+        },
+        {
+          "index": 166,
+          "parent_index": 149,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 7,
+          "attribute_names": []
+        },
+        {
+          "index": 167,
+          "parent_index": 109,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 5,
+          "attribute_names": []
+        },
+        {
+          "index": 168,
+          "parent_index": 71,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 6,
+          "attribute_names": []
+        },
+        {
+          "index": 169,
+          "parent_index": 71,
+          "node_type": 1,
+          "node_name": "DIV",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 170,
+          "parent_index": 169,
+          "node_type": 1,
+          "node_name": "STRONG",
+          "node_value_length": 0,
+          "attribute_names": []
+        },
+        {
+          "index": 171,
+          "parent_index": 170,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 8,
+          "attribute_names": []
+        },
+        {
+          "index": 172,
+          "parent_index": 169,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 74,
+          "attribute_names": []
+        },
+        {
+          "index": 173,
+          "parent_index": 71,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 6,
+          "attribute_names": []
+        },
+        {
+          "index": 174,
+          "parent_index": 71,
+          "node_type": 1,
+          "node_name": "DIV",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 175,
+          "parent_index": 174,
+          "node_type": 1,
+          "node_name": "::before",
+          "node_value_length": 0,
+          "attribute_names": []
+        },
+        {
+          "index": 176,
+          "parent_index": 174,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 7,
+          "attribute_names": []
+        },
+        {
+          "index": 177,
+          "parent_index": 174,
+          "node_type": 1,
+          "node_name": "H3",
+          "node_value_length": 0,
+          "attribute_names": []
+        },
+        {
+          "index": 178,
+          "parent_index": 177,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 4,
+          "attribute_names": []
+        },
+        {
+          "index": 179,
+          "parent_index": 174,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 7,
+          "attribute_names": []
+        },
+        {
+          "index": 180,
+          "parent_index": 174,
+          "node_type": 1,
+          "node_name": "P",
+          "node_value_length": 0,
+          "attribute_names": []
+        },
+        {
+          "index": 181,
+          "parent_index": 180,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 52,
+          "attribute_names": []
+        },
+        {
+          "index": 182,
+          "parent_index": 180,
+          "node_type": 1,
+          "node_name": "SPAN",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 183,
+          "parent_index": 182,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 4,
+          "attribute_names": []
+        },
+        {
+          "index": 184,
+          "parent_index": 180,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 10,
+          "attribute_names": []
+        },
+        {
+          "index": 185,
+          "parent_index": 180,
+          "node_type": 1,
+          "node_name": "SPAN",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 186,
+          "parent_index": 185,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 4,
+          "attribute_names": []
+        },
+        {
+          "index": 187,
+          "parent_index": 180,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 12,
+          "attribute_names": []
+        },
+        {
+          "index": 188,
+          "parent_index": 180,
+          "node_type": 1,
+          "node_name": "SPAN",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 189,
+          "parent_index": 188,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 4,
+          "attribute_names": []
+        },
+        {
+          "index": 190,
+          "parent_index": 180,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 12,
+          "attribute_names": []
+        },
+        {
+          "index": 191,
+          "parent_index": 174,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 7,
+          "attribute_names": []
+        },
+        {
+          "index": 192,
+          "parent_index": 174,
+          "node_type": 1,
+          "node_name": "P",
+          "node_value_length": 0,
+          "attribute_names": []
+        },
+        {
+          "index": 193,
+          "parent_index": 192,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 64,
+          "attribute_names": []
+        },
+        {
+          "index": 194,
+          "parent_index": 174,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 5,
+          "attribute_names": []
+        },
+        {
+          "index": 195,
+          "parent_index": 71,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 6,
+          "attribute_names": []
+        },
+        {
+          "index": 196,
+          "parent_index": 71,
+          "node_type": 1,
+          "node_name": "DIV",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 197,
+          "parent_index": 196,
+          "node_type": 1,
+          "node_name": "::before",
+          "node_value_length": 0,
+          "attribute_names": []
+        },
+        {
+          "index": 198,
+          "parent_index": 196,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 7,
+          "attribute_names": []
+        },
+        {
+          "index": 199,
+          "parent_index": 196,
+          "node_type": 1,
+          "node_name": "H3",
+          "node_value_length": 0,
+          "attribute_names": []
+        },
+        {
+          "index": 200,
+          "parent_index": 199,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 4,
+          "attribute_names": []
+        },
+        {
+          "index": 201,
+          "parent_index": 196,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 7,
+          "attribute_names": []
+        },
+        {
+          "index": 202,
+          "parent_index": 196,
+          "node_type": 1,
+          "node_name": "DIV",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 203,
+          "parent_index": 202,
+          "node_type": 1,
+          "node_name": "SPAN",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 204,
+          "parent_index": 203,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 3,
+          "attribute_names": []
+        },
+        {
+          "index": 205,
+          "parent_index": 202,
+          "node_type": 1,
+          "node_name": "SPAN",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 206,
+          "parent_index": 205,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 46,
+          "attribute_names": []
+        },
+        {
+          "index": 207,
+          "parent_index": 196,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 7,
+          "attribute_names": []
+        },
+        {
+          "index": 208,
+          "parent_index": 196,
+          "node_type": 1,
+          "node_name": "DIV",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 209,
+          "parent_index": 208,
+          "node_type": 1,
+          "node_name": "SPAN",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 210,
+          "parent_index": 209,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 3,
+          "attribute_names": []
+        },
+        {
+          "index": 211,
+          "parent_index": 208,
+          "node_type": 1,
+          "node_name": "SPAN",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 212,
+          "parent_index": 211,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 57,
+          "attribute_names": []
+        },
+        {
+          "index": 213,
+          "parent_index": 196,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 5,
+          "attribute_names": []
+        },
+        {
+          "index": 214,
+          "parent_index": 71,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 6,
+          "attribute_names": []
+        },
+        {
+          "index": 215,
+          "parent_index": 71,
+          "node_type": 1,
+          "node_name": "P",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 216,
+          "parent_index": 215,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 18,
+          "attribute_names": []
+        },
+        {
+          "index": 217,
+          "parent_index": 215,
+          "node_type": 1,
+          "node_name": "BR",
+          "node_value_length": 0,
+          "attribute_names": []
+        },
+        {
+          "index": 218,
+          "parent_index": 215,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 23,
+          "attribute_names": []
+        },
+        {
+          "index": 219,
+          "parent_index": 71,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 3,
+          "attribute_names": []
+        },
+        {
+          "index": 220,
+          "parent_index": 67,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 4,
+          "attribute_names": []
+        },
+        {
+          "index": 221,
+          "parent_index": 67,
+          "node_type": 8,
+          "node_name": "#comment",
+          "node_value_length": 17,
+          "attribute_names": []
+        },
+        {
+          "index": 222,
+          "parent_index": 67,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 3,
+          "attribute_names": []
+        },
+        {
+          "index": 223,
+          "parent_index": 67,
+          "node_type": 1,
+          "node_name": "SECTION",
+          "node_value_length": 0,
+          "attribute_names": [
+            "id",
+            "class",
+            "hidden"
+          ]
+        },
+        {
+          "index": 224,
+          "parent_index": 223,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 5,
+          "attribute_names": []
+        },
+        {
+          "index": 225,
+          "parent_index": 223,
+          "node_type": 1,
+          "node_name": "DIV",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 226,
+          "parent_index": 225,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 7,
+          "attribute_names": []
+        },
+        {
+          "index": 227,
+          "parent_index": 225,
+          "node_type": 1,
+          "node_name": "DIV",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 228,
+          "parent_index": 227,
+          "node_type": 1,
+          "node_name": "I",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 229,
+          "parent_index": 227,
+          "node_type": 1,
+          "node_name": "SPAN",
+          "node_value_length": 0,
+          "attribute_names": [
+            "id"
+          ]
+        },
+        {
+          "index": 230,
+          "parent_index": 225,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 7,
+          "attribute_names": []
+        },
+        {
+          "index": 231,
+          "parent_index": 225,
+          "node_type": 1,
+          "node_name": "H1",
+          "node_value_length": 0,
+          "attribute_names": []
+        },
+        {
+          "index": 232,
+          "parent_index": 231,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 8,
+          "attribute_names": []
+        },
+        {
+          "index": 233,
+          "parent_index": 231,
+          "node_type": 1,
+          "node_name": "BR",
+          "node_value_length": 0,
+          "attribute_names": []
+        },
+        {
+          "index": 234,
+          "parent_index": 231,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 6,
+          "attribute_names": []
+        },
+        {
+          "index": 235,
+          "parent_index": 231,
+          "node_type": 1,
+          "node_name": "EM",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 236,
+          "parent_index": 235,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 5,
+          "attribute_names": []
+        },
+        {
+          "index": 237,
+          "parent_index": 231,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 1,
+          "attribute_names": []
+        },
+        {
+          "index": 238,
+          "parent_index": 225,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 7,
+          "attribute_names": []
+        },
+        {
+          "index": 239,
+          "parent_index": 225,
+          "node_type": 1,
+          "node_name": "P",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class",
+            "id"
+          ]
+        },
+        {
+          "index": 240,
+          "parent_index": 225,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 5,
+          "attribute_names": []
+        },
+        {
+          "index": 241,
+          "parent_index": 223,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 5,
+          "attribute_names": []
+        },
+        {
+          "index": 242,
+          "parent_index": 223,
+          "node_type": 1,
+          "node_name": "DIV",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 243,
+          "parent_index": 242,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 7,
+          "attribute_names": []
+        },
+        {
+          "index": 244,
+          "parent_index": 242,
+          "node_type": 1,
+          "node_name": "H3",
+          "node_value_length": 0,
+          "attribute_names": []
+        },
+        {
+          "index": 245,
+          "parent_index": 244,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 4,
+          "attribute_names": []
+        },
+        {
+          "index": 246,
+          "parent_index": 242,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 7,
+          "attribute_names": []
+        },
+        {
+          "index": 247,
+          "parent_index": 242,
+          "node_type": 1,
+          "node_name": "DIV",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class",
+            "id"
+          ]
+        },
+        {
+          "index": 248,
+          "parent_index": 242,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 5,
+          "attribute_names": []
+        },
+        {
+          "index": 249,
+          "parent_index": 223,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 5,
+          "attribute_names": []
+        },
+        {
+          "index": 250,
+          "parent_index": 223,
+          "node_type": 1,
+          "node_name": "BUTTON",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class",
+            "id",
+            "type"
+          ]
+        },
+        {
+          "index": 251,
+          "parent_index": 250,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 20,
+          "attribute_names": []
+        },
+        {
+          "index": 252,
+          "parent_index": 250,
+          "node_type": 1,
+          "node_name": "svg",
+          "node_value_length": 0,
+          "attribute_names": [
+            "viewBox",
+            "fill",
+            "stroke",
+            "stroke-width",
+            "stroke-linecap",
+            "stroke-linejoin"
+          ]
+        },
+        {
+          "index": 253,
+          "parent_index": 252,
+          "node_type": 1,
+          "node_name": "path",
+          "node_value_length": 0,
+          "attribute_names": [
+            "d"
+          ]
+        },
+        {
+          "index": 254,
+          "parent_index": 250,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 5,
+          "attribute_names": []
+        },
+        {
+          "index": 255,
+          "parent_index": 223,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 5,
+          "attribute_names": []
+        },
+        {
+          "index": 256,
+          "parent_index": 223,
+          "node_type": 1,
+          "node_name": "P",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 257,
+          "parent_index": 256,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 20,
+          "attribute_names": []
+        },
+        {
+          "index": 258,
+          "parent_index": 223,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 3,
+          "attribute_names": []
+        },
+        {
+          "index": 259,
+          "parent_index": 67,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 4,
+          "attribute_names": []
+        },
+        {
+          "index": 260,
+          "parent_index": 67,
+          "node_type": 8,
+          "node_name": "#comment",
+          "node_value_length": 17,
+          "attribute_names": []
+        },
+        {
+          "index": 261,
+          "parent_index": 67,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 3,
+          "attribute_names": []
+        },
+        {
+          "index": 262,
+          "parent_index": 67,
+          "node_type": 1,
+          "node_name": "SECTION",
+          "node_value_length": 0,
+          "attribute_names": [
+            "id",
+            "class",
+            "hidden"
+          ]
+        },
+        {
+          "index": 263,
+          "parent_index": 262,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 5,
+          "attribute_names": []
+        },
+        {
+          "index": 264,
+          "parent_index": 262,
+          "node_type": 1,
+          "node_name": "ARTICLE",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class",
+            "id"
+          ]
+        },
+        {
+          "index": 265,
+          "parent_index": 264,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 7,
+          "attribute_names": []
+        },
+        {
+          "index": 266,
+          "parent_index": 264,
+          "node_type": 1,
+          "node_name": "H2",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class",
+            "id",
+            "aria-live"
+          ]
+        },
+        {
+          "index": 267,
+          "parent_index": 264,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 7,
+          "attribute_names": []
+        },
+        {
+          "index": 268,
+          "parent_index": 264,
+          "node_type": 1,
+          "node_name": "P",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class",
+            "id"
+          ]
+        },
+        {
+          "index": 269,
+          "parent_index": 264,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 7,
+          "attribute_names": []
+        },
+        {
+          "index": 270,
+          "parent_index": 264,
+          "node_type": 1,
+          "node_name": "DIV",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class",
+            "id"
+          ]
+        },
+        {
+          "index": 271,
+          "parent_index": 264,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 5,
+          "attribute_names": []
+        },
+        {
+          "index": 272,
+          "parent_index": 262,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 5,
+          "attribute_names": []
+        },
+        {
+          "index": 273,
+          "parent_index": 262,
+          "node_type": 1,
+          "node_name": "NAV",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 274,
+          "parent_index": 273,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 7,
+          "attribute_names": []
+        },
+        {
+          "index": 275,
+          "parent_index": 273,
+          "node_type": 1,
+          "node_name": "BUTTON",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class",
+            "id",
+            "type",
+            "aria-label",
+            "disabled"
+          ]
+        },
+        {
+          "index": 276,
+          "parent_index": 275,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 9,
+          "attribute_names": []
+        },
+        {
+          "index": 277,
+          "parent_index": 275,
+          "node_type": 1,
+          "node_name": "svg",
+          "node_value_length": 0,
+          "attribute_names": [
+            "viewBox",
+            "fill",
+            "stroke",
+            "stroke-width",
+            "stroke-linecap",
+            "stroke-linejoin"
+          ]
+        },
+        {
+          "index": 278,
+          "parent_index": 277,
+          "node_type": 1,
+          "node_name": "path",
+          "node_value_length": 0,
+          "attribute_names": [
+            "d"
+          ]
+        },
+        {
+          "index": 279,
+          "parent_index": 275,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 7,
+          "attribute_names": []
+        },
+        {
+          "index": 280,
+          "parent_index": 273,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 7,
+          "attribute_names": []
+        },
+        {
+          "index": 281,
+          "parent_index": 273,
+          "node_type": 1,
+          "node_name": "BUTTON",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class",
+            "id",
+            "type",
+            "disabled"
+          ]
+        },
+        {
+          "index": 282,
+          "parent_index": 281,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 9,
+          "attribute_names": []
+        },
+        {
+          "index": 283,
+          "parent_index": 281,
+          "node_type": 1,
+          "node_name": "SPAN",
+          "node_value_length": 0,
+          "attribute_names": [
+            "id"
+          ]
+        },
+        {
+          "index": 284,
+          "parent_index": 283,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 3,
+          "attribute_names": []
+        },
+        {
+          "index": 285,
+          "parent_index": 281,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 9,
+          "attribute_names": []
+        },
+        {
+          "index": 286,
+          "parent_index": 281,
+          "node_type": 1,
+          "node_name": "svg",
+          "node_value_length": 0,
+          "attribute_names": [
+            "viewBox",
+            "fill",
+            "stroke",
+            "stroke-width",
+            "stroke-linecap",
+            "stroke-linejoin"
+          ]
+        },
+        {
+          "index": 287,
+          "parent_index": 286,
+          "node_type": 1,
+          "node_name": "path",
+          "node_value_length": 0,
+          "attribute_names": [
+            "d"
+          ]
+        },
+        {
+          "index": 288,
+          "parent_index": 281,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 7,
+          "attribute_names": []
+        },
+        {
+          "index": 289,
+          "parent_index": 273,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 5,
+          "attribute_names": []
+        },
+        {
+          "index": 290,
+          "parent_index": 262,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 5,
+          "attribute_names": []
+        },
+        {
+          "index": 291,
+          "parent_index": 262,
+          "node_type": 1,
+          "node_name": "P",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class",
+            "id"
+          ]
+        },
+        {
+          "index": 292,
+          "parent_index": 291,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 19,
+          "attribute_names": []
+        },
+        {
+          "index": 293,
+          "parent_index": 262,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 3,
+          "attribute_names": []
+        },
+        {
+          "index": 294,
+          "parent_index": 67,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 4,
+          "attribute_names": []
+        },
+        {
+          "index": 295,
+          "parent_index": 67,
+          "node_type": 8,
+          "node_name": "#comment",
+          "node_value_length": 19,
+          "attribute_names": []
+        },
+        {
+          "index": 296,
+          "parent_index": 67,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 3,
+          "attribute_names": []
+        },
+        {
+          "index": 297,
+          "parent_index": 67,
+          "node_type": 1,
+          "node_name": "SECTION",
+          "node_value_length": 0,
+          "attribute_names": [
+            "id",
+            "class",
+            "hidden"
+          ]
+        },
+        {
+          "index": 298,
+          "parent_index": 297,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 5,
+          "attribute_names": []
+        },
+        {
+          "index": 299,
+          "parent_index": 297,
+          "node_type": 1,
+          "node_name": "DIV",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 300,
+          "parent_index": 299,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 7,
+          "attribute_names": []
+        },
+        {
+          "index": 301,
+          "parent_index": 299,
+          "node_type": 1,
+          "node_name": "H2",
+          "node_value_length": 0,
+          "attribute_names": []
+        },
+        {
+          "index": 302,
+          "parent_index": 301,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 5,
+          "attribute_names": []
+        },
+        {
+          "index": 303,
+          "parent_index": 301,
+          "node_type": 1,
+          "node_name": "SPAN",
+          "node_value_length": 0,
+          "attribute_names": [
+            "style"
+          ]
+        },
+        {
+          "index": 304,
+          "parent_index": 303,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 4,
+          "attribute_names": []
+        },
+        {
+          "index": 305,
+          "parent_index": 299,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 7,
+          "attribute_names": []
+        },
+        {
+          "index": 306,
+          "parent_index": 299,
+          "node_type": 1,
+          "node_name": "P",
+          "node_value_length": 0,
+          "attribute_names": []
+        },
+        {
+          "index": 307,
+          "parent_index": 306,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 32,
+          "attribute_names": []
+        },
+        {
+          "index": 308,
+          "parent_index": 299,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 5,
+          "attribute_names": []
+        },
+        {
+          "index": 309,
+          "parent_index": 297,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 5,
+          "attribute_names": []
+        },
+        {
+          "index": 310,
+          "parent_index": 297,
+          "node_type": 1,
+          "node_name": "DIV",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 311,
+          "parent_index": 310,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 7,
+          "attribute_names": []
+        },
+        {
+          "index": 312,
+          "parent_index": 310,
+          "node_type": 1,
+          "node_name": "DIV",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 313,
+          "parent_index": 312,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 9,
+          "attribute_names": []
+        },
+        {
+          "index": 314,
+          "parent_index": 312,
+          "node_type": 1,
+          "node_name": "LABEL",
+          "node_value_length": 0,
+          "attribute_names": [
+            "for"
+          ]
+        },
+        {
+          "index": 315,
+          "parent_index": 314,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 11,
+          "attribute_names": []
+        },
+        {
+          "index": 316,
+          "parent_index": 312,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 9,
+          "attribute_names": []
+        },
+        {
+          "index": 317,
+          "parent_index": 312,
+          "node_type": 1,
+          "node_name": "TEXTAREA",
+          "node_value_length": 0,
+          "attribute_names": [
+            "id",
+            "maxlength",
+            "placeholder"
+          ]
+        },
+        {
+          "index": 318,
+          "parent_index": 312,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 9,
+          "attribute_names": []
+        },
+        {
+          "index": 319,
+          "parent_index": 312,
+          "node_type": 1,
+          "node_name": "DIV",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 320,
+          "parent_index": 319,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 7,
+          "attribute_names": []
+        },
+        {
+          "index": 321,
+          "parent_index": 312,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 7,
+          "attribute_names": []
+        },
+        {
+          "index": 322,
+          "parent_index": 310,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 7,
+          "attribute_names": []
+        },
+        {
+          "index": 323,
+          "parent_index": 310,
+          "node_type": 1,
+          "node_name": "DIV",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 324,
+          "parent_index": 323,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 9,
+          "attribute_names": []
+        },
+        {
+          "index": 325,
+          "parent_index": 323,
+          "node_type": 1,
+          "node_name": "LABEL",
+          "node_value_length": 0,
+          "attribute_names": [
+            "for"
+          ]
+        },
+        {
+          "index": 326,
+          "parent_index": 325,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 13,
+          "attribute_names": []
+        },
+        {
+          "index": 327,
+          "parent_index": 323,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 9,
+          "attribute_names": []
+        },
+        {
+          "index": 328,
+          "parent_index": 323,
+          "node_type": 1,
+          "node_name": "TEXTAREA",
+          "node_value_length": 0,
+          "attribute_names": [
+            "id",
+            "maxlength",
+            "placeholder"
+          ]
+        },
+        {
+          "index": 329,
+          "parent_index": 323,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 9,
+          "attribute_names": []
+        },
+        {
+          "index": 330,
+          "parent_index": 323,
+          "node_type": 1,
+          "node_name": "DIV",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 331,
+          "parent_index": 330,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 7,
+          "attribute_names": []
+        },
+        {
+          "index": 332,
+          "parent_index": 323,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 7,
+          "attribute_names": []
+        },
+        {
+          "index": 333,
+          "parent_index": 310,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 7,
+          "attribute_names": []
+        },
+        {
+          "index": 334,
+          "parent_index": 310,
+          "node_type": 1,
+          "node_name": "DIV",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 335,
+          "parent_index": 334,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 9,
+          "attribute_names": []
+        },
+        {
+          "index": 336,
+          "parent_index": 334,
+          "node_type": 1,
+          "node_name": "LABEL",
+          "node_value_length": 0,
+          "attribute_names": [
+            "for"
+          ]
+        },
+        {
+          "index": 337,
+          "parent_index": 336,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 18,
+          "attribute_names": []
+        },
+        {
+          "index": 338,
+          "parent_index": 334,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 9,
+          "attribute_names": []
+        },
+        {
+          "index": 339,
+          "parent_index": 334,
+          "node_type": 1,
+          "node_name": "TEXTAREA",
+          "node_value_length": 0,
+          "attribute_names": [
+            "id",
+            "maxlength",
+            "placeholder"
+          ]
+        },
+        {
+          "index": 340,
+          "parent_index": 334,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 9,
+          "attribute_names": []
+        },
+        {
+          "index": 341,
+          "parent_index": 334,
+          "node_type": 1,
+          "node_name": "DIV",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 342,
+          "parent_index": 341,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 7,
+          "attribute_names": []
+        },
+        {
+          "index": 343,
+          "parent_index": 334,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 7,
+          "attribute_names": []
+        },
+        {
+          "index": 344,
+          "parent_index": 310,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 5,
+          "attribute_names": []
+        },
+        {
+          "index": 345,
+          "parent_index": 297,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 5,
+          "attribute_names": []
+        },
+        {
+          "index": 346,
+          "parent_index": 297,
+          "node_type": 1,
+          "node_name": "DIV",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 347,
+          "parent_index": 346,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 7,
+          "attribute_names": []
+        },
+        {
+          "index": 348,
+          "parent_index": 346,
+          "node_type": 1,
+          "node_name": "BUTTON",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class",
+            "id",
+            "type"
+          ]
+        },
+        {
+          "index": 349,
+          "parent_index": 348,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 2,
+          "attribute_names": []
+        },
+        {
+          "index": 350,
+          "parent_index": 346,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 7,
+          "attribute_names": []
+        },
+        {
+          "index": 351,
+          "parent_index": 346,
+          "node_type": 1,
+          "node_name": "BUTTON",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class",
+            "id",
+            "type"
+          ]
+        },
+        {
+          "index": 352,
+          "parent_index": 351,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 4,
+          "attribute_names": []
+        },
+        {
+          "index": 353,
+          "parent_index": 346,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 5,
+          "attribute_names": []
+        },
+        {
+          "index": 354,
+          "parent_index": 297,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 3,
+          "attribute_names": []
+        },
+        {
+          "index": 355,
+          "parent_index": 67,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 4,
+          "attribute_names": []
+        },
+        {
+          "index": 356,
+          "parent_index": 67,
+          "node_type": 8,
+          "node_name": "#comment",
+          "node_value_length": 17,
+          "attribute_names": []
+        },
+        {
+          "index": 357,
+          "parent_index": 67,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 3,
+          "attribute_names": []
+        },
+        {
+          "index": 358,
+          "parent_index": 67,
+          "node_type": 1,
+          "node_name": "SECTION",
+          "node_value_length": 0,
+          "attribute_names": [
+            "id",
+            "class",
+            "hidden"
+          ]
+        },
+        {
+          "index": 359,
+          "parent_index": 358,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 5,
+          "attribute_names": []
+        },
+        {
+          "index": 360,
+          "parent_index": 358,
+          "node_type": 1,
+          "node_name": "DIV",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 361,
+          "parent_index": 360,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 7,
+          "attribute_names": []
+        },
+        {
+          "index": 362,
+          "parent_index": 360,
+          "node_type": 1,
+          "node_name": "DIV",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 363,
+          "parent_index": 362,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 4,
+          "attribute_names": []
+        },
+        {
+          "index": 364,
+          "parent_index": 360,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 7,
+          "attribute_names": []
+        },
+        {
+          "index": 365,
+          "parent_index": 360,
+          "node_type": 1,
+          "node_name": "H2",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class",
+            "id"
+          ]
+        },
+        {
+          "index": 366,
+          "parent_index": 365,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 6,
+          "attribute_names": []
+        },
+        {
+          "index": 367,
+          "parent_index": 360,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 7,
+          "attribute_names": []
+        },
+        {
+          "index": 368,
+          "parent_index": 360,
+          "node_type": 1,
+          "node_name": "P",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class",
+            "id"
+          ]
+        },
+        {
+          "index": 369,
+          "parent_index": 368,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 12,
+          "attribute_names": []
+        },
+        {
+          "index": 370,
+          "parent_index": 360,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 5,
+          "attribute_names": []
+        },
+        {
+          "index": 371,
+          "parent_index": 358,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 5,
+          "attribute_names": []
+        },
+        {
+          "index": 372,
+          "parent_index": 358,
+          "node_type": 1,
+          "node_name": "DIV",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 373,
+          "parent_index": 372,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 7,
+          "attribute_names": []
+        },
+        {
+          "index": 374,
+          "parent_index": 372,
+          "node_type": 1,
+          "node_name": "svg",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class",
+            "width",
+            "height",
+            "viewBox",
+            "aria-hidden"
+          ]
+        },
+        {
+          "index": 375,
+          "parent_index": 374,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 9,
+          "attribute_names": []
+        },
+        {
+          "index": 376,
+          "parent_index": 374,
+          "node_type": 1,
+          "node_name": "circle",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class",
+            "cx",
+            "cy",
+            "r"
+          ]
+        },
+        {
+          "index": 377,
+          "parent_index": 374,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 9,
+          "attribute_names": []
+        },
+        {
+          "index": 378,
+          "parent_index": 374,
+          "node_type": 1,
+          "node_name": "circle",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class",
+            "id",
+            "cx",
+            "cy",
+            "r"
+          ]
+        },
+        {
+          "index": 379,
+          "parent_index": 374,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 7,
+          "attribute_names": []
+        },
+        {
+          "index": 380,
+          "parent_index": 372,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 7,
+          "attribute_names": []
+        },
+        {
+          "index": 381,
+          "parent_index": 372,
+          "node_type": 1,
+          "node_name": "DIV",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 382,
+          "parent_index": 381,
+          "node_type": 1,
+          "node_name": "B",
+          "node_value_length": 0,
+          "attribute_names": [
+            "id"
+          ]
+        },
+        {
+          "index": 383,
+          "parent_index": 382,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 1,
+          "attribute_names": []
+        },
+        {
+          "index": 384,
+          "parent_index": 381,
+          "node_type": 1,
+          "node_name": "SPAN",
+          "node_value_length": 0,
+          "attribute_names": []
+        },
+        {
+          "index": 385,
+          "parent_index": 384,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 10,
+          "attribute_names": []
+        },
+        {
+          "index": 386,
+          "parent_index": 372,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 5,
+          "attribute_names": []
+        },
+        {
+          "index": 387,
+          "parent_index": 358,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 5,
+          "attribute_names": []
+        },
+        {
+          "index": 388,
+          "parent_index": 358,
+          "node_type": 1,
+          "node_name": "DIV",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class",
+            "id"
+          ]
+        },
+        {
+          "index": 389,
+          "parent_index": 388,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 7,
+          "attribute_names": []
+        },
+        {
+          "index": 390,
+          "parent_index": 388,
+          "node_type": 1,
+          "node_name": "DIV",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 391,
+          "parent_index": 390,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 4,
+          "attribute_names": []
+        },
+        {
+          "index": 392,
+          "parent_index": 388,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 7,
+          "attribute_names": []
+        },
+        {
+          "index": 393,
+          "parent_index": 388,
+          "node_type": 1,
+          "node_name": "DIV",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class",
+            "id"
+          ]
+        },
+        {
+          "index": 394,
+          "parent_index": 388,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 7,
+          "attribute_names": []
+        },
+        {
+          "index": 395,
+          "parent_index": 388,
+          "node_type": 1,
+          "node_name": "P",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class",
+            "id"
+          ]
+        },
+        {
+          "index": 396,
+          "parent_index": 388,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 7,
+          "attribute_names": []
+        },
+        {
+          "index": 397,
+          "parent_index": 388,
+          "node_type": 1,
+          "node_name": "DIV",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class",
+            "id"
+          ]
+        },
+        {
+          "index": 398,
+          "parent_index": 388,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 5,
+          "attribute_names": []
+        },
+        {
+          "index": 399,
+          "parent_index": 358,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 5,
+          "attribute_names": []
+        },
+        {
+          "index": 400,
+          "parent_index": 358,
+          "node_type": 1,
+          "node_name": "DIV",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 401,
+          "parent_index": 400,
+          "node_type": 1,
+          "node_name": "SPAN",
+          "node_value_length": 0,
+          "attribute_names": []
+        },
+        {
+          "index": 402,
+          "parent_index": 401,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 4,
+          "attribute_names": []
+        },
+        {
+          "index": 403,
+          "parent_index": 400,
+          "node_type": 1,
+          "node_name": "I",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 404,
+          "parent_index": 358,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 5,
+          "attribute_names": []
+        },
+        {
+          "index": 405,
+          "parent_index": 358,
+          "node_type": 1,
+          "node_name": "DIV",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class",
+            "id"
+          ]
+        },
+        {
+          "index": 406,
+          "parent_index": 358,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 5,
+          "attribute_names": []
+        },
+        {
+          "index": 407,
+          "parent_index": 358,
+          "node_type": 1,
+          "node_name": "DIV",
+          "node_value_length": 0,
+          "attribute_names": [
+            "id"
+          ]
+        },
+        {
+          "index": 408,
+          "parent_index": 358,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 5,
+          "attribute_names": []
+        },
+        {
+          "index": 409,
+          "parent_index": 358,
+          "node_type": 1,
+          "node_name": "DIV",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 410,
+          "parent_index": 409,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 7,
+          "attribute_names": []
+        },
+        {
+          "index": 411,
+          "parent_index": 409,
+          "node_type": 1,
+          "node_name": "H3",
+          "node_value_length": 0,
+          "attribute_names": []
+        },
+        {
+          "index": 412,
+          "parent_index": 411,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 6,
+          "attribute_names": []
+        },
+        {
+          "index": 413,
+          "parent_index": 409,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 7,
+          "attribute_names": []
+        },
+        {
+          "index": 414,
+          "parent_index": 409,
+          "node_type": 1,
+          "node_name": "P",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 415,
+          "parent_index": 414,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 29,
+          "attribute_names": []
+        },
+        {
+          "index": 416,
+          "parent_index": 409,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 7,
+          "attribute_names": []
+        },
+        {
+          "index": 417,
+          "parent_index": 409,
+          "node_type": 1,
+          "node_name": "DIV",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class",
+            "id"
+          ]
+        },
+        {
+          "index": 418,
+          "parent_index": 409,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 5,
+          "attribute_names": []
+        },
+        {
+          "index": 419,
+          "parent_index": 358,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 5,
+          "attribute_names": []
+        },
+        {
+          "index": 420,
+          "parent_index": 358,
+          "node_type": 1,
+          "node_name": "DIV",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 421,
+          "parent_index": 420,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 7,
+          "attribute_names": []
+        },
+        {
+          "index": 422,
+          "parent_index": 420,
+          "node_type": 1,
+          "node_name": "DIV",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 423,
+          "parent_index": 422,
+          "node_type": 1,
+          "node_name": "svg",
+          "node_value_length": 0,
+          "attribute_names": [
+            "viewBox",
+            "fill",
+            "stroke",
+            "stroke-width",
+            "stroke-linecap",
+            "stroke-linejoin"
+          ]
+        },
+        {
+          "index": 424,
+          "parent_index": 423,
+          "node_type": 1,
+          "node_name": "path",
+          "node_value_length": 0,
+          "attribute_names": [
+            "d"
+          ]
+        },
+        {
+          "index": 425,
+          "parent_index": 420,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 7,
+          "attribute_names": []
+        },
+        {
+          "index": 426,
+          "parent_index": 420,
+          "node_type": 1,
+          "node_name": "DIV",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 427,
+          "parent_index": 426,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 14,
+          "attribute_names": []
+        },
+        {
+          "index": 428,
+          "parent_index": 420,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 7,
+          "attribute_names": []
+        },
+        {
+          "index": 429,
+          "parent_index": 420,
+          "node_type": 1,
+          "node_name": "P",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 430,
+          "parent_index": 429,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 27,
+          "attribute_names": []
+        },
+        {
+          "index": 431,
+          "parent_index": 420,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 5,
+          "attribute_names": []
+        },
+        {
+          "index": 432,
+          "parent_index": 358,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 5,
+          "attribute_names": []
+        },
+        {
+          "index": 433,
+          "parent_index": 358,
+          "node_type": 1,
+          "node_name": "BUTTON",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class",
+            "id",
+            "type"
+          ]
+        },
+        {
+          "index": 434,
+          "parent_index": 433,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 7,
+          "attribute_names": []
+        },
+        {
+          "index": 435,
+          "parent_index": 433,
+          "node_type": 1,
+          "node_name": "svg",
+          "node_value_length": 0,
+          "attribute_names": [
+            "viewBox",
+            "fill",
+            "stroke",
+            "stroke-width",
+            "stroke-linecap",
+            "stroke-linejoin"
+          ]
+        },
+        {
+          "index": 436,
+          "parent_index": 435,
+          "node_type": 1,
+          "node_name": "path",
+          "node_value_length": 0,
+          "attribute_names": [
+            "d"
+          ]
+        },
+        {
+          "index": 437,
+          "parent_index": 433,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 16,
+          "attribute_names": []
+        },
+        {
+          "index": 438,
+          "parent_index": 358,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 5,
+          "attribute_names": []
+        },
+        {
+          "index": 439,
+          "parent_index": 358,
+          "node_type": 1,
+          "node_name": "P",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class"
+          ]
+        },
+        {
+          "index": 440,
+          "parent_index": 439,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 22,
+          "attribute_names": []
+        },
+        {
+          "index": 441,
+          "parent_index": 358,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 3,
+          "attribute_names": []
+        },
+        {
+          "index": 442,
+          "parent_index": 67,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 1,
+          "attribute_names": []
+        },
+        {
+          "index": 443,
+          "parent_index": 29,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 2,
+          "attribute_names": []
+        },
+        {
+          "index": 444,
+          "parent_index": 29,
+          "node_type": 1,
+          "node_name": "DIV",
+          "node_value_length": 0,
+          "attribute_names": [
+            "class",
+            "id"
+          ]
+        },
+        {
+          "index": 445,
+          "parent_index": 29,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 2,
+          "attribute_names": []
+        },
+        {
+          "index": 446,
+          "parent_index": 29,
+          "node_type": 1,
+          "node_name": "SCRIPT",
+          "node_value_length": 0,
+          "attribute_names": []
+        },
+        {
+          "index": 447,
+          "parent_index": 446,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 29287,
+          "attribute_names": []
+        },
+        {
+          "index": 448,
+          "parent_index": 29,
+          "node_type": 3,
+          "node_name": "#text",
+          "node_value_length": 2,
+          "attribute_names": []
+        }
+      ]
+    },
+    "accessibility": {
+      "total_nodes": 143,
+      "text_capture": {
+        "status": "included",
+        "retained_bytes": 3383,
+        "excluded_fields": 0
+      },
+      "nodes": [
+        {
+          "node_id": "4",
+          "parent_id": null,
+          "role": "RootWebArea",
+          "name": "成长健研社 · 青少年近期压力与韧性观察分析",
+          "description": null,
+          "ignored": false,
+          "states": [
+            {
+              "name": "focusable",
+              "value": true
+            },
+            {
+              "name": "focused",
+              "value": true
+            }
+          ]
+        },
+        {
+          "node_id": "55",
+          "parent_id": "4",
+          "role": "none",
+          "name": null,
+          "description": null,
+          "ignored": true,
+          "states": []
+        },
+        {
+          "node_id": "82",
+          "parent_id": "55",
+          "role": "none",
+          "name": null,
+          "description": null,
+          "ignored": true,
+          "states": []
+        },
+        {
+          "node_id": "7",
+          "parent_id": "82",
+          "role": "banner",
+          "name": "",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "12",
+          "parent_id": "82",
+          "role": "main",
+          "name": "",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "445",
+          "parent_id": "82",
+          "role": "generic",
+          "name": "",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "85",
+          "parent_id": "7",
+          "role": "none",
+          "name": null,
+          "description": null,
+          "ignored": true,
+          "states": []
+        },
+        {
+          "node_id": "8",
+          "parent_id": "85",
+          "role": "button",
+          "name": "返回",
+          "description": null,
+          "ignored": false,
+          "states": [
+            {
+              "name": "focusable",
+              "value": true
+            },
+            {
+              "name": "invalid",
+              "value": "false"
+            }
+          ]
+        },
+        {
+          "node_id": "108",
+          "parent_id": "85",
+          "role": "generic",
+          "name": "",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "13",
+          "parent_id": "12",
+          "role": "generic",
+          "name": "",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "318",
+          "parent_id": "12",
+          "role": "none",
+          "name": null,
+          "description": null,
+          "ignored": true,
+          "states": []
+        },
+        {
+          "node_id": "319",
+          "parent_id": "318",
+          "role": "none",
+          "name": null,
+          "description": null,
+          "ignored": true,
+          "states": []
+        },
+        {
+          "node_id": "450",
+          "parent_id": "12",
+          "role": "none",
+          "name": null,
+          "description": null,
+          "ignored": true,
+          "states": []
+        },
+        {
+          "node_id": "451",
+          "parent_id": "12",
+          "role": "none",
+          "name": null,
+          "description": null,
+          "ignored": true,
+          "states": []
+        },
+        {
+          "node_id": "328",
+          "parent_id": "12",
+          "role": "none",
+          "name": null,
+          "description": null,
+          "ignored": true,
+          "states": []
+        },
+        {
+          "node_id": "329",
+          "parent_id": "328",
+          "role": "none",
+          "name": null,
+          "description": null,
+          "ignored": true,
+          "states": []
+        },
+        {
+          "node_id": "453",
+          "parent_id": "12",
+          "role": "none",
+          "name": null,
+          "description": null,
+          "ignored": true,
+          "states": []
+        },
+        {
+          "node_id": "454",
+          "parent_id": "12",
+          "role": "none",
+          "name": null,
+          "description": null,
+          "ignored": true,
+          "states": []
+        },
+        {
+          "node_id": "338",
+          "parent_id": "12",
+          "role": "none",
+          "name": null,
+          "description": null,
+          "ignored": true,
+          "states": []
+        },
+        {
+          "node_id": "339",
+          "parent_id": "338",
+          "role": "none",
+          "name": null,
+          "description": null,
+          "ignored": true,
+          "states": []
+        },
+        {
+          "node_id": "456",
+          "parent_id": "12",
+          "role": "none",
+          "name": null,
+          "description": null,
+          "ignored": true,
+          "states": []
+        },
+        {
+          "node_id": "457",
+          "parent_id": "12",
+          "role": "none",
+          "name": null,
+          "description": null,
+          "ignored": true,
+          "states": []
+        },
+        {
+          "node_id": "9",
+          "parent_id": "8",
+          "role": "image",
+          "name": "",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "90",
+          "parent_id": "8",
+          "role": "none",
+          "name": null,
+          "description": null,
+          "ignored": true,
+          "states": []
+        },
+        {
+          "node_id": "10",
+          "parent_id": "90",
+          "role": "StaticText",
+          "name": "返回",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "11",
+          "parent_id": "108",
+          "role": "StaticText",
+          "name": "Star-Track · 系列分析手册",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "5",
+          "parent_id": "13",
+          "role": "generic",
+          "name": "",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "140",
+          "parent_id": "13",
+          "role": "none",
+          "name": null,
+          "description": null,
+          "ignored": true,
+          "states": []
+        },
+        {
+          "node_id": "141",
+          "parent_id": "140",
+          "role": "none",
+          "name": null,
+          "description": null,
+          "ignored": true,
+          "states": []
+        },
+        {
+          "node_id": "142",
+          "parent_id": "140",
+          "role": "none",
+          "name": null,
+          "description": null,
+          "ignored": true,
+          "states": []
+        },
+        {
+          "node_id": "22",
+          "parent_id": "142",
+          "role": "StaticText",
+          "name": "请选择孩子的年龄段",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "143",
+          "parent_id": "140",
+          "role": "none",
+          "name": null,
+          "description": null,
+          "ignored": true,
+          "states": []
+        },
+        {
+          "node_id": "145",
+          "parent_id": "13",
+          "role": "generic",
+          "name": "",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "196",
+          "parent_id": "13",
+          "role": "generic",
+          "name": "",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "199",
+          "parent_id": "13",
+          "role": "generic",
+          "name": "",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "209",
+          "parent_id": "13",
+          "role": "generic",
+          "name": "",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "51",
+          "parent_id": "13",
+          "role": "paragraph",
+          "name": "",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "-1000000002",
+          "parent_id": "10",
+          "role": "InlineTextBox",
+          "name": "返回",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "-1000000003",
+          "parent_id": "11",
+          "role": "InlineTextBox",
+          "name": "Star-Track · 系列分析手册",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "120",
+          "parent_id": "5",
+          "role": "generic",
+          "name": "",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "15",
+          "parent_id": "5",
+          "role": "heading",
+          "name": "情绪小树苗 在爱与陪伴中 慢慢长大",
+          "description": null,
+          "ignored": false,
+          "states": [
+            {
+              "name": "level",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "node_id": "19",
+          "parent_id": "5",
+          "role": "paragraph",
+          "name": "",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "-1000000011",
+          "parent_id": "22",
+          "role": "InlineTextBox",
+          "name": "请选择孩子的年龄段",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "147",
+          "parent_id": "145",
+          "role": "button",
+          "name": "小学阶段 6 — 12 岁",
+          "description": null,
+          "ignored": false,
+          "states": [
+            {
+              "name": "focusable",
+              "value": true
+            }
+          ]
+        },
+        {
+          "node_id": "163",
+          "parent_id": "145",
+          "role": "button",
+          "name": "初中阶段 12 — 15 岁",
+          "description": null,
+          "ignored": false,
+          "states": [
+            {
+              "name": "focusable",
+              "value": true
+            }
+          ]
+        },
+        {
+          "node_id": "179",
+          "parent_id": "145",
+          "role": "button",
+          "name": "高中阶段 15 — 18 岁",
+          "description": null,
+          "ignored": false,
+          "states": [
+            {
+              "name": "focusable",
+              "value": true
+            }
+          ]
+        },
+        {
+          "node_id": "197",
+          "parent_id": "196",
+          "role": "strong",
+          "name": "",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "32",
+          "parent_id": "196",
+          "role": "StaticText",
+          "name": "请根据最近一个月的真实表现作答。如果是家长填写，请与孩子充分沟通并尊重孩子的真实感受，不评判对错；如果是青少年自评，请选择最符合自己真实反应的选项。",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "33",
+          "parent_id": "199",
+          "role": "heading",
+          "name": "设计理念",
+          "description": null,
+          "ignored": false,
+          "states": [
+            {
+              "name": "level",
+              "value": 3
+            }
+          ]
+        },
+        {
+          "node_id": "35",
+          "parent_id": "199",
+          "role": "paragraph",
+          "name": "",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "43",
+          "parent_id": "199",
+          "role": "paragraph",
+          "name": "",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "45",
+          "parent_id": "209",
+          "role": "heading",
+          "name": "观察维度",
+          "description": null,
+          "ignored": false,
+          "states": [
+            {
+              "name": "level",
+              "value": 3
+            }
+          ]
+        },
+        {
+          "node_id": "213",
+          "parent_id": "209",
+          "role": "none",
+          "name": null,
+          "description": null,
+          "ignored": true,
+          "states": []
+        },
+        {
+          "node_id": "214",
+          "parent_id": "213",
+          "role": "none",
+          "name": null,
+          "description": null,
+          "ignored": true,
+          "states": []
+        },
+        {
+          "node_id": "47",
+          "parent_id": "214",
+          "role": "StaticText",
+          "name": "中学版",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "215",
+          "parent_id": "213",
+          "role": "none",
+          "name": null,
+          "description": null,
+          "ignored": true,
+          "states": []
+        },
+        {
+          "node_id": "48",
+          "parent_id": "215",
+          "role": "StaticText",
+          "name": "情绪觉察 · 情绪调节 · 认知弹性 · 压力适应 · 连接求助 · 成长赋能 · 压力感知",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "217",
+          "parent_id": "209",
+          "role": "none",
+          "name": null,
+          "description": null,
+          "ignored": true,
+          "states": []
+        },
+        {
+          "node_id": "218",
+          "parent_id": "217",
+          "role": "none",
+          "name": null,
+          "description": null,
+          "ignored": true,
+          "states": []
+        },
+        {
+          "node_id": "49",
+          "parent_id": "218",
+          "role": "StaticText",
+          "name": "小学版",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "219",
+          "parent_id": "217",
+          "role": "none",
+          "name": null,
+          "description": null,
+          "ignored": true,
+          "states": []
+        },
+        {
+          "node_id": "50",
+          "parent_id": "219",
+          "role": "StaticText",
+          "name": "情绪察觉 · 自我平复 · 变化适应 · 挫折转化 · 主动求助 · 自我鼓励 · 压力感知（由家长陪伴孩子作答）",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "52",
+          "parent_id": "51",
+          "role": "StaticText",
+          "name": "本工具基于发展心理学设计，不构成诊断",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "222",
+          "parent_id": "51",
+          "role": "LineBreak",
+          "name": "\n",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "53",
+          "parent_id": "51",
+          "role": "StaticText",
+          "name": "如孩子或您持续感到困扰，请联系我们获取专业支持",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "121",
+          "parent_id": "120",
+          "role": "none",
+          "name": null,
+          "description": null,
+          "ignored": true,
+          "states": []
+        },
+        {
+          "node_id": "14",
+          "parent_id": "120",
+          "role": "StaticText",
+          "name": "6–18岁 · 压力与韧性观察分析",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "16",
+          "parent_id": "15",
+          "role": "StaticText",
+          "name": "情绪小树苗",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "123",
+          "parent_id": "15",
+          "role": "LineBreak",
+          "name": "\n",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "17",
+          "parent_id": "15",
+          "role": "StaticText",
+          "name": "在爱与陪伴中",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "124",
+          "parent_id": "15",
+          "role": "emphasis",
+          "name": "",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "20",
+          "parent_id": "19",
+          "role": "StaticText",
+          "name": "这不是考试，没有标准答案。通过回顾日常真实的情绪体验，了解孩子面对压力、挫折和情绪波动时的复原力与内在韧性，发现让自己或孩子更快恢复平静的力量。",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "150",
+          "parent_id": "147",
+          "role": "none",
+          "name": null,
+          "description": null,
+          "ignored": true,
+          "states": []
+        },
+        {
+          "node_id": "23",
+          "parent_id": "150",
+          "role": "image",
+          "name": "",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "154",
+          "parent_id": "147",
+          "role": "none",
+          "name": null,
+          "description": null,
+          "ignored": true,
+          "states": []
+        },
+        {
+          "node_id": "155",
+          "parent_id": "154",
+          "role": "none",
+          "name": null,
+          "description": null,
+          "ignored": true,
+          "states": []
+        },
+        {
+          "node_id": "24",
+          "parent_id": "155",
+          "role": "StaticText",
+          "name": "小学阶段",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "156",
+          "parent_id": "154",
+          "role": "none",
+          "name": null,
+          "description": null,
+          "ignored": true,
+          "states": []
+        },
+        {
+          "node_id": "25",
+          "parent_id": "156",
+          "role": "StaticText",
+          "name": "6 — 12 岁",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "166",
+          "parent_id": "163",
+          "role": "none",
+          "name": null,
+          "description": null,
+          "ignored": true,
+          "states": []
+        },
+        {
+          "node_id": "6",
+          "parent_id": "166",
+          "role": "image",
+          "name": "",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "170",
+          "parent_id": "163",
+          "role": "none",
+          "name": null,
+          "description": null,
+          "ignored": true,
+          "states": []
+        },
+        {
+          "node_id": "171",
+          "parent_id": "170",
+          "role": "none",
+          "name": null,
+          "description": null,
+          "ignored": true,
+          "states": []
+        },
+        {
+          "node_id": "26",
+          "parent_id": "171",
+          "role": "StaticText",
+          "name": "初中阶段",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "172",
+          "parent_id": "170",
+          "role": "none",
+          "name": null,
+          "description": null,
+          "ignored": true,
+          "states": []
+        },
+        {
+          "node_id": "27",
+          "parent_id": "172",
+          "role": "StaticText",
+          "name": "12 — 15 岁",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "182",
+          "parent_id": "179",
+          "role": "none",
+          "name": null,
+          "description": null,
+          "ignored": true,
+          "states": []
+        },
+        {
+          "node_id": "28",
+          "parent_id": "182",
+          "role": "image",
+          "name": "",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "186",
+          "parent_id": "179",
+          "role": "none",
+          "name": null,
+          "description": null,
+          "ignored": true,
+          "states": []
+        },
+        {
+          "node_id": "187",
+          "parent_id": "186",
+          "role": "none",
+          "name": null,
+          "description": null,
+          "ignored": true,
+          "states": []
+        },
+        {
+          "node_id": "29",
+          "parent_id": "187",
+          "role": "StaticText",
+          "name": "高中阶段",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "188",
+          "parent_id": "186",
+          "role": "none",
+          "name": null,
+          "description": null,
+          "ignored": true,
+          "states": []
+        },
+        {
+          "node_id": "30",
+          "parent_id": "188",
+          "role": "StaticText",
+          "name": "15 — 18 岁",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "31",
+          "parent_id": "197",
+          "role": "StaticText",
+          "name": "💬 填写建议：",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "-1000000019",
+          "parent_id": "32",
+          "role": "InlineTextBox",
+          "name": "请根据最近一个月的真实表现作答。如果是家长填写，请与孩子充分沟通并尊重孩子",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "-1000000020",
+          "parent_id": "32",
+          "role": "InlineTextBox",
+          "name": "的真实感受，不评判对错；如果是青少年自评，请选择最符合自己真实反应的选项。",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "34",
+          "parent_id": "33",
+          "role": "StaticText",
+          "name": "设计理念",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "36",
+          "parent_id": "35",
+          "role": "StaticText",
+          "name": "我们不主张“一刀切”地评价孩子的情绪表现，而是相信每个年龄段的孩子都有适合其心智发展水平的韧性成长路径。",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "37",
+          "parent_id": "35",
+          "role": "StaticText",
+          "name": "小学阶段",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "38",
+          "parent_id": "35",
+          "role": "StaticText",
+          "name": "重在情绪察觉与表达，",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "39",
+          "parent_id": "35",
+          "role": "StaticText",
+          "name": "初中阶段",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "40",
+          "parent_id": "35",
+          "role": "StaticText",
+          "name": "重在认知弹性与压力适应，",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "41",
+          "parent_id": "35",
+          "role": "StaticText",
+          "name": "高中阶段",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "42",
+          "parent_id": "35",
+          "role": "StaticText",
+          "name": "重在独立调节与综合韧性。",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "44",
+          "parent_id": "43",
+          "role": "StaticText",
+          "name": "本工具基于发展心理学与情绪韧性研究设计，通过观察而非评判的方式，帮助家庭看见真实的情绪应对状态——从“评判者”转变为“支持者”。",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "46",
+          "parent_id": "45",
+          "role": "StaticText",
+          "name": "观察维度",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "-1000000034",
+          "parent_id": "47",
+          "role": "InlineTextBox",
+          "name": "中学版",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "-1000000035",
+          "parent_id": "48",
+          "role": "InlineTextBox",
+          "name": "情绪觉察 · 情绪调节 · 认知弹性 · 压力适应 · 连接求助 · 成长赋能 · 压力感知",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "-1000000036",
+          "parent_id": "49",
+          "role": "InlineTextBox",
+          "name": "小学版",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "-1000000037",
+          "parent_id": "50",
+          "role": "InlineTextBox",
+          "name": "情绪察觉 · 自我平复 · 变化适应 · 挫折转化 · 主动求助 · 自我鼓励 · 压力感知",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "-1000000038",
+          "parent_id": "50",
+          "role": "InlineTextBox",
+          "name": "（由家长陪伴孩子作答）",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "-1000000039",
+          "parent_id": "52",
+          "role": "InlineTextBox",
+          "name": "本工具基于发展心理学设计，不构成诊断",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "-1000000040",
+          "parent_id": "222",
+          "role": "InlineTextBox",
+          "name": "\n",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "-1000000041",
+          "parent_id": "53",
+          "role": "InlineTextBox",
+          "name": "如孩子或您持续感到困扰，请联系我们获取专业支持",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "-1000000004",
+          "parent_id": "14",
+          "role": "InlineTextBox",
+          "name": "6–18岁 · 压力与韧性观察分析",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "-1000000005",
+          "parent_id": "16",
+          "role": "InlineTextBox",
+          "name": "情绪小树苗",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "-1000000006",
+          "parent_id": "123",
+          "role": "InlineTextBox",
+          "name": "\n",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "-1000000007",
+          "parent_id": "17",
+          "role": "InlineTextBox",
+          "name": "在爱与陪伴中",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "18",
+          "parent_id": "124",
+          "role": "StaticText",
+          "name": "慢慢长大",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "125",
+          "parent_id": "124",
+          "role": "generic",
+          "name": "",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "-1000000009",
+          "parent_id": "20",
+          "role": "InlineTextBox",
+          "name": "这不是考试，没有标准答案。通过回顾日常真实的情绪体验，了解孩子面对压力、",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "-1000000010",
+          "parent_id": "20",
+          "role": "InlineTextBox",
+          "name": "挫折和情绪波动时的复原力与内在韧性，发现让自己或孩子更快恢复平静的力量。",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "-1000000012",
+          "parent_id": "24",
+          "role": "InlineTextBox",
+          "name": "小学阶段",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "-1000000013",
+          "parent_id": "25",
+          "role": "InlineTextBox",
+          "name": "6 — 12 岁",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "-1000000014",
+          "parent_id": "26",
+          "role": "InlineTextBox",
+          "name": "初中阶段",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "-1000000015",
+          "parent_id": "27",
+          "role": "InlineTextBox",
+          "name": "12 — 15 岁",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "-1000000016",
+          "parent_id": "29",
+          "role": "InlineTextBox",
+          "name": "高中阶段",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "-1000000017",
+          "parent_id": "30",
+          "role": "InlineTextBox",
+          "name": "15 — 18 岁",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "-1000000018",
+          "parent_id": "31",
+          "role": "InlineTextBox",
+          "name": "💬 填写建议：",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "-1000000021",
+          "parent_id": "34",
+          "role": "InlineTextBox",
+          "name": "设计理念",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "-1000000022",
+          "parent_id": "36",
+          "role": "InlineTextBox",
+          "name": "我们不主张“一刀切”地评价孩子的情绪表现，而是相信每个年龄段的孩子都有适合其心智",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "-1000000023",
+          "parent_id": "36",
+          "role": "InlineTextBox",
+          "name": "发展水平的韧性成长路径。",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "-1000000024",
+          "parent_id": "37",
+          "role": "InlineTextBox",
+          "name": "小学阶段",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "-1000000025",
+          "parent_id": "38",
+          "role": "InlineTextBox",
+          "name": "重在情绪察觉与表达，",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "-1000000026",
+          "parent_id": "39",
+          "role": "InlineTextBox",
+          "name": "初中阶段",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "-1000000027",
+          "parent_id": "40",
+          "role": "InlineTextBox",
+          "name": "重在认知弹性与压力适",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "-1000000028",
+          "parent_id": "40",
+          "role": "InlineTextBox",
+          "name": "应，",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "-1000000029",
+          "parent_id": "41",
+          "role": "InlineTextBox",
+          "name": "高中阶段",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "-1000000030",
+          "parent_id": "42",
+          "role": "InlineTextBox",
+          "name": "重在独立调节与综合韧性。",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "-1000000031",
+          "parent_id": "44",
+          "role": "InlineTextBox",
+          "name": "本工具基于发展心理学与情绪韧性研究设计，通过观察而非评判的方式，帮助家庭看见真实",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "-1000000032",
+          "parent_id": "44",
+          "role": "InlineTextBox",
+          "name": "的情绪应对状态——从“评判者”转变为“支持者”。",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "-1000000033",
+          "parent_id": "46",
+          "role": "InlineTextBox",
+          "name": "观察维度",
+          "description": null,
+          "ignored": false,
+          "states": []
+        },
+        {
+          "node_id": "-1000000008",
+          "parent_id": "18",
+          "role": "InlineTextBox",
+          "name": "慢慢长大",
+          "description": null,
+          "ignored": false,
+          "states": []
+        }
+      ]
+    },
+    "scripts": {
+      "total": 2,
+      "items": [
+        {
+          "script_key": "scr_34ae49c5dc40eb00dc6ae56b89e6d19ccb8c7ae7f31b739849e5d98b1efb2de3",
+          "frame_id": "26C8FBB4E297649B57B14E9F88FB9F66",
+          "url": "https://sdsqsnwh.cn/cz/ya",
+          "origin": "https://sdsqsnwh.cn",
+          "cdp_hash": "321b4f657afbf8ba49518e6ab4cbad07ea967d0b4c68f71c7deed05ed09c1187",
+          "length": 16,
+          "is_module": false,
+          "language": "JavaScript",
+          "source_map_url": null,
+          "resource_reconciliation": {
+            "status": "unmatched",
+            "reason": "no_exact_sanitized_url"
+          },
+          "source": {
+            "included": false,
+            "reason": "source capture was not selected"
+          }
+        },
+        {
+          "script_key": "scr_ba2836c9a06fb5c7a432ea9e7171b1ae63d80356222b72de00ca9e042d13c4e6",
+          "frame_id": "26C8FBB4E297649B57B14E9F88FB9F66",
+          "url": "https://sdsqsnwh.cn/cz/ya",
+          "origin": "https://sdsqsnwh.cn",
+          "cdp_hash": "5b27de96c65c118b41876babbd1fe7a74ada9c120fdbdff50026b6a1b8a6645e",
+          "length": 29287,
+          "is_module": false,
+          "language": "JavaScript",
+          "source_map_url": null,
+          "resource_reconciliation": {
+            "status": "unmatched",
+            "reason": "no_exact_sanitized_url"
+          },
+          "source": {
+            "included": false,
+            "reason": "source capture was not selected"
+          }
+        }
+      ]
+    },
+    "resources": [],
+    "network": {
+      "requests": [],
+      "websocket_connections": [],
+      "coverage_started_at": "2026-10-14T07:34:46.890Z",
+      "prior_activity_available": false
+    },
+    "console": {
+      "events": [],
+      "coverage_started_at": "2026-10-14T07:34:46.890Z",
+      "prior_activity_available": false
+    },
+    "workers": [],
+    "metadata": {
+      "responses": [],
+      "dom_urls": [
+        {
+          "node_index": 16,
+          "attribute": "href",
+          "url": null,
+          "destination_scope": "outside_policy"
+        },
+        {
+          "node_index": 18,
+          "attribute": "href",
+          "url": null,
+          "destination_scope": "outside_policy"
+        },
+        {
+          "node_index": 20,
+          "attribute": "href",
+          "url": null,
+          "destination_scope": "outside_policy"
+        }
+      ],
+      "agent_hints": [],
+      "excluded_dom_urls": 3,
+      "headers_allowlisted": true
+    },
+    "storage": {
+      "origin": "https://sdsqsnwh.cn",
+      "usage_bytes": 0,
+      "quota_bytes": 296630877388,
+      "local_storage_keys": [],
+      "session_storage_keys": [],
+      "indexed_db_names": [],
+      "cache_names": [],
+      "content_fingerprints": [],
+      "fingerprint_algorithm": "sha256",
+      "fingerprints_complete": false,
+      "values_redacted": true
+    },
+    "limitations": [
+      "Observation starts when REA attaches; prior network and console activity is unavailable.",
+      "Raw network headers, bodies, cookies, storage values, console objects, and WebSocket payloads are never retained; explicitly requested primitive console text is retained verbatim, while payload captures retain value-free shapes.",
+      "Source maps are reported only as declarative URLs and are not fetched.",
+      "URL-less scripts and console events without an allowed source URL are excluded because their origin cannot be proven."
+    ]
+  },
+  "confidence": "observed",
+  "authority": "external-service",
+  "environment": {
+    "id": "Chrome/155.0.8059.79@537.36 (@a49e2e3d4addfd84e765b52afe230bedb81096db)",
+    "platform": "unknown",
+    "architecture": "unknown",
+    "isolation": "none"
+  },
+  "limitations": [
+    "Artifact identity is unavailable for this observation.",
+    "Observation starts when REA attaches; prior network and console activity is unavailable.",
+    "Raw network headers, bodies, cookies, storage values, console objects, and WebSocket payloads are never retained; explicitly requested primitive console text is retained verbatim, while payload captures retain value-free shapes.",
+    "Source maps are reported only as declarative URLs and are not fetched.",
+    "URL-less scripts and console events without an allowed source URL are excluded because their origin cannot be proven.",
+    "Browser host platform and architecture were not observed."
+  ],
+  "locations": [],
+  "evidence_links": []
+}

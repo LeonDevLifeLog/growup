@@ -1,0 +1,44 @@
+.article-symbol {
+  font-size:76rpx;
+  color:#6e8a54;
+  line-height:1.4;
+  margin-bottom:28rpx;
+}
+
+.paragraph {
+  font-size:29rpx;
+  line-height:1.95;
+  color:#55664f;
+  margin:26rpx 0;
+}
+
+.tools {
+  display:flex;
+  flex-wrap:wrap;
+  gap:16rpx;
+}
+
+.tool {
+  width:calc(50% - 8rpx);
+  background:#fff;
+  border:1rpx solid #e1e7da;
+  border-radius:20rpx;
+  padding:24rpx;
+  font-size:25rpx;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  min-height:145rpx;
+  gap:18rpx;
+}
+
+.source {
+  background:#f0f2e9;
+}
+
+.source-url {
+  font-size:22rpx;
+  word-break:break-all;
+  margin-top:10rpx;
+  color:#7a857e;
+}

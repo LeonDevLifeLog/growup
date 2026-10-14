@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#FAF6F0">
+<title>成长健研社 · 我的沟通手帐</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+:root{
+  --bg-primary:#FAF6F0; --bg-secondary:#F2EBE0; --bg-card:#FFFFFF;
+  --color-primary:#B85C38; --color-primary-dark:#8B3D1F;
+  --color-accent:#2C5F4F; --color-accent-dark:#1d4136;
+  --color-text:#2A1F18; --color-text-secondary:#6B5A4D;
+  --color-border:#E5D9C7; --color-danger:#B8423C;
+  --safe-bottom:env(safe-area-inset-bottom,0px);
+}
+*{-webkit-tap-highlight-color:transparent;box-sizing:border-box}
+body{
+  font-family:'Noto Sans SC',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  background:var(--bg-primary);color:var(--color-text);
+  padding-bottom:calc(50px + var(--safe-bottom));
+  background-image:radial-gradient(circle at 20% 0%,rgba(184,92,56,0.08) 0%,transparent 40%),
+                   radial-gradient(circle at 80% 100%,rgba(44,95,79,0.06) 0%,transparent 40%);
+  min-height:100vh;-webkit-font-smoothing:antialiased;
+  padding-left:env(safe-area-inset-left,0px);
+  padding-right:env(safe-area-inset-right,0px);
+  font-size:15px;line-height:1.5
+}
+input,textarea,select{font-size:16px}
+.font-serif{font-family:'Noto Serif SC',"Times New Roman",serif}
+
+.card{
+  background:var(--bg-card);border-radius:20px;
+  box-shadow:0 2px 12px rgba(120,80,50,0.06);
+  border:1px solid var(--color-border);padding:18px 16px
+}
+.section-title{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.section-title .icon{
+  width:32px;height:32px;
+  background:linear-gradient(135deg,var(--color-primary),var(--color-primary-dark));
+  color:white;display:flex;align-items:center;justify-content:center;
+  border-radius:10px;font-size:13px;flex-shrink:0;
+  box-shadow:0 4px 10px rgba(184,92,56,0.2)
+}
+.section-title .icon.green{
+  background:linear-gradient(135deg,var(--color-accent),var(--color-accent-dark));
+  box-shadow:0 4px 10px rgba(44,95,79,0.2)
+}
+
+.input-field{
+  width:100%;background:var(--bg-secondary);
+  border:1.5px solid transparent;border-radius:14px;
+  padding:12px 14px;font-size:14px;color:var(--color-text);
+  transition:all 0.25s ease;font-family:inherit;
+  resize:vertical;line-height:1.6;-webkit-appearance:none;appearance:none
+}
+.input-field:focus{outline:none;border-color:var(--color-primary);background:white;box-shadow:0 0 0 4px rgba(184,92,56,0.08)}
+.input-field.green-focus:focus{border-color:var(--color-accent);box-shadow:0 0 0 4px rgba(44,95,79,0.08)}
+.input-field::placeholder{color:#B5A99A;font-size:13px}
+
+.chip{
+  padding:6px 12px;border-radius:999px;
+  border:1.5px solid var(--color-border);background:white;
+  font-size:12px;font-weight:500;color:var(--color-text-secondary);
+  cursor:pointer;transition:all 0.2s ease;
+  display:inline-flex;align-items:center;gap:4px;
+  user-select:none;touch-action:manipulation;
+  min-height:32px;letter-spacing:0.02em
+}
+.chip:active{transform:scale(0.94)}
+.chip.active{background:var(--color-primary);border-color:var(--color-primary);color:white;box-shadow:0 3px 10px rgba(184,92,56,0.25)}
+.chip.active.green{background:var(--color-accent);border-color:var(--color-accent);box-shadow:0 3px 10px rgba(44,95,79,0.25)}
+
+.btn-primary{
+  background:linear-gradient(135deg,var(--color-primary),var(--color-primary-dark));
+  color:white;padding:14px 20px;border-radius:16px;
+  font-weight:600;font-size:15px;width:100%;border:none;
+  box-shadow:0 4px 14px rgba(184,92,56,0.3);
+  transition:all 0.2s ease;display:flex;align-items:center;justify-content:center;
+  gap:8px;cursor:pointer;touch-action:manipulation;letter-spacing:0.3px
+}
+.btn-primary:active{transform:translateY(1px);box-shadow:0 2px 8px rgba(184,92,56,0.25)}
+.btn-primary.green{
+  background:linear-gradient(135deg,var(--color-accent),var(--color-accent-dark));
+  box-shadow:0 4px 14px rgba(44,95,79,0.3)
+}
+.btn-primary.green:active{box-shadow:0 2px 8px rgba(44,95,79,0.25)}
+
+.btn-secondary{
+  background:white;color:var(--color-primary);
+  padding:12px 16px;border-radius:16px;font-weight:600;font-size:13px;
+  width:100%;border:1.5px solid var(--color-primary);
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  cursor:pointer;touch-action:manipulation
+}
+
+.emotion-slider{
+  -webkit-appearance:none;appearance:none;width:100%;height:5px;
+  background:linear-gradient(to right,#5C8A3A,#C97B2A,#B8423C);
+  border-radius:4px;outline:none;touch-action:none
+}
+.emotion-slider::-webkit-slider-thumb{
+  -webkit-appearance:none;appearance:none;width:22px;height:22px;
+  background:white;border:3px solid var(--color-primary);border-radius:50%;
+  cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.12);transition:box-shadow 0.2s
+}
+.emotion-slider::-webkit-slider-thumb:active{box-shadow:0 2px 12px rgba(0,0,0,0.2)}
+.emotion-slider::-moz-range-thumb{width:20px;height:20px;background:white;border:3px solid var(--color-primary);border-radius:50%;cursor:pointer}
+
+.hint-text{font-size:11.5px;color:var(--color-text-secondary);margin-top:4px;line-height:1.5;padding-left:6px;border-left:2px solid var(--color-border)}
+.label{font-size:13px;font-weight:600;color:var(--color-text);margin-bottom:4px;display:block}
+
+@keyframes fadeInUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.fade-in{animation:fadeInUp 0.35s ease-out backwards}
+
+.hero-bg{background:linear-gradient(135deg,#B85C38 0%,#8B3D1F 100%);position:relative;overflow:hidden}
+.hero-bg::before{
+  content:'';position:absolute;top:-50%;right:-20%;width:80%;height:200%;
+  background:radial-gradient(circle,rgba(255,255,255,0.10) 0%,transparent 70%);
+  pointer-events:none;animation:float 14s ease-in-out infinite;will-change:transform
+}
+@keyframes float{0%,100%{transform:translate(0,0)}50%{transform:translate(18px,-18px)}}
+
+.tab-bar{
+  position:sticky;top:0;z-index:40;
+  background:rgba(250,246,240,0.92);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  display:flex;padding:6px 12px 0;gap:4px;
+  border-bottom:1px solid var(--color-border);margin-bottom:12px
+}
+.tab-item{
+  flex:1;padding:10px 6px 11px;text-align:center;font-size:13px;
+  font-weight:600;color:var(--color-text-secondary);cursor:pointer;
+  position:relative;transition:all 0.2s ease;border-radius:12px 12px 0 0;
+  display:flex;align-items:center;justify-content:center;gap:4px;touch-action:manipulation
+}
+.tab-item.active{color:var(--color-primary);background:white;box-shadow:0 -2px 8px rgba(184,92,56,0.06)}
+.tab-item.active.green{color:var(--color-accent);box-shadow:0 -2px 8px rgba(44,95,79,0.06)}
+.tab-item::after{content:'';position:absolute;bottom:-1px;left:50%;transform:translateX(-50%);width:0;height:3px;background:var(--color-primary);border-radius:3px 3px 0 0;transition:width 0.25s ease}
+.tab-item.active::after{width:50%}
+.tab-item.active.green::after{background:var(--color-accent)}
+.tab-panel{display:none}
+.tab-panel.active{display:block;animation:fadeInUp 0.3s ease-out}
+
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(184,92,56,0.25);border-radius:4px}
+
+.toast{
+  position:fixed;bottom:calc(70px + var(--safe-bottom));left:50%;transform:translateX(-50%);
+  background:rgba(42,31,24,0.94);color:white;padding:10px 20px;border-radius:999px;
+  font-size:13px;z-index:200;display:flex;align-items:center;gap:6px;
+  animation:toastIn 0.3s ease-out;max-width:85%;text-align:center;
+  backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);box-shadow:0 6px 20px rgba(0,0,0,0.2);
+  opacity:0;pointer-events:none;transition:opacity 0.3s
+}
+.toast.show{opacity:1}
+@keyframes toastIn{from{transform:translate(-50%,20px);opacity:0}to{transform:translate(-50%,0);opacity:1}}
+
+.record-card{background:white;border-radius:14px;padding:12px;border-left:4px solid var(--color-primary);margin-bottom:8px;transition:all 0.15s ease;box-shadow:0 1px 4px rgba(0,0,0,0.02)}
+.record-card:active{transform:scale(0.98);background:#fcf9f5}
+.record-card.confusion{background:linear-gradient(135deg,rgba(44,95,79,0.04),white);border-left-color:var(--color-accent)}
+
+#historyContainer{transition:max-height 0.3s ease}
+#historyContainer.scrollable{max-height:252px;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-right:4px}
+#historyContainer.scrollable::-webkit-scrollbar{width:5px}
+#historyContainer.scrollable::-webkit-scrollbar-track{background:rgba(229,217,199,0.3);border-radius:4px}
+#historyContainer.scrollable::-webkit-scrollbar-thumb{background:rgba(184,92,56,0.3);border-radius:4px}
+
+.footer-bar{position:fixed;bottom:0;left:0;right:0;background:rgba(42,31,24,0.96);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);color:#E5D9C7;padding:8px 16px calc(8px + var(--safe-bottom));text-align:center;font-size:10px;z-index:50;border-top:1px solid rgba(184,92,56,0.2);letter-spacing:0.2px}
+
+.field-group{margin-bottom:16px}
+.field-group:last-child{margin-bottom:0}
+textarea.input-field{min-height:75px}
+
+.section-num{font-family:'Noto Serif SC',serif;font-size:10px;color:var(--color-primary);letter-spacing:1.5px;text-transform:uppercase;font-weight:600}
+.section-num.green{color:var(--color-accent)}
+
+.stat-pill{background:rgba(255,255,255,0.12);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-radius:12px;padding:6px 10px;flex:1;border:1px solid rgba(255,255,255,0.08)}
+.stat-pills{display:flex;gap:8px;margin-top:14px}
+
+*{-webkit-touch-callout:none}
+.chip,.btn-primary,.btn-secondary,.tab-item{-webkit-touch-callout:none}
+
+.hero-header{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.hero-header .brand{flex:1}
+.hero-header .help-btn-top{background:rgba(255,255,255,0.15);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);border:1px solid rgba(255,255,255,0.25);color:white;padding:6px 14px;border-radius:40px;font-size:11px;font-weight:500;display:flex;align-items:center;gap:4px;cursor:pointer;transition:all 0.2s;white-space:nowrap;touch-action:manipulation;box-shadow:0 2px 8px rgba(0,0,0,0.08);text-decoration:none}
+.hero-header .help-btn-top:active{transform:scale(0.95);background:rgba(255,255,255,0.25)}
+
+main{padding-left:12px;padding-right:12px}
+@media (max-width:380px){
+  .stat-pill{padding:4px 8px}
+  .stat-pill .font-serif{font-size:1rem}
+  .chip{font-size:11px;padding:4px 10px;min-height:28px}
+  .input-field{font-size:13px;padding:10px 12px}
+  .card{padding:14px 12px}
+}
+
+/* 弹窗 */
+.modal-mask{display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.5);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);padding:16px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.modal-mask.open{display:flex;align-items:flex-end;justify-content:center}
+@media(min-width:600px){.modal-mask.open{align-items:center}}
+.modal-sheet{background:var(--bg-primary);border:1px solid var(--color-border);border-radius:22px 22px 0 0;padding:22px 20px calc(22px + var(--safe-bottom));max-width:520px;width:100%;max-height:88vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.22);position:relative;animation:slideUp 0.3s cubic-bezier(.16,1,.3,1)}
+@media(min-width:600px){.modal-sheet{border-radius:22px}}
+@keyframes slideUp{from{transform:translateY(60px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-title{font-family:'Noto Serif SC',serif;font-size:17px;font-weight:700;margin:0 0 14px;color:var(--color-text);display:flex;align-items:center;gap:8px}
+.modal-close{position:absolute;top:14px;right:14px;width:34px;height:34px;border-radius:50%;background:rgba(184,92,56,0.1);border:none;color:var(--color-text-secondary);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
+
+/* 数据管理内联卡片 */
+.data-card{
+  background:var(--bg-card);border-radius:20px;
+  box-shadow:0 2px 12px rgba(120,80,50,0.06);
+  border:1px solid var(--color-border);border-top:4px solid var(--color-accent);
+  padding:18px 16px
+}
+.data-card .data-ttl{font-family:'Noto Serif SC',serif;font-size:15px;font-weight:700;color:var(--color-accent-dark);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.bak-info{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12.5px;color:var(--color-text-secondary);margin:10px 0 12px}
+.bak-tag{padding:3px 10px;border-radius:10px;font-size:11.5px;font-weight:700;background:rgba(44,95,79,0.12);color:var(--color-accent);border:1px dashed rgba(44,95,79,0.4)}
+.bak-tag.warn{background:#fdf2e9;color:#c2410c;border-color:#fdba74}
+.data-acts{display:flex;gap:8px}
+.data-btn{
+  flex:1;padding:12px 8px;border-radius:12px;font-size:12px;cursor:pointer;
+  border:none;font-family:inherit;font-weight:600;transition:all 0.15s;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  background:var(--bg-secondary);color:var(--color-accent-dark);
+  border:1px dashed rgba(44,95,79,0.4);text-align:center
+}
+.data-btn:active{transform:scale(0.96);background:rgba(44,95,79,0.08)}
+.data-btn .ico{font-size:18px;line-height:1}
+.data-btn .lbl{font-size:11px;font-weight:700}
+.data-btn.danger{background:#fef2f2;color:var(--color-danger);border-color:rgba(184,66,60,0.4)}
+.data-btn.danger:active{background:rgba(184,66,60,0.08)}
+.warn-box{background:#fdf2e9;border:1px solid #fdba74;border-left:4px solid #ea580c;border-radius:10px;padding:10px 12px;font-size:12px;color:#7c2d12;line-height:1.65;margin-bottom:10px}
+.warn-box b{color:#c2410c}
+
+/* 导入方式 */
+.imp-opt{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.imp-opt button{padding:14px 16px;border-radius:14px;border:1.5px dashed var(--color-border);background:white;text-align:left;cursor:pointer;font-family:inherit}
+.imp-opt button:active{background:var(--bg-secondary)}
+.imp-opt .t{font-weight:700;font-size:14px;color:var(--color-text);margin-bottom:2px}
+.imp-opt .d{font-size:12px;color:var(--color-text-secondary);line-height:1.5}
+.imp-opt .go .t{color:var(--color-accent)}
+.imp-opt .replace .t{color:var(--color-danger)}
+
+/* 帮助弹窗 */
+.help-mask{display:none;position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,0.45);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:16px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.help-mask.open{display:flex;align-items:flex-start;justify-content:center;padding-top:32px}
+.help-box{background:var(--bg-primary);border:1px solid var(--color-border);border-radius:22px;max-width:480px;width:100%;margin:auto;box-shadow:0 24px 64px rgba(0,0,0,0.22);overflow:hidden}
+.help-head{background:linear-gradient(135deg,var(--color-primary),var(--color-primary-dark));color:white;padding:22px 20px 18px;position:relative}
+.help-head::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:18px;background:var(--bg-primary);border-radius:18px 18px 0 0}
+.help-head h3{font-family:'Noto Serif SC',serif;font-size:17px;margin:0 0 3px;letter-spacing:0.5px}
+.help-head .sub{font-size:11.5px;opacity:0.82;line-height:1.5}
+.help-body{padding:12px 20px 20px}
+.help-section{margin-bottom:18px}
+.help-section:last-child{margin-bottom:0}
+.help-section-title{display:flex;align-items:center;gap:8px;font-family:'Noto Serif SC',serif;font-weight:700;font-size:14px;color:var(--color-primary);margin-bottom:8px}
+.help-section-title .hsi{width:24px;height:24px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;color:white;flex-shrink:0}
+.help-section-title .hsi.orange{background:linear-gradient(135deg,var(--color-primary),var(--color-primary-dark))}
+.help-section-title .hsi.teal{background:linear-gradient(135deg,var(--color-accent),var(--color-accent-dark))}
+.help-section-title .hsi.red{background:linear-gradient(135deg,#B8423C,#8B2F2A)}
+.help-p{font-size:12.5px;color:var(--color-text-secondary);line-height:1.7;margin-bottom:6px}
+.help-p strong{color:var(--color-text);font-weight:600}
+.help-tip-card{background:white;border:1px solid var(--color-border);border-radius:12px;padding:10px 12px;margin-bottom:6px;display:flex;align-items:flex-start;gap:8px}
+.help-tip-card:last-child{margin-bottom:0}
+.help-tip-num{width:20px;height:20px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:white;margin-top:1px}
+.help-tip-num.orange{background:var(--color-primary)}
+.help-tip-num.teal{background:var(--color-accent)}
+.help-tip-text{font-size:12px;line-height:1.6;color:var(--color-text-secondary)}
+.help-tip-text strong{color:var(--color-text);font-weight:600}
+.help-divider{height:1px;background:var(--color-border);margin:14px 0}
+.help-warn-card{background:#fdf2e9;border:1px solid #fdba74;border-radius:12px;padding:10px 12px;font-size:12px;line-height:1.65;color:#7c2d12;margin-bottom:6px}
+.help-warn-card strong{color:#c2410c}
+.help-close-btn{width:100%;padding:12px;border-radius:14px;border:1.5px solid var(--color-border);background:transparent;color:var(--color-text-secondary);font-weight:600;font-size:13px;cursor:pointer;margin-top:14px}
+.help-close-btn:active{background:var(--bg-secondary)}
+.help-flow{display:flex;align-items:center;gap:4px;margin:8px 0;flex-wrap:wrap;justify-content:center}
+.help-flow-step{display:inline-flex;align-items:center;gap:4px;background:white;border:1px solid var(--color-border);border-radius:999px;padding:4px 10px;font-size:11px;color:var(--color-text-secondary);font-weight:500}
+.help-flow-arrow{color:var(--color-border);font-size:10px}
+
+/* 微信导出弹窗 */
+.wc-modal-box{background:var(--bg-primary);border:1px solid var(--color-border);border-radius:20px;padding:24px 20px;max-width:520px;width:100%;position:relative;box-shadow:0 20px 60px rgba(0,0,0,0.2);margin:auto}
+.wc-modal-box h3{font-family:'Noto Serif SC',serif;font-size:17px;margin:0 0 8px;color:var(--color-text)}
+.wc-modal-box .sub{font-size:12px;color:var(--color-text-secondary);margin-bottom:14px;line-height:1.5}
+.wc-textarea-wrap textarea{width:100%;height:180px;background:white;border:1.5px solid var(--color-border);border-radius:14px;padding:12px;font-size:12px;font-family:monospace;color:var(--color-text);resize:none;line-height:1.5;-webkit-user-select:text;user-select:text}
+.wc-btn-row{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.wc-btn-copy{flex:1;padding:12px;border-radius:14px;border:none;cursor:pointer;font-weight:600;background:var(--color-primary);color:white;box-shadow:0 4px 14px rgba(184,92,56,0.3);min-width:120px}
+.wc-btn-copy.green{background:var(--color-accent);box-shadow:0 4px 14px rgba(44,95,79,0.3)}
+.wc-btn-close{width:100%;padding:10px;border-radius:14px;border:1.5px solid var(--color-border);background:transparent;color:var(--color-text-secondary);font-weight:600;font-size:13px;cursor:pointer;margin-top:8px}
+
+/* 分析师二维码 */
+.analyst-section{background:linear-gradient(135deg,rgba(44,95,79,0.06) 0%,rgba(184,92,56,0.04) 100%);border:1px solid var(--color-border);border-radius:20px;padding:20px 16px;text-align:center}
+.analyst-section .qrcode-wrap{display:inline-block;background:white;border-radius:16px;padding:12px;box-shadow:0 4px 16px rgba(44,95,79,0.10);margin-bottom:12px;border:1px solid var(--color-border)}
+.analyst-section .qrcode-wrap img{display:block;width:140px;height:140px;border-radius:8px;object-fit:contain}
+.analyst-section .analyst-title{font-family:'Noto Serif SC',serif;font-weight:700;font-size:15px;color:var(--color-text);margin-bottom:4px}
+.analyst-section .analyst-desc{font-size:12px;color:var(--color-text-secondary);line-height:1.6;max-width:280px;margin:0 auto}
+</style>
+</head>
+<body>
+
+<!-- 顶部 Hero -->
+<header class="hero-bg text-white px-4 pt-8 pb-5 relative">
+  <div class="relative z-10">
+    <div class="hero-header">
+      <div class="brand">
+        <div class="flex items-center gap-2 mb-1 text-amber-200 text-[9px] tracking-[2.5px] font-medium">
+          <i class="fas fa-seedling"></i>
+          <span>倾听 · 表达 · 理解 · 信任</span>
+        </div>
+        <h1 class="font-serif text-[24px] font-bold leading-tight mb-1 tracking-wide">我的沟通手帐</h1>
+        <p class="text-amber-100/80 text-[12px] leading-relaxed">记录我和爸妈之间的对话，<br>看见自己的感受，也看见关系的成长。</p>
+      </div>
+      <div class="flex flex-col gap-2 items-end">
+        <button class="help-btn-top" id="helpBtnOpen" aria-label="使用帮助">
+          <i class="fas fa-circle-question"></i>帮助
+        </button>
+        <a href="index.html" class="help-btn-top" aria-label="返回主页">
+          <i class="fas fa-house"></i>主页
+        </a>
+      </div>
+    </div>
+    <div class="stat-pills">
+      <div class="stat-pill">
+        <div class="text-amber-200 text-[8px] tracking-wider mb-0.5">今日记录</div>
+        <div class="font-serif text-lg font-bold" id="todayCount">0</div>
+      </div>
+      <div class="stat-pill">
+        <div class="text-amber-200 text-[8px] tracking-wider mb-0.5">累计</div>
+        <div class="font-serif text-lg font-bold" id="totalCount">0</div>
+      </div>
+      <div class="stat-pill">
+        <div class="text-amber-200 text-[8px] tracking-wider mb-0.5">我的困惑</div>
+        <div class="font-serif text-lg font-bold" id="confusionCount">0</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Tab 栏 -->
+<div class="tab-bar">
+  <div class="tab-item active" data-tab="daily">
+    <i class="fas fa-pen-to-square text-xs"></i> 日常对话
+  </div>
+  <div class="tab-item" data-tab="confusion">
+    <i class="fas fa-lightbulb text-xs"></i> 我的困惑
+  </div>
+</div>
+
+<main class="space-y-4 pb-4">
+
+  <!-- ============ 日常对话面板 ============ -->
+  <div id="panel-daily" class="tab-panel active space-y-4">
+    <section class="card fade-in">
+      <div class="section-title">
+        <div class="icon"><i class="fas fa-user-circle"></i></div>
+        <div>
+          <div class="section-num">01 / 基本情况</div>
+          <h2 class="font-serif text-base font-bold">这次对话发生了什么</h2>
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="label">记录日期</label>
+        <input type="date" class="input-field" data-field="recordDate" style="padding:10px 14px">
+      </div>
+      <div class="field-group">
+        <label class="label">对话发生在什么时候？</label>
+        <div class="flex flex-wrap gap-2" data-factor="timeSlot">
+          <span class="chip" data-value="早晨">早晨</span><span class="chip" data-value="上午">上午</span>
+          <span class="chip" data-value="午间">午间</span><span class="chip" data-value="下午">下午</span>
+          <span class="chip" data-value="傍晚">傍晚</span><span class="chip" data-value="睡前">睡前</span>
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="label">我的性别</label>
+        <div class="flex gap-2" data-factor="myGender">
+          <span class="chip flex-1 justify-center" data-value="男孩"><i class="fas fa-mars text-xs"></i> 男孩</span>
+          <span class="chip flex-1 justify-center" data-value="女孩"><i class="fas fa-venus text-xs"></i> 女孩</span>
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="label">聊了什么话题？（可多选）</label>
+        <div class="flex flex-wrap gap-2" data-factor="topic" data-multi="true">
+          <span class="chip" data-value="作业学习">作业学习</span><span class="chip" data-value="手机时间">手机/屏幕时间</span>
+          <span class="chip" data-value="起居习惯">起居习惯</span><span class="chip" data-value="情绪感受">情绪感受</span>
+          <span class="chip" data-value="朋友关系">朋友关系</span><span class="chip" data-value="未来规划">未来规划</span>
+          <span class="chip" data-value="兴趣爱好">兴趣爱好</span><span class="chip" data-value="其他">其他</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="card fade-in">
+      <div class="section-title">
+        <div class="icon"><i class="fas fa-feather-pointed"></i></div>
+        <div>
+          <div class="section-num">02 / 对话经过</div>
+          <h2 class="font-serif text-base font-bold">当时发生了什么</h2>
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="label">当时我在做什么？</label>
+        <textarea class="input-field" data-field="myState" placeholder="比如：我正在写作业，妈妈走进来……"></textarea>
+      </div>
+      <div class="field-group">
+        <label class="label">我听到/看到爸妈说了什么、做了什么？</label>
+        <textarea class="input-field" data-field="parentAction" placeholder="比如：妈妈皱着眉头说'怎么还没写完？'……"></textarea>
+      </div>
+      <div class="field-group">
+        <label class="label">我当时说了什么、做了什么？</label>
+        <textarea class="input-field" data-field="myAction" placeholder="比如：我把笔一扔说'烦死了，不想写了'……"></textarea>
+      </div>
+    </section>
+
+    <section class="card fade-in">
+      <div class="section-title">
+        <div class="icon"><i class="fas fa-heart-pulse"></i></div>
+        <div>
+          <div class="section-num">03 / 我的情绪</div>
+          <h2 class="font-serif text-base font-bold">当时我是什么感觉</h2>
+        </div>
+      </div>
+      <div class="space-y-4">
+        <div>
+          <div class="flex justify-between items-center mb-1">
+            <label class="label mb-0">我当时的情绪强度</label>
+            <span class="text-sm font-bold text-orange-700" id="d_myEmotionValue">5</span>
+          </div>
+          <input type="range" min="0" max="10" value="5" class="emotion-slider" data-field="myEmotion">
+          <div class="hint-text">0 = 平静，10 = 非常强烈</div>
+        </div>
+        <div>
+          <div class="flex justify-between items-center mb-1">
+            <label class="label mb-0">我感觉爸妈当时的情绪强度</label>
+            <span class="text-sm font-bold text-orange-700" id="d_parentEmotionValue">5</span>
+          </div>
+          <input type="range" min="0" max="10" value="5" class="emotion-slider" data-field="parentEmotion">
+        </div>
+      </div>
+      <div class="field-group mt-4">
+        <label class="label">我当时主要的感受是？（可多选）</label>
+        <div class="flex flex-wrap gap-2" data-factor="myFeelings" data-multi="true">
+          <span class="chip" data-value="委屈">委屈</span><span class="chip" data-value="愤怒">愤怒</span>
+          <span class="chip" data-value="无奈">无奈</span><span class="chip" data-value="伤心">伤心</span>
+          <span class="chip" data-value="害怕">害怕</span><span class="chip" data-value="烦躁">烦躁</span>
+          <span class="chip" data-value="被冤枉">被冤枉</span><span class="chip" data-value="不被理解">不被理解</span>
+          <span class="chip" data-value="想逃离">想逃离</span><span class="chip" data-value="无所谓">无所谓</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="card fade-in">
+      <div class="section-title">
+        <div class="icon"><i class="fas fa-lightbulb"></i></div>
+        <div>
+          <div class="section-num">04 / 我的反思</div>
+          <h2 class="font-serif text-base font-bold">回看这次对话</h2>
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="label">如果重来一次，我希望爸妈怎么做？</label>
+        <textarea class="input-field" data-field="hopeParent" placeholder="比如：我希望妈妈先问我是不是累了，而不是直接催我……"></textarea>
+      </div>
+      <div class="field-group">
+        <label class="label">如果重来一次，我希望自己怎么做？</label>
+        <textarea class="input-field" data-field="hopeSelf" placeholder="比如：我希望自己可以深呼吸一下，好好说……"></textarea>
+      </div>
+      <div class="field-group">
+        <label class="label">我有没有什么想对爸妈说但没说出口的话？</label>
+        <textarea class="input-field" data-field="unspoken" placeholder="比如：其实我不是不想写，是那道题真的很难……"></textarea>
+      </div>
+    </section>
+
+    <!-- 日常对话保存按钮 -->
+    <button class="btn-primary fade-in" onclick="saveCurrentPanel()">
+      <i class="fas fa-floppy-disk"></i> 保存本次日常对话
+    </button>
+  </div>
+
+  <!-- ============ 我的困惑面板 ============ -->
+  <div id="panel-confusion" class="tab-panel space-y-4">
+    <section class="card fade-in" style="border-color:rgba(44,95,79,0.2)">
+      <div class="section-title">
+        <div class="icon green"><i class="fas fa-compass"></i></div>
+        <div>
+          <div class="section-num green">01 / 我的困惑</div>
+          <h2 class="font-serif text-base font-bold">那些让我感到困扰的事</h2>
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="label">最近最让我感到困惑或烦恼的是什么？</label>
+        <textarea class="input-field green-focus" data-field="confusionDesc" placeholder="比如：我不知道怎么跟爸妈说我想打游戏，他们一说我就急……"></textarea>
+      </div>
+      <div class="field-group">
+        <label class="label">这种困惑通常发生在什么情况下？</label>
+        <div class="flex flex-wrap gap-2" data-factor="confusionScene" data-multi="true">
+          <span class="chip green" data-value="学习成绩">学习成绩</span>
+          <span class="chip green" data-value="手机使用">手机/游戏</span>
+          <span class="chip green" data-value="作息时间">作息时间</span>
+          <span class="chip green" data-value="交友">交友</span>
+          <span class="chip green" data-value="兴趣爱好">兴趣爱好</span>
+          <span class="chip green" data-value="隐私空间">隐私/空间</span>
+          <span class="chip green" data-value="未来选择">未来/选科</span>
+          <span class="chip green" data-value="其他">其他</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="card fade-in" style="border-color:rgba(44,95,79,0.2)">
+      <div class="section-title">
+        <div class="icon green"><i class="fas fa-heart-circle-exclamation"></i></div>
+        <div>
+          <div class="section-num green">02 / 内心的声音</div>
+          <h2 class="font-serif text-base font-bold">我的真实想法</h2>
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="label">我心里真正想要的是什么？</label>
+        <textarea class="input-field green-focus" data-field="myRealNeed" placeholder="比如：我希望爸妈能相信我可以管理好自己的时间，而不是一直盯着我……"></textarea>
+      </div>
+      <div class="field-group">
+        <label class="label">我担心什么？</label>
+        <textarea class="input-field green-focus" data-field="myWorry" placeholder="比如：我担心如果我直说，他们会觉得我顶嘴……"></textarea>
+      </div>
+      <div class="field-group">
+        <label class="label">我期待爸妈用什么样的方式跟我沟通？</label>
+        <textarea class="input-field green-focus" data-field="expectParent" placeholder="比如：希望他们先听听我的想法，不要一上来就批评……"></textarea>
+      </div>
+    </section>
+
+    <section class="card fade-in" style="border-color:rgba(44,95,79,0.2)">
+      <div class="section-title">
+        <div class="icon green"><i class="fas fa-arrow-right"></i></div>
+        <div>
+          <div class="section-num green">03 / 我可以尝试的</div>
+          <h2 class="font-serif text-base font-bold">关于改变，我的想法</h2>
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="label">如果我可以换一种方式跟爸妈沟通，我会怎么做？</label>
+        <textarea class="input-field green-focus" data-field="tryNewWay" placeholder="比如：我想在爸妈情绪好的时候，心平气和地说出我的想法……"></textarea>
+      </div>
+      <div class="field-group">
+        <label class="label">我目前遇到的困难是什么？</label>
+        <textarea class="input-field green-focus" data-field="difficulty" placeholder="比如：我试过好好说，但说着说着就吵起来了……"></textarea>
+      </div>
+    </section>
+
+    <!-- 我的困惑保存按钮 -->
+    <button class="btn-primary green fade-in" onclick="saveCurrentPanel()">
+      <i class="fas fa-floppy-disk"></i> 保存本次困惑记录
+    </button>
+  </div>
+
+  <!-- 历史记录区 -->
+  <section class="card fade-in">
+    <div class="section-title">
+      <div class="icon"><i class="fas fa-clock-rotate-left"></i></div>
+      <div>
+        <div class="section-num">历史记录</div>
+        <h2 class="font-serif text-base font-bold">往期手帐盘点</h2>
+      </div>
+    </div>
+    <div id="historyContainer">
+      <p class="text-sm mb-4" style="color:var(--color-text-secondary)">还没有记录，填写完上面的内容后，点击"保存"就可以看到啦。</p>
+    </div>
+  </section>
+
+  <!-- ============ 数据管理（内联卡片） ============ -->
+  <section class="data-card fade-in">
+    <div class="data-ttl">
+      <i class="fas fa-lock" style="color:var(--color-accent)"></i>
+      数据管理
+    </div>
+    <div class="warn-box">
+      ⚠️ <b>记录只存在当前浏览器里。</b>清理浏览器缓存、卸载微信/浏览器或换手机，记录都会永久丢失且无法找回。<br>
+      👉 请每 <b>30 天左右</b>点一次「备份」。
+    </div>
+    <div class="bak-info">
+      上次备份：<span class="bak-tag" id="bakTime">从未备份</span>
+      <span id="bakExtra" style="font-size:11.5px"></span>
+    </div>
+    <div style="font-size:11.5px;color:var(--color-text-secondary);line-height:1.6;margin-bottom:10px">
+      换设备或换浏览器时，用「导入/合并」把两边的数据合到一起。
+    </div>
+    <div class="data-acts">
+      <button class="data-btn" id="backupBtn">
+        <span class="ico">💾</span>
+        <span class="lbl">备份</span>
+      </button>
+      <button class="data-btn" id="importBtn">
+        <span class="ico">📥</span>
+        <span class="lbl">导入/合并</span>
+      </button>
+      <button class="data-btn danger" id="clearBtn">
+        <span class="ico">🗑️</span>
+        <span class="lbl">清空</span>
+      </button>
+    </div>
+    <input type="file" id="importFile" accept=".json,application/json" style="display:none">
+  </section>
+
+  <!-- 分析师二维码 -->
+  <section class="analyst-section fade-in">
+    <div class="section-title" style="justify-content:center;margin-bottom:10px">
+      <div class="icon green"><i class="fas fa-user-tie"></i></div>
+      <div>
+        <div class="section-num green">专属服务支持</div>
+        <div class="analyst-title">添加企业微信，获取专业指导</div>
+      </div>
+    </div>
+    <div class="qrcode-wrap">
+      <img src="qrcode.png" alt="添加分析师二维码" onerror="this.parentElement.innerHTML='<div style=\'width:140px;height:140px;display:flex;align-items:center;justify-content:center;color:#B5A99A;font-size:12px;text-align:center;line-height:1.5;background:var(--bg-secondary);border-radius:8px\'><i class=\'fas fa-qrcode\' style=\'font-size:36px;display:block;margin-bottom:6px;opacity:0.4\'></i>请将 qrcode.png<br>放置到同目录</div>'">
+    </div>
+    <p class="analyst-desc">添加企业微信，导出文件后发送给我们，获取专业的亲子沟通分析与个性化指导建议。</p>
+  </section>
+
+</main>
+
+<div class="footer-bar">© 2026 山东省青少年文化交流中心 · 铃兰心理工作室 版权所有&amp;制作</div>
+
+<!-- ====== 导入方式弹窗 ====== -->
+<div class="modal-mask" id="importMask">
+  <div class="modal-sheet">
+    <button class="modal-close" onclick="closeImport()">✕</button>
+    <h3 class="modal-title"><i class="fas fa-download" style="color:var(--color-primary)"></i> 选择导入方式</h3>
+    <div class="imp-opt">
+      <button class="go" onclick="execImport('merge')">
+        <div class="t">合并（推荐）</div>
+        <div class="d">保留本机记录，只补充文件里的新记录，自动去重</div>
+      </button>
+      <button class="replace" onclick="execImport('replace')">
+        <div class="t">覆盖</div>
+        <div class="d">清空本机记录，完全使用文件里的数据，不可恢复</div>
+      </button>
+    </div>
+    <button class="btn-secondary" onclick="closeImport()" style="width:100%">取消</button>
+  </div>
+</div>
+
+<!-- ====== 清空确认弹窗 ====== -->
+<div class="modal-mask" id="clearMask">
+  <div class="modal-sheet">
+    <button class="modal-close" onclick="closeModal('clearMask')">✕</button>
+    <h3 class="modal-title"><i class="fas fa-triangle-exclamation" style="color:var(--color-danger)"></i> 确认清空</h3>
+    <p style="font-size:13.5px;line-height:1.65;color:var(--color-text-secondary);margin-bottom:14px">
+      确定要清空所有记录吗？清空后无法恢复！<br>
+      <b style="color:var(--color-danger)">请先点「备份」导出文件再清空。</b>
+    </p>
+    <div style="display:flex;gap:8px">
+      <button class="btn-secondary" onclick="closeModal('clearMask')" style="flex:1">取消</button>
+      <button class="btn-primary" onclick="execClear()" style="flex:1;background:linear-gradient(135deg,#B8423C,#8B2F2A);box-shadow:0 6px 18px rgba(184,66,60,0.35)">确认清空</button>
+    </div>
+  </div>
+</div>
+
+<!-- ====== 微信导出弹窗 ====== -->
+<div class="modal-mask" id="wcModal">
+  <div class="wc-modal-box">
+    <button class="modal-close" onclick="closeModal('wcModal')">✕</button>
+    <h3>导出数据</h3>
+    <p class="sub">点击「下载文件」保存为 .json 文件；若无法下载，请使用「复制全部」后粘贴到备忘录保存。</p>
+    <div class="wc-textarea-wrap">
+      <textarea id="wcTextarea" readonly></textarea>
+    </div>
+    <div class="wc-btn-row">
+      <button class="wc-btn-copy green" id="wcDownloadBtn">⬇️ 下载文件</button>
+      <button class="wc-btn-copy" id="wcCopyBtn">📋 复制全部</button>
+    </div>
+    <button class="wc-btn-close" onclick="closeModal('wcModal')">关闭</button>
+  </div>
+</div>
+
+<!-- ====== 帮助弹窗 ====== -->
+<div class="help-mask" id="helpMask">
+  <div class="help-box">
+    <div class="help-head">
+      <h3><i class="fas fa-circle-question" style="margin-right:5px;opacity:0.85"></i>使用帮助</h3>
+      <div class="sub">我的沟通手帐 —— 记录·感受·表达</div>
+    </div>
+    <div class="help-body">
+
+      <div class="help-section">
+        <div class="help-section-title"><div class="hsi red"><i class="fas fa-triangle-exclamation"></i></div>数据安全（重要）</div>
+        <div class="help-warn-card">
+          <strong>⚠️ 数据存在哪里？</strong><br>
+          所有记录只保存在你当前这个浏览器的本机缓存里，不联网、不上传、不跨设备同步。
+        </div>
+        <div class="help-warn-card">
+          <strong>📱 微信 vs 浏览器数据不互通</strong><br>
+          微信内置浏览器和手机自带浏览器（Safari、Chrome 等）的缓存相互独立，<b>数据不互通</b>。建议固定在同一个入口使用，不要一会儿用微信、一会儿用浏览器。
+        </div>
+        <div class="help-warn-card">
+          <strong>💾 定期备份（每 30 天左右）</strong><br>
+          点「数据管理 → 备份」，会下载一个 JSON 文件。存到微信收藏、网盘或发给自己。<br>
+          <b>清理浏览器数据之前，务必先备份！</b>
+        </div>
+        <div class="help-warn-card">
+          <strong>🔀 两端口数据怎么合并？</strong><br>
+          例如先在手机浏览器记了一些，又在微信里记了一些：<br>
+          1️⃣ 在 A 端点「备份」，把文件发到 B 端；<br>
+          2️⃣ 在 B 端点「导入/合并」，选择文件；<br>
+          3️⃣ 选「合并」——两边的记录会自动去重合并。<br>
+          （选「覆盖」会清空本机记录、完全使用文件里的数据，请谨慎。）
+        </div>
+      </div>
+
+      <div class="help-divider"></div>
+
+      <div class="help-section">
+        <div class="help-section-title"><div class="hsi orange"><i class="fas fa-palette"></i></div>设计理念</div>
+        <p class="help-p">这个手帐是为你设计的——<strong>一个可以安全存放自己声音的地方</strong>。和爸妈的沟通有时候会让我们感到困惑、委屈、或者不知道怎么说才好。</p>
+        <p class="help-p">手帐的作用不是"评判对错"，而是帮你在安全的空间里：</p>
+        <div class="help-flow">
+          <span class="help-flow-step">📝 记录发生了什么</span>
+          <span class="help-flow-arrow">→</span>
+          <span class="help-flow-step">❤️ 看见自己的感受</span>
+          <span class="help-flow-arrow">→</span>
+          <span class="help-flow-step">💡 找到自己的声音</span>
+        </div>
+      </div>
+
+      <div class="help-divider"></div>
+
+      <div class="help-section">
+        <div class="help-section-title"><div class="hsi teal"><i class="fas fa-compass"></i></div>使用方法</div>
+        <div class="help-tip-card"><div class="help-tip-num teal">1</div><div class="help-tip-text"><strong>日常对话：</strong>每次和爸妈发生了有印象的对话，打开「日常对话」面板，按步骤记录。不需要写得很完整，<strong>先记下来</strong>就好。</div></div>
+        <div class="help-tip-card"><div class="help-tip-num teal">2</div><div class="help-tip-text"><strong>我的困惑：</strong>有些话可能一直憋在心里，或者不知道该怎么跟爸妈说。「我的困惑」面板提供了一个安全的地方，先写给自己看。</div></div>
+        <div class="help-tip-card"><div class="help-tip-num teal">3</div><div class="help-tip-text"><strong>情绪滑块：</strong>拖动滑块表达你当时的情绪强度。0 = 平静，10 = 非常强烈。这能帮你觉察自己的情绪变化。</div></div>
+        <div class="help-tip-card"><div class="help-tip-num teal">4</div><div class="help-tip-text"><strong>保存与导出：</strong>填写完当前面板后，点面板底部的「保存本次记录」写入本地；点「数据管理 → 备份」生成 JSON 文件，可发送给分析师获取专业建议。</div></div>
+      </div>
+
+      <div class="help-divider"></div>
+
+      <div class="help-section">
+        <div class="help-section-title"><div class="hsi orange"><i class="fas fa-heart"></i></div>一些想对你说的话</div>
+        <div class="help-tip-card"><div class="help-tip-num orange">1</div><div class="help-tip-text"><strong>你的感受是真实的。</strong>无论你感到愤怒、委屈还是难过，这些情绪都值得被看见和尊重。不需要评判它们"对不对"。</div></div>
+        <div class="help-tip-card"><div class="help-tip-num orange">2</div><div class="help-tip-text"><strong>沟通是双向的。</strong>有时候爸妈也在学习怎么更好地理解你。记录可以帮助你更清晰地看到双方在说什么、做什么。</div></div>
+        <div class="help-tip-card"><div class="help-tip-num orange">3</div><div class="help-tip-text"><strong>你有表达的权利。</strong>你可以有不同意见，可以用平静的方式说出自己的想法。"我信息"是一个好用的工具："当你……的时候，我感到……，因为我需要……"</div></div>
+        <div class="help-tip-card"><div class="help-tip-num orange">4</div><div class="help-tip-text"><strong>改变需要时间。</strong>沟通模式的改变不会一夜发生。每一次记录都是一次"看见"，而看见本身就是改变的开始。</div></div>
+      </div>
+
+      <button class="help-close-btn" id="helpBtnClose"><i class="fas fa-times" style="margin-right:4px"></i>关闭帮助</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  var STORAGE_KEY = 'teenCommRecords';
+  var BACKUP_KEY = 'teenCommLastBackup';
+
+  /* ============ 工具 ============ */
+  function $(id){ return document.getElementById(id); }
+  function pad2(n){ return String(n).padStart(2,'0'); }
+  function curDate(){ var d=new Date(); return d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate()); }
+  function nowStr(){
+    var d=new Date();
+    return d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate())+' '+pad2(d.getHours())+':'+pad2(d.getMinutes());
+  }
+  function isWeChat(){ return /MicroMessenger/i.test(navigator.userAgent); }
+
+  // 初始化日期
+  document.querySelectorAll('input[type="date"]').forEach(function(input){
+    input.value = curDate();
+  });
+
+  /* ============ Toast ============ */
+  var toastEl = document.createElement('div');
+  toastEl.className = 'toast';
+  document.body.appendChild(toastEl);
+  var toastTimer;
+  function showToast(msg, icon){
+    toastEl.innerHTML = '<i class="fas ' + (icon||'fa-check-circle') + '"></i> ' + msg;
+    toastEl.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ toastEl.classList.remove('show'); }, 2200);
+  }
+
+  /* ============ 弹窗 ============ */
+  function openModal(id){ $(id).classList.add('open'); }
+  function closeModal(id){ $(id).classList.remove('open'); }
+  window.closeModal = closeModal;
+  document.querySelectorAll('.modal-mask, .help-mask').forEach(function(m){
+    m.addEventListener('click', function(e){ if(e.target===m) m.classList.remove('open'); });
+  });
+
+  /* ============ 帮助 ============ */
+  $('helpBtnOpen').addEventListener('click', function(){ $('helpMask').classList.add('open'); });
+  $('helpBtnClose').addEventListener('click', function(){ $('helpMask').classList.remove('open'); });
+
+  /* ============ Tab 切换 ============ */
+  document.querySelectorAll('.tab-item').forEach(function(tab){
+    tab.addEventListener('click', function(){
+      var target = tab.dataset.tab;
+      document.querySelectorAll('.tab-item').forEach(function(t){ t.classList.remove('active','green'); });
+      document.querySelectorAll('.tab-panel').forEach(function(p){ p.classList.remove('active'); });
+      tab.classList.add('active');
+      if(target === 'confusion') tab.classList.add('green');
+      $('panel-' + target).classList.add('active');
+      window.scrollTo({ top:0, behavior:'smooth' });
+    });
+  });
+
+  /* ============ 滑块 ============ */
+  document.querySelectorAll('input[type="range"]').forEach(function(slider){
+    slider.addEventListener('input', function(){
+      var valSpan = slider.parentElement.querySelector('.text-orange-700');
+      if(valSpan) valSpan.textContent = slider.value;
+    });
+  });
+
+  /* ============ Chip 点击 ============ */
+  document.body.addEventListener('click', function(e){
+    var target = e.target.closest('.chip');
+    if(!target) return;
+    var container = target.parentElement;
+    if(!container.dataset.factor) return;
+    var isMulti = container.dataset.multi === 'true';
+    if(isMulti){
+      target.classList.toggle('active');
+    } else {
+      container.querySelectorAll('.active').forEach(function(c){ c.classList.remove('active'); });
+      target.classList.add('active');
+    }
+  });
+
+  /* ============ 表单数据 ============ */
+  function getCurrentFormData(){
+    var activePanel = document.querySelector('.tab-panel.active');
+    var data = { type: activePanel.id.replace('panel-','') };
+
+    activePanel.querySelectorAll('[data-factor]').forEach(function(container){
+      var factor = container.dataset.factor;
+      var isMulti = container.dataset.multi === 'true';
+      var activeChips = container.querySelectorAll('.chip.active');
+      if(isMulti){
+        data[factor] = Array.prototype.map.call(activeChips, function(c){ return c.dataset.value; });
+      } else {
+        data[factor] = activeChips.length > 0 ? activeChips[0].dataset.value : '';
+      }
+    });
+
+    activePanel.querySelectorAll('[data-field]').forEach(function(input){
+      data[input.dataset.field] = input.value.trim();
+    });
+
+    var d = new Date();
+    data.timestamp = d.toISOString();
+    data.dateStr = d.toLocaleDateString('zh-CN');
+    return data;
+  }
+
+  function resetForm(){
+    var activePanel = document.querySelector('.tab-panel.active');
+    activePanel.querySelectorAll('.active').forEach(function(c){ c.classList.remove('active'); });
+    activePanel.querySelectorAll('[data-field]').forEach(function(input){
+      if(input.type === 'date'){
+        input.value = curDate();
+      } else if(input.type === 'range'){
+        input.value = 5;
+        var valSpan = input.parentElement.querySelector('.text-orange-700');
+        if(valSpan) valSpan.textContent = '5';
+      } else {
+        input.value = '';
+      }
+    });
+    showToast('记录已保存，表单已重置');
+    window.scrollTo({ top:0, behavior:'smooth' });
+  }
+
+  /* ============ 存储 ============ */
+  function loadRecords(){
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
+    catch(e){ return []; }
+  }
+  function saveRecords(list){
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(list)); return true; }
+    catch(e){ showToast('存储失败，请先备份再清空','fa-triangle-exclamation'); return false; }
+  }
+
+  /* ============ 保存当前面板 ============ */
+  window.saveCurrentPanel = function(){
+    var formData = getCurrentFormData();
+    var hasContent = formData.myState || formData.confusionDesc ||
+                     (formData.topic && formData.topic.length) ||
+                     (formData.confusionScene && formData.confusionScene.length);
+    if(!hasContent){
+      showToast('请至少填写部分内容再保存', 'fa-triangle-exclamation');
+      return;
+    }
+    var records = loadRecords();
+    records.push(formData);
+    if(saveRecords(records)){
+      renderHistory();
+      resetForm();
+    }
+  };
+
+  /* ============ 历史渲染 ============ */
+  function renderHistory(){
+    var records = loadRecords();
+    var today = new Date().toLocaleDateString('zh-CN');
+
+    $('totalCount').textContent = records.length;
+    $('todayCount').textContent = records.filter(function(r){ return r.dateStr === today; }).length;
+    $('confusionCount').textContent = records.filter(function(r){ return r.type === 'confusion'; }).length;
+
+    var container = $('historyContainer');
+    if(records.length === 0){
+      container.innerHTML = '<p class="text-sm mb-4" style="color:var(--color-text-secondary)">还没有记录，填写完上面的内容后，点击"保存"就可以看到啦。</p>';
+      container.classList.remove('scrollable');
+      return;
+    }
+
+    var html = '';
+    for(var i = records.length - 1; i >= 0; i--){
+      var r = records[i];
+      var isConfusion = r.type === 'confusion';
+      var title;
+      if(isConfusion){
+        title = r.confusionDesc ? (r.confusionDesc.substring(0,20) + (r.confusionDesc.length>20?'…':'')) : '我的困惑';
+      } else {
+        title = r.topic ? (Array.isArray(r.topic) ? r.topic.join('/') : r.topic) : '日常对话';
+      }
+      var preview = isConfusion ? (r.confusionDesc || '') : (r.myState || '无详细描述');
+      html += '<div class="record-card ' + (isConfusion ? 'confusion' : '') + '">' +
+              '<div class="flex justify-between items-center mb-1">' +
+              '<span class="font-serif font-bold text-sm" style="color:var(--color-text);">' +
+              (r.dateStr || '') + ' · ' + title + '</span>' +
+              '<button class="text-xs text-red-500 delete-btn" data-idx="' + i + '">删除</button>' +
+              '</div>' +
+              '<div class="text-xs" style="color:var(--color-text-secondary);">' +
+              preview.substring(0,60) + '</div></div>';
+    }
+    container.innerHTML = html;
+
+    if(records.length > 3){
+      container.classList.add('scrollable');
+    } else {
+      container.classList.remove('scrollable');
+    }
+
+    container.querySelectorAll('.delete-btn').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        if(!confirm('确定删除这条记录吗？')) return;
+        var idx = parseInt(btn.dataset.idx, 10);
+        var list = loadRecords();
+        list.splice(idx, 1);
+        saveRecords(list);
+        renderHistory();
+        showToast('记录已删除');
+      });
+    });
+  }
+
+  /* ============ 备份相关 ============ */
+  function getLastBackup(){
+    try { return Number(localStorage.getItem(BACKUP_KEY) || 0); }
+    catch(e){ return 0; }
+  }
+  function markBackup(){
+    try { localStorage.setItem(BACKUP_KEY, String(Date.now())); } catch(e){}
+    renderBackupInfo();
+  }
+  function renderBackupInfo(){
+    var el = $('bakTime'), extra = $('bakExtra');
+    if(!el) return;
+    var t = getLastBackup();
+    if(!t){
+      el.textContent = '从未备份';
+      el.className = 'bak-tag warn';
+      if(extra) extra.textContent = loadRecords().length ? '（建议马上备份一次）' : '';
+      return;
+    }
+    var days = Math.floor((Date.now() - t) / 86400000);
+    var d = new Date(t);
+    el.textContent = d.getFullYear() + '-' + pad2(d.getMonth()+1) + '-' + pad2(d.getDate()) +
+                     '（' + (days === 0 ? '今天' : days + '天前') + '）';
+    el.className = days >= 30 ? 'bak-tag warn' : 'bak-tag';
+    if(extra) extra.textContent = days >= 30 ? '⚠️ 超过30天没备份了' : '';
+  }
+  function checkBackupReminder(){
+    var records = loadRecords();
+    if(!records.length) return;
+    var t = getLastBackup();
+    var days = t ? Math.floor((Date.now() - t) / 86400000) : 999;
+    if(days >= 30){
+      setTimeout(function(){
+        showToast((t ? '已 ' + days + ' 天未备份' : '还没有备份过') + '，建议到「数据管理」备份一次', 'fa-clock');
+      }, 1500);
+    }
+  }
+
+  /* ============ 下载 ============ */
+  function downloadFile(content, filename){
+    try {
+      var blob = new Blob([content], { type:'application/json' });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(function(){ URL.revokeObjectURL(url); }, 1500);
+      return true;
+    } catch(e){ return false; }
+  }
+  function downloadFileBase64(content, filename){
+    try {
+      var base64 = btoa(unescape(encodeURIComponent(content)));
+      var link = document.createElement('a');
+      link.href = 'data:application/octet-stream;charset=utf-8;base64,' + base64;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      return true;
+    } catch(e){ return false; }
+  }
+
+  /* ============ 备份按钮 ============ */
+  $('backupBtn').addEventListener('click', function(){
+    var records = loadRecords();
+    if(!records.length){ showToast('还没有记录可以备份哦', 'fa-inbox'); return; }
+
+    var dataStr = JSON.stringify({ version:2, exportDate:nowStr(), records:records }, null, 2);
+    var filename = '我的沟通手帐_' + curDate() + '.json';
+
+    if(isWeChat()){
+      $('wcTextarea').value = dataStr;
+      $('wcDownloadBtn').dataset.content = dataStr;
+      $('wcDownloadBtn').dataset.filename = filename;
+      openModal('wcModal');
+      return;
+    }
+
+    if(downloadFile(dataStr, filename)){
+      markBackup();
+      showToast('备份已下载，请妥善保存');
+    } else {
+      showToast('导出失败，请重试', 'fa-triangle-exclamation');
+    }
+  });
+
+  /* ============ 微信弹窗按钮 ============ */
+  $('wcDownloadBtn').addEventListener('click', function(){
+    var content = this.dataset.content;
+    var filename = this.dataset.filename;
+    if(!content || !filename){ showToast('数据缺失，请重新导出', 'fa-triangle-exclamation'); return; }
+    if(downloadFile(content, filename)){
+      markBackup();
+      showToast('下载已开始');
+      closeModal('wcModal');
+      return;
+    }
+    if(downloadFileBase64(content, filename)){
+      markBackup();
+      showToast('下载已开始');
+      closeModal('wcModal');
+      return;
+    }
+    showToast('下载失败，请使用「复制全部」', 'fa-triangle-exclamation');
+  });
+
+  $('wcCopyBtn').addEventListener('click', function(){
+    var ta = $('wcTextarea');
+    ta.select();
+    ta.setSelectionRange(0, 99999);
+    try {
+      document.execCommand('copy');
+      markBackup();
+      showToast('已复制，请粘贴到备忘录保存为 .json');
+    } catch(e){
+      if(navigator.clipboard){
+        navigator.clipboard.writeText(ta.value).then(function(){
+          markBackup();
+          showToast('已复制到剪贴板');
+        });
+      } else {
+        showToast('复制失败，请长按文本手动复制', 'fa-triangle-exclamation');
+      }
+    }
+  });
+
+  /* ============ 导入 ============ */
+  var pendingImport = null;
+
+  $('importBtn').addEventListener('click', function(){
+    $('importFile').click();
+  });
+
+  $('importFile').addEventListener('change', function(e){
+    var file = e.target.files && e.target.files[0];
+    e.target.value = '';
+    if(!file) return;
+    var reader = new FileReader();
+    reader.onload = function(ev){
+      try {
+        var data = JSON.parse(ev.target.result);
+        var list = Array.isArray(data) ? data : (data && data.records);
+        if(!list || !list.length){ showToast('文件里没有可导入的记录', 'fa-triangle-exclamation'); return; }
+        pendingImport = list;
+        openModal('importMask');
+      } catch(err){
+        showToast('打不开这个文件，请确认是本工具导出的 JSON', 'fa-triangle-exclamation');
+      }
+    };
+    reader.onerror = function(){ showToast('文件读取失败', 'fa-triangle-exclamation'); };
+    reader.readAsText(file);
+  });
+
+  window.closeImport = function(){
+    pendingImport = null;
+    closeModal('importMask');
+  };
+
+  window.execImport = function(mode){
+    if(!pendingImport){ closeImport(); return; }
+    var list = pendingImport;
+    var msg;
+    if(mode === 'replace'){
+      saveRecords(list);
+      msg = '已覆盖导入 ' + list.length + ' 条记录';
+    } else {
+      var records = loadRecords();
+      var seen = {};
+      records.forEach(function(r){
+        if(r && r.timestamp) seen[r.timestamp + '|' + (r.type||'')] = 1;
+      });
+      var added = 0;
+      list.forEach(function(r){
+        if(!r || typeof r !== 'object') return;
+        var key = r.timestamp + '|' + (r.type||'');
+        if(seen[key]) return;
+        seen[key] = 1;
+        records.push(r);
+        added++;
+      });
+      saveRecords(records);
+      msg = added ? ('合并完成，新增 ' + added + ' 条记录') : '数据已是最新，没有新增记录';
+    }
+    renderHistory();
+    renderBackupInfo();
+    closeImport();
+    checkBackupReminder();
+    showToast(msg);
+  };
+
+  /* ============ 清空 ============ */
+  $('clearBtn').addEventListener('click', function(){
+    openModal('clearMask');
+  });
+
+  window.execClear = function(){
+    localStorage.removeItem(STORAGE_KEY);
+    renderHistory();
+    renderBackupInfo();
+    closeModal('clearMask');
+    showToast('已清空所有记录');
+  };
+
+  /* ============ 移动端输入框防键盘遮挡 ============ */
+  document.querySelectorAll('input, textarea').forEach(function(el){
+    el.addEventListener('focus', function(){
+      setTimeout(function(){
+        el.scrollIntoView({ behavior:'smooth', block:'center' });
+      }, 300);
+    });
+  });
+
+  /* ============ 初始化 ============ */
+  renderHistory();
+  renderBackupInfo();
+  checkBackupReminder();
+})();
+</script>
+</body>
+</html>

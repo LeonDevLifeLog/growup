@@ -1,0 +1,4762 @@
+[
+  {
+    "id": "4c1",
+    "name": "4CR 青少年成长手帐",
+    "group": "中长期成长观察",
+    "mode": "tracker",
+    "description": "分别记录情绪天气、成长瞬间、每周反思、活动反馈与压力来源；月报汇总频次，不评定能力高低。",
+    "sourceUrl": "https://sdsqsnwh.cn/cz/4c1.html",
+    "profiles": [
+      {
+        "id": "weather",
+        "name": "情绪天气",
+        "fields": [
+          {
+            "id": "weather",
+            "label": "今天的情绪天气",
+            "type": "single",
+            "required": true,
+            "options": [
+              {
+                "value": "sunny",
+                "label": "晴天"
+              },
+              {
+                "value": "cloudy",
+                "label": "多云"
+              },
+              {
+                "value": "overcast",
+                "label": "阴天"
+              },
+              {
+                "value": "rainy",
+                "label": "小雨"
+              },
+              {
+                "value": "stormy",
+                "label": "雷雨"
+              }
+            ]
+          },
+          {
+            "id": "calmQuick",
+            "label": "遇到不开心的事情，能很快平静下来吗？",
+            "type": "single",
+            "required": false,
+            "options": [
+              {
+                "value": "yes",
+                "label": "能"
+              },
+              {
+                "value": "no",
+                "label": "暂时不能"
+              }
+            ]
+          },
+          {
+            "id": "description",
+            "label": "今天发生了什么？",
+            "type": "textarea",
+            "required": false
+          }
+        ]
+      },
+      {
+        "id": "growth",
+        "name": "4C+R 成长瞬间",
+        "fields": [
+          {
+            "id": "description",
+            "label": "今天的成长瞬间",
+            "type": "textarea",
+            "required": true
+          },
+          {
+            "id": "dimensions",
+            "label": "与哪些能力有关？",
+            "type": "multi",
+            "required": false,
+            "options": [
+              {
+                "value": "critical",
+                "label": "独立思考"
+              },
+              {
+                "value": "communication",
+                "label": "沟通"
+              },
+              {
+                "value": "collaboration",
+                "label": "协作"
+              },
+              {
+                "value": "creativity",
+                "label": "创造力"
+              },
+              {
+                "value": "resilience",
+                "label": "情绪恢复力"
+              }
+            ]
+          },
+          {
+            "id": "isHighlight",
+            "label": "这是一个高光时刻",
+            "type": "single",
+            "required": false,
+            "options": [
+              {
+                "value": 1,
+                "label": "是"
+              },
+              {
+                "value": 0,
+                "label": "否"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "reflection",
+        "name": "每周反思",
+        "fields": [
+          {
+            "id": "description",
+            "label": "这一周，你有什么新的发现和想法？",
+            "type": "textarea",
+            "required": true
+          }
+        ]
+      },
+      {
+        "id": "activity",
+        "name": "活动反馈",
+        "fields": [
+          {
+            "id": "description",
+            "label": "活动内容和自己的反应、变化",
+            "type": "textarea",
+            "required": true
+          },
+          {
+            "id": "dimensions",
+            "label": "涉及的能力",
+            "type": "multi",
+            "required": false,
+            "options": [
+              {
+                "value": "critical",
+                "label": "独立思考"
+              },
+              {
+                "value": "communication",
+                "label": "沟通"
+              },
+              {
+                "value": "collaboration",
+                "label": "协作"
+              },
+              {
+                "value": "creativity",
+                "label": "创造力"
+              },
+              {
+                "value": "resilience",
+                "label": "情绪恢复力"
+              }
+            ]
+          },
+          {
+            "id": "activityScenes",
+            "label": "活动形式",
+            "type": "multi",
+            "required": false,
+            "options": [
+              {
+                "value": "online",
+                "label": "线上"
+              },
+              {
+                "value": "offline",
+                "label": "线下"
+              },
+              {
+                "value": "group",
+                "label": "团体"
+              },
+              {
+                "value": "individual",
+                "label": "一对一"
+              }
+            ]
+          },
+          {
+            "id": "isEffective",
+            "label": "感觉活动带来了积极变化",
+            "type": "single",
+            "required": false,
+            "options": [
+              {
+                "value": 1,
+                "label": "是"
+              },
+              {
+                "value": 0,
+                "label": "否"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "stress",
+        "name": "压力观察",
+        "fields": [
+          {
+            "id": "description",
+            "label": "今天或最近的压力来源与感受",
+            "type": "textarea",
+            "required": true
+          },
+          {
+            "id": "stressSources",
+            "label": "压力来源",
+            "type": "multi",
+            "required": false,
+            "options": [
+              {
+                "value": "study",
+                "label": "学习"
+              },
+              {
+                "value": "family",
+                "label": "家庭"
+              },
+              {
+                "value": "friends",
+                "label": "朋友"
+              },
+              {
+                "value": "self",
+                "label": "自我"
+              },
+              {
+                "value": "future",
+                "label": "未来"
+              },
+              {
+                "value": "other",
+                "label": "其他"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "4cr",
+    "name": "4CR 家庭成长手帐",
+    "group": "中长期成长观察",
+    "mode": "tracker",
+    "description": "保留青少年记录、家长观察、活动反馈与压力观察，以双方记录形成描述性月报。",
+    "sourceUrl": "https://sdsqsnwh.cn/cz/4cr.html",
+    "profiles": [
+      {
+        "id": "weather",
+        "name": "情绪天气",
+        "fields": [
+          {
+            "id": "weather",
+            "label": "今天的情绪天气",
+            "type": "single",
+            "required": true,
+            "options": [
+              {
+                "value": "sunny",
+                "label": "晴天"
+              },
+              {
+                "value": "cloudy",
+                "label": "多云"
+              },
+              {
+                "value": "overcast",
+                "label": "阴天"
+              },
+              {
+                "value": "rainy",
+                "label": "小雨"
+              },
+              {
+                "value": "stormy",
+                "label": "雷雨"
+              }
+            ]
+          },
+          {
+            "id": "calmQuick",
+            "label": "遇到不开心的事情，能很快平静下来吗？",
+            "type": "single",
+            "required": false,
+            "options": [
+              {
+                "value": "yes",
+                "label": "能"
+              },
+              {
+                "value": "no",
+                "label": "暂时不能"
+              }
+            ]
+          },
+          {
+            "id": "description",
+            "label": "今天发生了什么？",
+            "type": "textarea",
+            "required": false
+          }
+        ]
+      },
+      {
+        "id": "growth",
+        "name": "4C+R 成长瞬间",
+        "fields": [
+          {
+            "id": "description",
+            "label": "今天的成长瞬间",
+            "type": "textarea",
+            "required": true
+          },
+          {
+            "id": "dimensions",
+            "label": "与哪些能力有关？",
+            "type": "multi",
+            "required": false,
+            "options": [
+              {
+                "value": "critical",
+                "label": "独立思考"
+              },
+              {
+                "value": "communication",
+                "label": "沟通"
+              },
+              {
+                "value": "collaboration",
+                "label": "协作"
+              },
+              {
+                "value": "creativity",
+                "label": "创造力"
+              },
+              {
+                "value": "resilience",
+                "label": "情绪恢复力"
+              }
+            ]
+          },
+          {
+            "id": "isHighlight",
+            "label": "这是一个高光时刻",
+            "type": "single",
+            "required": false,
+            "options": [
+              {
+                "value": 1,
+                "label": "是"
+              },
+              {
+                "value": 0,
+                "label": "否"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "reflection",
+        "name": "每周反思",
+        "fields": [
+          {
+            "id": "description",
+            "label": "这一周，你有什么新的发现和想法？",
+            "type": "textarea",
+            "required": true
+          }
+        ]
+      },
+      {
+        "id": "parent",
+        "name": "家长观察",
+        "fields": [
+          {
+            "id": "description",
+            "label": "具体行为、情境及孩子反应（不加评价）",
+            "type": "textarea",
+            "required": true
+          },
+          {
+            "id": "dimensions",
+            "label": "涉及的能力",
+            "type": "multi",
+            "required": false,
+            "options": [
+              {
+                "value": "critical",
+                "label": "独立思考"
+              },
+              {
+                "value": "communication",
+                "label": "沟通"
+              },
+              {
+                "value": "collaboration",
+                "label": "协作"
+              },
+              {
+                "value": "creativity",
+                "label": "创造力"
+              },
+              {
+                "value": "resilience",
+                "label": "情绪恢复力"
+              }
+            ]
+          },
+          {
+            "id": "contextTags",
+            "label": "发生场景",
+            "type": "multi",
+            "required": false,
+            "options": [
+              {
+                "value": "school",
+                "label": "学校"
+              },
+              {
+                "value": "home",
+                "label": "家庭"
+              },
+              {
+                "value": "social",
+                "label": "社交"
+              },
+              {
+                "value": "alone",
+                "label": "独处"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "activity",
+        "name": "活动反馈",
+        "fields": [
+          {
+            "id": "description",
+            "label": "活动内容和自己的反应、变化",
+            "type": "textarea",
+            "required": true
+          },
+          {
+            "id": "dimensions",
+            "label": "涉及的能力",
+            "type": "multi",
+            "required": false,
+            "options": [
+              {
+                "value": "critical",
+                "label": "独立思考"
+              },
+              {
+                "value": "communication",
+                "label": "沟通"
+              },
+              {
+                "value": "collaboration",
+                "label": "协作"
+              },
+              {
+                "value": "creativity",
+                "label": "创造力"
+              },
+              {
+                "value": "resilience",
+                "label": "情绪恢复力"
+              }
+            ]
+          },
+          {
+            "id": "activityScenes",
+            "label": "活动形式",
+            "type": "multi",
+            "required": false,
+            "options": [
+              {
+                "value": "online",
+                "label": "线上"
+              },
+              {
+                "value": "offline",
+                "label": "线下"
+              },
+              {
+                "value": "group",
+                "label": "团体"
+              },
+              {
+                "value": "individual",
+                "label": "一对一"
+              }
+            ]
+          },
+          {
+            "id": "isEffective",
+            "label": "感觉活动带来了积极变化",
+            "type": "single",
+            "required": false,
+            "options": [
+              {
+                "value": 1,
+                "label": "是"
+              },
+              {
+                "value": 0,
+                "label": "否"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "stress",
+        "name": "压力观察",
+        "fields": [
+          {
+            "id": "description",
+            "label": "观察到的压力与反应",
+            "type": "textarea",
+            "required": true
+          },
+          {
+            "id": "stressSignals",
+            "label": "压力信号",
+            "type": "multi",
+            "required": false,
+            "options": [
+              {
+                "value": "emotion",
+                "label": "情绪波动"
+              },
+              {
+                "value": "body",
+                "label": "身体不适"
+              },
+              {
+                "value": "behavior",
+                "label": "回避行为"
+              },
+              {
+                "value": "sleep",
+                "label": "睡眠变化"
+              },
+              {
+                "value": "social",
+                "label": "社交退缩"
+              },
+              {
+                "value": "other",
+                "label": "其他"
+              }
+            ]
+          },
+          {
+            "id": "contextTags",
+            "label": "发生场景",
+            "type": "multi",
+            "required": false,
+            "options": [
+              {
+                "value": "school",
+                "label": "学校"
+              },
+              {
+                "value": "home",
+                "label": "家庭"
+              },
+              {
+                "value": "social",
+                "label": "社交"
+              },
+              {
+                "value": "alone",
+                "label": "独处"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "sl",
+    "name": "睡眠微手帐",
+    "group": "中长期成长观察",
+    "mode": "tracker",
+    "description": "记录时长区间、质量、入睡与夜醒及影响因素，回看最近7条趋势和因素共现。",
+    "sourceUrl": "https://sdsqsnwh.cn/cz/sl.html",
+    "profiles": [
+      {
+        "id": "daily",
+        "name": "每日睡眠",
+        "fields": [
+          {
+            "id": "sleepRange",
+            "label": "昨晚大约睡了多久？",
+            "type": "single",
+            "required": true,
+            "options": [
+              {
+                "value": "lt5",
+                "label": "不到5小时"
+              },
+              {
+                "value": "5-6",
+                "label": "5-6小时"
+              },
+              {
+                "value": "6-7",
+                "label": "6-7小时"
+              },
+              {
+                "value": "7-8",
+                "label": "7-8小时"
+              },
+              {
+                "value": "8-9",
+                "label": "8-9小时"
+              },
+              {
+                "value": "9-10",
+                "label": "9-10小时"
+              },
+              {
+                "value": "gt10",
+                "label": "10小时以上"
+              }
+            ]
+          },
+          {
+            "id": "quality",
+            "label": "睡得怎么样？",
+            "type": "single",
+            "required": true,
+            "options": [
+              {
+                "value": 1,
+                "label": "很差"
+              },
+              {
+                "value": 2,
+                "label": "不太好"
+              },
+              {
+                "value": 3,
+                "label": "还行"
+              },
+              {
+                "value": 4,
+                "label": "挺好"
+              },
+              {
+                "value": 5,
+                "label": "超棒"
+              }
+            ]
+          },
+          {
+            "id": "mood",
+            "label": "起床后的心情",
+            "type": "single",
+            "required": false,
+            "options": [
+              {
+                "value": "happy",
+                "label": "开心"
+              },
+              {
+                "value": "ok",
+                "label": "一般"
+              },
+              {
+                "value": "tired",
+                "label": "疲惫"
+              },
+              {
+                "value": "sad",
+                "label": "难过"
+              },
+              {
+                "value": "angry",
+                "label": "烦躁"
+              }
+            ]
+          },
+          {
+            "id": "fallAsleep",
+            "label": "入睡情况",
+            "type": "single",
+            "required": false,
+            "options": [
+              {
+                "value": "fast",
+                "label": "很快睡着了"
+              },
+              {
+                "value": "soon",
+                "label": "过了一会儿才睡着"
+              },
+              {
+                "value": "slow",
+                "label": "翻了好久才睡着"
+              },
+              {
+                "value": "verylong",
+                "label": "怎么都睡不着"
+              }
+            ]
+          },
+          {
+            "id": "nightWake",
+            "label": "夜间醒来情况",
+            "type": "single",
+            "required": false,
+            "options": [
+              {
+                "value": "none",
+                "label": "一觉睡到天亮"
+              },
+              {
+                "value": "once",
+                "label": "醒了一次"
+              },
+              {
+                "value": "several",
+                "label": "醒了好几次"
+              },
+              {
+                "value": "long",
+                "label": "醒了很久才再睡着"
+              }
+            ]
+          },
+          {
+            "id": "homework",
+            "label": "📚 作业完成时间",
+            "type": "single",
+            "required": false,
+            "options": [
+              {
+                "value": "early",
+                "label": "放学前完成"
+              },
+              {
+                "value": "normal",
+                "label": "晚饭前完成"
+              },
+              {
+                "value": "late",
+                "label": "睡前才写完"
+              },
+              {
+                "value": "none",
+                "label": "没有作业"
+              }
+            ],
+            "section": "睡眠影响因素"
+          },
+          {
+            "id": "pressure",
+            "label": "📝 明天有压力的事吗",
+            "type": "single",
+            "required": false,
+            "options": [
+              {
+                "value": "exam",
+                "label": "有考试/测验"
+              },
+              {
+                "value": "homework",
+                "label": "有要交的大作业"
+              },
+              {
+                "value": "perform",
+                "label": "有表演/比赛"
+              },
+              {
+                "value": "none",
+                "label": "没有压力"
+              }
+            ],
+            "section": "睡眠影响因素"
+          },
+          {
+            "id": "class",
+            "label": "🎒 课外兴趣班",
+            "type": "single",
+            "required": false,
+            "options": [
+              {
+                "value": "none",
+                "label": "今天没有"
+              },
+              {
+                "value": "one",
+                "label": "有一个"
+              },
+              {
+                "value": "many",
+                "label": "有两个以上"
+              },
+              {
+                "value": "late",
+                "label": "上到很晚"
+              }
+            ],
+            "section": "睡眠影响因素"
+          },
+          {
+            "id": "screen",
+            "label": "📱 睡前玩电子产品",
+            "type": "single",
+            "required": false,
+            "options": [
+              {
+                "value": "none",
+                "label": "没玩"
+              },
+              {
+                "value": "little",
+                "label": "不到30分钟"
+              },
+              {
+                "value": "some",
+                "label": "30-60分钟"
+              },
+              {
+                "value": "lot",
+                "label": "超过1小时"
+              }
+            ],
+            "section": "睡眠影响因素"
+          },
+          {
+            "id": "exercise",
+            "label": "🏃 白天运动了吗",
+            "type": "single",
+            "required": false,
+            "options": [
+              {
+                "value": "lot",
+                "label": "运动超过1小时"
+              },
+              {
+                "value": "some",
+                "label": "运动了一会儿"
+              },
+              {
+                "value": "little",
+                "label": "几乎没动"
+              }
+            ],
+            "section": "睡眠影响因素"
+          },
+          {
+            "id": "nap",
+            "label": "😴 白天午睡了吗",
+            "type": "single",
+            "required": false,
+            "options": [
+              {
+                "value": "none",
+                "label": "没有午睡"
+              },
+              {
+                "value": "short",
+                "label": "午睡不到30分钟"
+              },
+              {
+                "value": "long",
+                "label": "午睡超过30分钟"
+              },
+              {
+                "value": "late",
+                "label": "傍晚才午睡"
+              }
+            ],
+            "section": "睡眠影响因素"
+          },
+          {
+            "id": "drink",
+            "label": "🥤 睡前吃喝",
+            "type": "single",
+            "required": false,
+            "options": [
+              {
+                "value": "nothing",
+                "label": "什么都没吃"
+              },
+              {
+                "value": "milk",
+                "label": "喝了温牛奶"
+              },
+              {
+                "value": "soda",
+                "label": "喝了可乐/奶茶"
+              },
+              {
+                "value": "snack",
+                "label": "吃了零食"
+              },
+              {
+                "value": "coffee",
+                "label": "喝了咖啡/茶"
+              }
+            ],
+            "section": "睡眠影响因素"
+          },
+          {
+            "id": "dinner",
+            "label": "🍽️ 晚饭吃得怎么样",
+            "type": "single",
+            "required": false,
+            "options": [
+              {
+                "value": "full",
+                "label": "吃得很饱"
+              },
+              {
+                "value": "ok",
+                "label": "吃得刚好"
+              },
+              {
+                "value": "little",
+                "label": "吃得不多"
+              },
+              {
+                "value": "late",
+                "label": "吃得很晚"
+              },
+              {
+                "value": "spicy",
+                "label": "吃了辣的"
+              }
+            ],
+            "section": "睡眠影响因素"
+          },
+          {
+            "id": "dayMood",
+            "label": "😊 白天心情怎么样",
+            "type": "single",
+            "required": false,
+            "options": [
+              {
+                "value": "happy",
+                "label": "很开心"
+              },
+              {
+                "value": "ok",
+                "label": "一般般"
+              },
+              {
+                "value": "worried",
+                "label": "有点烦恼"
+              },
+              {
+                "value": "sad",
+                "label": "很不开心"
+              },
+              {
+                "value": "excited",
+                "label": "特别兴奋"
+              }
+            ],
+            "section": "睡眠影响因素"
+          },
+          {
+            "id": "family",
+            "label": "👨‍👩‍👧 和家人相处",
+            "type": "single",
+            "required": false,
+            "options": [
+              {
+                "value": "great",
+                "label": "很开心"
+              },
+              {
+                "value": "ok",
+                "label": "还行"
+              },
+              {
+                "value": "scolded",
+                "label": "被批评了"
+              },
+              {
+                "value": "argue",
+                "label": "吵架了"
+              }
+            ],
+            "section": "睡眠影响因素"
+          },
+          {
+            "id": "friend",
+            "label": "👫 和同学/朋友相处",
+            "type": "single",
+            "required": false,
+            "options": [
+              {
+                "value": "great",
+                "label": "一起玩很开心"
+              },
+              {
+                "value": "ok",
+                "label": "正常相处"
+              },
+              {
+                "value": "conflict",
+                "label": "闹矛盾了"
+              },
+              {
+                "value": "lonely",
+                "label": "感觉被冷落"
+              }
+            ],
+            "section": "睡眠影响因素"
+          },
+          {
+            "id": "body",
+            "label": "💪 身体状况",
+            "type": "single",
+            "required": false,
+            "options": [
+              {
+                "value": "great",
+                "label": "精神很好"
+              },
+              {
+                "value": "tired",
+                "label": "有点累"
+              },
+              {
+                "value": "sick",
+                "label": "不太舒服"
+              },
+              {
+                "value": "pain",
+                "label": "哪里疼"
+              },
+              {
+                "value": "stuffy",
+                "label": "鼻子堵了"
+              }
+            ],
+            "section": "睡眠影响因素"
+          },
+          {
+            "id": "preSleep",
+            "label": "🚿 睡前准备（可多选）",
+            "type": "multi",
+            "required": false,
+            "options": [
+              {
+                "value": "shower",
+                "label": "洗了热水澡"
+              },
+              {
+                "value": "teeth",
+                "label": "认真刷牙"
+              },
+              {
+                "value": "reading",
+                "label": "看书"
+              },
+              {
+                "value": "music",
+                "label": "听音乐"
+              },
+              {
+                "value": "game",
+                "label": "打游戏"
+              },
+              {
+                "value": "video",
+                "label": "看视频"
+              },
+              {
+                "value": "talk",
+                "label": "和家人聊天"
+              },
+              {
+                "value": "think",
+                "label": "想事情"
+              },
+              {
+                "value": "stretch",
+                "label": "做了拉伸"
+              },
+              {
+                "value": "diary",
+                "label": "写了日记"
+              }
+            ],
+            "section": "睡眠影响因素"
+          },
+          {
+            "id": "env",
+            "label": "🛏️ 卧室环境",
+            "type": "single",
+            "required": false,
+            "options": [
+              {
+                "value": "great",
+                "label": "安静又黑暗"
+              },
+              {
+                "value": "ok",
+                "label": "还可以"
+              },
+              {
+                "value": "noisy",
+                "label": "有点吵"
+              },
+              {
+                "value": "bright",
+                "label": "太亮了"
+              },
+              {
+                "value": "hot",
+                "label": "太热了"
+              },
+              {
+                "value": "cold",
+                "label": "太冷了"
+              }
+            ],
+            "section": "睡眠影响因素"
+          },
+          {
+            "id": "weather",
+            "label": "🌤️ 今天天气",
+            "type": "single",
+            "required": false,
+            "options": [
+              {
+                "value": "sunny",
+                "label": "☀️ 晴天"
+              },
+              {
+                "value": "cloudy",
+                "label": "☁️ 阴天"
+              },
+              {
+                "value": "rain",
+                "label": "🌧️ 下雨"
+              },
+              {
+                "value": "snow",
+                "label": "❄️ 下雪"
+              },
+              {
+                "value": "wind",
+                "label": "🌪️ 刮大风"
+              },
+              {
+                "value": "fog",
+                "label": "🌫️ 雾天"
+              }
+            ],
+            "section": "睡眠影响因素"
+          },
+          {
+            "id": "customGood",
+            "label": "自定义因素：可能帮助睡眠的事",
+            "type": "textarea",
+            "required": false,
+            "max": 200,
+            "section": "自定义因素"
+          },
+          {
+            "id": "customBad",
+            "label": "自定义因素：可能影响睡眠的事",
+            "type": "textarea",
+            "required": false,
+            "max": 200,
+            "section": "自定义因素"
+          },
+          {
+            "id": "note",
+            "label": "梦境或其他想记下的事",
+            "type": "textarea",
+            "required": false,
+            "max": 1000
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "qc1",
+    "name": "青春期成长青少年手帐",
+    "group": "中长期成长观察",
+    "mode": "tracker",
+    "description": "根据男生/女生分别记录身体变化、情绪、知识需求与沟通；敏感记录仅本人可见。",
+    "sourceUrl": "https://sdsqsnwh.cn/cz/qc1.html",
+    "profiles": [
+      {
+        "id": "male",
+        "name": "男生版",
+        "fields": [
+          {
+            "id": "age",
+            "label": "你现在的年龄段",
+            "type": "single",
+            "required": true,
+            "options": [
+              {
+                "value": "10-12",
+                "label": "10-12岁 青春期前期"
+              },
+              {
+                "value": "13-15",
+                "label": "13-15岁 青春期中期"
+              },
+              {
+                "value": "16-18",
+                "label": "16-18岁 青春期后期"
+              },
+              {
+                "value": "other",
+                "label": "其他 关注成长"
+              }
+            ],
+            "section": ""
+          },
+          {
+            "id": "mood",
+            "label": "今天的心情怎么样？",
+            "type": "single",
+            "required": false,
+            "options": [
+              {
+                "value": "great",
+                "label": "😄 很好"
+              },
+              {
+                "value": "ok",
+                "label": "🙂 还行"
+              },
+              {
+                "value": "confused",
+                "label": "😕 迷茫"
+              },
+              {
+                "value": "anxious",
+                "label": "😣 焦虑"
+              },
+              {
+                "value": "sad",
+                "label": "😢 不开心"
+              }
+            ],
+            "section": ""
+          },
+          {
+            "id": "teenBodyChange",
+            "label": "自己注意到的身体变化",
+            "type": "multi",
+            "required": false,
+            "options": [
+              {
+                "value": "height",
+                "label": "身高增长"
+              },
+              {
+                "value": "weight",
+                "label": "体重增加"
+              },
+              {
+                "value": "voice",
+                "label": "声音变粗"
+              },
+              {
+                "value": "bodyHair",
+                "label": "体毛生长"
+              },
+              {
+                "value": "penis",
+                "label": "阴茎和睾丸发育"
+              },
+              {
+                "value": "wetDream",
+                "label": "遗精"
+              },
+              {
+                "value": "muscle",
+                "label": "肌肉增长"
+              },
+              {
+                "value": "acne",
+                "label": "面部痤疮"
+              }
+            ]
+          },
+          {
+            "id": "parentObserveBody",
+            "label": "家人注意到的身体变化",
+            "type": "multi",
+            "required": false,
+            "options": [
+              {
+                "value": "height",
+                "label": "身高增长"
+              },
+              {
+                "value": "weight",
+                "label": "体重增加"
+              },
+              {
+                "value": "voice",
+                "label": "声音变粗"
+              },
+              {
+                "value": "bodyHair",
+                "label": "体毛生长"
+              },
+              {
+                "value": "penis",
+                "label": "阴茎和睾丸发育"
+              },
+              {
+                "value": "wetDream",
+                "label": "遗精"
+              },
+              {
+                "value": "muscle",
+                "label": "肌肉增长"
+              },
+              {
+                "value": "acne",
+                "label": "面部痤疮"
+              }
+            ]
+          },
+          {
+            "id": "bodyAccept",
+            "label": "你对自己身体变化的接受程度",
+            "type": "single",
+            "required": false,
+            "options": [
+              {
+                "value": "1",
+                "label": "1 很不接受"
+              },
+              {
+                "value": "2",
+                "label": "2 有点别扭"
+              },
+              {
+                "value": "3",
+                "label": "3 一般"
+              },
+              {
+                "value": "4",
+                "label": "4 接受"
+              },
+              {
+                "value": "5",
+                "label": "5 很接受"
+              }
+            ],
+            "section": ""
+          },
+          {
+            "id": "teenBodyFeeling",
+            "label": "你对自己身体变化的感受是？",
+            "type": "single",
+            "required": false,
+            "options": [
+              {
+                "value": "curious",
+                "label": "很好奇"
+              },
+              {
+                "value": "calm",
+                "label": "觉得很正常"
+              },
+              {
+                "value": "shy",
+                "label": "有点害羞"
+              },
+              {
+                "value": "worried",
+                "label": "有点担心"
+              },
+              {
+                "value": "embarrassed",
+                "label": "觉得尴尬"
+              }
+            ],
+            "section": ""
+          },
+          {
+            "id": "knowledgeSource",
+            "label": "你主要从哪里了解性知识？",
+            "type": "multi",
+            "required": false,
+            "options": [
+              {
+                "value": "school",
+                "label": "学校课堂"
+              },
+              {
+                "value": "family",
+                "label": "家庭教育"
+              },
+              {
+                "value": "internet",
+                "label": "网络搜索"
+              },
+              {
+                "value": "book",
+                "label": "科普书籍"
+              },
+              {
+                "value": "peer",
+                "label": "同龄人交流"
+              }
+            ],
+            "section": ""
+          },
+          {
+            "id": "knowledgeNeed",
+            "label": "你目前最想了解的性知识是？",
+            "type": "multi",
+            "required": false,
+            "options": [
+              {
+                "value": "bodyChange",
+                "label": "身体发育细节"
+              },
+              {
+                "value": "masturbation",
+                "label": "自慰是否正常"
+              },
+              {
+                "value": "relationship",
+                "label": "恋爱与情感"
+              },
+              {
+                "value": "protection",
+                "label": "避孕与防护"
+              }
+            ],
+            "section": ""
+          },
+          {
+            "id": "freeThoughts",
+            "label": "还有什么想说的话？",
+            "type": "textarea",
+            "required": false,
+            "max": 2000,
+            "section": ""
+          }
+        ]
+      },
+      {
+        "id": "female",
+        "name": "女生版",
+        "fields": [
+          {
+            "id": "age",
+            "label": "你现在的年龄段",
+            "type": "single",
+            "required": true,
+            "options": [
+              {
+                "value": "10-12",
+                "label": "10-12岁 青春期前期"
+              },
+              {
+                "value": "13-15",
+                "label": "13-15岁 青春期中期"
+              },
+              {
+                "value": "16-18",
+                "label": "16-18岁 青春期后期"
+              },
+              {
+                "value": "other",
+                "label": "其他 关注成长"
+              }
+            ],
+            "section": ""
+          },
+          {
+            "id": "mood",
+            "label": "今天的心情怎么样？",
+            "type": "single",
+            "required": false,
+            "options": [
+              {
+                "value": "great",
+                "label": "😄 很好"
+              },
+              {
+                "value": "ok",
+                "label": "🙂 还行"
+              },
+              {
+                "value": "confused",
+                "label": "😕 迷茫"
+              },
+              {
+                "value": "anxious",
+                "label": "😣 焦虑"
+              },
+              {
+                "value": "sad",
+                "label": "😢 不开心"
+              }
+            ],
+            "section": ""
+          },
+          {
+            "id": "teenBodyChange",
+            "label": "自己注意到的身体变化",
+            "type": "multi",
+            "required": false,
+            "options": [
+              {
+                "value": "height",
+                "label": "身高增长"
+              },
+              {
+                "value": "weight",
+                "label": "体重增加"
+              },
+              {
+                "value": "breast",
+                "label": "乳房发育"
+              },
+              {
+                "value": "bodyHair",
+                "label": "体毛生长"
+              },
+              {
+                "value": "menstruation",
+                "label": "月经初潮"
+              },
+              {
+                "value": "hip",
+                "label": "臀部变化"
+              },
+              {
+                "value": "discharge",
+                "label": "分泌物变化"
+              },
+              {
+                "value": "acne",
+                "label": "面部痤疮"
+              },
+              {
+                "value": "dysmenorrhea",
+                "label": "痛经"
+              }
+            ]
+          },
+          {
+            "id": "parentObserveBody",
+            "label": "家人注意到的身体变化",
+            "type": "multi",
+            "required": false,
+            "options": [
+              {
+                "value": "height",
+                "label": "身高增长"
+              },
+              {
+                "value": "weight",
+                "label": "体重增加"
+              },
+              {
+                "value": "breast",
+                "label": "乳房发育"
+              },
+              {
+                "value": "bodyHair",
+                "label": "体毛生长"
+              },
+              {
+                "value": "menstruation",
+                "label": "月经初潮"
+              },
+              {
+                "value": "hip",
+                "label": "臀部变化"
+              },
+              {
+                "value": "discharge",
+                "label": "分泌物变化"
+              },
+              {
+                "value": "acne",
+                "label": "面部痤疮"
+              },
+              {
+                "value": "dysmenorrhea",
+                "label": "痛经"
+              }
+            ]
+          },
+          {
+            "id": "bodyAccept",
+            "label": "你对自己身体变化的接受程度",
+            "type": "single",
+            "required": false,
+            "options": [
+              {
+                "value": "1",
+                "label": "1 很不接受"
+              },
+              {
+                "value": "2",
+                "label": "2 有点别扭"
+              },
+              {
+                "value": "3",
+                "label": "3 一般"
+              },
+              {
+                "value": "4",
+                "label": "4 接受"
+              },
+              {
+                "value": "5",
+                "label": "5 很接受"
+              }
+            ],
+            "section": ""
+          },
+          {
+            "id": "teenBodyFeeling",
+            "label": "你对自己身体变化的感受是？",
+            "type": "single",
+            "required": false,
+            "options": [
+              {
+                "value": "curious",
+                "label": "很好奇"
+              },
+              {
+                "value": "calm",
+                "label": "觉得很正常"
+              },
+              {
+                "value": "shy",
+                "label": "有点害羞"
+              },
+              {
+                "value": "worried",
+                "label": "有点担心"
+              },
+              {
+                "value": "embarrassed",
+                "label": "觉得尴尬"
+              }
+            ],
+            "section": ""
+          },
+          {
+            "id": "knowledgeSource",
+            "label": "你主要从哪里了解性知识？",
+            "type": "multi",
+            "required": false,
+            "options": [
+              {
+                "value": "school",
+                "label": "学校课堂"
+              },
+              {
+                "value": "family",
+                "label": "家庭教育"
+              },
+              {
+                "value": "internet",
+                "label": "网络搜索"
+              },
+              {
+                "value": "book",
+                "label": "科普书籍"
+              },
+              {
+                "value": "peer",
+                "label": "同龄人交流"
+              }
+            ],
+            "section": ""
+          },
+          {
+            "id": "knowledgeNeed",
+            "label": "你目前最想了解的性知识是？",
+            "type": "multi",
+            "required": false,
+            "options": [
+              {
+                "value": "bodyChange",
+                "label": "身体发育细节"
+              },
+              {
+                "value": "menstrualCare",
+                "label": "月经护理"
+              },
+              {
+                "value": "relationship",
+                "label": "恋爱与情感"
+              },
+              {
+                "value": "protection",
+                "label": "避孕与防护"
+              }
+            ],
+            "section": ""
+          },
+          {
+            "id": "freeThoughts",
+            "label": "还有什么想说的话？",
+            "type": "textarea",
+            "required": false,
+            "max": 2000,
+            "section": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "qc",
+    "name": "青春期成长家庭共评手帐",
+    "group": "中长期成长观察",
+    "mode": "tracker",
+    "description": "根据男生/女生分别记录身体变化、情绪、知识需求与沟通；敏感记录仅本人可见。",
+    "sourceUrl": "https://sdsqsnwh.cn/cz/qc.html",
+    "profiles": [
+      {
+        "id": "male",
+        "name": "男生版",
+        "fields": [
+          {
+            "id": "age",
+            "label": "孩子目前的年龄段",
+            "type": "single",
+            "required": false,
+            "options": [
+              {
+                "value": "10-12",
+                "label": "10-12岁 青春期前期"
+              },
+              {
+                "value": "13-15",
+                "label": "13-15岁 青春期中期"
+              },
+              {
+                "value": "16-18",
+                "label": "16-18岁 青春期后期"
+              },
+              {
+                "value": "other",
+                "label": "其他 关注成长"
+              }
+            ],
+            "section": ""
+          },
+          {
+            "id": "mood",
+            "label": "今天孩子的心情怎么样？",
+            "type": "single",
+            "required": false,
+            "options": [
+              {
+                "value": "great",
+                "label": "😄 很好"
+              },
+              {
+                "value": "ok",
+                "label": "🙂 还行"
+              },
+              {
+                "value": "confused",
+                "label": "😕 迷茫"
+              },
+              {
+                "value": "anxious",
+                "label": "😣 焦虑"
+              },
+              {
+                "value": "sad",
+                "label": "😢 不开心"
+              }
+            ],
+            "section": ""
+          },
+          {
+            "id": "bodyAccept",
+            "label": "孩子对自己身体变化的接受程度",
+            "type": "single",
+            "required": false,
+            "options": [
+              {
+                "value": "1",
+                "label": "1 很不接受"
+              },
+              {
+                "value": "2",
+                "label": "2 有点别扭"
+              },
+              {
+                "value": "3",
+                "label": "3 一般"
+              },
+              {
+                "value": "4",
+                "label": "4 接受"
+              },
+              {
+                "value": "5",
+                "label": "5 很接受"
+              }
+            ],
+            "section": ""
+          },
+          {
+            "id": "parentObserve",
+            "label": "家长观察到的孩子适应情况",
+            "type": "single",
+            "required": false,
+            "options": [
+              {
+                "value": "1",
+                "label": "1 比较困扰"
+              },
+              {
+                "value": "2",
+                "label": "2 有些困扰"
+              },
+              {
+                "value": "3",
+                "label": "3 一般"
+              },
+              {
+                "value": "4",
+                "label": "4 较好"
+              },
+              {
+                "value": "5",
+                "label": "5 很好"
+              }
+            ],
+            "section": ""
+          },
+          {
+            "id": "context",
+            "label": "这次记录的场景",
+            "type": "single",
+            "required": true,
+            "options": [
+              {
+                "value": "daily",
+                "label": "日常观察 家庭日常"
+              },
+              {
+                "value": "offlineCourse",
+                "label": "线下课程 面授/工作坊"
+              },
+              {
+                "value": "onlineCourse",
+                "label": "线上课程 直播/录播"
+              },
+              {
+                "value": "parentTalk",
+                "label": "亲子对话 家庭沟通"
+              },
+              {
+                "value": "consultation",
+                "label": "专业咨询 心理咨询"
+              }
+            ],
+            "section": ""
+          },
+          {
+            "id": "childParticipation",
+            "label": "孩子参与度",
+            "type": "single",
+            "required": false,
+            "options": [
+              {
+                "value": "1",
+                "label": "1 被动"
+              },
+              {
+                "value": "2",
+                "label": "2 抗拒"
+              },
+              {
+                "value": "3",
+                "label": "3 一般"
+              },
+              {
+                "value": "4",
+                "label": "4 积极"
+              },
+              {
+                "value": "5",
+                "label": "5 投入"
+              }
+            ],
+            "section": ""
+          },
+          {
+            "id": "courseContent",
+            "label": "课程内容主要讲了什么？ （可多选）",
+            "type": "multi",
+            "required": false,
+            "options": [
+              {
+                "value": "bodyKnowledge",
+                "label": "身体发育知识"
+              },
+              {
+                "value": "emotionManage",
+                "label": "情绪管理"
+              },
+              {
+                "value": "relationship",
+                "label": "人际与情感"
+              },
+              {
+                "value": "selfProtect",
+                "label": "自我保护"
+              },
+              {
+                "value": "sexEdu",
+                "label": "性教育基础"
+              },
+              {
+                "value": "pubertyPsych",
+                "label": "青春期心理"
+              }
+            ],
+            "section": ""
+          },
+          {
+            "id": "talkEffect",
+            "label": "对话效果自评",
+            "type": "single",
+            "required": false,
+            "options": [
+              {
+                "value": "1",
+                "label": "1 没聊下去"
+              },
+              {
+                "value": "2",
+                "label": "2 勉强"
+              },
+              {
+                "value": "3",
+                "label": "3 一般"
+              },
+              {
+                "value": "4",
+                "label": "4 较好"
+              },
+              {
+                "value": "5",
+                "label": "5 很有收获"
+              }
+            ],
+            "section": ""
+          },
+          {
+            "id": "childReaction",
+            "label": "孩子当时的反应 （可多选）",
+            "type": "multi",
+            "required": false,
+            "options": [
+              {
+                "value": "willing",
+                "label": "愿意聊"
+              },
+              {
+                "value": "shy",
+                "label": "有点不好意思"
+              },
+              {
+                "value": "asked",
+                "label": "问了问题"
+              },
+              {
+                "value": "shared",
+                "label": "主动分享"
+              }
+            ],
+            "section": ""
+          },
+          {
+            "id": "teenBodyChange",
+            "label": "1 孩子自己注意到了哪些身体变化？ 孩子",
+            "type": "multi",
+            "required": false,
+            "options": [
+              {
+                "value": "height",
+                "label": "身高增长"
+              },
+              {
+                "value": "weight",
+                "label": "体重增加"
+              },
+              {
+                "value": "voice",
+                "label": "声音变粗"
+              },
+              {
+                "value": "bodyHair",
+                "label": "体毛生长"
+              },
+              {
+                "value": "penis",
+                "label": "阴茎和睾丸发育"
+              },
+              {
+                "value": "wetDream",
+                "label": "遗精"
+              },
+              {
+                "value": "muscle",
+                "label": "肌肉增长"
+              },
+              {
+                "value": "acne",
+                "label": "面部痤疮"
+              }
+            ],
+            "section": ""
+          },
+          {
+            "id": "parentObserveBody",
+            "label": "2 家长观察到了哪些身体变化？ 家长",
+            "type": "multi",
+            "required": false,
+            "options": [
+              {
+                "value": "height",
+                "label": "身高明显增长"
+              },
+              {
+                "value": "voice",
+                "label": "声音变粗"
+              },
+              {
+                "value": "bodyHair",
+                "label": "长出体毛"
+              },
+              {
+                "value": "wetDream",
+                "label": "遗精迹象"
+              },
+              {
+                "value": "muscle",
+                "label": "肌肉线条明显"
+              },
+              {
+                "value": "acne",
+                "label": "面部痤疮"
+              }
+            ],
+            "section": ""
+          },
+          {
+            "id": "teenBodyFeeling",
+            "label": "孩子对身体变化的感受是？ 孩子",
+            "type": "single",
+            "required": false,
+            "options": [
+              {
+                "value": "curious",
+                "label": "很好奇"
+              },
+              {
+                "value": "calm",
+                "label": "觉得很正常"
+              },
+              {
+                "value": "shy",
+                "label": "有点害羞"
+              },
+              {
+                "value": "worried",
+                "label": "有点担心"
+              },
+              {
+                "value": "embarrassed",
+                "label": "觉得尴尬"
+              }
+            ],
+            "section": ""
+          },
+          {
+            "id": "familyBodyTalk",
+            "label": "4 家里聊过这些身体发育的话题吗？ 共填",
+            "type": "multi",
+            "required": false,
+            "options": [
+              {
+                "value": "wetDream",
+                "label": "遗精"
+              },
+              {
+                "value": "penis",
+                "label": "阴茎发育"
+              },
+              {
+                "value": "bodyHair",
+                "label": "体毛"
+              },
+              {
+                "value": "voice",
+                "label": "声音变化"
+              }
+            ],
+            "section": ""
+          },
+          {
+            "id": "knowledgeSource",
+            "label": "孩子主要从哪里了解性知识？ 孩子",
+            "type": "multi",
+            "required": false,
+            "options": [
+              {
+                "value": "school",
+                "label": "学校课堂"
+              },
+              {
+                "value": "family",
+                "label": "家庭教育"
+              },
+              {
+                "value": "internet",
+                "label": "网络搜索"
+              },
+              {
+                "value": "book",
+                "label": "科普书籍"
+              },
+              {
+                "value": "peer",
+                "label": "同龄人交流"
+              }
+            ],
+            "section": ""
+          },
+          {
+            "id": "knowledgeNeed",
+            "label": "孩子目前最想了解的性知识是？ 孩子",
+            "type": "multi",
+            "required": false,
+            "options": [
+              {
+                "value": "bodyChange",
+                "label": "身体发育细节"
+              },
+              {
+                "value": "masturbation",
+                "label": "自慰是否正常"
+              },
+              {
+                "value": "relationship",
+                "label": "恋爱与情感"
+              },
+              {
+                "value": "protection",
+                "label": "避孕与防护"
+              }
+            ],
+            "section": ""
+          },
+          {
+            "id": "emotionShow",
+            "label": "1 孩子近期主要的情绪表现？ 家长",
+            "type": "multi",
+            "required": false,
+            "options": [
+              {
+                "value": "stable",
+                "label": "情绪稳定"
+              },
+              {
+                "value": "irritable",
+                "label": "易怒烦躁"
+              },
+              {
+                "value": "silent",
+                "label": "沉默寡言"
+              },
+              {
+                "value": "rebellious",
+                "label": "逆反对抗"
+              },
+              {
+                "value": "anxious",
+                "label": "焦虑紧张"
+              }
+            ],
+            "section": ""
+          },
+          {
+            "id": "parentSupport",
+            "label": "2 家长做了哪些心理支持？ 家长",
+            "type": "multi",
+            "required": false,
+            "options": [
+              {
+                "value": "listen",
+                "label": "倾听理解"
+              },
+              {
+                "value": "space",
+                "label": "给予独处空间"
+              },
+              {
+                "value": "accompany",
+                "label": "陪伴活动"
+              },
+              {
+                "value": "affirm",
+                "label": "肯定鼓励"
+              }
+            ],
+            "section": ""
+          },
+          {
+            "id": "safetySkill",
+            "label": "1 孩子是否掌握了自我保护的原则？ 共填",
+            "type": "multi",
+            "required": false,
+            "options": [
+              {
+                "value": "boundary",
+                "label": "身体边界感"
+              },
+              {
+                "value": "refuse",
+                "label": "敢于拒绝"
+              },
+              {
+                "value": "help",
+                "label": "知道如何求助"
+              },
+              {
+                "value": "privacy",
+                "label": "保护隐私部位"
+              }
+            ],
+            "section": ""
+          },
+          {
+            "id": "commQuality",
+            "label": "1 本周亲子沟通的频率和质量如何？ 家长",
+            "type": "single",
+            "required": false,
+            "options": [
+              {
+                "value": "high",
+                "label": "频繁且深入"
+              },
+              {
+                "value": "normal",
+                "label": "日常沟通"
+              },
+              {
+                "value": "low",
+                "label": "沟通较少"
+              },
+              {
+                "value": "conflict",
+                "label": "存在冲突"
+              }
+            ],
+            "section": ""
+          },
+          {
+            "id": "courseName",
+            "label": "课程/活动名称",
+            "type": "text",
+            "required": false,
+            "max": 200,
+            "section": ""
+          },
+          {
+            "id": "parentGainNote",
+            "label": "家长课后收获",
+            "type": "textarea",
+            "required": false,
+            "max": 2000,
+            "section": ""
+          },
+          {
+            "id": "actionItems",
+            "label": "课后打算怎么做？",
+            "type": "textarea",
+            "required": false,
+            "max": 2000,
+            "section": ""
+          },
+          {
+            "id": "talkTopic",
+            "label": "聊了什么话题？",
+            "type": "text",
+            "required": false,
+            "max": 200,
+            "section": ""
+          },
+          {
+            "id": "talkProcessNote",
+            "label": "简单记录一下对话过程",
+            "type": "textarea",
+            "required": false,
+            "max": 2000,
+            "section": ""
+          },
+          {
+            "id": "consultTopic",
+            "label": "咨询主题",
+            "type": "text",
+            "required": false,
+            "max": 200,
+            "section": ""
+          },
+          {
+            "id": "consultAdviceNote",
+            "label": "咨询师的主要建议",
+            "type": "textarea",
+            "required": false,
+            "max": 2000,
+            "section": ""
+          },
+          {
+            "id": "consultFollowUpNote",
+            "label": "我们打算怎么做？",
+            "type": "textarea",
+            "required": false,
+            "max": 2000,
+            "section": ""
+          },
+          {
+            "id": "freeThoughts",
+            "label": "还有什么想说的话？",
+            "type": "textarea",
+            "required": false,
+            "max": 2000,
+            "section": ""
+          }
+        ]
+      },
+      {
+        "id": "female",
+        "name": "女生版",
+        "fields": [
+          {
+            "id": "age",
+            "label": "孩子目前的年龄段",
+            "type": "single",
+            "required": false,
+            "options": [
+              {
+                "value": "10-12",
+                "label": "10-12岁 青春期前期"
+              },
+              {
+                "value": "13-15",
+                "label": "13-15岁 青春期中期"
+              },
+              {
+                "value": "16-18",
+                "label": "16-18岁 青春期后期"
+              },
+              {
+                "value": "other",
+                "label": "其他 关注成长"
+              }
+            ],
+            "section": ""
+          },
+          {
+            "id": "mood",
+            "label": "今天孩子的心情怎么样？",
+            "type": "single",
+            "required": false,
+            "options": [
+              {
+                "value": "great",
+                "label": "😄 很好"
+              },
+              {
+                "value": "ok",
+                "label": "🙂 还行"
+              },
+              {
+                "value": "confused",
+                "label": "😕 迷茫"
+              },
+              {
+                "value": "anxious",
+                "label": "😣 焦虑"
+              },
+              {
+                "value": "sad",
+                "label": "😢 不开心"
+              }
+            ],
+            "section": ""
+          },
+          {
+            "id": "bodyAccept",
+            "label": "孩子对自己身体变化的接受程度",
+            "type": "single",
+            "required": false,
+            "options": [
+              {
+                "value": "1",
+                "label": "1 很不接受"
+              },
+              {
+                "value": "2",
+                "label": "2 有点别扭"
+              },
+              {
+                "value": "3",
+                "label": "3 一般"
+              },
+              {
+                "value": "4",
+                "label": "4 接受"
+              },
+              {
+                "value": "5",
+                "label": "5 很接受"
+              }
+            ],
+            "section": ""
+          },
+          {
+            "id": "parentObserve",
+            "label": "家长观察到的孩子适应情况",
+            "type": "single",
+            "required": false,
+            "options": [
+              {
+                "value": "1",
+                "label": "1 比较困扰"
+              },
+              {
+                "value": "2",
+                "label": "2 有些困扰"
+              },
+              {
+                "value": "3",
+                "label": "3 一般"
+              },
+              {
+                "value": "4",
+                "label": "4 较好"
+              },
+              {
+                "value": "5",
+                "label": "5 很好"
+              }
+            ],
+            "section": ""
+          },
+          {
+            "id": "context",
+            "label": "这次记录的场景",
+            "type": "single",
+            "required": true,
+            "options": [
+              {
+                "value": "daily",
+                "label": "日常观察 家庭日常"
+              },
+              {
+                "value": "offlineCourse",
+                "label": "线下课程 面授/工作坊"
+              },
+              {
+                "value": "onlineCourse",
+                "label": "线上课程 直播/录播"
+              },
+              {
+                "value": "parentTalk",
+                "label": "亲子对话 家庭沟通"
+              },
+              {
+                "value": "consultation",
+                "label": "专业咨询 心理咨询"
+              }
+            ],
+            "section": ""
+          },
+          {
+            "id": "childParticipation",
+            "label": "孩子参与度",
+            "type": "single",
+            "required": false,
+            "options": [
+              {
+                "value": "1",
+                "label": "1 被动"
+              },
+              {
+                "value": "2",
+                "label": "2 抗拒"
+              },
+              {
+                "value": "3",
+                "label": "3 一般"
+              },
+              {
+                "value": "4",
+                "label": "4 积极"
+              },
+              {
+                "value": "5",
+                "label": "5 投入"
+              }
+            ],
+            "section": ""
+          },
+          {
+            "id": "courseContent",
+            "label": "课程内容主要讲了什么？ （可多选）",
+            "type": "multi",
+            "required": false,
+            "options": [
+              {
+                "value": "bodyKnowledge",
+                "label": "身体发育知识"
+              },
+              {
+                "value": "emotionManage",
+                "label": "情绪管理"
+              },
+              {
+                "value": "relationship",
+                "label": "人际与情感"
+              },
+              {
+                "value": "selfProtect",
+                "label": "自我保护"
+              },
+              {
+                "value": "sexEdu",
+                "label": "性教育基础"
+              },
+              {
+                "value": "pubertyPsych",
+                "label": "青春期心理"
+              }
+            ],
+            "section": ""
+          },
+          {
+            "id": "talkEffect",
+            "label": "对话效果自评",
+            "type": "single",
+            "required": false,
+            "options": [
+              {
+                "value": "1",
+                "label": "1 没聊下去"
+              },
+              {
+                "value": "2",
+                "label": "2 勉强"
+              },
+              {
+                "value": "3",
+                "label": "3 一般"
+              },
+              {
+                "value": "4",
+                "label": "4 较好"
+              },
+              {
+                "value": "5",
+                "label": "5 很有收获"
+              }
+            ],
+            "section": ""
+          },
+          {
+            "id": "childReaction",
+            "label": "孩子当时的反应 （可多选）",
+            "type": "multi",
+            "required": false,
+            "options": [
+              {
+                "value": "willing",
+                "label": "愿意聊"
+              },
+              {
+                "value": "shy",
+                "label": "有点不好意思"
+              },
+              {
+                "value": "asked",
+                "label": "问了问题"
+              },
+              {
+                "value": "shared",
+                "label": "主动分享"
+              }
+            ],
+            "section": ""
+          },
+          {
+            "id": "teenBodyChange",
+            "label": "1 孩子自己注意到了哪些身体变化？ 孩子",
+            "type": "multi",
+            "required": false,
+            "options": [
+              {
+                "value": "height",
+                "label": "身高增长"
+              },
+              {
+                "value": "weight",
+                "label": "体重增加"
+              },
+              {
+                "value": "breast",
+                "label": "乳房发育"
+              },
+              {
+                "value": "bodyHair",
+                "label": "体毛生长"
+              },
+              {
+                "value": "menstruation",
+                "label": "月经初潮"
+              },
+              {
+                "value": "hip",
+                "label": "臀部变化"
+              },
+              {
+                "value": "discharge",
+                "label": "分泌物变化"
+              },
+              {
+                "value": "acne",
+                "label": "面部痤疮"
+              },
+              {
+                "value": "dysmenorrhea",
+                "label": "痛经"
+              }
+            ],
+            "section": ""
+          },
+          {
+            "id": "parentObserveBody",
+            "label": "2 家长观察到了哪些身体变化？ 家长",
+            "type": "multi",
+            "required": false,
+            "options": [
+              {
+                "value": "height",
+                "label": "身高明显增长"
+              },
+              {
+                "value": "bodyHair",
+                "label": "长出体毛"
+              },
+              {
+                "value": "breast",
+                "label": "乳房发育"
+              },
+              {
+                "value": "menstruation",
+                "label": "月经初潮"
+              },
+              {
+                "value": "hip",
+                "label": "臀部变化"
+              },
+              {
+                "value": "acne",
+                "label": "面部痤疮"
+              }
+            ],
+            "section": ""
+          },
+          {
+            "id": "teenBodyFeeling",
+            "label": "孩子对身体变化的感受是？ 孩子",
+            "type": "single",
+            "required": false,
+            "options": [
+              {
+                "value": "curious",
+                "label": "很好奇"
+              },
+              {
+                "value": "calm",
+                "label": "觉得很正常"
+              },
+              {
+                "value": "shy",
+                "label": "有点害羞"
+              },
+              {
+                "value": "worried",
+                "label": "有点担心"
+              },
+              {
+                "value": "embarrassed",
+                "label": "觉得尴尬"
+              }
+            ],
+            "section": ""
+          },
+          {
+            "id": "familyBodyTalk",
+            "label": "4 家里聊过这些身体发育的话题吗？ 共填",
+            "type": "multi",
+            "required": false,
+            "options": [
+              {
+                "value": "menstruation",
+                "label": "月经"
+              },
+              {
+                "value": "breast",
+                "label": "乳房发育"
+              },
+              {
+                "value": "bodyHair",
+                "label": "体毛"
+              },
+              {
+                "value": "shape",
+                "label": "身材变化"
+              }
+            ],
+            "section": ""
+          },
+          {
+            "id": "knowledgeSource",
+            "label": "孩子主要从哪里了解性知识？ 孩子",
+            "type": "multi",
+            "required": false,
+            "options": [
+              {
+                "value": "school",
+                "label": "学校课堂"
+              },
+              {
+                "value": "family",
+                "label": "家庭教育"
+              },
+              {
+                "value": "internet",
+                "label": "网络搜索"
+              },
+              {
+                "value": "book",
+                "label": "科普书籍"
+              },
+              {
+                "value": "peer",
+                "label": "同龄人交流"
+              }
+            ],
+            "section": ""
+          },
+          {
+            "id": "knowledgeNeed",
+            "label": "孩子目前最想了解的性知识是？ 孩子",
+            "type": "multi",
+            "required": false,
+            "options": [
+              {
+                "value": "bodyChange",
+                "label": "身体发育细节"
+              },
+              {
+                "value": "menstrualCare",
+                "label": "月经护理"
+              },
+              {
+                "value": "relationship",
+                "label": "恋爱与情感"
+              },
+              {
+                "value": "protection",
+                "label": "避孕与防护"
+              }
+            ],
+            "section": ""
+          },
+          {
+            "id": "emotionShow",
+            "label": "1 孩子近期主要的情绪表现？ 家长",
+            "type": "multi",
+            "required": false,
+            "options": [
+              {
+                "value": "stable",
+                "label": "情绪稳定"
+              },
+              {
+                "value": "irritable",
+                "label": "易怒烦躁"
+              },
+              {
+                "value": "silent",
+                "label": "沉默寡言"
+              },
+              {
+                "value": "rebellious",
+                "label": "逆反对抗"
+              },
+              {
+                "value": "anxious",
+                "label": "焦虑紧张"
+              }
+            ],
+            "section": ""
+          },
+          {
+            "id": "parentSupport",
+            "label": "2 家长做了哪些心理支持？ 家长",
+            "type": "multi",
+            "required": false,
+            "options": [
+              {
+                "value": "listen",
+                "label": "倾听理解"
+              },
+              {
+                "value": "space",
+                "label": "给予独处空间"
+              },
+              {
+                "value": "accompany",
+                "label": "陪伴活动"
+              },
+              {
+                "value": "affirm",
+                "label": "肯定鼓励"
+              }
+            ],
+            "section": ""
+          },
+          {
+            "id": "safetySkill",
+            "label": "1 孩子是否掌握了自我保护的原则？ 共填",
+            "type": "multi",
+            "required": false,
+            "options": [
+              {
+                "value": "boundary",
+                "label": "身体边界感"
+              },
+              {
+                "value": "refuse",
+                "label": "敢于拒绝"
+              },
+              {
+                "value": "help",
+                "label": "知道如何求助"
+              },
+              {
+                "value": "privacy",
+                "label": "保护隐私部位"
+              }
+            ],
+            "section": ""
+          },
+          {
+            "id": "commQuality",
+            "label": "1 本周亲子沟通的频率和质量如何？ 家长",
+            "type": "single",
+            "required": false,
+            "options": [
+              {
+                "value": "high",
+                "label": "频繁且深入"
+              },
+              {
+                "value": "normal",
+                "label": "日常沟通"
+              },
+              {
+                "value": "low",
+                "label": "沟通较少"
+              },
+              {
+                "value": "conflict",
+                "label": "存在冲突"
+              }
+            ],
+            "section": ""
+          },
+          {
+            "id": "courseName",
+            "label": "课程/活动名称",
+            "type": "text",
+            "required": false,
+            "max": 200,
+            "section": ""
+          },
+          {
+            "id": "parentGainNote",
+            "label": "家长课后收获",
+            "type": "textarea",
+            "required": false,
+            "max": 2000,
+            "section": ""
+          },
+          {
+            "id": "actionItems",
+            "label": "课后打算怎么做？",
+            "type": "textarea",
+            "required": false,
+            "max": 2000,
+            "section": ""
+          },
+          {
+            "id": "talkTopic",
+            "label": "聊了什么话题？",
+            "type": "text",
+            "required": false,
+            "max": 200,
+            "section": ""
+          },
+          {
+            "id": "talkProcessNote",
+            "label": "简单记录一下对话过程",
+            "type": "textarea",
+            "required": false,
+            "max": 2000,
+            "section": ""
+          },
+          {
+            "id": "consultTopic",
+            "label": "咨询主题",
+            "type": "text",
+            "required": false,
+            "max": 200,
+            "section": ""
+          },
+          {
+            "id": "consultAdviceNote",
+            "label": "咨询师的主要建议",
+            "type": "textarea",
+            "required": false,
+            "max": 2000,
+            "section": ""
+          },
+          {
+            "id": "consultFollowUpNote",
+            "label": "我们打算怎么做？",
+            "type": "textarea",
+            "required": false,
+            "max": 2000,
+            "section": ""
+          },
+          {
+            "id": "freeThoughts",
+            "label": "还有什么想说的话？",
+            "type": "textarea",
+            "required": false,
+            "max": 2000,
+            "section": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "sz",
+    "name": "数字产品使用手帐",
+    "group": "中长期成长观察",
+    "mode": "tracker",
+    "description": "记录设备、场景、时长、内容、使用前后情绪、冲突、陪伴与服务效果。",
+    "sourceUrl": "https://sdsqsnwh.cn/cz/sz.html",
+    "profiles": [
+      {
+        "id": "daily",
+        "name": "每日使用记录",
+        "fields": [
+          {
+            "id": "deviceType",
+            "label": "主要设备",
+            "type": "single",
+            "required": true,
+            "options": [
+              {
+                "value": "smartphone",
+                "label": "📱 智能手机"
+              },
+              {
+                "value": "tablet",
+                "label": "📲 平板"
+              },
+              {
+                "value": "computer",
+                "label": "💻 电脑"
+              },
+              {
+                "value": "console",
+                "label": "🎮 游戏主机"
+              }
+            ],
+            "section": "📅 基础与场景"
+          },
+          {
+            "id": "context",
+            "label": "使用场景",
+            "type": "single",
+            "required": true,
+            "options": [
+              {
+                "value": "after_homework",
+                "label": "写作业间隙 / 拖延时"
+              },
+              {
+                "value": "before_bed",
+                "label": "睡前"
+              },
+              {
+                "value": "mealtime",
+                "label": "吃饭时"
+              },
+              {
+                "value": "boredom",
+                "label": "无聊 / 没事可做"
+              },
+              {
+                "value": "emotional_escape",
+                "label": "情绪低落 / 想逃避"
+              },
+              {
+                "value": "social",
+                "label": "社交需求"
+              },
+              {
+                "value": "other",
+                "label": "其他"
+              }
+            ],
+            "section": "📅 基础与场景"
+          },
+          {
+            "id": "screenTime",
+            "label": "使用时长（分钟）",
+            "type": "number",
+            "required": true,
+            "section": "📱 数字饮食日记",
+            "step": 1,
+            "min": 1.0,
+            "max": 1440,
+            "unit": "分钟"
+          },
+          {
+            "id": "contentCategory",
+            "label": "主要内容类别",
+            "type": "single",
+            "required": true,
+            "options": [
+              {
+                "value": "short_video",
+                "label": "短视频（抖音/快手）"
+              },
+              {
+                "value": "gaming",
+                "label": "游戏"
+              },
+              {
+                "value": "social_media",
+                "label": "社交媒体（微信/QQ/小红书）"
+              },
+              {
+                "value": "watching",
+                "label": "长视频 / 追剧"
+              },
+              {
+                "value": "learning",
+                "label": "学习 / 查资料"
+              },
+              {
+                "value": "creating",
+                "label": "创作（编程/剪辑/绘画）"
+              },
+              {
+                "value": "reading",
+                "label": "阅读 / 听播客"
+              }
+            ],
+            "section": "📱 数字饮食日记"
+          },
+          {
+            "id": "activityType",
+            "label": "活动性质",
+            "type": "single",
+            "required": true,
+            "options": [
+              {
+                "value": "passive",
+                "label": "被动消费（无目的地刷）"
+              },
+              {
+                "value": "active",
+                "label": "主动创造（产出/学习）"
+              },
+              {
+                "value": "social",
+                "label": "社交互动"
+              },
+              {
+                "value": "mixed",
+                "label": "混合"
+              }
+            ],
+            "section": "📱 数字饮食日记"
+          },
+          {
+            "id": "moodBefore",
+            "label": "使用前的情绪",
+            "type": "single",
+            "required": true,
+            "options": [
+              {
+                "value": "bored",
+                "label": "无聊"
+              },
+              {
+                "value": "anxious",
+                "label": "焦虑 / 有压力"
+              },
+              {
+                "value": "sad",
+                "label": "沮丧 / 难过"
+              },
+              {
+                "value": "tired",
+                "label": "疲惫"
+              },
+              {
+                "value": "happy",
+                "label": "开心 / 放松"
+              },
+              {
+                "value": "seeking",
+                "label": "主动想找点东西看看"
+              }
+            ],
+            "section": "📱 数字饮食日记"
+          },
+          {
+            "id": "moodAfter",
+            "label": "使用后的情绪",
+            "type": "single",
+            "required": true,
+            "options": [
+              {
+                "value": "relaxed",
+                "label": "放松了"
+              },
+              {
+                "value": "inspired",
+                "label": "有启发 / 有灵感"
+              },
+              {
+                "value": "guilty",
+                "label": "内疚 / 有点自责"
+              },
+              {
+                "value": "more_anxious",
+                "label": "更焦虑 / 更烦躁"
+              },
+              {
+                "value": "numb",
+                "label": "感觉空空的"
+              }
+            ],
+            "section": "📱 数字饮食日记"
+          },
+          {
+            "id": "conflictLevel",
+            "label": "今天因为手机发生过冲突吗？（1=没有冲突，5=大吵一架）",
+            "type": "number",
+            "required": false,
+            "section": "⚖️ 量化评估与干预",
+            "step": 1,
+            "min": 1.0,
+            "max": 5.0
+          },
+          {
+            "id": "interventionResponse",
+            "label": "叫停时孩子的反应",
+            "type": "single",
+            "required": true,
+            "options": [
+              {
+                "value": "voluntary",
+                "label": "主动放下，情绪平稳"
+              },
+              {
+                "value": "compliant",
+                "label": "催了之后才放下"
+              },
+              {
+                "value": "reluctant",
+                "label": "不情愿，拖着或讨价还价"
+              },
+              {
+                "value": "resistant",
+                "label": "发脾气，或趁不注意偷玩"
+              }
+            ],
+            "section": "⚖️ 量化评估与干预"
+          },
+          {
+            "id": "sleepImpact",
+            "label": "使用影响了睡眠",
+            "type": "single",
+            "required": false,
+            "options": [
+              {
+                "value": 1,
+                "label": "是"
+              },
+              {
+                "value": 0,
+                "label": "否"
+              }
+            ],
+            "section": "⚖️ 量化评估与干预"
+          },
+          {
+            "id": "goldenRule",
+            "label": "践行黄金法则",
+            "type": "single",
+            "required": false,
+            "options": [
+              {
+                "value": 1,
+                "label": "是"
+              },
+              {
+                "value": 0,
+                "label": "否"
+              }
+            ],
+            "section": "⚖️ 量化评估与干预"
+          },
+          {
+            "id": "imaginationLoop",
+            "label": "开展想象力循环",
+            "type": "single",
+            "required": false,
+            "options": [
+              {
+                "value": 1,
+                "label": "是"
+              },
+              {
+                "value": 0,
+                "label": "否"
+              }
+            ],
+            "section": "⚖️ 量化评估与干预"
+          },
+          {
+            "id": "noAIDay",
+            "label": "尝试无AI日",
+            "type": "single",
+            "required": false,
+            "options": [
+              {
+                "value": 1,
+                "label": "是"
+              },
+              {
+                "value": 0,
+                "label": "否"
+              }
+            ],
+            "section": "⚖️ 量化评估与干预"
+          },
+          {
+            "id": "observations",
+            "label": "观察到的「数字压力信号」或积极改变",
+            "type": "textarea",
+            "required": false,
+            "max": 2000,
+            "section": "❤️ 情绪解码与反思"
+          },
+          {
+            "id": "parentResponse",
+            "label": "我的领航员回应（替换了哪句\"没收\"的话？）",
+            "type": "textarea",
+            "required": false,
+            "max": 2000,
+            "section": "❤️ 情绪解码与反思"
+          }
+        ]
+      },
+      {
+        "id": "feedback",
+        "name": "服务效果反馈",
+        "fields": [
+          {
+            "id": "serviceType",
+            "label": "服务类型",
+            "type": "single",
+            "required": true,
+            "options": [
+              {
+                "value": "online_course",
+                "label": "线上课程"
+              },
+              {
+                "value": "offline_workshop",
+                "label": "线下工作坊"
+              },
+              {
+                "value": "consultation",
+                "label": "一对一咨询"
+              },
+              {
+                "value": "family_coach",
+                "label": "家庭教练"
+              },
+              {
+                "value": "other",
+                "label": "其他"
+              }
+            ],
+            "section": "📬 服务追踪反馈 · 线下/线上"
+          },
+          {
+            "id": "serviceTopic",
+            "label": "服务主题",
+            "type": "text",
+            "required": true,
+            "max": 200,
+            "section": "📬 服务追踪反馈 · 线下/线上"
+          },
+          {
+            "id": "screenChange",
+            "label": "这次服务后，孩子屏幕时间的变化",
+            "type": "single",
+            "required": false,
+            "options": [
+              {
+                "value": "decrease",
+                "label": "明显减少了"
+              },
+              {
+                "value": "slight_decrease",
+                "label": "稍微减少了一点"
+              },
+              {
+                "value": "no_change",
+                "label": "没什么变化"
+              },
+              {
+                "value": "increase",
+                "label": "反而增加了"
+              }
+            ],
+            "section": "📬 服务追踪反馈 · 线下/线上"
+          },
+          {
+            "id": "relationshipImprove",
+            "label": "亲子关系改善度（1~5）",
+            "type": "number",
+            "required": false,
+            "section": "📬 服务追踪反馈 · 线下/线上",
+            "step": 1,
+            "min": 1.0,
+            "max": 5.0
+          },
+          {
+            "id": "attitudeChange",
+            "label": "孩子对屏幕的态度变化",
+            "type": "single",
+            "required": false,
+            "options": [
+              {
+                "value": "more_positive",
+                "label": "更积极了 / 愿意主动控制"
+              },
+              {
+                "value": "neutral",
+                "label": "没怎么变"
+              },
+              {
+                "value": "more_resistant",
+                "label": "更抗拒了 / 更沉迷了"
+              }
+            ],
+            "section": "📬 服务追踪反馈 · 线下/线上"
+          },
+          {
+            "id": "parentEfficacy",
+            "label": "家长自我效能感（1~5）",
+            "type": "number",
+            "required": false,
+            "section": "📬 服务追踪反馈 · 线下/线上",
+            "step": 1,
+            "min": 1.0,
+            "max": 5.0
+          },
+          {
+            "id": "followUpAction",
+            "label": "已落实后续行动",
+            "type": "single",
+            "required": false,
+            "options": [
+              {
+                "value": 1,
+                "label": "是"
+              },
+              {
+                "value": 0,
+                "label": "否"
+              }
+            ],
+            "section": "📬 服务追踪反馈 · 线下/线上"
+          },
+          {
+            "id": "childFeedback",
+            "label": "孩子分享了自己的感受",
+            "type": "single",
+            "required": false,
+            "options": [
+              {
+                "value": 1,
+                "label": "是"
+              },
+              {
+                "value": 0,
+                "label": "否"
+              }
+            ],
+            "section": "📬 服务追踪反馈 · 线下/线上"
+          },
+          {
+            "id": "feedbackNotes",
+            "label": "自由记录 / 观察",
+            "type": "textarea",
+            "required": false,
+            "max": 2000,
+            "section": "📬 服务追踪反馈 · 线下/线上"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "gt1",
+    "name": "亲子沟通青少年手帐",
+    "group": "中长期成长观察",
+    "mode": "tracker",
+    "description": "分别记录具体对话与情绪强度，保留反思或课程实践，不把沟通记录转换为诊断分数。",
+    "sourceUrl": "https://sdsqsnwh.cn/cz/gt1.html",
+    "profiles": [
+      {
+        "id": "daily",
+        "name": "日常对话",
+        "fields": [
+          {
+            "id": "timeSlot",
+            "label": "对话发生在什么时候？",
+            "type": "single",
+            "required": false,
+            "options": [
+              {
+                "value": "早晨",
+                "label": "早晨"
+              },
+              {
+                "value": "上午",
+                "label": "上午"
+              },
+              {
+                "value": "午间",
+                "label": "午间"
+              },
+              {
+                "value": "下午",
+                "label": "下午"
+              },
+              {
+                "value": "傍晚",
+                "label": "傍晚"
+              },
+              {
+                "value": "睡前",
+                "label": "睡前"
+              }
+            ],
+            "section": "这次对话发生了什么"
+          },
+          {
+            "id": "myGender",
+            "label": "我的性别",
+            "type": "single",
+            "required": false,
+            "options": [
+              {
+                "value": "男孩",
+                "label": "男孩"
+              },
+              {
+                "value": "女孩",
+                "label": "女孩"
+              }
+            ],
+            "section": "这次对话发生了什么"
+          },
+          {
+            "id": "topic",
+            "label": "聊了什么话题？（可多选）",
+            "type": "multi",
+            "required": false,
+            "options": [
+              {
+                "value": "作业学习",
+                "label": "作业学习"
+              },
+              {
+                "value": "手机时间",
+                "label": "手机/屏幕时间"
+              },
+              {
+                "value": "起居习惯",
+                "label": "起居习惯"
+              },
+              {
+                "value": "情绪感受",
+                "label": "情绪感受"
+              },
+              {
+                "value": "朋友关系",
+                "label": "朋友关系"
+              },
+              {
+                "value": "未来规划",
+                "label": "未来规划"
+              },
+              {
+                "value": "兴趣爱好",
+                "label": "兴趣爱好"
+              },
+              {
+                "value": "其他",
+                "label": "其他"
+              }
+            ],
+            "section": "这次对话发生了什么"
+          },
+          {
+            "id": "myFeelings",
+            "label": "我当时主要的感受是？（可多选）",
+            "type": "multi",
+            "required": false,
+            "options": [
+              {
+                "value": "委屈",
+                "label": "委屈"
+              },
+              {
+                "value": "愤怒",
+                "label": "愤怒"
+              },
+              {
+                "value": "无奈",
+                "label": "无奈"
+              },
+              {
+                "value": "伤心",
+                "label": "伤心"
+              },
+              {
+                "value": "害怕",
+                "label": "害怕"
+              },
+              {
+                "value": "烦躁",
+                "label": "烦躁"
+              },
+              {
+                "value": "被冤枉",
+                "label": "被冤枉"
+              },
+              {
+                "value": "不被理解",
+                "label": "不被理解"
+              },
+              {
+                "value": "想逃离",
+                "label": "想逃离"
+              },
+              {
+                "value": "无所谓",
+                "label": "无所谓"
+              }
+            ],
+            "section": "当时我是什么感觉"
+          },
+          {
+            "id": "myState",
+            "label": "当时我在做什么？",
+            "type": "textarea",
+            "required": false,
+            "max": 2000,
+            "section": "当时发生了什么"
+          },
+          {
+            "id": "parentAction",
+            "label": "我听到/看到爸妈说了什么、做了什么？",
+            "type": "textarea",
+            "required": false,
+            "max": 2000,
+            "section": "当时发生了什么"
+          },
+          {
+            "id": "myAction",
+            "label": "我当时说了什么、做了什么？",
+            "type": "textarea",
+            "required": false,
+            "max": 2000,
+            "section": "当时发生了什么"
+          },
+          {
+            "id": "myEmotion",
+            "label": "我当时的情绪强度",
+            "type": "number",
+            "required": false,
+            "section": "当时我是什么感觉",
+            "step": 1,
+            "min": 0.0,
+            "max": 10.0
+          },
+          {
+            "id": "parentEmotion",
+            "label": "我感觉爸妈当时的情绪强度",
+            "type": "number",
+            "required": false,
+            "section": "当时我是什么感觉",
+            "step": 1,
+            "min": 0.0,
+            "max": 10.0
+          },
+          {
+            "id": "hopeParent",
+            "label": "如果重来一次，我希望爸妈怎么做？",
+            "type": "textarea",
+            "required": false,
+            "max": 2000,
+            "section": "回看这次对话"
+          },
+          {
+            "id": "hopeSelf",
+            "label": "如果重来一次，我希望自己怎么做？",
+            "type": "textarea",
+            "required": false,
+            "max": 2000,
+            "section": "回看这次对话"
+          },
+          {
+            "id": "unspoken",
+            "label": "我有没有什么想对爸妈说但没说出口的话？",
+            "type": "textarea",
+            "required": false,
+            "max": 2000,
+            "section": "回看这次对话"
+          }
+        ]
+      },
+      {
+        "id": "confusion",
+        "name": "我的困扰",
+        "fields": [
+          {
+            "id": "confusionScene",
+            "label": "这种困惑通常发生在什么情况下？",
+            "type": "multi",
+            "required": false,
+            "options": [
+              {
+                "value": "学习成绩",
+                "label": "学习成绩"
+              },
+              {
+                "value": "手机使用",
+                "label": "手机/游戏"
+              },
+              {
+                "value": "作息时间",
+                "label": "作息时间"
+              },
+              {
+                "value": "交友",
+                "label": "交友"
+              },
+              {
+                "value": "兴趣爱好",
+                "label": "兴趣爱好"
+              },
+              {
+                "value": "隐私空间",
+                "label": "隐私/空间"
+              },
+              {
+                "value": "未来选择",
+                "label": "未来/选科"
+              },
+              {
+                "value": "其他",
+                "label": "其他"
+              }
+            ],
+            "section": "那些让我感到困扰的事"
+          },
+          {
+            "id": "confusionDesc",
+            "label": "最近最让我感到困惑或烦恼的是什么？",
+            "type": "textarea",
+            "required": false,
+            "max": 2000,
+            "section": "那些让我感到困扰的事"
+          },
+          {
+            "id": "myRealNeed",
+            "label": "我心里真正想要的是什么？",
+            "type": "textarea",
+            "required": false,
+            "max": 2000,
+            "section": "我的真实想法"
+          },
+          {
+            "id": "myWorry",
+            "label": "我担心什么？",
+            "type": "textarea",
+            "required": false,
+            "max": 2000,
+            "section": "我的真实想法"
+          },
+          {
+            "id": "expectParent",
+            "label": "我期待爸妈用什么样的方式跟我沟通？",
+            "type": "textarea",
+            "required": false,
+            "max": 2000,
+            "section": "我的真实想法"
+          },
+          {
+            "id": "tryNewWay",
+            "label": "如果我可以换一种方式跟爸妈沟通，我会怎么做？",
+            "type": "textarea",
+            "required": false,
+            "max": 2000,
+            "section": "关于改变，我的想法"
+          },
+          {
+            "id": "difficulty",
+            "label": "我目前遇到的困难是什么？",
+            "type": "textarea",
+            "required": false,
+            "max": 2000,
+            "section": "关于改变，我的想法"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "gt",
+    "name": "亲子沟通家庭手帐",
+    "group": "中长期成长观察",
+    "mode": "tracker",
+    "description": "分别记录具体对话与情绪强度，保留反思或课程实践，不把沟通记录转换为诊断分数。",
+    "sourceUrl": "https://sdsqsnwh.cn/cz/gt.html",
+    "profiles": [
+      {
+        "id": "daily",
+        "name": "日常沟通",
+        "fields": [
+          {
+            "id": "timeSlot",
+            "label": "对话发生在什么时候？",
+            "type": "single",
+            "required": false,
+            "options": [
+              {
+                "value": "早晨",
+                "label": "早晨"
+              },
+              {
+                "value": "上午",
+                "label": "上午"
+              },
+              {
+                "value": "午间",
+                "label": "午间"
+              },
+              {
+                "value": "下午",
+                "label": "下午"
+              },
+              {
+                "value": "傍晚",
+                "label": "傍晚"
+              },
+              {
+                "value": "睡前",
+                "label": "睡前"
+              }
+            ],
+            "section": "关于这次记录"
+          },
+          {
+            "id": "childGender",
+            "label": "孩子性别",
+            "type": "single",
+            "required": false,
+            "options": [
+              {
+                "value": "男孩",
+                "label": "男孩"
+              },
+              {
+                "value": "女孩",
+                "label": "女孩"
+              }
+            ],
+            "section": "关于这次记录"
+          },
+          {
+            "id": "scene",
+            "label": "沟通场景（可多选）",
+            "type": "multi",
+            "required": false,
+            "options": [
+              {
+                "value": "作业学习",
+                "label": "作业学习"
+              },
+              {
+                "value": "屏幕时间",
+                "label": "屏幕时间"
+              },
+              {
+                "value": "起居习惯",
+                "label": "起居习惯"
+              },
+              {
+                "value": "情绪表达",
+                "label": "情绪表达"
+              },
+              {
+                "value": "同伴关系",
+                "label": "同伴关系"
+              },
+              {
+                "value": "其他",
+                "label": "其他"
+              }
+            ],
+            "section": "关于这次记录"
+          },
+          {
+            "id": "parentEmotions",
+            "label": "家长当时的主要情绪（可多选）",
+            "type": "multi",
+            "required": false,
+            "options": [
+              {
+                "value": "焦虑",
+                "label": "焦虑"
+              },
+              {
+                "value": "愤怒",
+                "label": "愤怒"
+              },
+              {
+                "value": "无奈",
+                "label": "无奈"
+              },
+              {
+                "value": "疲惫",
+                "label": "疲惫"
+              },
+              {
+                "value": "平静",
+                "label": "平静"
+              }
+            ],
+            "section": "双方情绪状态"
+          },
+          {
+            "id": "trigger",
+            "label": "起因和背景",
+            "type": "textarea",
+            "required": false,
+            "max": 2000,
+            "section": "当时发生了什么"
+          },
+          {
+            "id": "childBehavior",
+            "label": "孩子的表现和说了什么",
+            "type": "textarea",
+            "required": false,
+            "max": 2000,
+            "section": "当时发生了什么"
+          },
+          {
+            "id": "parentBehavior",
+            "label": "家长的反应和说了什么",
+            "type": "textarea",
+            "required": false,
+            "max": 2000,
+            "section": "当时发生了什么"
+          },
+          {
+            "id": "parentEmotion",
+            "label": "家长情绪强度",
+            "type": "number",
+            "required": false,
+            "section": "双方情绪状态",
+            "step": 1,
+            "min": 0.0,
+            "max": 10.0
+          },
+          {
+            "id": "childEmotion",
+            "label": "孩子情绪强度",
+            "type": "number",
+            "required": false,
+            "section": "双方情绪状态",
+            "step": 1,
+            "min": 0.0,
+            "max": 10.0
+          },
+          {
+            "id": "redo",
+            "label": "如果重来一次，我会怎么做？",
+            "type": "textarea",
+            "required": false,
+            "max": 2000,
+            "section": "回看这次沟通"
+          }
+        ]
+      },
+      {
+        "id": "practice",
+        "name": "课程实践反馈",
+        "fields": [
+          {
+            "id": "courseType",
+            "label": "课程形式",
+            "type": "single",
+            "required": false,
+            "options": [
+              {
+                "value": "线上直播课",
+                "label": "线上直播课"
+              },
+              {
+                "value": "线下团体工作坊",
+                "label": "线下团体工作坊"
+              },
+              {
+                "value": "读书会/自学",
+                "label": "读书会/自学"
+              }
+            ],
+            "section": "本次实践的课程背景"
+          },
+          {
+            "id": "courseName",
+            "label": "参加的活动或课程名称",
+            "type": "text",
+            "required": false,
+            "max": 200,
+            "section": "本次实践的课程背景"
+          },
+          {
+            "id": "methodUsed",
+            "label": "尝试的方法或技巧",
+            "type": "textarea",
+            "required": false,
+            "max": 2000,
+            "section": "本次尝试了什么"
+          },
+          {
+            "id": "practiceScene",
+            "label": "实践发生的具体场景",
+            "type": "textarea",
+            "required": false,
+            "max": 2000,
+            "section": "本次尝试了什么"
+          },
+          {
+            "id": "usualParent",
+            "label": "往常家长的反应",
+            "type": "textarea",
+            "required": false,
+            "max": 2000,
+            "section": "与以往有何不同"
+          },
+          {
+            "id": "thisTimeParent",
+            "label": "这次家长的反应",
+            "type": "textarea",
+            "required": false,
+            "max": 2000,
+            "section": "与以往有何不同"
+          },
+          {
+            "id": "usualChild",
+            "label": "往常孩子的反应",
+            "type": "textarea",
+            "required": false,
+            "max": 2000,
+            "section": "与以往有何不同"
+          },
+          {
+            "id": "thisTimeChild",
+            "label": "这次孩子的反应",
+            "type": "textarea",
+            "required": false,
+            "max": 2000,
+            "section": "与以往有何不同"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "ys",
+    "name": "饮食与体重追踪手帐",
+    "group": "中长期成长观察",
+    "mode": "tracker",
+    "description": "分别记录饮食结构、身体测量与营养咨询；BMI和腰高比用于回顾身体变化，不作为医学诊断。",
+    "sourceUrl": "https://sdsqsnwh.cn/cz/ys.html",
+    "profiles": [
+      {
+        "id": "diet",
+        "name": "饮食记录",
+        "fields": [
+          {
+            "id": "recordType",
+            "label": "记录粒度",
+            "type": "single",
+            "required": true,
+            "options": [
+              {
+                "value": "single_meal",
+                "label": "单餐详细记录"
+              },
+              {
+                "value": "daily_summary",
+                "label": "一日饮食概览"
+              },
+              {
+                "value": "special_event",
+                "label": "特殊饮食事件（如聚餐/暴食）"
+              }
+            ],
+            "section": "📅 本次记录信息"
+          },
+          {
+            "id": "lifeScene",
+            "label": "当前生活场景",
+            "type": "single",
+            "required": true,
+            "options": [
+              {
+                "value": "home",
+                "label": "🏠 家庭居家"
+              },
+              {
+                "value": "school_canteen",
+                "label": "🏫 学校食堂走读"
+              },
+              {
+                "value": "boarding",
+                "label": "🛏️ 住校就读"
+              },
+              {
+                "value": "dining_out",
+                "label": "🍴 外出就餐"
+              },
+              {
+                "value": "holiday",
+                "label": "🎉 假期/节庆"
+              },
+              {
+                "value": "travel",
+                "label": "🚗 旅行外出"
+              }
+            ],
+            "section": "📅 本次记录信息"
+          },
+          {
+            "id": "mealType",
+            "label": "餐次/时段",
+            "type": "single",
+            "required": true,
+            "options": [
+              {
+                "value": "breakfast",
+                "label": "🌅 早餐"
+              },
+              {
+                "value": "lunch",
+                "label": "☀️ 午餐"
+              },
+              {
+                "value": "dinner",
+                "label": "🌙 晚餐"
+              },
+              {
+                "value": "snack_morning",
+                "label": "🍎 上午加餐"
+              },
+              {
+                "value": "snack_afternoon",
+                "label": "🍪 下午加餐"
+              },
+              {
+                "value": "snack_evening",
+                "label": "🌙 晚间零食"
+              },
+              {
+                "value": "all_day",
+                "label": "🗓️ 全天概况"
+              },
+              {
+                "value": "event",
+                "label": "⚡ 特定事件"
+              }
+            ],
+            "section": "📅 本次记录信息"
+          },
+          {
+            "id": "diningPlace",
+            "label": "用餐地点",
+            "type": "single",
+            "required": true,
+            "options": [
+              {
+                "value": "home_table",
+                "label": "家中餐桌"
+              },
+              {
+                "value": "school_canteen",
+                "label": "学校食堂"
+              },
+              {
+                "value": "dormitory",
+                "label": "宿舍"
+              },
+              {
+                "value": "classroom",
+                "label": "教室"
+              },
+              {
+                "value": "restaurant",
+                "label": "餐厅"
+              },
+              {
+                "value": "takeout",
+                "label": "外卖/外带"
+              },
+              {
+                "value": "street_food",
+                "label": "街边小吃"
+              },
+              {
+                "value": "multiple",
+                "label": "多个地点"
+              }
+            ],
+            "section": "📅 本次记录信息"
+          },
+          {
+            "id": "foodGroups",
+            "label": "🥗 食物构成（可以选多个）",
+            "type": "multi",
+            "required": true,
+            "options": [
+              {
+                "value": "staple_rice",
+                "label": "🍚 主食-米饭/面食"
+              },
+              {
+                "value": "staple_cereal",
+                "label": "🌾 主食-杂粮/薯类"
+              },
+              {
+                "value": "protein_meat",
+                "label": "🍖 动物蛋白-猪牛羊肉"
+              },
+              {
+                "value": "protein_poultry",
+                "label": "🍗 动物蛋白-禽类"
+              },
+              {
+                "value": "protein_fish",
+                "label": "🐟 动物蛋白-鱼虾海鲜"
+              },
+              {
+                "value": "protein_egg",
+                "label": "🥚 动物蛋白-蛋类"
+              },
+              {
+                "value": "protein_plant",
+                "label": "🫘 植物蛋白-豆制品"
+              },
+              {
+                "value": "vegetable",
+                "label": "🥬 蔬菜类"
+              },
+              {
+                "value": "fruit",
+                "label": "🍎 水果类"
+              },
+              {
+                "value": "dairy",
+                "label": "🥛 奶及奶制品"
+              },
+              {
+                "value": "snack_chips",
+                "label": "🍟 零食-膨化油炸"
+              },
+              {
+                "value": "snack_sweet",
+                "label": "🍫 零食-糖果糕点"
+              },
+              {
+                "value": "drink_sugary",
+                "label": "🥤 含糖饮料/奶茶"
+              },
+              {
+                "value": "drink_water",
+                "label": "💧 白开水/纯水"
+              }
+            ],
+            "section": "🥗 食物构成（可以选多个）"
+          },
+          {
+            "id": "portionSize",
+            "label": "进食份量",
+            "type": "single",
+            "required": true,
+            "options": [
+              {
+                "value": "small",
+                "label": "少量（不到正常量的一半）"
+              },
+              {
+                "value": "proper",
+                "label": "适量（7-8分饱）"
+              },
+              {
+                "value": "large",
+                "label": "偏多（9-10分饱）"
+              },
+              {
+                "value": "excessive",
+                "label": "过量（撑得难受）"
+              }
+            ],
+            "section": "🥗 食物构成（可以选多个）"
+          },
+          {
+            "id": "eatingSpeed",
+            "label": "进食速度",
+            "type": "single",
+            "required": true,
+            "options": [
+              {
+                "value": "slow",
+                "label": "慢（超过20分钟）"
+              },
+              {
+                "value": "normal",
+                "label": "正常（10-20分钟）"
+              },
+              {
+                "value": "fast",
+                "label": "快（不到10分钟）"
+              },
+              {
+                "value": "very_fast",
+                "label": "非常快（不到5分钟）"
+              }
+            ],
+            "section": "🥗 食物构成（可以选多个）"
+          },
+          {
+            "id": "waterIntake",
+            "label": "喝水估计（毫升）",
+            "type": "number",
+            "required": false,
+            "section": "💧 饮水与零食估计",
+            "step": 1,
+            "min": 0.0,
+            "max": 10000
+          },
+          {
+            "id": "snackCount",
+            "label": "零食次数估计",
+            "type": "number",
+            "required": false,
+            "section": "💧 饮水与零食估计",
+            "step": 1,
+            "min": 0.0,
+            "max": 10000
+          },
+          {
+            "id": "sugaryDrinkCount",
+            "label": "含糖饮料（杯/瓶）",
+            "type": "number",
+            "required": false,
+            "section": "💧 饮水与零食估计",
+            "step": 1,
+            "min": 0.0,
+            "max": 10000
+          },
+          {
+            "id": "moodBefore",
+            "label": "进食前情绪状态",
+            "type": "single",
+            "required": true,
+            "options": [
+              {
+                "value": "hungry",
+                "label": "正常饥饿"
+              },
+              {
+                "value": "happy",
+                "label": "愉快期待"
+              },
+              {
+                "value": "bored",
+                "label": "无聊消遣"
+              },
+              {
+                "value": "stressed",
+                "label": "学习压力/焦虑"
+              },
+              {
+                "value": "sad",
+                "label": "低落难过"
+              },
+              {
+                "value": "reward",
+                "label": "想奖励自己"
+              },
+              {
+                "value": "social",
+                "label": "社交场合"
+              }
+            ],
+            "section": "😌 进食情境与情绪"
+          },
+          {
+            "id": "moodAfter",
+            "label": "进食后感受",
+            "type": "single",
+            "required": true,
+            "options": [
+              {
+                "value": "satisfied",
+                "label": "满足舒适"
+              },
+              {
+                "value": "energetic",
+                "label": "精力充沛"
+              },
+              {
+                "value": "stuffed",
+                "label": "撑胀不适"
+              },
+              {
+                "value": "guilty",
+                "label": "内疚自责"
+              },
+              {
+                "value": "sleepy",
+                "label": "困倦想睡"
+              },
+              {
+                "value": "still_hungry",
+                "label": "没饱还想吃"
+              }
+            ],
+            "section": "😌 进食情境与情绪"
+          },
+          {
+            "id": "screenWhileEating",
+            "label": "是否边吃边看屏幕",
+            "type": "single",
+            "required": false,
+            "options": [
+              {
+                "value": "none",
+                "label": "没有看屏幕"
+              },
+              {
+                "value": "phone",
+                "label": "看手机/平板"
+              },
+              {
+                "value": "tv",
+                "label": "看电视"
+              },
+              {
+                "value": "computer",
+                "label": "用电脑"
+              }
+            ],
+            "section": "😌 进食情境与情绪"
+          },
+          {
+            "id": "exerciseDuration",
+            "label": "运动时长估计（分钟）",
+            "type": "number",
+            "required": false,
+            "section": "🏃 作息与活动",
+            "step": 1,
+            "min": 0.0,
+            "max": 10000
+          },
+          {
+            "id": "sleepHours",
+            "label": "睡眠时长估计（小时）",
+            "type": "number",
+            "required": false,
+            "section": "🏃 作息与活动",
+            "step": 0.5,
+            "min": 0.0,
+            "max": 24.0
+          },
+          {
+            "id": "appetiteScore",
+            "label": "食欲评分（1=差，5=旺盛）",
+            "type": "number",
+            "required": false,
+            "section": "🏃 作息与活动",
+            "step": 1,
+            "min": 1.0,
+            "max": 5.0
+          },
+          {
+            "id": "observations",
+            "label": "饮食观察/特殊情况",
+            "type": "textarea",
+            "required": false,
+            "max": 2000,
+            "section": "📝 观察与反思"
+          },
+          {
+            "id": "careResponse",
+            "label": "家长/自我关怀回应",
+            "type": "textarea",
+            "required": false,
+            "max": 2000,
+            "section": "📝 观察与反思"
+          }
+        ]
+      },
+      {
+        "id": "body",
+        "name": "体重身高腰围",
+        "fields": [
+          {
+            "id": "gender",
+            "label": "性别",
+            "type": "single",
+            "required": true,
+            "options": [
+              {
+                "value": "male",
+                "label": "男"
+              },
+              {
+                "value": "female",
+                "label": "女"
+              }
+            ],
+            "section": "📏 身体测量记录"
+          },
+          {
+            "id": "age",
+            "label": "年龄（岁）",
+            "type": "number",
+            "required": true,
+            "section": "📏 身体测量记录",
+            "step": 1.0,
+            "min": 6.0,
+            "max": 18.0
+          },
+          {
+            "id": "weight",
+            "label": "体重（公斤）",
+            "type": "number",
+            "required": true,
+            "section": "📏 身体测量记录",
+            "step": 0.1,
+            "min": 20.0,
+            "max": 150.0
+          },
+          {
+            "id": "height",
+            "label": "身高（厘米）",
+            "type": "number",
+            "required": true,
+            "section": "📏 身体测量记录",
+            "step": 0.1,
+            "min": 100.0,
+            "max": 200.0
+          },
+          {
+            "id": "waist",
+            "label": "腰围（厘米）",
+            "type": "number",
+            "required": true,
+            "section": "📏 身体测量记录",
+            "step": 0.1,
+            "min": 40.0,
+            "max": 130.0
+          },
+          {
+            "id": "measureTime",
+            "label": "测量时段",
+            "type": "single",
+            "required": false,
+            "options": [
+              {
+                "value": "morning",
+                "label": "早上空腹"
+              },
+              {
+                "value": "noon",
+                "label": "中午"
+              },
+              {
+                "value": "evening",
+                "label": "晚上"
+              },
+              {
+                "value": "irregular",
+                "label": "不固定"
+              }
+            ],
+            "section": "📏 身体测量记录"
+          },
+          {
+            "id": "pubertyStage",
+            "label": "青春期发育阶段（自己判断/家长判断）",
+            "type": "single",
+            "required": false,
+            "options": [
+              {
+                "value": "early",
+                "label": "前期（刚开始发育）"
+              },
+              {
+                "value": "middle",
+                "label": "中期（快速长个子）"
+              },
+              {
+                "value": "late",
+                "label": "后期（趋于稳定）"
+              },
+              {
+                "value": "unknown",
+                "label": "不太确定"
+              }
+            ],
+            "section": "📏 身体测量记录"
+          },
+          {
+            "id": "notes",
+            "label": "备注（比如月经周期、感冒等）",
+            "type": "textarea",
+            "required": false,
+            "max": 2000,
+            "section": "📏 身体测量记录"
+          }
+        ]
+      },
+      {
+        "id": "feedback",
+        "name": "营养咨询记录",
+        "fields": [
+          {
+            "id": "consultType",
+            "label": "咨询形式",
+            "type": "single",
+            "required": true,
+            "options": [
+              {
+                "value": "online",
+                "label": "线上咨询"
+              },
+              {
+                "value": "offline",
+                "label": "线下门诊"
+              },
+              {
+                "value": "school",
+                "label": "学校体检/营养课"
+              },
+              {
+                "value": "followup",
+                "label": "复诊随访"
+              }
+            ],
+            "section": "📬 营养师咨询记录"
+          },
+          {
+            "id": "consultTopic",
+            "label": "咨询主题",
+            "type": "text",
+            "required": true,
+            "max": 200,
+            "section": "📬 营养师咨询记录"
+          },
+          {
+            "id": "nutritionistAdvice",
+            "label": "营养师主要建议",
+            "type": "textarea",
+            "required": false,
+            "max": 2000,
+            "section": "📬 营养师咨询记录"
+          },
+          {
+            "id": "adherenceLevel",
+            "label": "饮食执行度（1~5，做得怎么样？）",
+            "type": "number",
+            "required": false,
+            "section": "📬 营养师咨询记录",
+            "step": 1,
+            "min": 1.0,
+            "max": 5.0
+          },
+          {
+            "id": "weightChange",
+            "label": "体重变化趋势",
+            "type": "single",
+            "required": false,
+            "options": [
+              {
+                "value": "decrease",
+                "label": "下降了"
+              },
+              {
+                "value": "stable",
+                "label": "保持稳定"
+              },
+              {
+                "value": "slight_increase",
+                "label": "缓慢增加（正常范围）"
+              },
+              {
+                "value": "rapid_increase",
+                "label": "增加得太快"
+              }
+            ],
+            "section": "📬 营养师咨询记录"
+          },
+          {
+            "id": "childCooperation",
+            "label": "孩子配合度",
+            "type": "single",
+            "required": false,
+            "options": [
+              {
+                "value": "active",
+                "label": "主动配合"
+              },
+              {
+                "value": "passive",
+                "label": "被动配合"
+              },
+              {
+                "value": "resistant",
+                "label": "不太愿意执行"
+              }
+            ],
+            "section": "📬 营养师咨询记录"
+          },
+          {
+            "id": "checkboxes",
+            "label": "已经尝试的行动",
+            "type": "multi",
+            "required": false,
+            "options": [
+              {
+                "value": "dietPlanFollowed",
+                "label": "📋 遵循饮食计划 大部分时间按方案执行"
+              },
+              {
+                "value": "childFeedbackShared",
+                "label": "🗣️ 孩子主动反馈 表达了ta对饮食的感受"
+              },
+              {
+                "value": "familySupport",
+                "label": "👨‍👩‍👧 家庭支持 全家人一起改变饮食"
+              }
+            ],
+            "section": "📬 营养师咨询记录"
+          },
+          {
+            "id": "notes",
+            "label": "观察/挑战/进步",
+            "type": "textarea",
+            "required": false,
+            "max": 2000,
+            "section": "📬 营养师咨询记录"
+          }
+        ]
+      }
+    ]
+  }
+]

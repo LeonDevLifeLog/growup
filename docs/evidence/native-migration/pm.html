@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#FAF6EE">
+<meta name="format-detection" content="telephone=no,email=no,address=no">
+<title>屏幕改造计划 · 青少年数字产品近期使用习惯观察分析</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@500;600;700&display=swap" rel="stylesheet"></noscript>
+<style>
+:root{
+  --bg:#FAF6EE;--bg2:#F0E9D6;--paper:#FFF;
+  --ink:#1A1A1A;--ink2:#524A3C;--ink3:#8E8674;
+  --olive:#2A3F2D;--terra:#B25336;--amber:#C99432;--line:#E0D7C0;
+  --shadow:0 1px 2px rgba(42,63,45,.05),0 4px 16px rgba(42,63,45,.07);
+  --shadow-lg:0 10px 30px rgba(42,63,45,.16);
+  --r-s:10px;--r-m:16px;--r-l:22px;
+  --ease:cubic-bezier(.22,.61,.36,1);
+  --serif:"Noto Serif SC",serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%;touch-action:manipulation}
+body{
+  font-family:"Noto Sans SC",-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+  font-size:15px;line-height:1.7;color:var(--ink);
+  min-height:100vh;overscroll-behavior-y:contain;-webkit-font-smoothing:antialiased;
+  background:var(--bg);
+  background-image:radial-gradient(circle at 10% 15%,rgba(178,83,54,.04) 0,transparent 38%),
+    radial-gradient(circle at 90% 85%,rgba(42,63,45,.07) 0,transparent 42%),
+    repeating-linear-gradient(45deg,transparent 0,transparent 2px,rgba(42,63,45,.014) 2px,rgba(42,63,45,.014) 4px);
+}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;-webkit-user-select:none;user-select:none}
+[hidden]{display:none!important}
+::selection{background:rgba(178,83,54,.18)}
+.lv-good{--gc:var(--olive)}
+.lv-ok{--gc:#9A6B14}
+.lv-low{--gc:var(--terra)}
+
+/* ---------- 顶栏（含进度） ---------- */
+.topbar{position:sticky;top:0;z-index:50;transform:translateZ(0);
+  background:rgba(250,246,238,.9);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top)}
+.topbar-inner{max-width:640px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 14px}
+.back-btn{display:inline-flex;align-items:center;gap:5px;padding:8px 12px 8px 8px;min-height:40px;
+  border-radius:var(--r-s);color:var(--olive);font-size:14px;font-weight:500;text-decoration:none;transition:background .15s}
+.back-btn:active{background:rgba(42,63,45,.08)}
+.back-btn svg{width:16px;height:16px}
+.topbar-brand{font-family:var(--serif);font-weight:500;font-size:13px;color:var(--ink3);letter-spacing:.05em}
+.top-quiz{display:flex;align-items:center;gap:10px}
+.dim-tag{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--terra);
+  background:rgba(178,83,54,.08);padding:3px 10px;border-radius:99px}
+.dim-tag .dot{width:5px;height:5px;border-radius:50%;background:var(--terra)}
+.q-count{font-size:13px;color:var(--ink3)}
+.q-count b{font-family:var(--serif);color:var(--olive);font-size:15px}
+.progress-track{height:3px;background:rgba(224,215,192,.5)}
+.progress-track i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--olive),var(--terra));transition:width .5s var(--ease)}
+
+/* ---------- 布局 ---------- */
+.wrap{max-width:640px;margin:0 auto;padding:0 18px calc(28px + env(safe-area-inset-bottom))}
+.stage-in{animation:fadeUp .4s var(--ease)}
+
+/* ---------- 首页 ---------- */
+.hero{padding:34px 0 22px;position:relative}
+.hero-tag{display:inline-flex;align-items:center;gap:8px;font-size:12px;color:var(--olive);letter-spacing:.14em;
+  background:rgba(42,63,45,.08);padding:6px 12px;border-radius:99px;margin-bottom:16px}
+.hero-tag .dot{width:6px;height:6px;border-radius:50%;background:var(--terra);animation:pulse 2.4s ease-in-out infinite}
+.hero h1{font-family:var(--serif);font-size:clamp(27px,7.2vw,33px);font-weight:700;line-height:1.35;letter-spacing:-.01em;margin-bottom:12px}
+.hero .accent{font-style:normal;color:var(--terra);position:relative;z-index:0;display:inline-block}
+.hero .accent::after{content:"";position:absolute;left:-2px;right:-2px;bottom:3px;height:8px;background:rgba(201,148,50,.32);border-radius:2px;z-index:-1}
+.lead{font-size:15px;color:var(--ink2);line-height:1.85;max-width:540px}
+.hero-deco{position:absolute;top:6px;right:-8px;width:84px;height:84px;opacity:.6;pointer-events:none}
+
+.section-title{display:flex;align-items:center;gap:10px;margin:24px 0 14px}
+.section-title span{font-family:var(--serif);font-size:14px;color:var(--ink2);letter-spacing:.1em}
+.section-title .line{flex:1;height:1px;background:var(--line)}
+
+.age-cards{display:flex;flex-direction:column;gap:12px}
+@media(min-width:640px){
+  .age-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .age-card{flex-direction:column;text-align:center;padding:22px 12px}
+  .age-card .age-arrow{display:none}
+}
+.age-card{--acc:#5B8C5A;display:flex;align-items:center;gap:14px;cursor:pointer;outline:none;
+  background:var(--paper);border:1.5px solid var(--line);border-radius:var(--r-l);
+  padding:14px 16px;box-shadow:var(--shadow);position:relative;overflow:hidden;
+  transition:transform .15s var(--ease),border-color .2s}
+.age-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--acc)}
+.age-card[data-age="middle"]{--acc:#C99432}
+.age-card[data-age="high"]{--acc:#B25336}
+.age-card:active,.age-card:focus-visible{transform:scale(.985);border-color:var(--acc)}
+.age-icon{width:44px;height:44px;border-radius:13px;background:rgba(42,63,45,.06);color:var(--acc);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.age-card[data-age="middle"] .age-icon{background:rgba(201,148,50,.12)}
+.age-card[data-age="high"] .age-icon{background:rgba(178,83,54,.1)}
+.age-icon svg{width:22px;height:22px}
+.age-content{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;text-align:left}
+.age-title{font-family:var(--serif);font-size:17px;font-weight:600}
+.age-range{font-size:12.5px;color:var(--acc);font-weight:500}
+.age-arrow{width:30px;height:30px;border-radius:50%;background:var(--bg2);color:var(--ink3);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .2s,color .2s}
+.age-arrow svg{width:14px;height:14px}
+.age-card:active .age-arrow{background:var(--acc);color:#fff}
+
+.tip{background:#FFFBEB;border-left:3px solid var(--amber);padding:11px 12px;border-radius:0 var(--r-s) var(--r-s) 0;
+  margin:18px 0;font-size:13px;color:#744210;line-height:1.7}
+
+.info-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r-m);padding:18px 20px;
+  margin:14px 0;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.info-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(180deg,var(--terra),var(--amber))}
+.info-card h3{font-family:var(--serif);font-size:16px;font-weight:600;color:var(--olive);margin-bottom:8px}
+.info-card p{font-size:14px;color:var(--ink2);line-height:1.8}
+.info-card p+p{margin-top:8px}
+.hl{color:var(--terra);font-weight:500}
+
+.dim-preview{display:flex;flex-direction:column;gap:13px;margin-top:4px}
+.dp-row{display:flex;gap:12px;align-items:flex-start}
+.dp-ico{width:34px;height:34px;border-radius:10px;background:rgba(42,63,45,.07);color:var(--olive);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.dp-ico svg{width:17px;height:17px}
+.dp-row b{font-family:var(--serif);font-size:14px;display:block}
+.dp-row p{font-size:12.5px;color:var(--ink3);line-height:1.6;margin-top:1px}
+.footnote{margin-top:24px;font-size:12px;color:var(--ink3);text-align:center;line-height:1.8}
+
+/* ---------- 信息表单页 ---------- */
+#page-form .hero{padding:26px 0 18px}
+#page-form .hero h1{font-size:clamp(22px,5.6vw,26px)}
+.f-group{display:flex;flex-direction:column;gap:16px}
+.f-label{display:block;font-size:13px;font-weight:500;color:var(--ink2);margin-bottom:6px}
+.f-input{width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:var(--r-s);
+  font-size:16px;background:#FCFAF5;color:var(--ink);font-family:inherit;
+  transition:border-color .2s,background .2s;-webkit-appearance:none;appearance:none}
+.f-input:focus{border-color:var(--olive);background:#fff;outline:none}
+.f-input::placeholder{color:var(--ink3)}
+select.f-input{background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%238E8674"><path d="M7 10l5 5 5-5z"/></svg>');
+  background-repeat:no-repeat;background-position:right 12px center;background-size:18px;padding-right:40px;cursor:pointer}
+.cta-btn{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;max-width:340px;margin:24px auto 0;
+  padding:15px;background:linear-gradient(135deg,var(--olive),#1A2A1C);color:#fff;font-size:16px;font-weight:500;
+  letter-spacing:.05em;border-radius:99px;box-shadow:0 8px 24px rgba(42,63,45,.28);
+  -webkit-appearance:none;appearance:none;transition:transform .15s,box-shadow .15s}
+.cta-btn:active{transform:translateY(1px);box-shadow:0 4px 12px rgba(42,63,45,.2)}
+.cta-btn svg{width:17px;height:17px}
+
+/* ---------- 问卷 ---------- */
+#page-quiz{display:flex;flex-direction:column;min-height:calc(100vh - 140px);padding-top:14px}
+@supports(min-height:100svh){#page-quiz{min-height:calc(100svh - 140px)}}
+.q-card{flex:1;background:var(--paper);border:1px solid var(--line);border-radius:var(--r-l);
+  padding:26px 20px 22px;box-shadow:var(--shadow)}
+.q-text{font-family:var(--serif);font-size:19px;font-weight:600;line-height:1.6;margin-bottom:4px}
+.q-hint{font-size:12.5px;color:var(--ink3);margin-bottom:16px}
+.q-options{display:flex;flex-direction:column;gap:9px}
+.q-opt{display:flex;align-items:flex-start;gap:11px;text-align:left;background:#FBF8F0;
+  border:1.5px solid var(--line);border-radius:var(--r-m);padding:13px 14px;min-height:52px;
+  font-size:15px;line-height:1.55;color:var(--ink);
+  transition:border-color .18s,background .18s,box-shadow .18s,transform .12s}
+.q-opt:active{transform:scale(.985)}
+.q-opt.sel{background:#fff;border-color:var(--olive);box-shadow:0 4px 14px rgba(42,63,45,.12)}
+.q-mark{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--line);background:#fff;
+  display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;
+  font-size:12px;font-weight:600;color:var(--ink3);transition:background .18s,border-color .18s,color .18s}
+.q-opt.sel .q-mark{background:var(--olive);border-color:var(--olive);color:#fff}
+.q-card.q-anim{animation:qNext .32s var(--ease)}
+.q-card.q-anim-back{animation:qPrev .32s var(--ease)}
+
+.q-nav{position:sticky;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:40;
+  display:grid;grid-template-columns:auto 1fr;gap:10px;margin-top:20px;padding:8px;
+  background:rgba(255,255,255,.88);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border:1px solid var(--line);border-radius:99px;box-shadow:var(--shadow-lg)}
+.nav-prev{width:48px;height:44px;border-radius:99px;display:inline-flex;align-items:center;justify-content:center;
+  color:var(--ink2);transition:background .15s,opacity .15s}
+.nav-prev svg{width:16px;height:16px}
+.nav-prev:active{background:var(--bg2)}
+.nav-prev:disabled{opacity:.3}
+.nav-next{height:44px;border-radius:99px;padding:0 22px;display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  background:var(--olive);color:#fff;font-size:15px;font-weight:500;letter-spacing:.05em;
+  box-shadow:0 6px 18px rgba(42,63,45,.25);transition:background .2s,opacity .15s,transform .12s}
+.nav-next svg{width:15px;height:15px}
+.nav-next:active{transform:translateY(1px)}
+.nav-next:disabled{background:#C9C1AC;box-shadow:none}
+.nav-next.nudge{animation:nudge .5s var(--ease)}
+.auto-tip{text-align:center;font-size:12px;color:var(--ink3);margin-top:12px}
+
+/* ---------- 报告 ---------- */
+.result-hero{text-align:center;padding:30px 0 8px}
+.result-badge{display:inline-block;font-size:12px;color:var(--olive);letter-spacing:.15em;
+  background:rgba(42,63,45,.08);padding:6px 14px;border-radius:99px;margin-bottom:14px}
+.result-title{font-family:var(--serif);font-size:clamp(22px,5.8vw,26px);font-weight:700}
+.result-sub{font-size:14px;color:var(--ink2);margin-top:6px}
+
+.score-wrap{position:relative;width:196px;height:196px;margin:18px auto 4px;animation:pop .6s var(--ease) both}
+.score-ring{transform:rotate(-90deg)}
+.ring-bg,.ring-fg{fill:none;stroke-width:10}
+.ring-bg{stroke:var(--line)}
+.ring-fg{stroke:var(--olive);stroke-linecap:round;stroke-dasharray:553;stroke-dashoffset:553;
+  transition:stroke-dashoffset 1.5s var(--ease),stroke .4s ease}
+.score-num{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.score-num b{font-family:var(--serif);font-size:52px;font-weight:700;color:var(--olive);line-height:1;letter-spacing:-.02em}
+.score-num span{font-size:11.5px;color:var(--ink3);margin-top:8px;letter-spacing:.08em}
+
+.verdict-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r-m);padding:16px 18px;
+  margin:18px 0 4px;box-shadow:var(--shadow);position:relative;overflow:hidden;animation:fadeUp .5s var(--ease) .15s both}
+.verdict-card::before{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:linear-gradient(90deg,var(--terra),var(--amber),var(--olive))}
+.verdict-label{font-family:var(--serif);font-weight:500;font-size:13px;color:var(--ink3);letter-spacing:.1em;margin-bottom:6px}
+.verdict-text{font-size:14.5px;line-height:1.85}
+
+.dim-list{display:flex;flex-direction:column;gap:12px}
+.dim-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r-m);padding:16px;
+  box-shadow:var(--shadow);animation:fadeUp .55s var(--ease) both}
+.dim-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.dim-name{font-family:var(--serif);font-size:15px;font-weight:600;display:inline-flex;align-items:center;gap:8px;flex-wrap:wrap}
+.dim-name svg{width:17px;height:17px;color:var(--gc);flex-shrink:0}
+.dim-level{font-family:"Noto Sans SC",sans-serif;font-size:11px;padding:2px 9px;border-radius:99px;letter-spacing:.05em}
+.lvl-good{background:rgba(42,63,45,.12);color:var(--olive)}
+.lvl-ok{background:rgba(201,148,50,.18);color:#8A6420}
+.lvl-low{background:rgba(178,83,54,.12);color:var(--terra)}
+.dim-score{font-size:11.5px;color:var(--ink3);white-space:nowrap}
+.dim-score b{font-family:var(--serif);font-size:19px;font-weight:700;color:var(--gc)}
+.dim-mini-bar{height:5px;background:var(--bg2);border-radius:99px;overflow:hidden;margin:10px 0 9px}
+.dim-mini-bar i{display:block;height:100%;border-radius:99px;background:var(--gc);
+  transform:scaleX(0);transform-origin:left;animation:grow 1s var(--ease) both}
+.dim-desc{font-size:13px;color:var(--ink2);line-height:1.75}
+
+.advice-section{margin-top:28px}
+.advice-section h3{font-family:var(--serif);font-size:18px;font-weight:600;display:flex;align-items:center;gap:9px;margin-bottom:4px}
+.advice-section h3::before{content:"";width:4px;height:17px;background:var(--terra);border-radius:2px}
+.advice-section .sub{font-size:13px;color:var(--ink3);margin-bottom:14px}
+.advice-list{display:flex;flex-direction:column;gap:10px}
+.advice-item{background:#FBF8F0;border:1px solid var(--line);border-left:3px solid var(--terra);
+  border-radius:0 var(--r-m) var(--r-m) 0;padding:13px 15px;animation:fadeUp .5s var(--ease) both}
+.a-tag{display:inline-block;font-size:11px;color:var(--terra);background:rgba(178,83,54,.08);
+  padding:1px 8px;border-radius:99px;margin-bottom:5px}
+.advice-item .d{font-size:13.5px;color:var(--ink2);line-height:1.75}
+
+.parent-card{background:linear-gradient(135deg,#FBF5E8,#F5EDD6);border:1px solid #E8D9A8;border-radius:var(--r-m);
+  padding:16px 18px;margin-top:20px;animation:fadeUp .5s var(--ease) .1s both}
+.parent-card h4{font-family:var(--serif);font-size:15px;font-weight:600;color:#7A5418;display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.parent-card h4 svg{width:16px;height:16px}
+.parent-card p{font-size:13.5px;color:#5C4818;line-height:1.85}
+
+.contact-card{background:linear-gradient(135deg,#FBF8F0,#F5EFE0);border:1px solid var(--line);border-left:3px solid var(--olive);
+  border-radius:var(--r-m);padding:20px;text-align:center;margin-top:20px}
+.cg-icon{width:46px;height:46px;margin:0 auto 10px;border-radius:50%;background:rgba(42,63,45,.08);display:flex;align-items:center;justify-content:center}
+.cg-icon svg{width:22px;height:22px;color:var(--olive)}
+.cg-title{font-family:var(--serif);font-size:16px;font-weight:600;color:var(--olive);margin-bottom:6px}
+.cg-text{font-size:13.5px;color:var(--ink2);line-height:1.75;max-width:320px;margin:0 auto}
+
+.action-btn{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;max-width:340px;margin:26px auto 0;
+  padding:15px;background:linear-gradient(135deg,var(--olive),#1A2A1C);color:#fff;font-size:15px;font-weight:500;
+  letter-spacing:.06em;border-radius:99px;box-shadow:0 8px 24px rgba(42,63,45,.28);
+  -webkit-appearance:none;appearance:none;transition:transform .15s,box-shadow .15s}
+.action-btn:active{transform:translateY(1px);box-shadow:0 4px 12px rgba(42,63,45,.2)}
+.action-btn svg{width:17px;height:17px}
+
+/* ---------- 动画 ---------- */
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}}
+@keyframes qNext{from{opacity:0;transform:translateX(26px)}}
+@keyframes qPrev{from{opacity:0;transform:translateX(-26px)}}
+@keyframes pop{from{opacity:0;transform:scale(.9)}}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.45;transform:scale(.7)}}
+@keyframes grow{from{transform:scaleX(0)}to{transform:scaleX(var(--p))}}
+@keyframes nudge{0%,100%{transform:none}25%{transform:translateX(5px)}55%{transform:translateX(-3px)}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+@media(max-width:360px){
+  .q-text{font-size:17.5px}
+  .score-wrap{width:176px;height:176px}
+  .score-num b{font-size:46px}
+  .back-btn span{display:none}
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <button class="back-btn" id="backBtn" type="button" aria-label="返回">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      <span>返回</span>
+    </button>
+    <div class="top-quiz" id="topQuiz" hidden>
+      <span class="dim-tag"><i class="dot"></i><span id="dimText">使用时长</span></span>
+      <span class="q-count"><b id="qIdx">1</b>/<span id="qTotal">15</span></span>
+    </div>
+    <span class="topbar-brand" id="brand">Star-Track · 系列分析手册</span>
+  </div>
+  <div class="progress-track" id="progressTrack" hidden><i id="progressFill"></i></div>
+</header>
+
+<main class="wrap" id="app">
+
+  <!-- ===== 首页：年龄选择 ===== -->
+  <section id="page-landing" class="stage">
+    <div class="hero">
+      <div class="hero-tag"><i class="dot"></i>青少年数字产品使用习惯观察分析</div>
+      <h1>在屏幕之外，<br>孩子还有<em class="accent">更广阔的世界</em>。</h1>
+      <p class="lead">数字时代，完全不接触电子产品已不现实。关键在于如何引导孩子建立健康的屏幕使用习惯。本工具通过观察孩子近一个月的数字产品使用情况，帮助您发现潜在的沉迷风险与习惯盲区，更早地帮助孩子养成健康的使用习惯。</p>
+      <div class="hero-deco" aria-hidden="true">
+        <svg viewBox="0 0 100 100" fill="none">
+          <circle cx="50" cy="50" r="40" stroke="#2A3F2D" stroke-width="1.2" stroke-dasharray="2 5" opacity=".4"/>
+          <rect x="41" y="30" width="18" height="32" rx="4" stroke="#2A3F2D" stroke-width="2"/>
+          <path d="M46 57h8" stroke="#2A3F2D" stroke-width="1.6" stroke-linecap="round"/>
+          <circle cx="27" cy="28" r="5" stroke="#B25336" stroke-width="2"/>
+          <path d="M66 68c5-2 9-1 12 3M74 56c4 1 7 4 8 9" stroke="#B25336" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="section-title"><i class="line"></i><span>请选择孩子的年龄段</span><i class="line"></i></div>
+
+    <div class="age-cards" id="ageCards">
+      <div class="age-card" data-age="primary" role="button" tabindex="0">
+        <span class="age-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V4H6.5A2.5 2.5 0 0 0 4 6.5z"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/></svg></span>
+        <span class="age-content"><span class="age-title">小学阶段</span><span class="age-range">6 — 12 岁</span></span>
+        <span class="age-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+      </div>
+      <div class="age-card" data-age="middle" role="button" tabindex="0">
+        <span class="age-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="8" width="14" height="12" rx="3"/><path d="M9 8V6a3 3 0 0 1 6 0v2M9 13h6"/></svg></span>
+        <span class="age-content"><span class="age-title">初中阶段</span><span class="age-range">12 — 15 岁</span></span>
+        <span class="age-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+      </div>
+      <div class="age-card" data-age="high" role="button" tabindex="0">
+        <span class="age-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 9L12 4 2 9l10 5 10-5z"/><path d="M6 11.5V16c0 1.5 2.7 3 6 3s6-1.5 6-3v-4.5"/></svg></span>
+        <span class="age-content"><span class="age-title">高中阶段</span><span class="age-range">15 — 18 岁</span></span>
+        <span class="age-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+      </div>
+    </div>
+
+    <div class="tip"><strong>💬 填写建议：</strong>请根据孩子最近一个月的真实表现作答；如有波动，选择最常出现的频率。建议由最了解孩子日常的家长独立填写，以保证观察的连贯性。</div>
+
+    <div class="info-card">
+      <h3>设计理念</h3>
+      <p>我们不主张“一刀切”地禁止电子产品，而是相信每个年龄段的孩子都需要适合其心智发展水平的屏幕使用策略——<span class="hl">小学阶段</span>重在建立规则意识与内容把关，<span class="hl">初中阶段</span>重在培养自控力与心理韧性，<span class="hl">高中阶段</span>则强调自我管理与压力疏导。</p>
+      <p>本工具基于发展心理学与屏幕成瘾研究设计，通过观察而非评判的方式，帮助您看见孩子真实的数字生活状态，从“管理者”转变为“引导者”。</p>
+    </div>
+
+    <div class="info-card">
+      <h3>观察维度</h3>
+      <div class="dim-preview">
+        <div class="dp-row"><span class="dp-ico" data-ico="duration"></span><div><b>使用时长</b><p>每日屏幕总时间，是否挤占睡眠、运动与现实社交</p></div></div>
+        <div class="dp-row"><span class="dp-ico" data-ico="content"></span><div><b>内容与社交</b><p>接触的内容是否健康，数字社交是良性延伸还是孤立源头</p></div></div>
+        <div class="dp-row"><span class="dp-ico" data-ico="control"></span><div><b>自控与规则</b><p>面对诱惑能否主动停止，违规后的情绪与应对方式</p></div></div>
+        <div class="dp-row"><span class="dp-ico" data-ico="dependency"></span><div><b>心理依赖</b><p>电子产品是否成为唯一的安抚物或避风港</p></div></div>
+        <div class="dp-row"><span class="dp-ico" data-ico="boundary"></span><div><b>场景与边界</b><p>餐桌、睡前、课堂等场景的规矩执行情况</p></div></div>
+      </div>
+    </div>
+
+    <p class="footnote">本工具基于发展心理学设计，不构成诊断<br>如孩子出现持续困扰，请联系我们获取支持</p>
+  </section>
+
+  <!-- ===== 信息填写页 ===== -->
+  <section id="page-form" class="stage" hidden>
+    <div class="hero">
+      <div class="hero-tag"><i class="dot"></i><span id="formTag"></span></div>
+      <h1>在开始观察之前，<br>先简单介绍一下<em class="accent">孩子</em>。</h1>
+      <p class="lead" id="formLead"></p>
+    </div>
+    <div class="info-card">
+      <h3 id="formTitle">基本信息</h3>
+      <div class="f-group" id="formFields"></div>
+    </div>
+    <button class="cta-btn" id="startBtn" type="button">
+      开始观察分析
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </button>
+    <p class="footnote">所有信息仅在本机处理，不会上传任何服务器</p>
+  </section>
+
+  <!-- ===== 问卷页 ===== -->
+  <section id="page-quiz" class="stage" hidden>
+    <article class="q-card" id="qCard">
+      <h2 class="q-text" id="qText" aria-live="polite"></h2>
+      <p class="q-hint" id="qHint"></p>
+      <div class="q-options" id="qOptions"></div>
+    </article>
+    <nav class="q-nav">
+      <button class="nav-prev" id="prevBtn" type="button" aria-label="上一题" disabled>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      </button>
+      <button class="nav-next" id="nextBtn" type="button" disabled>
+        <span id="nextLabel">下一题</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+    </nav>
+    <p class="auto-tip" id="autoTip">选中后将自动进入下一题，可随时返回修改</p>
+  </section>
+
+  <!-- ===== 报告页 ===== -->
+  <section id="page-report" class="stage" hidden>
+    <div class="result-hero">
+      <div class="result-badge">观察分析完成</div>
+      <h2 class="result-title" id="resultTitle">孩子的屏幕使用画像</h2>
+      <p class="result-sub">基于五大维度的观察与建议</p>
+    </div>
+    <div class="score-wrap">
+      <svg class="score-ring" width="196" height="196" viewBox="0 0 200 200" aria-hidden="true">
+        <circle class="ring-bg" cx="100" cy="100" r="88"/>
+        <circle class="ring-fg" id="ringFg" cx="100" cy="100" r="88"/>
+      </svg>
+      <div class="score-num"><b id="totalScore">0</b><span>健康指数 / 100</span></div>
+    </div>
+    <div class="verdict-card">
+      <div class="verdict-label">整体印象</div>
+      <p class="verdict-text" id="verdictText"></p>
+    </div>
+    <div class="section-title"><span>分项地图</span><i class="line"></i></div>
+    <div class="dim-list" id="dimList"></div>
+    <div class="advice-section">
+      <h3>可以试试这样做</h3>
+      <p class="sub">以下是针对本次观察中较薄弱环节的建议，挑一两条试试看就好。</p>
+      <div class="advice-list" id="adviceList"></div>
+    </div>
+    <div class="parent-card">
+      <h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-4.35-7-10a4 4 0 0 1 7-2.65A4 4 0 0 1 19 11c0 5.65-7 10-7 10z"/></svg>给家长的话</h4>
+      <p id="parentAdvice"></p>
+    </div>
+    <div class="contact-card">
+      <div class="cg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-8 8H5l-2 2V12a8 8 0 0 1 8-8h2a8 8 0 0 1 8 8z"/></svg></div>
+      <div class="cg-title">联系我们获取专业支持</div>
+      <p class="cg-text">如果您和孩子在屏幕管理中持续感到困扰，欢迎联系我们获取更多专业支持与帮助。</p>
+    </div>
+    <button class="action-btn" id="restartBtn" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5"/></svg>
+      重新观察
+    </button>
+    <p class="footnote">本报告基于家长观察自评生成，仅供参考，不构成诊断</p>
+  </section>
+</main>
+
+<script>
+(function(){
+'use strict';
+var $=function(s){return document.querySelector(s)};
+
+/* ================= 配置 ================= */
+var AUTO_NEXT=true, AUTO_DELAY=380;
+var REDUCED=matchMedia('(prefers-reduced-motion: reduce)').matches;
+var C=553; // 评分环周长（r=88）
+
+/* ================= 图标 ================= */
+var ICONS={
+duration:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
+content:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>',
+control:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6z"/><path d="M9 12l2 2 4-4"/></svg>',
+dependency:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></svg>',
+boundary:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-6-5.3-6-10a6 6 0 1 1 12 0c0 4.7-6 10-6 10z"/><circle cx="12" cy="11" r="2"/></svg>'};
+
+/* ================= 维度名 ================= */
+var DIM_NAMES={
+primary:{duration:'使用时长',content:'内容偏好',control:'自控能力',dependency:'依赖程度',boundary:'场景边界'},
+teen:{duration:'使用时长',content:'内容与社交',control:'自控与规则',dependency:'心理依赖',boundary:'场景与边界'}};
+
+/* ================= 小学题库（选项按分值 3→0 降序） ================= */
+var Q_PRIMARY=[
+{d:'duration',t:'工作日（周一到周五），孩子每天使用电子产品的总时间大约是？',h:'包括看电视、玩手机、平板等',o:['30分钟以内','30-60分钟','1-2小时','超过2小时']},
+{d:'duration',t:'周末或节假日，孩子单日的屏幕时间通常是？',h:'观察无约束状态下的时长',o:['1小时以内','1-2小时','2-4小时','几乎整天都挂着屏幕']},
+{d:'duration',t:'孩子是否经常因为玩电子产品而推迟睡觉时间？',h:'作息影响',o:['从不，到点就交','偶尔，提醒后能去睡','经常，总要催促多次','每天都因为屏幕熬夜']},
+{d:'content',t:'孩子平时在电子产品上看得最多的是什么内容？',h:'内容消费倾向',o:['科普教育、纪录片或优质动画片','普通的娱乐动画片或益智游戏','短视频平台的搞笑视频','含有打斗、惊悚或成人元素的游戏/直播']},
+{d:'content',t:'您是否清楚并筛选过孩子常看的视频和常玩的游戏？',h:'家长把关程度',o:['非常清楚，会提前筛选并陪伴观看','知道他在看什么，但没仔细甄别内容','只管他别看太久了，不管内容是什么','完全不知道他在看什么/玩什么']},
+{d:'content',t:'孩子是否会模仿短视频里的网络烂梗，或游戏里的粗俗用语？',h:'内容影响行为',o:['从未出现过','偶尔说一两次，纠正后不再说','经常挂在嘴边，觉得这样很酷','不仅说，还会做危险或极不雅的动作']},
+{d:'control',t:'当约定的使用时间到了时，孩子的反应通常是？',h:'规则意识与情绪',o:['主动关掉，无需提醒','需要提醒，但能遵守约定关掉','讨价还价“再玩最后五分钟”','拒绝关掉，强行没收会大闹一场']},
+{d:'control',t:'如果孩子正在打游戏/看视频到了精彩处，您让他暂停，他能做到吗？',h:'延迟满足能力',o:['能立刻暂停，去做该做的事','稍有不情愿，但能放下','很难停下来，会发脾气','完全沉浸，听不见大人说话']},
+{d:'control',t:'孩子是否会为了偷偷多玩一会儿而撒谎（如假装上厕所带手机）？',h:'诚信与规则博弈',o:['从不撒谎，遵守规矩','偶尔试探底线，被识破后承认','经常找借口偷偷玩','谎话连篇，甚至偷拿大人的设备']},
+{d:'dependency',t:'当不带电子产品出门（如去公园、串门）时，孩子的表现是？',h:'脱机状态适应性',o:['玩得很开心，完全不惦记屏幕','偶尔觉得无聊，但能找到别的事做','频繁抱怨好无聊，想回家看手机','焦躁不安，甚至哭闹要求玩手机']},
+{d:'dependency',t:'当孩子感到无聊、失落或生气时，他首选的安抚方式是？',h:'情绪依赖度',o:['找大人抱抱、聊天或找玩具','吃东西或听音乐','要求看动画片或玩游戏','只有给屏幕才能立刻止哭/安静']},
+{d:'dependency',t:'孩子与同龄人聚会时，他们的互动方式通常是？',h:'社交影响',o:['一起跑跳玩耍、做游戏','有时玩实体玩具，有时交流动画片','经常围着一个屏幕各玩各的','几乎没有现实互动，只各自低头看手机']},
+{d:'boundary',t:'吃饭时，孩子是否会要求边看屏幕边吃饭？',h:'餐桌边界',o:['从不，专心吃饭','偶尔提出，被拒绝后能接受','经常要求，不给就不吃或吃得极慢','已经养成习惯，每顿饭必须配屏幕']},
+{d:'boundary',t:'在商场、餐厅等公共场合，孩子一闹脾气，您的处理方式通常是？',h:'安抚策略',o:['冷处理或讲道理，转移注意力','偶尔为了面子给手机看一会儿','经常用手机当“哄娃神器”','只要给手机就不闹，成了唯一手段']},
+{d:'boundary',t:'睡前一小时，孩子的状态通常是？',h:'睡前边界',o:['看纸质书、听故事或聊天','偶尔看一会儿电视，睡前收起','经常在床上玩手机/平板','必须抱着手机/平板睡着']}
+];
+
+/* ================= 中学共享题库（初中/高中通用） ================= */
+var Q_TEEN=[
+{d:'duration',t:'',h:'包括手机、平板、电脑等娱乐时间',o:['1小时以内','1-2小时','2-4小时','超过4小时，几乎除了睡觉都在看']}, /* 第 1 题按版本覆写 */
+{d:'duration',t:'周末或节假日，孩子单日的屏幕时间通常是？',h:'观察无约束状态下的时长',o:['2小时以内','2-4小时','4-6小时','超过6小时，连饭都要端到电脑前吃']},
+{d:'duration',t:'孩子是否经常因为玩手机/电脑而推迟睡觉时间？',h:'作息影响',o:['从不，到点就交设备','偶尔，提醒后能去睡','经常，总要催促多次','每天都因为屏幕熬夜到凌晨']},
+{d:'content',t:'孩子平时在电子产品上花时间最多的是？',h:'内容消费倾向',o:['查阅学习资料、看纪录片或益智内容','看普通的娱乐视频或玩单机休闲游戏','高强度竞技游戏（如王者荣耀、吃鸡）','刷短视频、看直播或在社交软件闲聊']},
+{d:'content',t:'数字产品在孩子同龄人社交中的作用是？',h:'社交同侪压力',o:['偶尔交流热门话题，不影响现实友谊','需要共同的游戏话题才能融入圈子','大部分社交在线上进行，现实交流变少','因为网络言论或游戏纠纷与同学产生矛盾']},
+{d:'content',t:'孩子是否接触过不良网络内容（如软色情、暴力、赌博或网络暴力）？',h:'网络风险暴露',o:['从未发现，有安全过滤机制','偶尔无意弹窗看到，会主动关掉','和同学偷偷分享过不良网址或梗','沉迷于此类内容，甚至参与网络骂战']},
+{d:'control',t:'当约定的使用时间到了时，孩子的反应通常是？',h:'规则意识与情绪',o:['主动关掉，无需提醒','需要提醒，但能遵守约定关掉','讨价还价“打完这局”，经常超时','拒绝关掉，强行没收会大发脾气甚至砸东西']},
+{d:'control',t:'孩子写作业或晚自习时，是否会偷偷分心使用电子产品？',h:'专注力与违规',o:['从不，作业时设备放客厅或关机','偶尔查资料时顺手看眼消息','经常借口查题，实际在聊天或搜答案','作业边写边玩，一小时只写几个字']},
+{d:'control',t:'如果发现孩子违规使用手机，您没收设备后的结果是？',h:'亲子权力博弈',o:['孩子能接受后果，第二天正常沟通','冷战半天，之后能和好','激烈抗议，拒绝吃饭或沟通','离家出走、锁门反锁等极端对抗行为']},
+{d:'dependency',t:'当不带电子产品出门（如去公园、串门、旅游）时，孩子的表现是？',h:'脱机状态适应性',o:['能享受现实生活，完全不惦记屏幕','偶尔觉得无聊，想看眼手机','频繁抱怨好无聊，一直催促回家','焦躁不安，脾气暴躁，甚至哭闹']},
+{d:'dependency',t:'当孩子感到学业压力大或被批评后，他首选的解压方式是？',h:'情绪应对机制',o:['运动、听音乐或找家人朋友倾诉','睡觉或吃东西','躲进房间疯狂打游戏或刷视频','只有在虚拟世界才能找到成就感，拒绝现实交流']},
+{d:'dependency',t:'孩子是否有“报复性熬夜”现象（写完作业已很晚，仍强撑着玩手机不肯睡）？',h:'心理代偿机制',o:['没有，困了就顺势去睡','偶尔（周末），会多玩半小时','经常如此，哪怕很困也要在被窝里刷手机','每晚都强撑熬夜，不到凌晨不睡']},
+{d:'boundary',t:'在餐桌上或家庭聚餐时，孩子是否会一直盯着手机？',h:'现实社交边界',o:['从不，专心吃饭并与家人交流','偶尔看一眼消息，被提醒能放下','经常边吃边看，不理会家人','完全沉浸，一顿饭全程离不开屏幕']},
+{d:'boundary',t:'在禁止使用手机的场合（如课堂、自习、就寝后），孩子的表现是？',h:'纪律与规则底线',o:['严格遵守纪律，从不违规','偶尔偷偷看眼时间或回消息','经常被老师/宿管发现在桌兜或被窝里玩','因违规使用多次被没收设备或受处分']},
+{d:'boundary',t:'睡前一小时，孩子的状态通常是？',h:'睡前物理边界',o:['看闲书、听音乐或准备第二天的东西','偶尔看会儿手机，睡前主动放下','经常在床上玩游戏/刷视频到很晚','必须抱着手机/平板睡着，设备从不离床']}
+];
+var Q1_TEEN={
+middle:{t:'工作日（周一到周五），孩子每天使用电子产品的总时间大约是？'},
+high:{t:'工作日（周一到周五），孩子每天使用电子产品（纯娱乐非学习）的总时间大约是？'}};
+
+/* ================= 维度分析文案 ================= */
+var DESCR={
+primary:{
+duration:{high:'孩子的屏幕时间控制得非常理想，留出了充足的时间用于户外运动、阅读和睡眠。这为保护视力和大脑发育提供了最好的保障。',
+ medium:'屏幕时间基本在可控范围内，但周末或假期可能存在超标的情况。建议设立明确的时间沙漏，帮助孩子建立时间概念。',
+ low:'屏幕时间严重超标，已经挤占了睡眠和运动时间。长期如此不仅影响视力，更会导致注意力涣散。必须强制削减。'},
+content:{high:'孩子接触的内容健康优质，您也深度参与了内容的筛选与陪伴。屏幕不仅是娱乐工具，更成为了拓宽认知的窗口。',
+ medium:'内容以普通娱乐为主，偶尔会接触短视频平台。由于算法推荐的存在，建议开启青少年模式，并增加优质纪录片的输入。',
+ low:'内容处于失控状态，充斥着短视频烂梗或不适宜的游戏。这些高刺激低营养的内容会破坏孩子的审美与价值观。建议立即启用家长控制，切断不良内容源。'},
+control:{high:'孩子具备极好的规则意识和自控力，能主动遵守约定。这说明您在日常教育中注重契约精神的培养，而非简单的强权压制。',
+ medium:'基本能遵守规则，但在精彩内容面前难以自控。建议在游戏或视频开始前设定明确的结束节点（如“这集播完”），避免突兀打断。',
+ low:'自控力薄弱，离开屏幕伴随激烈情绪反应。这是典型的屏幕成瘾前兆。建议不要再用“没收”引发冲突，而是建立“代币机制”，通过赚取屏幕时间来培养自律。'},
+dependency:{high:'电子产品只是孩子生活中的调味品，而非必需品。他在脱离屏幕的现实世界中能找到丰富的乐趣，具备强大的现实感知力。',
+ medium:'偶尔会喊无聊，对电子产品有一定眷恋。建议丰富家庭的实体玩具和绘本库存，多带孩子进行户外探索，降低对数字娱乐的心理依赖。',
+ low:'孩子对电子产品产生了重度心理依赖，现实感薄弱。屏幕已成为唯一的安抚奶嘴。建议全家实施“数字排毒”，用高质量的陪伴填补脱机初期的空虚。'},
+boundary:{high:'家庭建立了清晰的屏幕使用边界，餐桌、睡前、聚会等场景完全去电子化。这保护了孩子的消化系统、睡眠节律和社交能力。',
+ medium:'部分场景边界模糊，偶尔会用手机安抚孩子。建议坚守底线，特别是在餐桌和睡前这两个关键场景，绝不妥协。',
+ low:'屏幕已经入侵了生活的所有场景。边吃边看影响消化，睡前看屏抑制褪黑素分泌。建议立刻划定“无屏区”（如餐厅和卧室），并严格执行。'}},
+teen:{
+duration:{high:'孩子的屏幕时间控制得非常理想，留出了充足的时间用于睡眠、学业和现实社交。这为保护视力和维持稳定的情绪提供了最好的保障。',
+ medium:'屏幕时间基本在可控范围内，但周末或假期可能存在超标的情况。建议与孩子协商制定一份“屏幕时间契约”，培养其自主管理能力。',
+ low:''}, /* 按版本覆写 */
+content:{high:'孩子接触的内容健康优质，网络社交也是现实友谊的良性延伸。您与孩子保持了开放的沟通，他能主动与您分享网络见闻。',
+ medium:'内容以普通娱乐和竞技游戏为主，这虽然是青春期社交的常见需求，但需警惕算法推荐带来的信息茧房。建议多引导孩子关注科技、人文等广度内容。',
+ low:'内容处于失控状态，充斥着短视频碎片或不良信息。高刺激的短视频正在破坏他的深度思考能力。建议立即启用青少年模式，并与孩子深入探讨网络内容的虚假与极端性。'},
+control:{high:'孩子具备较强的规则意识和自控力，能主动遵守约定。这说明您在日常教育中注重平等协商，而非简单的强权压制，赢得了孩子的配合。',
+ medium:'基本能遵守规则，但在游戏胜负欲面前难以自控。建议在游戏开始前设定明确的结束节点（如“打完这局”），避免突兀打断引发情绪爆发。',
+ low:'自控力薄弱，离开屏幕伴随激烈情绪反应，甚至出现极端对抗。这是典型的屏幕成瘾症状。建议不要用暴力没收引发悲剧，应寻求专业心理干预，并重建亲子信任。'},
+dependency:{high:'电子产品只是孩子生活中的工具和调剂品。他在现实世界中有其他兴趣爱好和成就感来源，具备强大的现实感知力。',
+ medium:'对电子产品有一定眷恋，偶尔会用手机缓解压力。建议丰富孩子的现实生活，培养一项热爱的体育运动或艺术特长，转移注意力。',
+ low:'孩子对电子产品产生了重度心理依赖，将其作为逃避学业压力的唯一避风港。建议深入了解孩子在现实中遇到了什么挫折，先解开心结，再谈断网。'},
+boundary:{high:'家庭和学校建立了清晰的屏幕使用边界，餐桌、睡前、课堂等场景完全去电子化。这保护了孩子的消化系统、睡眠节律和课堂专注力。',
+ medium:'部分场景边界模糊，偶尔会在餐桌上或被窝里偷玩。建议坚守底线，特别是在睡前一小时，严禁设备进卧室，大人也要带头遵守。',
+ low:'屏幕已经入侵了生活的所有场景，不仅破坏规矩，还引发了多起违纪事件。建议立刻划定“无屏区”，并严格执行违规后果，绝不妥协。'}}};
+var DUR_LOW_TEEN={
+middle:'屏幕时间严重超标，已经挤占了睡眠和运动时间。初中生自控力尚弱，长期超时会导致多巴胺分泌紊乱，注意力涣散。必须采取技术手段（如路由器限速）进行强制干预。',
+high:'屏幕时间严重超标，已经挤占了睡眠和运动时间。高中生虽自控力有所增强，但面对高考压力易产生补偿心理，长期超时会导致注意力涣散。必须采取技术手段（如断网）进行强制干预。'};
+
+/* ================= 行动建议 ================= */
+var SUG={
+primary:{duration:'使用实体计时器或沙漏，让时间可视化。时间一到，立刻收走设备',
+ content:'开启各大视频/社交 App 的青少年模式，锁定优质内容池',
+ control:'在开始观看前约定结束的标志（如“这一集结束”），而非单纯约定时间',
+ dependency:'在客厅设置一个“手机停车场”，回家后全家把手机放在那里',
+ boundary:'设立严格的“餐桌无屏”和“卧室无屏”规矩，大人也要带头遵守'},
+teen:{duration:'与孩子协商签订《屏幕时间契约》，工作日每天不超过 1 小时，违规有明确后果',
+ content:'主动了解孩子常玩的游戏，以请教的姿态进入他的数字世界，避免一上来就批判',
+ control:'在游戏开始前约定明确的结束标志（如“打完这局”），而非单纯约定时间',
+ dependency:'丰富现实生活：鼓励孩子培养一项需要出汗的体育运动或实体爱好',
+ boundary:'设立严格的“卧室无屏”规矩，设备晚上统一在客厅充电，大人带头遵守'}};
+
+/* ================= 版本配置 ================= */
+var CFG={
+primary:{k:'primary',tag:'6–12岁 · 小学阶段',lead:'小学阶段是习惯养成的黄金窗口。这一版的观察聚焦规则意识与内容把关：刷牙……不，是刷牙之外的另一场“习惯战役”——按时交设备、看什么内容、餐桌和睡前有没有屏幕。答案没有对错，如实观察就好。',
+ title:'孩子基本信息',nameLabel:'孩子昵称',grades:['一年级','二年级','三年级','四年级','五年级','六年级'],boarding:false,devices:['手机/平板','电视/投影','游戏机','电脑']},
+middle:{k:'teen',tag:'12–15岁 · 初中阶段',lead:'初中阶段，电子产品往往是社交的硬通货和压力的避风港，强行没收极易引发激烈冲突。这一版的观察聚焦自控力与心理韧性，帮助您发现潜在的沉迷风险，学习从“管理者”转变为“引导者”。',
+ title:'学生基本信息',nameLabel:'学生昵称',grades:['初一','初二','初三'],boarding:true,devices:['智能手机','平板电脑','电脑/笔记本','游戏机']},
+high:{k:'teen',tag:'15–18岁 · 高中阶段',lead:'高中阶段，手机几乎成了身体的延伸，既是社交刚需，也是释放高考压力的出口，强行剥夺极易引发剧烈冲突。这一版的观察聚焦自我管理与压力疏导，帮助您识别潜在的成瘾风险，从“管理者”转变为“契约协商者”。',
+ title:'学生基本信息',nameLabel:'学生昵称',grades:['高一','高二','高三'],boarding:true,devices:['智能手机','平板电脑','电脑/笔记本','游戏机']}};
+
+/* ================= 评语文案 ================= */
+var VERDICTS=[
+[85,'孩子的屏幕使用习惯整体<span class="hl">健康且自律</span>。时长可控、内容优质、边界清晰，说明家庭中已经建立了良好的规则与信任。接下来只需保持，并随学业阶段的变化弹性调整约定即可。'],
+[70,'整体状况<span class="hl">基本健康</span>，但个别维度已出现松动——可能是周末时长、睡前边界或内容把关。趁习惯尚未固化，现在正是微调约定的最佳时机，分项地图中标出了值得留意的地方。'],
+[50,'孩子的屏幕使用已<span class="hl">出现失衡迹象</span>：部分场景的边界被突破，或屏幕正在挤占睡眠与运动。先不要急着“一刀切”没收，建议从分项地图中最薄弱的一两个维度入手，与孩子重新协商规则。'],
+[0,'当前状态<span class="hl">风险较高</span>，屏幕可能已对孩子的生活形成明显侵蚀，亲子之间也容易因此爆发冲突。建议暂缓强硬对抗，先修复沟通渠道；必要时欢迎联系我们，或寻求专业心理支持。']];
+var PARENT={
+good:'你们已经建立了健康的屏幕规则与信任关系。接下来只需保持弹性：随孩子学业阶段的变化，定期和他一起重新协商约定，让规则始终“长得像他自己的选择”。',
+ok:'规则的框架在了，但执行中还留着缝隙。建议把“没收—对抗”换成“约定—复盘”：每周找一个轻松的时刻，和孩子一起看看本周的执行情况，让他参与规则的修订，而不是单方面接受。',
+low:'屏幕之争可能已经消耗了不少亲子信任。这个阶段，先修复关系比执行规则更重要：暂停强硬没收，从孩子感兴趣的数字内容聊起，先听他说，再谈约定；必要时欢迎联系我们获取专业支持。'};
+var LVL={good:'状态良好',ok:'有待改善',low:'重点关注'};
+var DK={good:'high',ok:'medium',low:'low'};
+var KEEP_ADVICE='目前的习惯运转良好，无需新增限制。可以每学期和孩子一起复盘一次约定，随学业节奏弹性调整。';
+
+/* ================= 状态 ================= */
+var els={
+  landing:$('#page-landing'),form:$('#page-form'),quiz:$('#page-quiz'),report:$('#page-report'),
+  brand:$('#brand'),topQuiz:$('#topQuiz'),dimText:$('#dimText'),
+  qIdx:$('#qIdx'),qTotal:$('#qTotal'),progressTrack:$('#progressTrack'),progressFill:$('#progressFill'),
+  qCard:$('#qCard'),qText:$('#qText'),qHint:$('#qHint'),qOptions:$('#qOptions'),
+  prevBtn:$('#prevBtn'),nextBtn:$('#nextBtn'),nextLabel:$('#nextLabel'),autoTip:$('#autoTip'),
+  formTag:$('#formTag'),formLead:$('#formLead'),formTitle:$('#formTitle'),formFields:$('#formFields'),
+  ring:$('#ringFg'),totalScore:$('#totalScore'),resultTitle:$('#resultTitle'),verdictText:$('#verdictText'),
+  dimList:$('#dimList'),adviceList:$('#adviceList'),parentAdvice:$('#parentAdvice'),
+  ageCards:$('#ageCards'),backBtn:$('#backBtn')
+};
+var ver='',set=null,flat=[],answers=[],idx=0,stage='landing',user={},timer=null,pushed=false;
+
+function buzz(ms){if(navigator.vibrate){try{navigator.vibrate(ms)}catch(e){}}}
+function shallow(o){var r={};for(var k in o)r[k]=o[k];return r}
+function opts(a){return a.map(function(t){return '<option>'+t+'</option>'}).join('')}
+
+function showStage(s){
+  clearTimeout(timer);
+  stage=s;
+  [['landing',els.landing],['form',els.form],['quiz',els.quiz],['report',els.report]].forEach(function(p){
+    var on=p[0]===s;p[1].hidden=!on;
+    if(on){p[1].classList.remove('stage-in');void p[1].offsetWidth;p[1].classList.add('stage-in')}
+  });
+  var q=s==='quiz';
+  els.brand.hidden=q;els.topQuiz.hidden=!q;els.progressTrack.hidden=!q;
+  window.scrollTo(0,0);
+}
+
+/* ================= 数据集组装（合并中学共享数据） ================= */
+function buildSet(v){
+  var c=CFG[v],teen=c.k==='teen';
+  var qs=(teen?Q_TEEN:Q_PRIMARY).slice();
+  if(teen){qs[0]={d:'duration',t:Q1_TEEN[v].t,h:Q_TEEN[0].h,o:Q_TEEN[0].o}}
+  var descr=teen?shallow(DESCR.teen):DESCR.primary;
+  if(teen){descr.duration={high:DESCR.teen.duration.high,medium:DESCR.teen.duration.medium,low:DUR_LOW_TEEN[v]}}
+  return{c:c,qs:qs,descr:descr,sug:SUG[c.k],names:DIM_NAMES[c.k]};
+}
+
+/* ================= 流程：选年龄 → 表单 → 问卷 ================= */
+function pickAge(v){
+  ver=v;set=buildSet(v);user={};
+  var c=set.c;
+  els.formTag.textContent=c.tag;
+  els.formLead.textContent=c.lead;
+  els.formTitle.textContent=c.title;
+  var g='<div><label class="f-label" for="fName">'+c.nameLabel+'（选填）</label>'+
+    '<input class="f-input" id="fName" type="text" maxlength="12" placeholder="用于报告展示，可不填" autocomplete="off"></div>'+
+    '<div><label class="f-label" for="fGrade">年级</label><select class="f-input" id="fGrade">'+opts(c.grades)+'</select></div>';
+  if(c.boarding)g+='<div><label class="f-label" for="fBoard">就读方式</label><select class="f-input" id="fBoard">'+opts(['走读生','住校生'])+'</select></div>';
+  g+='<div><label class="f-label" for="fDevice">平时接触最多的设备</label><select class="f-input" id="fDevice">'+opts(c.devices)+'</select></div>';
+  els.formFields.innerHTML=g;
+  if(!pushed){try{history.pushState({s:1},'');pushed=true}catch(e){}}
+  showStage('form');
+}
+
+function startQuiz(){
+  var n=$('#fName');
+  user={name:n?n.value.trim():'',grade:$('#fGrade').value,device:$('#fDevice').value,
+        board:$('#fBoard')?$('#fBoard').value:''};
+  flat=set.qs;
+  answers=flat.map(function(){return -1});
+  idx=0;
+  els.qTotal.textContent=flat.length;
+  showStage('quiz');
+  renderQ(1);
+}
+
+/* ================= 问卷渲染 ================= */
+function renderQ(dir){
+  var q=flat[idx];
+  els.dimText.textContent=set.names[q.d];
+  els.qIdx.textContent=idx+1;
+  els.progressFill.style.width=((idx+1)/flat.length*100).toFixed(1)+'%';
+  els.qText.textContent=q.t;
+  els.qHint.textContent=q.h||'';
+  els.qHint.hidden=!q.h;
+  els.qOptions.innerHTML='';
+  q.o.forEach(function(t,i){
+    var b=document.createElement('button');
+    b.type='button';
+    b.className='q-opt'+(answers[idx]===i?' sel':'');
+    b.innerHTML='<span class="q-mark">'+'ABCD'[i]+'</span><span>'+t+'</span>';
+    b.addEventListener('click',function(){pick(i)});
+    els.qOptions.appendChild(b);
+  });
+  els.autoTip.hidden=idx!==0;
+  updateNav();
+  if(dir){
+    els.qCard.classList.remove('q-anim','q-anim-back');
+    void els.qCard.offsetWidth;
+    els.qCard.classList.add(dir>0?'q-anim':'q-anim-back');
+  }
+}
+function updateNav(){
+  els.prevBtn.disabled=idx===0;
+  els.nextBtn.disabled=answers[idx]<0;
+  els.nextLabel.textContent=idx===flat.length-1?'查看报告':'下一题';
+}
+function pick(i){
+  answers[idx]=i;
+  Array.prototype.forEach.call(els.qOptions.children,function(el,j){el.classList.toggle('sel',j===i)});
+  buzz(8);
+  clearTimeout(timer);
+  if(idx<flat.length-1){
+    if(AUTO_NEXT)timer=setTimeout(function(){go(1)},AUTO_DELAY);
+    else updateNav();
+  }else{
+    updateNav();
+    els.nextBtn.classList.remove('nudge');void els.nextBtn.offsetWidth;els.nextBtn.classList.add('nudge');
+  }
+}
+function go(d){
+  clearTimeout(timer);
+  if(d>0&&answers[idx]<0)return;
+  var t=idx+d;
+  if(t<0)return;
+  if(t>=flat.length){finish();return}
+  idx=t;
+  renderQ(d);
+  window.scrollTo({top:0,behavior:REDUCED?'auto':'smooth'});
+}
+
+/* ================= 计分与报告 ================= */
+function compute(){
+  var per={},cnt={};
+  flat.forEach(function(q,i){
+    per[q.d]=(per[q.d]||0)+(3-answers[i]);
+    cnt[q.d]=(cnt[q.d]||0)+1;
+  });
+  var dims=Object.keys(set.names).map(function(k){
+    var pct=Math.round((per[k]||0)/(cnt[k]*3)*100);
+    return{k:k,name:set.names[k],pct:pct,lv:pct>=75?'good':pct>=50?'ok':'low'};
+  });
+  var total=Math.round(dims.reduce(function(s,d){return s+d.pct},0)/dims.length);
+  return{dims:dims,total:total,g:total>=70?'good':total>=50?'ok':'low'};
+}
+
+function countUp(el,to,dur){
+  if(REDUCED){el.textContent=to;return}
+  var t0=performance.now();
+  (function step(t){
+    var p=Math.min((t-t0)/dur,1);
+    el.textContent=Math.round((1-Math.pow(1-p,3))*to);
+    if(p<1)requestAnimationFrame(step);
+  })(t0);
+}
+
+function renderReport(res){
+  var who=user.name?'「'+user.name+'」':'';
+  els.resultTitle.textContent=who+'的屏幕使用画像';
+
+  var col=res.g==='good'?'var(--olive)':res.g==='ok'?'#C99432':'var(--terra)';
+  var numCol=res.g==='ok'?'#9A6B14':col;
+  els.ring.style.transition='none';
+  els.ring.style.strokeDashoffset=C;
+  els.ring.style.stroke=col;
+  els.totalScore.style.color=numCol;
+  if(REDUCED){
+    els.ring.style.strokeDashoffset=Math.round(C*(1-res.total/100));
+    els.totalScore.textContent=res.total;
+  }else{
+    requestAnimationFrame(function(){requestAnimationFrame(function(){
+      els.ring.style.transition='';
+      els.ring.style.strokeDashoffset=C*(1-res.total/100);
+    })});
+    countUp(els.totalScore,res.total,1300);
+  }
+  var vd=VERDICTS.find(function(v){return res.total>=v[0]});
+  els.verdictText.innerHTML=vd[1];
+
+  els.dimList.innerHTML='';
+  var k=0;
+  res.dims.forEach(function(d){
+    var card=document.createElement('div');
+    card.className='dim-card lv-'+d.lv;
+    card.style.animationDelay=(0.12+k*0.09)+'s';
+    card.innerHTML=
+      '<div class="dim-head">'+
+        '<div class="dim-name">'+ICONS[d.k]+d.name+'<span class="dim-level lvl-'+d.lv+'">'+LVL[d.lv]+'</span></div>'+
+        '<div class="dim-score"><b>'+d.pct+'</b> /100</div>'+
+      '</div>'+
+      '<div class="dim-mini-bar"><i style="--p:'+(d.pct/100).toFixed(3)+';animation-delay:'+(0.35+k*0.09)+'s"></i></div>'+
+      '<p class="dim-desc">'+set.descr[d.k][DK[d.lv]]+'</p>';
+    els.dimList.appendChild(card);
+    k++;
+  });
+
+  var weak=res.dims.filter(function(d){return d.lv!=='good'})
+    .sort(function(a,b){return a.pct-b.pct}).slice(0,3);
+  els.adviceList.innerHTML='';
+  if(weak.length){
+    var m=0;
+    weak.forEach(function(d){
+      var el=document.createElement('div');
+      el.className='advice-item';
+      el.style.animationDelay=(0.2+m*0.08)+'s';
+      el.innerHTML='<span class="a-tag">'+d.name+'</span><div class="d">'+set.sug[d.k]+'</div>';
+      els.adviceList.appendChild(el);
+      m++;
+    });
+  }else{
+    els.adviceList.innerHTML='<div class="advice-item" style="animation-delay:.2s"><span class="a-tag">保持</span><div class="d">'+KEEP_ADVICE+'</div></div>';
+  }
+  els.parentAdvice.textContent=PARENT[res.g];
+}
+
+function finish(){
+  clearTimeout(timer);
+  renderReport(compute());
+  showStage('report');
+}
+
+/* ================= 事件 ================= */
+/* 首页维度图标注入 */
+Array.prototype.forEach.call(document.querySelectorAll('.dp-ico'),function(el){
+  el.innerHTML=ICONS[el.dataset.ico];
+});
+
+els.ageCards.addEventListener('click',function(e){
+  var c=e.target.closest('[data-age]');
+  if(c)pickAge(c.dataset.age);
+});
+els.ageCards.addEventListener('keydown',function(e){
+  if(e.key==='Enter'||e.key===' '){
+    var c=e.target.closest('[data-age]');
+    if(c){e.preventDefault();pickAge(c.dataset.age)}
+  }
+});
+ $('#startBtn').addEventListener('click',function(){startQuiz()});
+els.prevBtn.addEventListener('click',function(){go(-1)});
+els.nextBtn.addEventListener('click',function(){go(1)});
+ $('#restartBtn').addEventListener('click',function(){showStage('landing')});
+els.backBtn.addEventListener('click',function(){
+  if(stage==='landing'){location.href='index.html';return}
+  if(stage==='quiz'&&pushed){history.back()}else{showStage('landing')}
+});
+
+/* 系统返回：问卷中挽留，其余回首页 */
+window.addEventListener('popstate',function(){
+  if(!pushed)return;
+  pushed=false;
+  if(stage==='quiz'&&answers.some(function(a){return a>=0})&&
+     !confirm('确定退出本次观察吗？当前作答不会被保存。')){
+    pushed=true;
+    try{history.pushState({s:1},'')}catch(e){}
+    return;
+  }
+  showStage('landing');
+});
+
+/* 桌面端键盘支持：← → 切题，1-4 选答案 */
+document.addEventListener('keydown',function(e){
+  if(stage!=='quiz')return;
+  if(e.key==='ArrowRight')go(1);
+  else if(e.key==='ArrowLeft')go(-1);
+  else if(/^[1-4]$/.test(e.key))pick(+e.key-1);
+});
+})();
+</script>
+</body>
+</html>

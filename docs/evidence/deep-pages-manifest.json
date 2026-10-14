@@ -1,0 +1,27 @@
+{
+  "fetched_at": "2026-10-14T07:33:19.904685+00:00",
+  "method": "GET only; no form submission",
+  "pages": [
+    {
+      "url": "https://sdsqsnwh.cn/cz/shiguang.html",
+      "file": "docs/evidence/reference-shiguang.html",
+      "status": 200,
+      "bytes": 140127,
+      "sha256": "12956d3a7850bb65acf78624fc24328ad555fbe67f306107fbe8209b2ef22b8a"
+    },
+    {
+      "url": "https://sdsqsnwh.cn/cz/ya.html",
+      "file": "docs/evidence/reference-ya.html",
+      "status": 200,
+      "bytes": 82966,
+      "sha256": "715a616fba42397309239568d8551f97caf0e2eaf74fcd54b67948462d2b6d81"
+    },
+    {
+      "url": "https://sdsqsnwh.cn/cz/4c1.html",
+      "file": "docs/evidence/reference-4c1.html",
+      "status": 200,
+      "bytes": 62723,
+      "sha256": "c1a2c045413e764e7a57e9a47e8b5a3f7bcfd2e9cf744da5f9f16c3dcf33b777"
+    }
+  ]
+}

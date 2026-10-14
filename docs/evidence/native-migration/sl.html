@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="format-detection" content="telephone=no">
+<meta name="theme-color" content="#0a0820">
+<title>成长健研社 · 睡眠微手帐</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg-deep:#0a0820;--bg-mid:#1a1245;--bg-card:rgba(60,40,130,.35);
+  --border:rgba(255,209,102,.18);--border-hover:rgba(255,209,102,.4);
+  --text-primary:#fef9e7;--text-secondary:#c4b3e8;--text-muted:#8a7cb3;
+  --accent-moon:#ffd166;--accent-pink:#ff6b9d;--accent-blue:#6b9eff;
+  --accent-green:#7eda9e;--accent-purple:#c084fc;--accent-red:#ff7a7a;
+  --safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none}
+img{-webkit-touch-callout:default}
+html,body{margin:0;padding:0;-webkit-text-size-adjust:100%;-webkit-font-smoothing:antialiased;overscroll-behavior:none}
+body{
+  font-family:'Nunito','PingFang SC',-apple-system,sans-serif;
+  background:var(--bg-deep);color:var(--text-primary);
+  min-height:100vh;min-height:100dvh;overflow-x:hidden;
+  background-image:
+    radial-gradient(ellipse at 20% 0%,#2d1b69 0%,transparent 55%),
+    radial-gradient(ellipse at 80% 100%,#1e1247 0%,transparent 55%),
+    radial-gradient(ellipse at 0% 80%,#3d1f5c 0%,transparent 50%),
+    radial-gradient(ellipse at 100% 20%,#4a1f6e 0%,transparent 50%);
+  background-attachment:fixed;padding-bottom:calc(60px + var(--safe-bottom));
+  -webkit-user-select:none;user-select:none;
+}
+input,textarea{-webkit-user-select:text;user-select:text;font-size:16px}
+.font-display{font-family:'Fredoka','PingFang SC',sans-serif}
+.stars-bg{position:fixed;inset:0;pointer-events:none;z-index:0}
+.star{position:absolute;background:white;border-radius:50%;animation:twinkle var(--dur,3s) ease-in-out infinite}
+@keyframes twinkle{0%,100%{opacity:.15;transform:scale(.8)}50%{opacity:1;transform:scale(1.3)}}
+.moon-deco{position:fixed;top:calc(12px + var(--safe-top));right:12px;width:48px;height:48px;z-index:1;pointer-events:none;animation:float 6s ease-in-out infinite;opacity:.8}
+@media(min-width:768px){.moon-deco{top:24px;right:24px;width:70px;height:70px}}
+@keyframes float{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-8px) rotate(4deg)}}
+.card{background:var(--bg-card);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:20px;transition:border-color .3s;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,209,102,.5),transparent)}
+.btn-primary{background:linear-gradient(135deg,var(--accent-moon),#ff9f43);color:#1a1245;font-weight:700;padding:14px 20px;border-radius:16px;border:none;cursor:pointer;transition:transform .2s,box-shadow .2s;font-family:'Fredoka',sans-serif;font-size:1rem;box-shadow:0 6px 20px rgba(255,209,102,.3);width:100%;min-height:48px;touch-action:manipulation}
+.btn-primary:active{transform:scale(.97);box-shadow:0 4px 12px rgba(255,209,102,.4)}
+.btn-ghost{background:rgba(255,255,255,.05);border:1px solid var(--border);color:var(--text-secondary);padding:8px 14px;border-radius:12px;cursor:pointer;transition:all .2s;font-weight:600;font-family:inherit;font-size:.8rem;min-height:36px;touch-action:manipulation}
+.btn-ghost:active{background:rgba(255,255,255,.1);transform:scale(.97)}
+.btn-tool{background:rgba(255,255,255,.04);border:1.5px solid var(--border);color:var(--text-primary);padding:12px 14px;border-radius:16px;cursor:pointer;transition:transform .2s,border-color .2s;font-family:'Fredoka',sans-serif;font-weight:600;font-size:.85rem;display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;touch-action:manipulation}
+.btn-tool:active{transform:scale(.97);border-color:var(--accent-moon);background:rgba(255,209,102,.08)}
+.btn-tool .icon{font-size:1.3rem}.btn-tool .desc{font-size:.65rem;color:var(--text-muted);font-weight:500}
+.btn-add{background:rgba(192,132,252,.1);border:1.5px dashed var(--accent-purple);color:var(--accent-purple);padding:6px 14px;border-radius:14px;cursor:pointer;transition:transform .2s;font-weight:700;font-family:'Fredoka',sans-serif;font-size:.8rem;display:inline-flex;align-items:center;gap:4px;touch-action:manipulation}
+.btn-add:active{transform:scale(.97);background:rgba(192,132,252,.2)}
+.factor-toggle{width:100%;padding:12px 16px;border-radius:14px;border:1.5px solid rgba(192,132,252,.25);background:rgba(192,132,252,.06);color:var(--accent-purple);cursor:pointer;font-family:'Fredoka',sans-serif;font-weight:600;font-size:.85rem;display:flex;align-items:center;justify-content:space-between;transition:background .2s,border-color .2s;touch-action:manipulation}
+.factor-toggle:active{background:rgba(192,132,252,.12)}
+.factor-toggle .arrow{display:inline-block;transition:transform .3s ease;font-size:.7rem}
+.factor-toggle.open .arrow{transform:rotate(180deg)}
+.factor-toggle.open{border-color:rgba(192,132,252,.45);background:rgba(192,132,252,.1)}
+.factor-collapse{max-height:0;overflow:hidden;opacity:0;transform:translateY(-8px);transition:max-height .45s cubic-bezier(.4,0,.2,1),opacity .3s ease,transform .35s ease}
+.factor-collapse.open{opacity:1;transform:translateY(0)}
+.moon-btn{width:44px;height:44px;border-radius:50%;border:2px solid var(--border);background:rgba(255,255,255,.05);cursor:pointer;transition:transform .2s,border-color .2s;display:flex;align-items:center;justify-content:center;font-size:22px;touch-action:manipulation;position:relative}
+@media(min-width:480px){.moon-btn{width:48px;height:48px;font-size:24px}}
+.moon-btn:active{transform:scale(.92);border-color:var(--accent-moon)}
+.moon-btn.active{background:linear-gradient(135deg,#ffd166,#ff9f43);border-color:var(--accent-moon);box-shadow:0 0 20px rgba(255,209,102,.5);transform:scale(1.06)}
+.moon-btn.active::after{content:attr(title);position:absolute;bottom:-24px;left:50%;transform:translateX(-50%) scale(.9);background:rgba(10,8,32,.95);border:1px solid var(--accent-moon);color:var(--accent-moon);padding:2px 8px;border-radius:6px;font-size:.6rem;white-space:nowrap;z-index:20;pointer-events:none;font-weight:700}
+.dur-btn{padding:10px 2px;border-radius:12px;border:1.5px solid var(--border);background:rgba(255,255,255,.04);color:var(--text-secondary);cursor:pointer;transition:transform .15s,border-color .15s;font-family:'Fredoka','PingFang SC',sans-serif;font-weight:600;font-size:.8rem;text-align:center;touch-action:manipulation;min-height:48px;display:flex;align-items:center;justify-content:center;white-space:nowrap}
+.dur-btn:active{transform:scale(.95);border-color:var(--accent-moon)}
+.dur-btn.active{background:linear-gradient(135deg,rgba(255,209,102,.25),rgba(255,107,157,.2));border-color:var(--accent-moon);color:var(--text-primary);box-shadow:0 4px 12px rgba(255,209,102,.2)}
+.tag-btn{padding:6px 12px;border-radius:12px;border:1.5px solid var(--border);background:rgba(255,255,255,.04);color:var(--text-secondary);cursor:pointer;transition:transform .15s,border-color .15s;font-weight:600;font-size:.78rem;font-family:inherit;touch-action:manipulation}
+.tag-btn:active{transform:scale(.95);border-color:var(--accent-pink)}
+.tag-btn.active{background:linear-gradient(135deg,rgba(255,107,157,.25),rgba(192,132,252,.2));border-color:var(--accent-pink);color:var(--text-primary);box-shadow:0 4px 10px rgba(255,107,157,.2)}
+.custom-factor-chip{padding:6px 12px;border-radius:14px;border:1.5px solid var(--accent-purple);background:rgba(192,132,252,.1);color:var(--text-primary);cursor:pointer;transition:transform .15s;font-weight:600;font-size:.78rem;display:inline-flex;align-items:center;gap:4px;font-family:inherit;touch-action:manipulation}
+.custom-factor-chip:active{transform:scale(.95)}
+.custom-factor-chip.active{background:linear-gradient(135deg,rgba(192,132,252,.4),rgba(255,107,157,.25));box-shadow:0 4px 12px rgba(192,132,252,.25)}
+.custom-factor-chip .delete-btn{width:18px;height:18px;border-radius:50%;background:rgba(255,107,157,.25);color:var(--text-primary);font-size:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-left:2px;flex-shrink:0}
+.time-input{background:rgba(255,255,255,.06);border:1.5px solid var(--border);border-radius:14px;padding:10px 14px;color:var(--text-primary);font-size:15px;font-family:'Nunito',sans-serif;width:100%;transition:border-color .2s;color-scheme:dark}
+.time-input:focus{outline:none;border-color:var(--accent-moon);background:rgba(255,209,102,.08)}
+textarea.time-input{resize:none;min-height:54px}
+.mood-btn{width:44px;height:44px;border-radius:16px;border:2px solid var(--border);background:rgba(255,255,255,.04);cursor:pointer;transition:transform .2s,border-color .2s;font-size:22px;display:flex;align-items:center;justify-content:center;touch-action:manipulation;position:relative}
+@media(min-width:480px){.mood-btn{width:48px;height:48px;font-size:24px}}
+.mood-btn:active{transform:scale(.92);border-color:var(--accent-pink)}
+.mood-btn.active{border-color:var(--accent-pink);background:rgba(255,107,157,.15);transform:scale(1.04);box-shadow:0 6px 16px rgba(255,107,157,.25)}
+.mood-btn.active::after{content:attr(title);position:absolute;bottom:-24px;left:50%;transform:translateX(-50%) scale(.9);background:rgba(10,8,32,.95);border:1px solid var(--accent-pink);color:var(--accent-pink);padding:2px 8px;border-radius:6px;font-size:.6rem;white-space:nowrap;z-index:20;pointer-events:none;font-weight:700}
+.toast{position:fixed;top:calc(12px + var(--safe-top));left:16px;right:16px;background:linear-gradient(135deg,#2d1b69,#4a2d8a);border:1px solid var(--accent-moon);color:var(--text-primary);padding:12px 18px;border-radius:14px;box-shadow:0 12px 40px rgba(0,0,0,.4);z-index:1000;transform:translateY(-120px);opacity:0;transition:transform .4s cubic-bezier(.34,1.56,.64,1),opacity .3s;display:flex;align-items:center;gap:8px;max-width:480px;margin:0 auto;font-size:.9rem}
+.toast.show{transform:translateY(0);opacity:1}
+.modal-overlay{position:fixed;inset:0;background:rgba(10,8,32,.7);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:999;display:none;align-items:flex-end;justify-content:center;padding:16px}
+@media(min-width:640px){.modal-overlay{align-items:center;padding:24px}}
+.modal-overlay.show{display:flex}
+.modal-box{background:linear-gradient(135deg,#2d1b69,#1a1245);border:1px solid var(--accent-moon);border-radius:24px;padding:20px;max-width:440px;width:100%;box-shadow:0 24px 60px rgba(0,0,0,.5);max-height:88vh;overflow-y:auto;-webkit-overflow-scrolling:touch;animation:modalIn .3s cubic-bezier(.34,1.56,.64,1)}
+@media(min-width:640px){.modal-box{padding:28px}}
+@keyframes modalIn{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
+.history-item{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:14px;padding:10px 12px;display:flex;align-items:center;gap:10px;transition:background .2s,border-color .2s}
+.history-item:active{background:rgba(255,255,255,.07)}
+.history-info{flex:1;min-width:0;display:flex;align-items:center;gap:8px}
+.history-del{width:30px;height:30px;border-radius:10px;border:1px solid rgba(255,107,157,.18);background:rgba(255,107,157,.05);color:var(--accent-pink);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;transition:background .2s,transform .15s,border-color .2s;touch-action:manipulation}
+.history-del:active{background:rgba(255,107,157,.2);transform:scale(.88);border-color:var(--accent-pink)}
+.history-scroll{max-height:180px;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-right:4px}
+::-webkit-scrollbar{width:4px;height:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(255,209,102,.3);border-radius:2px}
+.section-title{font-family:'Fredoka',sans-serif;font-weight:600;display:flex;align-items:center;gap:8px;font-size:1.05rem}
+.section-title .icon-wrap{width:28px;height:28px;border-radius:10px;background:linear-gradient(135deg,rgba(255,209,102,.2),rgba(255,107,157,.2));display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.float-cloud{position:fixed;border-radius:100px;background:radial-gradient(circle,rgba(192,132,252,.08),transparent);filter:blur(40px);pointer-events:none;z-index:0}
+.factor-group{margin-bottom:.8rem}.factor-group h3{margin-bottom:.4rem;font-size:.8rem;color:var(--text-secondary);font-weight:700}
+.type-selector{display:flex;gap:6px;margin-bottom:12px}
+.type-btn{flex:1;padding:8px 6px;border-radius:12px;border:1.5px solid var(--border);background:rgba(255,255,255,.04);color:var(--text-secondary);cursor:pointer;transition:transform .15s;font-family:'Fredoka',sans-serif;font-weight:600;font-size:.8rem;touch-action:manipulation}
+.type-btn.active[data-type="good"]{background:rgba(126,218,158,.2);border-color:var(--accent-green);color:var(--accent-green)}
+.type-btn.active[data-type="bad"]{background:rgba(255,107,157,.2);border-color:var(--accent-pink);color:var(--accent-pink)}
+.type-btn.active[data-type="neutral"]{background:rgba(107,158,255,.2);border-color:var(--accent-blue);color:var(--accent-blue)}
+.quick-presets{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
+.preset-chip{padding:4px 10px;border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,.03);color:var(--text-secondary);cursor:pointer;font-size:.7rem;transition:transform .15s;font-family:inherit;touch-action:manipulation}
+.preset-chip:active{transform:scale(.95);border-color:var(--accent-purple);color:var(--text-primary)}
+.analyst-card{background:linear-gradient(135deg,rgba(255,209,102,.08),rgba(255,107,157,.05));border:1px solid rgba(255,209,102,.3);border-radius:24px;padding:28px 16px;text-align:center;position:relative;overflow:hidden}
+.analyst-card::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle,rgba(255,209,102,.06),transparent 50%);animation:rotate 20s linear infinite;pointer-events:none}
+@keyframes rotate{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.analyst-qr-wrap{background:#fff;padding:10px;border-radius:18px;line-height:0;display:inline-block;box-shadow:0 12px 40px rgba(255,209,102,.25),0 0 0 6px rgba(255,209,102,.08);position:relative;z-index:1}
+.analyst-qr-wrap img{display:block;border-radius:8px;width:140px;height:140px;object-fit:contain}
+@media(min-width:640px){.analyst-qr-wrap img{width:170px;height:170px}}
+.data-stat{padding:10px 6px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid var(--border);text-align:center}
+.data-stat .num{font-family:'Fredoka',sans-serif;font-weight:700;font-size:1.4rem;line-height:1;background:linear-gradient(135deg,var(--accent-moon),var(--accent-pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.data-stat .lbl{font-size:.65rem;color:var(--text-muted);margin-top:4px;font-weight:600}
+.wx-tip{display:none;background:rgba(255,209,102,.12);border:1px solid rgba(255,209,102,.3);border-radius:12px;padding:10px 12px;margin-top:10px;font-size:.75rem;color:var(--text-primary);line-height:1.5}
+.wx-tip.show{display:block}.wx-tip b{color:var(--accent-moon)}
+input[type="file"]{display:none}canvas{max-width:100%}.container-max{max-width:1024px;margin:0 auto}.main-wrap{padding-top:4px}
+.fixed-copyright{position:fixed;bottom:0;left:0;right:0;z-index:50;padding:6px 12px;padding-bottom:calc(6px + var(--safe-bottom));text-align:center;font-size:.6rem;color:var(--text-muted);background:rgba(10,8,32,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--border)}
+.help-link{display:inline-flex;align-items:center;gap:2px;padding:4px 10px;border-radius:10px;background:rgba(107,158,255,.1);border:1px solid rgba(107,158,255,.2);color:var(--accent-blue);text-decoration:none;font-family:'Fredoka','PingFang SC',sans-serif;font-weight:600;font-size:.7rem;touch-action:manipulation;white-space:nowrap;cursor:pointer}
+.help-link:active{background:rgba(107,158,255,.2);border-color:var(--accent-blue)}
+.home-link{display:inline-flex;align-items:center;gap:4px;padding:6px 14px;border-radius:12px;background:linear-gradient(135deg,rgba(255,209,102,.15),rgba(255,159,67,.1));border:1px solid rgba(255,209,102,.3);color:var(--accent-moon);text-decoration:none;font-family:'Fredoka','PingFang SC',sans-serif;font-weight:600;font-size:.8rem;transition:all .2s;touch-action:manipulation;white-space:nowrap}
+.home-link:active{transform:scale(.97)}
+.p-card{padding:1rem 1rem}@media(min-width:640px){.p-card{padding:1.25rem 1.5rem}}
+.factor-badge{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;border-radius:9px;padding:0 5px;background:var(--accent-pink);color:#fff;font-size:.6rem;font-weight:800;font-family:'Fredoka',sans-serif;margin-left:6px;transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
+.factor-badge.hidden{display:none}
+
+/* ===== 新增：数据安全提醒样式 ===== */
+.bak-banner{display:flex;align-items:flex-start;gap:10px;background:linear-gradient(135deg,rgba(255,122,122,.12),rgba(255,159,67,.08));border:1px solid rgba(255,122,122,.4);border-radius:14px;padding:12px 14px;font-size:.75rem;line-height:1.65;color:var(--text-primary);margin-bottom:10px}
+.bak-banner.warn{border-color:rgba(255,122,122,.7);background:linear-gradient(135deg,rgba(255,122,122,.2),rgba(255,159,67,.12))}
+.bak-banner b{color:var(--accent-moon)}
+.bak-banner .ic{font-size:1.1rem;flex-shrink:0;line-height:1}
+.bak-info-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:.72rem;color:var(--text-secondary);margin-bottom:10px}
+.bak-tag{padding:3px 10px;border-radius:10px;font-size:.7rem;font-weight:700;background:rgba(126,218,158,.12);color:var(--accent-green);border:1px dashed rgba(126,218,158,.4)}
+.bak-tag.warn{background:rgba(255,122,122,.12);color:var(--accent-red);border-color:rgba(255,122,122,.5)}
+.modal-opt{display:flex;flex-direction:column;gap:8px;margin:14px 0}
+.modal-opt button{padding:12px 14px;border-radius:14px;border:1.5px dashed var(--border);background:rgba(255,255,255,.03);text-align:left;cursor:pointer;font-family:inherit;color:var(--text-primary)}
+.modal-opt button:active{background:rgba(255,209,102,.1);border-color:var(--accent-moon)}
+.modal-opt .t{font-weight:700;font-size:.9rem;color:var(--text-primary);margin-bottom:2px}
+.modal-opt .d{font-size:.72rem;color:var(--text-muted);line-height:1.5}
+.modal-opt .go .t{color:var(--accent-green)}
+.modal-opt .replace .t{color:var(--accent-red)}
+/* 帮助弹窗数据安全块 */
+.help-warn{background:rgba(255,122,122,.08);border:1px solid rgba(255,122,122,.3);border-radius:12px;padding:10px 12px;font-size:.78rem;line-height:1.65;color:var(--text-secondary);margin-bottom:8px}
+.help-warn strong{color:var(--accent-moon)}
+.help-warn .t{font-weight:700;color:var(--text-primary);margin-bottom:4px;display:flex;align-items:center;gap:6px}
+.help-tip{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;padding:10px 12px;font-size:.78rem;line-height:1.6;color:var(--text-secondary);margin-bottom:8px;display:flex;gap:8px}
+.help-tip .n{width:18px;height:18px;border-radius:50%;background:var(--accent-moon);color:#1a1245;display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:800;flex-shrink:0;margin-top:1px}
+.help-tip b{color:var(--text-primary)}
+.help-divider{height:1px;background:var(--border);margin:14px 0}
+.help-h{font-family:'Fredoka',sans-serif;font-weight:700;font-size:.9rem;color:var(--accent-moon);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+</style>
+</head>
+<body>
+<div class="stars-bg" id="starsBg"></div>
+<div class="float-cloud" style="width:280px;height:280px;top:12%;left:-12%"></div>
+<div class="float-cloud" style="width:340px;height:340px;bottom:-8%;right:-10%"></div>
+<svg class="moon-deco" viewBox="0 0 100 100"><defs><radialGradient id="moonGrad" cx="35%" cy="35%"><stop offset="0%" stop-color="#fff8dc"/><stop offset="50%" stop-color="#ffd166"/><stop offset="100%" stop-color="#ff9f43"/></radialGradient><filter id="moonGlow"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><circle cx="50" cy="50" r="35" fill="url(#moonGrad)" filter="url(#moonGlow)"/><circle cx="42" cy="42" r="4" fill="rgba(255,159,67,.4)"/><circle cx="58" cy="55" r="3" fill="rgba(255,159,67,.4)"/><circle cx="50" cy="65" r="2.5" fill="rgba(255,159,67,.4)"/></svg>
+
+<div class="container-max px-4 md:px-6 py-4 md:py-8 main-wrap" style="position:relative;z-index:2">
+  <header class="mb-4">
+    <a href="index.html" class="home-link mb-3 inline-flex"><span>🏠</span><span>返回主页</span></a>
+    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full mb-3" style="background:rgba(255,209,102,.1);border:1px solid var(--border)"><span class="text-[10px]" style="color:var(--accent-moon)">●</span><span class="text-[10px] font-semibold" style="color:var(--accent-moon)">本地保存 · 无需联网 · 无需填写个人信息</span></div>
+    <h1 class="font-display text-2xl md:text-4xl font-bold mb-1" style="line-height:1.1">成长健研社<span style="background:linear-gradient(135deg,var(--accent-moon),var(--accent-pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">睡眠微手帐</span></h1>
+    <div class="flex flex-wrap items-center gap-1.5 md:gap-2 text-[11px] md:text-xs" style="color:var(--text-secondary)">
+      <div class="flex items-center gap-1 px-2.5 py-1 rounded-xl" style="background:rgba(255,255,255,.04)"><span>📅</span><span class="font-display font-semibold" id="todayDate"></span></div>
+      <div class="flex items-center gap-1 px-2.5 py-1 rounded-xl" style="background:rgba(255,255,255,.04)"><span id="moonPhaseEmoji"></span><span class="font-display font-semibold" id="moonPhaseName"></span></div>
+      <div class="flex items-center gap-1 px-2.5 py-1 rounded-xl" style="background:rgba(255,255,255,.04)"><span>🔥</span><span class="font-display font-semibold">已记录 <span id="recordCount">0</span> 天</span></div>
+      <button class="help-link" id="instructionBtn"><span>📖</span><span>使用说明</span></button>
+    </div>
+  </header>
+
+  <!-- 备份提醒横幅（仅超过30天时显示） -->
+  <div id="bakBanner" class="bak-banner warn" style="display:none">
+    <span class="ic">💾</span>
+    <div>
+      <b>记录只存在当前浏览器里。</b>清理缓存、卸载微信/浏览器或换手机都会永久丢失。<br>
+      👉 请每 <b>30 天左右</b>到下方「睡眠数据管理」点一次「导出数据」备份。
+    </div>
+  </div>
+
+  <!-- 统一记录卡片 -->
+  <section class="mb-4 md:mb-5"><div class="card p-card">
+    <div class="section-title mb-3"><div class="icon-wrap">✏️</div><span>记录昨晚的睡眠</span></div>
+
+    <div class="mb-3"><label class="block text-[11px] mb-1.5 font-semibold" style="color:var(--text-secondary)">大概睡了多久？</label>
+      <div class="grid grid-cols-4 md:grid-cols-7 gap-1.5" id="durationSelector">
+        <button class="dur-btn" data-range="lt5">不到5小时</button><button class="dur-btn" data-range="5-6">5-6小时</button><button class="dur-btn" data-range="6-7">6-7小时</button><button class="dur-btn" data-range="7-8">7-8小时</button>
+        <button class="dur-btn" data-range="8-9">8-9小时</button><button class="dur-btn" data-range="9-10">9-10小时</button><button class="dur-btn" data-range="gt10">10小时以上</button>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 mb-3">
+      <div><label class="block text-[11px] mb-1.5 font-semibold" style="color:var(--text-secondary)">躺下后多久睡着？</label><div class="flex gap-1.5 flex-wrap" id="fallAsleepSelector">
+        <button class="tag-btn" data-fallasleep="fast">很快睡着了</button><button class="tag-btn" data-fallasleep="soon">过了一会儿才睡着</button><button class="tag-btn" data-fallasleep="slow">翻了好久才睡着</button><button class="tag-btn" data-fallasleep="verylong">怎么都睡不着</button>
+      </div></div>
+      <div><label class="block text-[11px] mb-1.5 font-semibold" style="color:var(--text-secondary)">夜里醒来过吗？</label><div class="flex gap-1.5 flex-wrap" id="nightWakeSelector">
+        <button class="tag-btn" data-nightwake="none">一觉睡到天亮</button><button class="tag-btn" data-nightwake="once">醒了一次</button><button class="tag-btn" data-nightwake="several">醒了好几次</button><button class="tag-btn" data-nightwake="long">醒了很久才再睡着</button>
+      </div></div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 mb-3">
+      <div><label class="block text-[11px] mb-1.5 font-semibold" style="color:var(--text-secondary)">睡得怎么样？</label><div class="flex gap-1.5 flex-wrap" id="moonRating"><button class="moon-btn" data-rating="1" title="很差">🌑</button><button class="moon-btn" data-rating="2" title="不太好">🌘</button><button class="moon-btn" data-rating="3" title="还行">🌗</button><button class="moon-btn" data-rating="4" title="挺好">🌖</button><button class="moon-btn" data-rating="5" title="超棒">🌕</button></div></div>
+      <div><label class="block text-[11px] mb-1.5 font-semibold" style="color:var(--text-secondary)">今天起床后心情怎么样？</label><div class="flex gap-1.5 flex-wrap" id="moodSelector"><button class="mood-btn" data-mood="happy" title="开心">😄</button><button class="mood-btn" data-mood="ok" title="一般">😊</button><button class="mood-btn" data-mood="tired" title="疲惫">😪</button><button class="mood-btn" data-mood="sad" title="难过">😞</button><button class="mood-btn" data-mood="angry" title="烦躁">😠</button></div></div>
+    </div>
+    <div class="my-3" style="height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent)"></div>
+
+    <button class="factor-toggle" id="factorToggle"><span class="flex items-center"><span>🔍</span><span class="ml-2">你认为什么影响了睡眠？（任何原因都可以写）</span><span class="text-[10px] ml-2 px-1.5 py-0.5 rounded-md" style="background:rgba(192,132,252,.15);color:var(--accent-purple);font-weight:700">可选</span><span class="factor-badge hidden" id="factorBadge">0</span></span><span class="arrow">▼</span></button>
+    <div class="factor-collapse" id="factorCollapse"><div class="mt-3">
+      <div class="flex justify-end mb-2"><button class="btn-add" id="addCustomFactorBtn">➕ 添加自定义因素</button></div>
+      <div class="grid md:grid-cols-2 gap-x-4 gap-y-1" id="factorsGrid">
+        <div class="factor-group"><h3>📚 作业完成时间</h3><div class="flex flex-wrap gap-1.5"><button class="tag-btn" data-factor="homework" data-value="early">放学前完成</button><button class="tag-btn" data-factor="homework" data-value="normal">晚饭前完成</button><button class="tag-btn" data-factor="homework" data-value="late">睡前才写完</button><button class="tag-btn" data-factor="homework" data-value="none">没有作业</button></div></div>
+        <div class="factor-group"><h3>📝 明天有压力的事吗</h3><div class="flex flex-wrap gap-1.5"><button class="tag-btn" data-factor="pressure" data-value="exam">有考试/测验</button><button class="tag-btn" data-factor="pressure" data-value="homework">有要交的大作业</button><button class="tag-btn" data-factor="pressure" data-value="perform">有表演/比赛</button><button class="tag-btn" data-factor="pressure" data-value="none">没有压力</button></div></div>
+        <div class="factor-group"><h3>🎒 课外兴趣班</h3><div class="flex flex-wrap gap-1.5"><button class="tag-btn" data-factor="class" data-value="none">今天没有</button><button class="tag-btn" data-factor="class" data-value="one">有一个</button><button class="tag-btn" data-factor="class" data-value="many">有两个以上</button><button class="tag-btn" data-factor="class" data-value="late">上到很晚</button></div></div>
+        <div class="factor-group"><h3>📱 睡前玩电子产品</h3><div class="flex flex-wrap gap-1.5"><button class="tag-btn" data-factor="screen" data-value="none">没玩</button><button class="tag-btn" data-factor="screen" data-value="little">不到30分钟</button><button class="tag-btn" data-factor="screen" data-value="some">30-60分钟</button><button class="tag-btn" data-factor="screen" data-value="lot">超过1小时</button></div></div>
+        <div class="factor-group"><h3>🏃 白天运动了吗</h3><div class="flex flex-wrap gap-1.5"><button class="tag-btn" data-factor="exercise" data-value="lot">运动超过1小时</button><button class="tag-btn" data-factor="exercise" data-value="some">运动了一会儿</button><button class="tag-btn" data-factor="exercise" data-value="little">几乎没动</button></div></div>
+        <div class="factor-group"><h3>😴 白天午睡了吗</h3><div class="flex flex-wrap gap-1.5"><button class="tag-btn" data-factor="nap" data-value="none">没有午睡</button><button class="tag-btn" data-factor="nap" data-value="short">午睡不到30分钟</button><button class="tag-btn" data-factor="nap" data-value="long">午睡超过30分钟</button><button class="tag-btn" data-factor="nap" data-value="late">傍晚才午睡</button></div></div>
+        <div class="factor-group"><h3>🥤 睡前吃喝</h3><div class="flex flex-wrap gap-1.5"><button class="tag-btn" data-factor="drink" data-value="nothing">什么都没吃</button><button class="tag-btn" data-factor="drink" data-value="milk">喝了温牛奶</button><button class="tag-btn" data-factor="drink" data-value="soda">喝了可乐/奶茶</button><button class="tag-btn" data-factor="drink" data-value="snack">吃了零食</button><button class="tag-btn" data-factor="drink" data-value="coffee">喝了咖啡/茶</button></div></div>
+        <div class="factor-group"><h3>🍽️ 晚饭吃得怎么样</h3><div class="flex flex-wrap gap-1.5"><button class="tag-btn" data-factor="dinner" data-value="full">吃得很饱</button><button class="tag-btn" data-factor="dinner" data-value="ok">吃得刚好</button><button class="tag-btn" data-factor="dinner" data-value="little">吃得不多</button><button class="tag-btn" data-factor="dinner" data-value="late">吃得很晚</button><button class="tag-btn" data-factor="dinner" data-value="spicy">吃了辣的</button></div></div>
+        <div class="factor-group"><h3>😊 白天心情怎么样</h3><div class="flex flex-wrap gap-1.5"><button class="tag-btn" data-factor="dayMood" data-value="happy">很开心</button><button class="tag-btn" data-factor="dayMood" data-value="ok">一般般</button><button class="tag-btn" data-factor="dayMood" data-value="worried">有点烦恼</button><button class="tag-btn" data-factor="dayMood" data-value="sad">很不开心</button><button class="tag-btn" data-factor="dayMood" data-value="excited">特别兴奋</button></div></div>
+        <div class="factor-group"><h3>👨‍👩‍👧 和家人相处</h3><div class="flex flex-wrap gap-1.5"><button class="tag-btn" data-factor="family" data-value="great">很开心</button><button class="tag-btn" data-factor="family" data-value="ok">还行</button><button class="tag-btn" data-factor="family" data-value="scolded">被批评了</button><button class="tag-btn" data-factor="family" data-value="argue">吵架了</button></div></div>
+        <div class="factor-group"><h3>👫 和同学/朋友相处</h3><div class="flex flex-wrap gap-1.5"><button class="tag-btn" data-factor="friend" data-value="great">一起玩很开心</button><button class="tag-btn" data-factor="friend" data-value="ok">正常相处</button><button class="tag-btn" data-factor="friend" data-value="conflict">闹矛盾了</button><button class="tag-btn" data-factor="friend" data-value="lonely">感觉被冷落</button></div></div>
+        <div class="factor-group"><h3>💪 身体状况</h3><div class="flex flex-wrap gap-1.5"><button class="tag-btn" data-factor="body" data-value="great">精神很好</button><button class="tag-btn" data-factor="body" data-value="tired">有点累</button><button class="tag-btn" data-factor="body" data-value="sick">不太舒服</button><button class="tag-btn" data-factor="body" data-value="pain">哪里疼</button><button class="tag-btn" data-factor="body" data-value="stuffy">鼻子堵了</button></div></div>
+        <div class="factor-group"><h3>🚿 睡前准备（可多选）</h3><div class="flex flex-wrap gap-1.5" data-multi="true"><button class="tag-btn" data-factor="preSleep" data-value="shower">洗了热水澡</button><button class="tag-btn" data-factor="preSleep" data-value="teeth">认真刷牙</button><button class="tag-btn" data-factor="preSleep" data-value="reading">看书</button><button class="tag-btn" data-factor="preSleep" data-value="music">听音乐</button><button class="tag-btn" data-factor="preSleep" data-value="game">打游戏</button><button class="tag-btn" data-factor="preSleep" data-value="video">看视频</button><button class="tag-btn" data-factor="preSleep" data-value="talk">和家人聊天</button><button class="tag-btn" data-factor="preSleep" data-value="think">想事情</button><button class="tag-btn" data-factor="preSleep" data-value="stretch">做了拉伸</button><button class="tag-btn" data-factor="preSleep" data-value="diary">写了日记</button></div></div>
+        <div class="factor-group"><h3>🛏️ 卧室环境</h3><div class="flex flex-wrap gap-1.5"><button class="tag-btn" data-factor="env" data-value="great">安静又黑暗</button><button class="tag-btn" data-factor="env" data-value="ok">还可以</button><button class="tag-btn" data-factor="env" data-value="noisy">有点吵</button><button class="tag-btn" data-factor="env" data-value="bright">太亮了</button><button class="tag-btn" data-factor="env" data-value="hot">太热了</button><button class="tag-btn" data-factor="env" data-value="cold">太冷了</button></div></div>
+        <div class="factor-group"><h3>🌤️ 今天天气</h3><div class="flex flex-wrap gap-1.5"><button class="tag-btn" data-factor="weather" data-value="sunny">☀️ 晴天</button><button class="tag-btn" data-factor="weather" data-value="cloudy">☁️ 阴天</button><button class="tag-btn" data-factor="weather" data-value="rain">🌧️ 下雨</button><button class="tag-btn" data-factor="weather" data-value="snow">❄️ 下雪</button><button class="tag-btn" data-factor="weather" data-value="wind">🌪️ 刮大风</button><button class="tag-btn" data-factor="weather" data-value="fog">🌫️ 雾天</button></div></div>
+      </div>
+      <div class="mt-3 p-3 rounded-xl" style="background:rgba(192,132,252,.05);border:1px dashed rgba(192,132,252,.3)" id="customFactorsArea"><h3 class="font-display font-semibold mb-1.5 flex items-center gap-2 text-xs" style="color:var(--accent-purple)"><span>✨</span> 我自定义的因素</h3><div class="flex flex-wrap gap-1.5" id="customFactorsList"></div></div>
+    </div></div>
+    <div class="mt-3"><label class="block text-[11px] mb-1.5 font-semibold" style="color:var(--text-secondary)">想写点什么？（做了什么梦，或想说的话）</label><textarea class="time-input" id="note" rows="2" placeholder="比如：我梦见自己会飞了……"></textarea></div>
+    <button class="btn-primary mt-4" id="saveBtn">保存今日记录</button>
+  </div></section>
+
+  <section class="grid lg:grid-cols-2 gap-3 md:gap-4 mb-4 md:mb-5">
+    <div class="card p-card"><div class="section-title mb-3">📊 最近7天睡眠时长</div><div style="height:180px"><canvas id="durationChart"></canvas></div></div>
+    <div class="card p-card"><div class="section-title mb-3">🌙 最近7天睡眠质量</div><div style="height:180px"><canvas id="qualityChart"></canvas></div></div>
+  </section>
+
+  <section class="card p-card mb-4 md:mb-5"><div class="section-title mb-3">💡 我的睡眠小发现</div><div id="insights" class="space-y-2"></div></section>
+
+  <section class="card p-card mb-4 md:mb-5">
+    <div class="flex justify-between items-center mb-3 flex-wrap gap-1">
+      <div class="section-title">📖 我的睡眠日记</div>
+      <button class="btn-ghost text-[11px]" id="clearBtn">清空所有记录</button>
+    </div>
+    <div id="historyList" class="space-y-1.5 history-scroll"></div>
+  </section>
+
+  <section class="card p-card mb-4 md:mb-5"><div class="section-title mb-2">✨ 睡眠小贴士</div><div id="tip" class="text-sm md:text-base p-3 rounded-xl leading-relaxed" style="background:rgba(255,209,102,.06);border-left:4px solid var(--accent-moon);color:var(--text-primary)"></div><button class="btn-ghost text-[11px] mt-2" id="newTipBtn">换一条看看</button></section>
+
+  <!-- ===== 数据管理卡片（含备份提醒） ===== -->
+  <section class="card p-card mb-4 md:mb-5">
+    <div class="section-title mb-3">💾 我的睡眠数据管理</div>
+
+    <div class="bak-banner" id="bakInlineBanner">
+      <span class="ic">⚠️</span>
+      <div>
+        <b>记录只存在当前浏览器里。</b>清理缓存、卸载微信/浏览器、换手机都会永久丢失。<br>
+        👉 请每 <b>30 天左右</b>点一次「导出数据」，把文件存到微信收藏、网盘或发给自己。
+      </div>
+    </div>
+
+    <div class="bak-info-row">
+      上次备份：<span class="bak-tag" id="bakTime">从未备份</span>
+      <span id="bakExtra" style="font-size:.7rem"></span>
+    </div>
+
+    <p class="text-[11px] md:text-xs mb-3" style="color:var(--text-secondary)">换设备或换浏览器时，用「导入备份」把两边的数据合到一起。</p>
+    <div class="grid grid-cols-3 gap-1.5 md:gap-2 mb-3">
+      <div class="data-stat"><div class="num" id="statRecords">0</div><div class="lbl">记录天数</div></div>
+      <div class="data-stat"><div class="num" id="statSize">0</div><div class="lbl">大小(KB)</div></div>
+      <div class="data-stat"><div class="num" id="statAvg">--</div><div class="lbl">平均时长</div></div>
+    </div>
+    <div class="grid grid-cols-2 gap-2">
+      <button class="btn-tool" id="exportJsonBtn"><span class="icon">📥</span><span>导出数据</span><span class="desc">备份 / 发给分析师</span></button>
+      <button class="btn-tool" id="importBtn"><span class="icon">📤</span><span>导入备份</span><span class="desc">合并或覆盖本机数据</span></button>
+    </div>
+    <input type="file" id="importFile" accept=".json,application/json">
+    <div class="wx-tip" id="wxTip"><b>📱 微信用户注意：</b>如果点击「导出数据」没有反应，请点击右上角 <b>···</b> 选择「在浏览器打开」后再操作。</div>
+  </section>
+
+  <section class="mb-5 md:mb-6"><div class="analyst-card">
+    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full mb-3" style="background:rgba(255,209,102,.15);border:1px solid rgba(255,209,102,.4);position:relative;z-index:1"><span class="text-[10px]" style="color:var(--accent-moon)">👨‍⚕️</span><span class="text-[10px] font-semibold" style="color:var(--accent-moon)">专业睡眠优化分析</span></div>
+    <h2 class="font-display text-lg md:text-2xl font-bold mb-1" style="position:relative;z-index:1">扫码联系企业微信</h2>
+    <p class="text-[11px] md:text-xs mb-4 max-w-md mx-auto px-2" style="color:var(--text-secondary);position:relative;z-index:1">导出睡眠数据后发给我们，获取个性化睡眠改善建议</p>
+    <div class="analyst-qr-wrap"><img src="qrcode.png" alt="扫码联系企业微信" onerror="this.parentElement.innerHTML='<div style=\'width:140px;height:140px;display:flex;align-items:center;justify-content:center;color:#8a7cb3;font-size:.72rem;text-align:center;line-height:1.5;padding:10px\'>二维码图片<br>未加载</div>'"></div>
+    <div class="mt-4 flex flex-wrap justify-center gap-x-3 gap-y-1 text-[11px] md:text-xs" style="color:var(--text-secondary);position:relative;z-index:1">
+      <div class="flex items-center gap-1"><span style="color:var(--accent-moon)">✓</span> 数据 &amp; 人工双重分析</div>
+      <div class="flex items-center gap-1"><span style="color:var(--accent-moon)">✓</span> 找出关键影响因素</div>
+      <div class="flex items-center gap-1"><span style="color:var(--accent-moon)">✓</span> 定制睡眠改善方案</div>
+    </div>
+    <p class="text-[10px] mt-3" style="color:var(--text-muted);position:relative;z-index:1">本工具仅供睡眠记录与分析参考，不作为医疗诊断依据</p>
+  </div></section>
+</div>
+
+<div class="fixed-copyright">© 2026 山东省青少年文化交流中心 &amp; 铃兰心理工作室 版权所有</div>
+<div class="toast" id="toast"><span class="text-lg" id="toastIcon">✨</span><span id="toastMsg" class="font-semibold">保存成功！</span></div>
+
+<!-- 通用确认弹窗 -->
+<div class="modal-overlay" id="modal"><div class="modal-box">
+  <div class="text-2xl mb-2" id="modalIcon">⚠️</div>
+  <h3 class="font-display text-lg md:text-xl font-bold mb-1" id="modalTitle">确定要清空吗？</h3>
+  <p class="mb-4 text-sm" style="color:var(--text-secondary)" id="modalText">所有记录都将被删除，无法恢复哦~</p>
+  <div id="modalBody"></div>
+  <div class="flex gap-2 mt-2"><button class="btn-ghost flex-1" id="modalCancel">再想想</button><button class="btn-primary flex-1" style="padding:10px 14px;font-size:.95rem;min-height:40px" id="modalConfirm">确定</button></div>
+</div></div>
+
+<!-- 使用说明弹窗（含数据安全） -->
+<div class="modal-overlay" id="instructionModal"><div class="modal-box">
+  <div class="flex justify-between items-center mb-4"><h3 class="font-display text-lg md:text-xl font-bold flex items-center gap-2"><span>💡</span> 使用说明</h3><button class="btn-ghost" id="instructionClose" style="padding:4px 10px;min-height:30px">✕</button></div>
+  <div class="space-y-3 text-sm" style="line-height:1.6">
+
+    <!-- 数据安全（最重要，放最前） -->
+    <div class="help-h"><span>🔒</span> 数据安全（重要）</div>
+
+    <div class="help-warn">
+      <div class="t">⚠️ 数据存在哪里？</div>
+      所有记录只保存在你当前这个浏览器的本机缓存里，不联网、不上传、不跨设备同步。
+    </div>
+
+    <div class="help-warn">
+      <div class="t">📱 微信 vs 浏览器数据不互通</div>
+      微信内置浏览器和手机自带浏览器（Safari、Chrome 等）的缓存相互独立，<strong>数据不互通</strong>。<br>
+      建议固定在<strong>同一个入口</strong>使用，不要一会儿用微信、一会儿用浏览器。
+    </div>
+
+    <div class="help-warn">
+      <div class="t">💾 定期备份（每 30 天左右）</div>
+      点「数据管理 → 导出数据」，会下载一个 JSON 文件。存到微信收藏、网盘或发给自己。<br>
+      <strong>清理浏览器数据之前，务必先导出备份！</strong>
+    </div>
+
+    <div class="help-warn">
+      <div class="t">🔀 两个端的数据怎么合并？</div>
+      例如先在手机浏览器记了一些，又在微信里记了一些：<br>
+      1️⃣ 在 A 端点「导出数据」，把文件发到 B 端；<br>
+      2️⃣ 在 B 端点「导入备份」，选择文件；<br>
+      3️⃣ 选「合并」——两边的记录会自动合并，本机已有的日期不会被覆盖。<br>
+      （选「覆盖」会清空本机记录、完全使用文件里的数据，请谨慎。）
+    </div>
+
+    <div class="help-divider"></div>
+
+    <!-- 使用说明 -->
+    <div class="help-h"><span>🌙</span> 怎么用</div>
+    <div class="help-tip"><span class="n">1</span><div><b>记录：</b>每天睡醒后花10秒，选时长、月亮评分和影响因素。所有选项都是客观记录，没有"对错"。</div></div>
+    <div class="help-tip"><span class="n">2</span><div><b>自动分析：</b>记录满5天后，「我的睡眠小发现」会自动找出跟睡眠质量相关的因素。</div></div>
+    <div class="help-tip"><span class="n">3</span><div><b>自定义因素：</b>列表里没有的，可以点「添加自定义因素」自己补充。</div></div>
+    <div class="help-tip"><span class="n">4</span><div><b>专业支持：</b>导出数据发给分析师，获取个性化睡眠改善建议。</div></div>
+
+    <div class="help-divider"></div>
+
+    <div class="help-h"><span>🌙</span> 设计理念</div>
+    <p style="color:var(--text-secondary)">很多同学和家长会困惑：明明睡够了9小时，为什么还是犯困？其实答案藏在白天的<b style="color:var(--text-primary)">生活细节</b>里。</p>
+    <p style="color:var(--text-primary);margin-top:6px;font-weight:600">我们要做的，就是通过日常记录，找到那个影响睡眠的"关键因素"。</p>
+  </div>
+  <button class="btn-primary w-full mt-5" id="instructionConfirm" style="padding:10px 14px;font-size:.95rem;min-height:40px">我知道了</button>
+</div></div>
+
+<!-- 导入方式选择弹窗 -->
+<div class="modal-overlay" id="importChoiceModal"><div class="modal-box">
+  <div class="flex justify-between items-center mb-3"><h3 class="font-display text-lg font-bold flex items-center gap-2"><span>📥</span> 选择导入方式</h3><button class="btn-ghost" id="importChoiceClose" style="padding:4px 10px;min-height:30px">✕</button></div>
+  <p class="text-sm mb-2" style="color:var(--text-secondary)">检测到文件中有 <b style="color:var(--accent-moon)" id="importCount">0</b> 天记录</p>
+  <div class="modal-opt">
+    <button class="go" id="importMergeBtn">
+      <div class="t">合并（推荐）</div>
+      <div class="d">保留本机记录，只补充文件里没有的日期，同日期以本机为准，不覆盖已有数据</div>
+    </button>
+    <button class="replace" id="importReplaceBtn">
+      <div class="t">覆盖</div>
+      <div class="d">清空本机记录，完全使用文件里的数据，不可恢复</div>
+    </button>
+  </div>
+  <button class="btn-ghost w-full" id="importCancelBtn" style="padding:10px;min-height:36px">取消</button>
+</div></div>
+
+<!-- 添加自定义因素弹窗 -->
+<div class="modal-overlay" id="factorModal"><div class="modal-box">
+  <div class="flex items-center gap-2 mb-3"><div class="text-2xl">✨</div><h3 class="font-display text-lg md:text-xl font-bold">添加自定义因素</h3></div>
+  <p class="text-sm mb-4" style="color:var(--text-secondary)">想到列表里没有的因素？自己来添加吧！</p>
+  <div class="mb-3"><label class="block text-[11px] mb-1 font-semibold" style="color:var(--text-secondary)">这个因素对你睡眠有什么影响？</label><div class="type-selector" id="factorTypeSelector"><button class="type-btn active" data-type="good">😊 好影响</button><button class="type-btn" data-type="bad">😪 坏影响</button><button class="type-btn" data-type="neutral">🤔 不确定</button></div></div>
+  <div class="mb-3"><label class="block text-[11px] mb-1 font-semibold" style="color:var(--text-secondary)">因素名称</label><input type="text" class="time-input" id="factorName" placeholder="比如：喝了咖啡、被表扬……" maxlength="20"></div>
+  <div class="mb-2"><label class="block text-[11px] mb-1 font-semibold" style="color:var(--text-secondary)">快捷选择（点击填入）</label><div class="quick-presets" id="quickPresets"><button class="preset-chip" data-preset="喝了咖啡/茶">☕ 喝了咖啡/茶</button><button class="preset-chip" data-preset="被老师表扬">🌟 被老师表扬</button><button class="preset-chip" data-preset="看了恐怖片">😱 看了恐怖片</button><button class="preset-chip" data-preset="被同学欺负">😢 被同学欺负</button><button class="preset-chip" data-preset="和家人吵架">💢 和家人吵架</button><button class="preset-chip" data-preset="吃了感冒药">💊 吃了感冒药</button><button class="preset-chip" data-preset="睡前哭了">😭 睡前哭了</button><button class="preset-chip" data-preset="白天晒了很多太阳">☀️ 白天晒太阳</button><button class="preset-chip" data-preset="睡前泡脚">🦶 睡前泡脚</button><button class="preset-chip" data-preset="换了新床单">🛏️ 换了新床单</button><button class="preset-chip" data-preset="家里来客人">🏠 家里来客人</button><button class="preset-chip" data-preset="考试考得好">🎉 考试考得好</button></div></div>
+  <div class="flex gap-2 mt-4"><button class="btn-ghost flex-1" id="factorCancel">取消</button><button class="btn-primary flex-1" style="padding:10px 14px;font-size:.95rem;min-height:40px" id="factorAdd">添加</button></div>
+</div></div>
+
+<!-- 微信导出弹窗 -->
+<div class="modal-overlay" id="wxExportModal" style="z-index:1001"><div class="modal-box">
+  <div class="flex justify-between items-center mb-4"><h3 class="font-display text-lg font-bold flex items-center gap-2"><span>📋</span> 导出睡眠数据</h3><button class="btn-ghost" id="wxExportClose" style="padding:4px 10px;min-height:30px">✕</button></div>
+  <p class="text-sm mb-3" style="color:var(--text-secondary)">微信环境已优化导出。优先点击「下载文件」；若无法下载，请使用「复制全部」后粘贴到备忘录保存。</p>
+  <textarea class="time-input" id="wxExportText" style="height:180px;font-size:10px;resize:none;font-family:monospace" readonly></textarea>
+  <div class="flex gap-2 mt-3 flex-wrap"><button class="btn-primary flex-1" id="wxDownloadBtn" style="padding:10px 14px;font-size:.95rem;min-height:40px;background:linear-gradient(135deg,#7eda9e,#4dab7e);box-shadow:0 6px 20px rgba(126,218,158,.3)">⬇️ 下载文件</button><button class="btn-primary flex-1" id="wxExportCopyBtn" style="padding:10px 14px;font-size:.95rem;min-height:40px">📋 复制全部</button></div>
+  <button class="btn-ghost w-full mt-3" id="wxExportClose2" style="padding:10px;min-height:36px">关闭</button>
+</div></div>
+
+<script>
+/* ============ 基础工具 ============ */
+const STORAGE_KEY='sleepDiary_v2',CUSTOM_FACTORS_KEY='sleepDiary_customFactors_v2',BACKUP_KEY='sleepDiary_lastBackup_v2';
+const $=(s,p=document)=>p.querySelector(s),$$=(s,p=document)=>Array.from(p.querySelectorAll(s));
+function loadRecords(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]')}catch{return[]}}
+function saveRecords(r){localStorage.setItem(STORAGE_KEY,JSON.stringify(r))}
+function loadCustomFactors(){try{return JSON.parse(localStorage.getItem(CUSTOM_FACTORS_KEY)||'[]')}catch{return[]}}
+function saveCustomFactors(f){localStorage.setItem(CUSTOM_FACTORS_KEY,JSON.stringify(f))}
+function getDateKey(d=new Date()){return`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
+function escapeHtml(s){return s?String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])):''}
+function isWeChat(){return /MicroMessenger/i.test(navigator.userAgent)}
+
+/* ============ 睡眠时长区间 ============ */
+const SLEEP_RANGES=[
+  {key:'lt5', label:'不到5小时', hours:4.5},{key:'5-6', label:'5-6小时', hours:5.5},
+  {key:'6-7', label:'6-7小时', hours:6.5},{key:'7-8', label:'7-8小时', hours:7.5},
+  {key:'8-9', label:'8-9小时', hours:8.5},{key:'9-10',label:'9-10小时',hours:9.5},
+  {key:'gt10',label:'10小时以上',hours:10.5}
+];
+const RANGE_HOURS={},RANGE_LABELS={};
+SLEEP_RANGES.forEach(r=>{RANGE_HOURS[r.key]=r.hours;RANGE_LABELS[r.key]=r.label});
+function rangeFromHours(h){if(!h)return'';if(h>=10)return'gt10';if(h<5)return'lt5';const f=Math.floor(h);return f+'-'+(f+1)}
+function sleepRangeText(r){if(r.sleepRange&&RANGE_LABELS[r.sleepRange])return RANGE_LABELS[r.sleepRange];if(r.sleepHours)return'约'+r.sleepHours+'小时';return'--'}
+
+/* ============ 状态 ============ */
+const state={records:loadRecords(),customFactors:loadCustomFactors(),current:{sleepHours:0,sleepRange:'',quality:0,mood:'',fallAsleep:'',nightWake:'',factors:{},note:''},factorType:'good',factorOpen:false,pendingImport:null};
+
+/* ============ 文案映射 ============ */
+const FACTOR_LABELS={homework:{early:'作业放学前完成',normal:'作业晚饭前完成',late:'作业睡前才写完',none:'没有作业'},pressure:{exam:'有考试',homework:'有大作业',perform:'有表演/比赛',none:'没有压力'},class:{none:'没兴趣班',one:'一个兴趣班',many:'两个以上兴趣班',late:'兴趣班到很晚'},screen:{none:'睡前没玩电子产品',little:'睡前屏幕<30分钟',some:'睡前屏幕30-60分钟',lot:'睡前屏幕>1小时'},exercise:{lot:'运动>1小时',some:'运动了一会儿',little:'几乎没运动'},nap:{none:'没午睡',short:'午睡<30分钟',long:'午睡>30分钟',late:'傍晚才午睡'},drink:{nothing:'睡前没吃喝',milk:'睡前温牛奶',soda:'睡前可乐/奶茶',snack:'睡前零食',coffee:'睡前咖啡/茶'},dinner:{full:'晚饭吃很饱',ok:'晚饭刚好',little:'晚饭吃得少',late:'晚饭吃很晚',spicy:'晚饭吃辣'},dayMood:{happy:'白天很开心',ok:'白天一般',worried:'白天有点烦恼',sad:'白天很不开心',excited:'白天特别兴奋'},family:{great:'家人相处开心',ok:'家人相处还行',scolded:'被家人批评',argue:'和家人吵架'},friend:{great:'朋友相处开心',ok:'朋友正常相处',conflict:'和朋友闹矛盾',lonely:'感觉被冷落'},body:{great:'精神很好',tired:'有点累',sick:'不太舒服',pain:'哪里疼',stuffy:'鼻子堵'},env:{great:'卧室安静黑暗',ok:'卧室还可以',noisy:'卧室有点吵',bright:'卧室太亮',hot:'卧室太热',cold:'卧室太冷'},weather:{sunny:'晴天',cloudy:'阴天',rain:'下雨',snow:'下雪',wind:'大风',fog:'雾天'}};
+const PRE_SLEEP_LABELS={shower:'洗热水澡',teeth:'认真刷牙',reading:'看书',music:'听音乐',game:'打游戏',video:'看视频',talk:'和家人聊天',think:'想事情',stretch:'拉伸',diary:'写日记'};
+const FALL_ASLEEP_LABELS={fast:'躺下就睡着',soon:'一会儿才睡着',slow:'很久才睡着',verylong:'睡不着'};
+const NIGHT_WAKE_LABELS={none:'一觉到天亮',once:'夜醒1次',several:'夜醒多次',long:'醒了很久'};
+const MOOD_EMOJIS={happy:'😄',ok:'😊',tired:'😪',sad:'😞',angry:'😠'};
+const TIPS=['睡前1小时尽量不看手机和平板，屏幕的蓝光会让大脑以为还是白天哦~','每天固定时间上床、起床，周末也别差太多，生物钟会越来越稳~','白天多晒太阳、多运动，晚上会睡得更香~','午睡控制在30分钟以内，太长的午睡会"偷走"晚上的瞌睡~','睡前可以听听轻音乐、翻翻纸质书，让大脑慢慢"降温"~','卧室稍微凉快一点（18~22℃）会更容易入睡~','睡前喝杯温牛奶不错，但可乐、奶茶、咖啡这些"提神饮料"晚上要避开~','晚饭吃得太饱或太辣，肠胃夜里还要"加班"，会打扰睡眠~','躺下睡不着别着急，试试慢慢深呼吸：吸气4秒，呼气6秒~','睡前把明天要用的书包和衣服准备好，心里踏实，入睡也更轻松~'];
+
+/* ============ 装饰 ============ */
+function initStars(){const bg=$('#starsBg');for(let i=0;i<40;i++){const s=document.createElement('div');s.className='star';const sz=Math.random()*2+1;Object.assign(s.style,{width:sz+'px',height:sz+'px',left:Math.random()*100+'%',top:Math.random()*100+'%'});s.style.setProperty('--dur',(2+Math.random()*3)+'s');s.style.animationDelay=Math.random()*3+'s';bg.appendChild(s)}}
+function getMoonPhase(d=new Date()){const p=['🌑','🌒','🌓','🌔','🌕','🌖','🌗','🌘'],n=['新月','蛾眉月','上弦月','盈凸月','满月','亏凸月','下弦月','残月'],ref=new Date(2000,0,6),days=Math.floor((d-ref)/864e5),ph=((days%29.53)+29.53)%29.53,idx=Math.floor((ph/29.53)*8)%8;return{emoji:p[idx],name:n[idx]}}
+function showDate(){const now=new Date(),ds=['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];$('#todayDate').textContent=`${now.getMonth()+1}月${now.getDate()}日 ${ds[now.getDay()]}`;const m=getMoonPhase(now);$('#moonPhaseEmoji').textContent=m.emoji;$('#moonPhaseName').textContent=m.name;$('#recordCount').textContent=state.records.length}
+function showTip(){const t=TIPS[Math.floor(Math.random()*TIPS.length)];$('#tip').textContent=t}
+
+/* ============ Toast / Modal ============ */
+let toastTimer=null;
+function showToast(msg,icon='✨'){$('#toastIcon').textContent=icon;$('#toastMsg').textContent=msg;const t=$('#toast');t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2200)}
+let modalCallback=null;
+function showModal(icon,title,text,cb){$('#modalIcon').textContent=icon;$('#modalTitle').textContent=title;$('#modalText').textContent=text;$('#modalBody').innerHTML='';modalCallback=cb;$('#modal').classList.add('show')}
+function hideModal(){$('#modal').classList.remove('show');modalCallback=null}
+
+/* ============ 备份追踪 ============ */
+function getLastBackup(){try{return Number(localStorage.getItem(BACKUP_KEY)||0)}catch{return 0}}
+function markBackup(){try{localStorage.setItem(BACKUP_KEY,String(Date.now()))}catch{} renderBackupInfo()}
+function renderBackupInfo(){
+  const el=$('#bakTime'),ex=$('#bakExtra');if(!el)return;
+  const t=getLastBackup();
+  if(!t){el.textContent='从未备份';el.className='bak-tag warn';ex.textContent=state.records.length?'（建议马上导出一次）':'';return}
+  const days=Math.floor((Date.now()-t)/864e5),d=new Date(t);
+  el.textContent=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}（${days===0?'今天':days+'天前'}）`;
+  el.className=days>=30?'bak-tag warn':'bak-tag';
+  ex.textContent=days>=30?'⚠️ 超过30天没备份了':'';
+}
+function checkBackupReminder(){
+  if(!state.records.length){$('#bakBanner').style.display='none';return}
+  const t=getLastBackup(),days=t?Math.floor((Date.now()-t)/864e5):999;
+  if(days>=30){
+    $('#bakBanner').style.display='flex';
+    setTimeout(()=>showToast((t?`已 ${days} 天未备份`:'还没有备份过')+'，请到「睡眠数据管理」导出一次','⏰'),1200);
+  }else{$('#bakBanner').style.display='none'}
+}
+
+/* ============ 自定义因素 ============ */
+function getCustomFactorsSelected(){return $$('.custom-factor-chip.active').map(c=>c.dataset.factorId)}
+function renderCustomFactors(){const wrap=$('#customFactorsList');wrap.innerHTML='';if(!state.customFactors.length){wrap.innerHTML='<span class="text-[11px]" style="color:var(--text-muted)">还没有自定义因素，点击上方按钮添加~</span>';return}state.customFactors.forEach(f=>{const chip=document.createElement('button');chip.type='button';chip.className='custom-factor-chip';chip.dataset.factorId=f.id;chip.innerHTML=`<span>${f.type==='bad'?'😪':f.type==='neutral'?'🤔':'😊'}</span><span>${escapeHtml(f.name)}</span><span class="delete-btn" data-id="${f.id}">✕</span>`;wrap.appendChild(chip)})}
+function openFactorModal(){$('#factorName').value='';$$('#factorTypeSelector .type-btn').forEach(b=>b.classList.toggle('active',b.dataset.type==='good'));state.factorType='good';$('#factorModal').classList.add('show')}
+function addCustomFactor(){const name=$('#factorName').value.trim();if(!name){showToast('先给因素起个名字~','✨');return}if(state.customFactors.some(f=>f.name===name)){showToast('这个因素已经添加过啦','😊');return}state.customFactors.push({id:'c_'+Date.now(),name,type:state.factorType});saveCustomFactors(state.customFactors);renderCustomFactors();$('#factorModal').classList.remove('show');showToast('自定义因素已添加！','✨')}
+function deleteCustomFactor(id){const f=state.customFactors.find(x=>x.id===id);if(!f)return;showModal('🗑️','删除自定义因素？',`「${f.name}」将被删除，历史记录不受影响。`,()=>{state.customFactors=state.customFactors.filter(x=>x.id!==id);saveCustomFactors(state.customFactors);renderCustomFactors();updateFactorBadge();showToast('已删除','🗑️')})}
+
+/* ============ 影响因素折叠面板 ============ */
+const factorToggle=$('#factorToggle'),factorCollapse=$('#factorCollapse');
+function toggleFactorPanel(force){
+  const open=(typeof force==='boolean')?force:!state.factorOpen;
+  state.factorOpen=open;
+  factorToggle.classList.toggle('open',open);
+  factorCollapse.classList.toggle('open',open);
+  clearTimeout(factorCollapse._hTimer);
+  if(open){
+    factorCollapse.style.maxHeight=factorCollapse.scrollHeight+'px';
+    factorCollapse._hTimer=setTimeout(()=>{if(state.factorOpen)factorCollapse.style.maxHeight='none'},460);
+  }else{
+    factorCollapse.style.maxHeight=factorCollapse.scrollHeight+'px';
+    void factorCollapse.offsetHeight;
+    requestAnimationFrame(()=>{factorCollapse.style.maxHeight='0px'});
+  }
+}
+factorToggle.addEventListener('click',()=>toggleFactorPanel());
+
+/* ============ 选中角标 ============ */
+function updateFactorBadge(){
+  let count=0;
+  Object.values(state.current.factors).forEach(v=>{if(Array.isArray(v))count+=v.length;else if(v)count++});
+  count+=getCustomFactorsSelected().length;
+  const badge=$('#factorBadge');
+  badge.textContent=count;
+  badge.classList.toggle('hidden',count===0);
+}
+
+/* ============ 表单选择 ============ */
+$('#durationSelector').addEventListener('click',e=>{
+  const btn=e.target.closest('.dur-btn');if(!btn)return;
+  $$('#durationSelector .dur-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  state.current.sleepRange=btn.dataset.range;
+  state.current.sleepHours=RANGE_HOURS[btn.dataset.range]||0;
+});
+$('#fallAsleepSelector').addEventListener('click',e=>{
+  const btn=e.target.closest('.tag-btn');if(!btn)return;
+  const was=btn.classList.contains('active');
+  $$('#fallAsleepSelector .tag-btn').forEach(b=>b.classList.remove('active'));
+  if(was){state.current.fallAsleep=''}else{btn.classList.add('active');state.current.fallAsleep=btn.dataset.fallasleep}
+});
+$('#nightWakeSelector').addEventListener('click',e=>{
+  const btn=e.target.closest('.tag-btn');if(!btn)return;
+  const was=btn.classList.contains('active');
+  $$('#nightWakeSelector .tag-btn').forEach(b=>b.classList.remove('active'));
+  if(was){state.current.nightWake=''}else{btn.classList.add('active');state.current.nightWake=btn.dataset.nightwake}
+});
+$('#moonRating').addEventListener('click',e=>{
+  const btn=e.target.closest('.moon-btn');if(!btn)return;
+  const was=btn.classList.contains('active');
+  $$('#moonRating .moon-btn').forEach(b=>b.classList.remove('active'));
+  if(was){state.current.quality=0}else{btn.classList.add('active');state.current.quality=+btn.dataset.rating}
+});
+$('#moodSelector').addEventListener('click',e=>{
+  const btn=e.target.closest('.mood-btn');if(!btn)return;
+  const was=btn.classList.contains('active');
+  $$('#moodSelector .mood-btn').forEach(b=>b.classList.remove('active'));
+  if(was){state.current.mood=''}else{btn.classList.add('active');state.current.mood=btn.dataset.mood}
+});
+$('#factorsGrid').addEventListener('click',e=>{
+  const btn=e.target.closest('.tag-btn');if(!btn)return;
+  const factor=btn.dataset.factor,value=btn.dataset.value,group=btn.parentElement;
+  if(group.dataset.multi==='true'){
+    btn.classList.toggle('active');
+    let arr=Array.isArray(state.current.factors[factor])?state.current.factors[factor].slice():[];
+    if(btn.classList.contains('active'))arr.push(value);else arr=arr.filter(v=>v!==value);
+    if(arr.length)state.current.factors[factor]=arr;else delete state.current.factors[factor];
+  }else{
+    const was=btn.classList.contains('active');
+    group.querySelectorAll('.tag-btn').forEach(b=>b.classList.remove('active'));
+    if(was){delete state.current.factors[factor]}
+    else{btn.classList.add('active');state.current.factors[factor]=value}
+  }
+  updateFactorBadge();
+});
+$('#customFactorsList').addEventListener('click',e=>{
+  const del=e.target.closest('.delete-btn');
+  if(del){e.stopPropagation();deleteCustomFactor(del.dataset.id);return}
+  const chip=e.target.closest('.custom-factor-chip');if(!chip)return;
+  chip.classList.toggle('active');
+  updateFactorBadge();
+});
+
+/* ============ 表单回填 / 重置 ============ */
+function fillForm(r){
+  const range=r.sleepRange||rangeFromHours(r.sleepHours)||'';
+  state.current.sleepRange=range;
+  state.current.sleepHours=range?(RANGE_HOURS[range]||r.sleepHours||0):(r.sleepHours||0);
+  $$('#durationSelector .dur-btn').forEach(b=>b.classList.toggle('active',b.dataset.range===range));
+  state.current.quality=r.quality||0;
+  $$('#moonRating .moon-btn').forEach(b=>b.classList.toggle('active',+b.dataset.rating===r.quality));
+  state.current.mood=r.mood||'';
+  $$('#moodSelector .mood-btn').forEach(b=>b.classList.toggle('active',b.dataset.mood===r.mood));
+  state.current.fallAsleep=r.fallAsleep||'';
+  $$('#fallAsleepSelector .tag-btn').forEach(b=>b.classList.toggle('active',b.dataset.fallasleep===r.fallAsleep));
+  state.current.nightWake=r.nightWake||'';
+  $$('#nightWakeSelector .tag-btn').forEach(b=>b.classList.toggle('active',b.dataset.nightwake===r.nightWake));
+  state.current.factors=(r.factors&&typeof r.factors==='object')?JSON.parse(JSON.stringify(r.factors)):{};
+  $$('#factorsGrid .tag-btn').forEach(b=>{
+    const cur=state.current.factors[b.dataset.factor];
+    const active=Array.isArray(cur)?cur.includes(b.dataset.value):(cur===b.dataset.value);
+    b.classList.toggle('active',active);
+  });
+  const ids=(r.customFactors||[]).map(f=>f.id);
+  $$('.custom-factor-chip').forEach(c=>c.classList.toggle('active',ids.includes(c.dataset.factorId)));
+  $('#note').value=r.note||'';
+}
+function resetForm(){
+  state.current={sleepHours:0,sleepRange:'',quality:0,mood:'',fallAsleep:'',nightWake:'',factors:{},note:''};
+  $$('#durationSelector .dur-btn,#fallAsleepSelector .tag-btn,#nightWakeSelector .tag-btn,#moonRating .moon-btn,#moodSelector .mood-btn,#factorsGrid .tag-btn').forEach(b=>b.classList.remove('active'));
+  $$('.custom-factor-chip').forEach(c=>c.classList.remove('active'));
+  $('#note').value='';
+  updateFactorBadge();
+}
+
+/* ============ 保存 / 删除 ============ */
+function saveRecord(){
+  if(!state.current.sleepRange){showToast('先选一下大概睡了多久~','🌙');return}
+  if(!state.current.quality){showToast('点亮一颗月亮评价一下吧~','🌙');return}
+  const today=getDateKey();
+  const exists=state.records.some(r=>r.date===today);
+  const record={
+    date:today,
+    sleepRange:state.current.sleepRange,
+    sleepHours:state.current.sleepHours||RANGE_HOURS[state.current.sleepRange]||0,
+    quality:state.current.quality,
+    mood:state.current.mood,
+    fallAsleep:state.current.fallAsleep,
+    nightWake:state.current.nightWake,
+    factors:JSON.parse(JSON.stringify(state.current.factors)),
+    customFactors:getCustomFactorsSelected().map(id=>{const f=state.customFactors.find(x=>x.id===id);return f?{id:f.id,name:f.name,type:f.type}:null}).filter(Boolean),
+    note:$('#note').value.trim(),
+    createdAt:Date.now()
+  };
+  if(exists){
+    state.records[state.records.findIndex(r=>r.date===today)]=record;
+    showToast('今天的记录已更新！','🌙');
+  }else{
+    state.records.push(record);
+    showToast('保存成功！继续加油~','✨');
+  }
+  state.records.sort((a,b)=>a.date<b.date?-1:1);
+  saveRecords(state.records);
+  toggleFactorPanel(false);
+  refreshAll();
+  checkBackupReminder();
+}
+function deleteRecord(date){
+  const r=state.records.find(x=>x.date===date);if(!r)return;
+  showModal('🗑️','删除这条记录？',`${r.date} 的睡眠记录将被删除。`,()=>{
+    state.records=state.records.filter(x=>x.date!==date);
+    saveRecords(state.records);
+    refreshAll();
+    showToast('已删除','🗑️');
+  });
+}
+
+/* ============ 图表 ============ */
+let durationChart=null,qualityChart=null;
+function renderCharts(){
+  const recent=state.records.slice(-7);
+  const labels=recent.map(r=>{const p=r.date.split('-');return (+p[1])+'/'+(+p[2])});
+  const textColor='#8a7cb3',gridColor='rgba(255,255,255,.06)';
+  const tooltipStyle={backgroundColor:'rgba(26,18,69,.95)',borderColor:'rgba(255,209,102,.4)',borderWidth:1,titleColor:'#fef9e7',bodyColor:'#fef9e7'};
+  if(durationChart)durationChart.destroy();
+  durationChart=new Chart($('#durationChart'),{
+    type:'bar',
+    data:{labels,datasets:[{data:recent.map(r=>r.sleepHours||null),backgroundColor:recent.map(r=>{const h=r.sleepHours||0;return h>=9?'rgba(126,218,158,.75)':h>=7?'rgba(255,209,102,.75)':'rgba(255,107,157,.65)'}),borderRadius:8,barPercentage:.55,categoryPercentage:.7}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:Object.assign({callbacks:{label:c=>' '+sleepRangeText(recent[c.dataIndex])}},tooltipStyle)},scales:{y:{beginAtZero:true,max:12,ticks:{color:textColor,stepSize:2,font:{size:10}},grid:{color:gridColor}},x:{ticks:{color:textColor,font:{size:10}},grid:{display:false}}}}
+  });
+  if(qualityChart)qualityChart.destroy();
+  qualityChart=new Chart($('#qualityChart'),{
+    type:'line',
+    data:{labels,datasets:[{data:recent.map(r=>r.quality||null),borderColor:'#ff6b9d',borderWidth:2.5,backgroundColor:'rgba(255,107,157,.15)',fill:true,tension:.4,pointBackgroundColor:'#ffd166',pointBorderColor:'#1a1245',pointBorderWidth:2,pointRadius:4.5}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:Object.assign({callbacks:{label:c=>{const q=recent[c.dataIndex].quality||0;const e=['🌑','🌘','🌗','🌖','🌕'][q-1]||'❔';return ' '+e+' '+q+' 颗月亮'}}},tooltipStyle)},scales:{y:{beginAtZero:true,max:5,ticks:{color:textColor,stepSize:1,font:{size:10}},grid:{color:gridColor}},x:{ticks:{color:textColor,font:{size:10}},grid:{display:false}}}}
+  });
+}
+
+/* ============ 睡眠小发现 ============ */
+function factorKeyLabel(key){
+  if(key.startsWith('@'))return key.slice(1);
+  const i=key.indexOf('|'),k=key.slice(0,i),v=key.slice(i+1);
+  return (k==='preSleep'?PRE_SLEEP_LABELS[v]:(FACTOR_LABELS[k]&&FACTOR_LABELS[k][v]))||v;
+}
+function insightItem(icon,text){return `<div class="flex items-start gap-2 p-3 rounded-xl" style="background:rgba(255,255,255,.04);border:1px solid var(--border);font-size:.8rem;line-height:1.6"><span style="font-size:1rem;flex-shrink:0">${icon}</span><span style="color:var(--text-secondary)">${text}</span></div>`}
+function renderInsights(){
+  const wrap=$('#insights'),n=state.records.length;
+  if(!n){wrap.innerHTML=insightItem('🌙','还没有记录哦~ 从今晚开始每天记一笔，慢慢就能发现属于你的"睡眠小秘密"！');return}
+  const html=[],recent=state.records.slice(-7);
+  const avgH=recent.reduce((s,r)=>s+(r.sleepHours||0),0)/recent.length;
+  const avgQ=recent.reduce((s,r)=>s+(r.quality||0),0)/recent.length;
+  if(avgH>=9)html.push(insightItem('🎉',`最近${recent.length}天平均睡 <b style="color:var(--accent-green)">${avgH.toFixed(1)} 小时</b>，达到了推荐时长，给你点赞！`));
+  else if(avgH>=8)html.push(insightItem('👍',`最近${recent.length}天平均睡 <b style="color:var(--accent-moon)">${avgH.toFixed(1)} 小时</b>，离推荐时长（9~11小时）只差一点点~`));
+  else html.push(insightItem('🌙',`最近${recent.length}天平均只睡 <b style="color:var(--accent-pink)">${avgH.toFixed(1)} 小时</b>，比推荐时长（9~11小时）少不少，试试提早半小时上床？`));
+  html.push(insightItem('⭐',`最近${recent.length}天的平均睡眠质量是 <b style="color:var(--accent-moon)">${avgQ.toFixed(1)} 颗月亮</b>（满分 5 颗）`));
+  if(n>=5){
+    const overall=state.records.reduce((s,r)=>s+(r.quality||0),0)/n;
+    const stats={};
+    state.records.forEach(r=>{
+      const q=r.quality||0;if(!q)return;
+      Object.entries(r.factors||{}).forEach(([k,v])=>{
+        (Array.isArray(v)?v:[v]).forEach(val=>{const key=k+'|'+val;(stats[key]=stats[key]||[]).push(q)});
+      });
+      (r.customFactors||[]).forEach(f=>{const key='@'+f.name;(stats[key]=stats[key]||[]).push(q)});
+    });
+    const findings=Object.entries(stats).filter(([k,arr])=>arr.length>=2).map(([k,arr])=>({key:k,count:arr.length,avg:arr.reduce((a,b)=>a+b,0)/arr.length})).map(f=>Object.assign(f,{diff:f.avg-overall})).filter(f=>Math.abs(f.diff)>=0.4).sort((a,b)=>Math.abs(b.diff)-Math.abs(a.diff));
+    const good=findings.find(f=>f.diff>0),bad=findings.find(f=>f.diff<0);
+    if(good)html.push(insightItem('😊',`「${escapeHtml(factorKeyLabel(good.key))}」出现的日子，睡眠平均 <b style="color:var(--accent-green)">${good.avg.toFixed(1)} 颗月亮</b>，比平时高 ${good.diff.toFixed(1)}——它是你的"睡眠好朋友"，继续保持！`));
+    if(bad)html.push(insightItem('🕵️',`「${escapeHtml(factorKeyLabel(bad.key))}」出现的日子，睡眠平均只有 <b style="color:var(--accent-pink)">${bad.avg.toFixed(1)} 颗月亮</b>，比平时低 ${Math.abs(bad.diff).toFixed(1)}——小心，它可能就是你的"睡眠小偷"！`));
+    if(!good&&!bad)html.push(insightItem('🔭','暂时还没发现特别明显的关联，继续记录，线索会越来越清晰~'));
+  }else{
+    html.push(insightItem('🔭',`再记录 <b style="color:var(--accent-purple)">${5-n}</b> 天，就能帮你分析"什么在影响你的睡眠"啦~`));
+  }
+  wrap.innerHTML=html.join('');
+}
+
+/* ============ 历史记录 ============ */
+function renderHistory(){
+  const list=$('#historyList');
+  if(!state.records.length){list.innerHTML='<div class="text-center py-5 text-sm" style="color:var(--text-muted)">还没有记录，今晚睡醒后来记第一笔吧~ 🌙</div>';return}
+  list.innerHTML=state.records.slice().reverse().map(r=>{
+    const q=r.quality?['🌑','🌘','🌗','🌖','🌕'][r.quality-1]:'❔';
+    const mood=r.mood?(MOOD_EMOJIS[r.mood]||''):'';
+    const factorCount=Object.values(r.factors||{}).reduce((s,v)=>s+(Array.isArray(v)?v.length:(v?1:0)),0)+(r.customFactors||[]).length;
+    const parts=[];
+    if(r.fallAsleep)parts.push(FALL_ASLEEP_LABELS[r.fallAsleep]);
+    if(r.nightWake)parts.push(NIGHT_WAKE_LABELS[r.nightWake]);
+    parts.push(factorCount?`影响因素 ${factorCount} 项`:'未记录影响因素');
+    const titleAttr=r.note?` title="${escapeHtml(r.note)}"`:'';
+    return `<div class="history-item"${titleAttr}><div class="history-info"><span style="font-size:1.1rem;flex-shrink:0">${q}</span><div style="min-width:0"><div style="font-size:.8rem;font-weight:700;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${r.date.slice(5).replace('-','/')} <span style="color:var(--text-secondary);font-weight:600">· ${sleepRangeText(r)}</span>${mood?' '+mood:''}</div><div style="font-size:.65rem;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escapeHtml(parts.join(' · '))}</div></div></div><button class="history-del" data-date="${r.date}" title="删除这条记录">🗑️</button></div>`;
+  }).join('');
+}
+
+/* ============ 数据统计 ============ */
+function renderStats(){
+  $('#statRecords').textContent=state.records.length;
+  const json=localStorage.getItem(STORAGE_KEY)||'';
+  let size=json.length;try{size=new Blob([json]).size}catch(e){}
+  $('#statSize').textContent=state.records.length?(size/1024).toFixed(1):'0';
+  const avg=state.records.length?state.records.reduce((s,r)=>s+(r.sleepHours||0),0)/state.records.length:0;
+  $('#statAvg').textContent=state.records.length?avg.toFixed(1)+'h':'--';
+}
+
+/* ============ 导出 / 导入 ============ */
+function buildExportJson(){return JSON.stringify({app:'成长健研社·睡眠微手帐',version:2,exportedAt:new Date().toLocaleString('zh-CN'),recordCount:state.records.length,customFactors:state.customFactors,records:state.records},null,2)}
+function downloadJson(json){
+  try{
+    const blob=new Blob([json],{type:'application/json'});
+    const a=document.createElement('a'),url=URL.createObjectURL(blob);
+    a.href=url;a.download=`睡眠微手帐备份_${getDateKey()}.json`;
+    document.body.appendChild(a);a.click();a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),2000);
+    markBackup();
+    showToast('导出成功！记得妥善保管~','📥');
+  }catch(e){showToast('导出失败，请重试~','⚠️')}
+}
+function exportData(){
+  if(!state.records.length){showToast('还没有记录可以导出哦~','📭');return}
+  const json=buildExportJson();
+  if(isWeChat()){$('#wxExportText').value=json;$('#wxExportModal').classList.add('show')}
+  else{downloadJson(json)}
+}
+
+/* 解析导入文件 */
+function parseImportFile(file){
+  const reader=new FileReader();
+  reader.onload=e=>{
+    try{
+      const data=JSON.parse(e.target.result);
+      let records,customFactors=[];
+      if(Array.isArray(data))records=data;
+      else if(data&&Array.isArray(data.records))records=data.records;
+      else throw new Error('format');
+      if(data&&Array.isArray(data.customFactors))customFactors=data.customFactors;
+      const valid=records.filter(r=>r&&r.date);
+      if(!valid.length){showToast('文件里没有可导入的记录','⚠️');return}
+      state.pendingImport={records:valid,customFactors};
+      $('#importCount').textContent=valid.length;
+      $('#importChoiceModal').classList.add('show');
+    }catch(err){showToast('文件格式不对哦，请选择导出的备份文件','⚠️')}
+  };
+  reader.readAsText(file);
+}
+
+/* 执行导入 */
+function execImport(mode){
+  const p=state.pendingImport;
+  if(!p){closeImportChoice();return}
+  if(mode==='replace'){
+    /* 覆盖：完全使用文件数据 */
+    const normalized=p.records.map(r=>normalizeRecord(r));
+    state.records=normalized.sort((a,b)=>a.date<b.date?-1:1);
+    /* 自定义因素合并（按名称去重） */
+    mergeCustomFactors(p.customFactors);
+    saveRecords(state.records);saveCustomFactors(state.customFactors);
+    renderCustomFactors();resetForm();
+    const today=getDateKey(),tr=state.records.find(r=>r.date===today);
+    if(tr)fillForm(tr);
+    refreshAll();closeImportChoice();
+    showToast(`已覆盖导入 ${state.records.length} 天记录`,'📤');
+  }else{
+    /* 合并：保留本机记录，只补充文件里没有的日期 */
+    const map={};state.records.forEach(r=>map[r.date]=r);
+    let added=0;
+    p.records.forEach(r=>{
+      if(!map[r.date]){map[r.date]=normalizeRecord(r);added++}
+    });
+    state.records=Object.values(map).sort((a,b)=>a.date<b.date?-1:1);
+    mergeCustomFactors(p.customFactors);
+    saveRecords(state.records);saveCustomFactors(state.customFactors);
+    renderCustomFactors();resetForm();
+    const today=getDateKey(),tr=state.records.find(r=>r.date===today);
+    if(tr)fillForm(tr);
+    refreshAll();closeImportChoice();
+    showToast(added?`合并完成，新增 ${added} 天记录`:'数据已是最新，没有新增记录','📤');
+  }
+}
+function normalizeRecord(r){
+  return {
+    date:r.date,
+    sleepRange:r.sleepRange||rangeFromHours(r.sleepHours)||'',
+    sleepHours:r.sleepRange?(RANGE_HOURS[r.sleepRange]||r.sleepHours||0):(r.sleepHours||0),
+    quality:+r.quality||0,mood:r.mood||'',
+    fallAsleep:r.fallAsleep||'',nightWake:r.nightWake||'',
+    factors:(r.factors&&typeof r.factors==='object')?r.factors:{},
+    customFactors:Array.isArray(r.customFactors)?r.customFactors:[],
+    note:r.note||'',createdAt:r.createdAt||Date.now()
+  };
+}
+function mergeCustomFactors(list){
+  const names=new Set(state.customFactors.map(f=>f.name));
+  list.forEach(f=>{
+    if(f&&f.name&&!names.has(f.name)){
+      names.add(f.name);
+      state.customFactors.push({id:f.id||('c_'+Date.now()+'_'+Math.random().toString(36).slice(2,6)),name:f.name,type:f.type||'neutral'});
+    }
+  });
+}
+function closeImportChoice(){state.pendingImport=null;$('#importChoiceModal').classList.remove('show')}
+
+/* ============ 事件绑定 ============ */
+$('#addCustomFactorBtn').addEventListener('click',openFactorModal);
+$('#factorCancel').addEventListener('click',()=>$('#factorModal').classList.remove('show'));
+$('#factorAdd').addEventListener('click',addCustomFactor);
+$('#factorName').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();addCustomFactor()}});
+$('#factorTypeSelector').addEventListener('click',e=>{
+  const btn=e.target.closest('.type-btn');if(!btn)return;
+  $$('#factorTypeSelector .type-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');state.factorType=btn.dataset.type;
+});
+$('#quickPresets').addEventListener('click',e=>{
+  const chip=e.target.closest('.preset-chip');if(!chip)return;
+  $('#factorName').value=chip.dataset.preset;
+});
+
+$('#saveBtn').addEventListener('click',saveRecord);
+$('#clearBtn').addEventListener('click',()=>{
+  if(!state.records.length){showToast('还没有记录哦~','📭');return}
+  showModal('⚠️','确定要清空吗？','所有记录都将被删除，无法恢复！建议先点「导出数据」备份。',()=>{
+    state.records=[];saveRecords(state.records);
+    resetForm();refreshAll();checkBackupReminder();
+    showToast('已清空所有记录','🗑️');
+  });
+});
+$('#historyList').addEventListener('click',e=>{
+  const del=e.target.closest('.history-del');if(!del)return;
+  deleteRecord(del.dataset.date);
+});
+
+$('#newTipBtn').addEventListener('click',showTip);
+$('#exportJsonBtn').addEventListener('click',exportData);
+$('#importBtn').addEventListener('click',()=>$('#importFile').click());
+$('#importFile').addEventListener('change',e=>{
+  const file=e.target.files[0];if(!file)return;
+  parseImportFile(file);e.target.value='';
+});
+
+/* 导入选择弹窗 */
+$('#importMergeBtn').addEventListener('click',()=>execImport('merge'));
+$('#importReplaceBtn').addEventListener('click',()=>execImport('replace'));
+$('#importCancelBtn').addEventListener('click',closeImportChoice);
+$('#importChoiceClose').addEventListener('click',closeImportChoice);
+
+/* 微信导出弹窗 */
+$('#wxDownloadBtn').addEventListener('click',()=>downloadJson($('#wxExportText').value));
+$('#wxExportCopyBtn').addEventListener('click',async()=>{
+  const ta=$('#wxExportText');
+  try{
+    await navigator.clipboard.writeText(ta.value);
+    markBackup();
+    showToast('已复制，去备忘录粘贴保存吧','📋');
+  }catch(e){
+    ta.select();
+    if(document.execCommand('copy')){markBackup();showToast('已复制，去备忘录粘贴保存吧','📋')}
+    else showToast('复制失败，请长按文本手动复制','⚠️');
+  }
+});
+$('#wxExportClose').addEventListener('click',()=>$('#wxExportModal').classList.remove('show'));
+$('#wxExportClose2').addEventListener('click',()=>$('#wxExportModal').classList.remove('show'));
+
+/* 通用确认弹窗 */
+$('#modalConfirm').addEventListener('click',()=>{const cb=modalCallback;hideModal();if(cb)cb()});
+$('#modalCancel').addEventListener('click',hideModal);
+$('#modal').addEventListener('click',e=>{if(e.target===e.currentTarget)hideModal()});
+
+/* 使用说明弹窗 */
+$('#instructionBtn').addEventListener('click',()=>$('#instructionModal').classList.add('show'));
+$('#instructionClose').addEventListener('click',()=>$('#instructionModal').classList.remove('show'));
+$('#instructionConfirm').addEventListener('click',()=>$('#instructionModal').classList.remove('show'));
+
+/* 其他弹窗遮罩关闭 */
+['instructionModal','factorModal','wxExportModal','importChoiceModal'].forEach(id=>{
+  const ov=document.getElementById(id);
+  ov.addEventListener('click',e=>{if(e.target===ov)ov.classList.remove('show')});
+});
+
+/* ============ 初始化 ============ */
+function refreshAll(){showDate();renderCharts();renderInsights();renderHistory();renderStats()}
+(function init(){
+  initStars();showDate();showTip();renderCustomFactors();
+  const today=getDateKey();
+  const todayRec=state.records.find(r=>r.date===today);
+  if(todayRec)fillForm(todayRec);
+  updateFactorBadge();
+  renderBackupInfo();
+  if(isWeChat())$('#wxTip').classList.add('show');
+  refreshAll();
+  checkBackupReminder();
+})();
+</script>
+</body>
+</html>
