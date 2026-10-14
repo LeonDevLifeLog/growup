@@ -139,6 +139,7 @@ export default function Platform() {
       <PageTitle
         eyebrow="GROWTH COMMUNITY ADMINISTRATION"
         title="平台管理"
+        help="platform-orgs"
         description="维护大区与学校，从已有工作人员中任命管理员。账号资料在用户管理中维护。"
       />
       <ResourceState {...resource}>

@@ -41,11 +41,13 @@ export function AdminOverview() {
       <PageTitle
         eyebrow="CARE BEGINS WITH NOTICING"
         title="看见变化，让关怀及时发生"
+        help={user.role === "region_admin" ? "region" : "school-start"}
         description={`${user.regionName} · 每一个数字背后，都是一个值得被认真对待的孩子。`}
         action="查看关怀规则"
         onAction={() => open({ type: "rules" })}
       />
       <ResourceState {...resource}>
+        {data && <TodayTasks stats={stats} />}
         <div className="admin-stat-grid">
           {[
             {
@@ -167,6 +169,72 @@ export function AdminOverview() {
   );
 }
 
+// The day's work for a care administrator, in priority order, each one click away.
+function TodayTasks({ stats }) {
+  const { user, setView } = useApp();
+  const tasks = [
+    stats.students === 0 && {
+      key: "invite",
+      text:
+        user.role === "school_admin"
+          ? "还没有学生注册：先生成邀请码发给学生"
+          : "本区还没有学生注册：请各校学校管理员生成邀请码",
+      action: user.role === "school_admin" ? "生成邀请码" : "查看各校邀请",
+      view: "admin-enrollment",
+    },
+    stats.red > 0 && {
+      key: "red",
+      text: `${stats.red} 位学生需要优先关怀`,
+      action: "查看学生",
+      view: "admin-students",
+    },
+    stats.pendingPosts > 0 && {
+      key: "posts",
+      text: `${stats.pendingPosts} 组树洞纸条或回复等待审核`,
+      action: "去审核",
+      view: "admin-posts",
+    },
+    stats.requests > 0 && {
+      key: "requests",
+      text: `${stats.requests} 条支持需求等待跟进`,
+      action: "去跟进",
+      view: "admin-services",
+    },
+    stats.yellow > 0 && {
+      key: "yellow",
+      text: `${stats.yellow} 位学生需要关注`,
+      action: "查看学生",
+      view: "admin-students",
+    },
+  ].filter(Boolean);
+  return (
+    <section className="panel today-tasks" aria-label="今天先做这几件事">
+      <h2>今天先做这几件事</h2>
+      {tasks.length ? (
+        <ol>
+          {tasks.map((task) => (
+            <li key={task.key}>
+              <span>{task.text}</span>
+              <button
+                className="text-button"
+                onClick={() => setView(task.view)}
+              >
+                {task.action}
+                <ArrowRight size={14} />
+              </button>
+            </li>
+          ))}
+        </ol>
+      ) : (
+        <p className="muted">
+          <CheckCircle2 size={15} />{" "}
+          暂时没有待处理的事项。可以看看本区记录状态，或给尚未打卡的学生一点耐心。
+        </p>
+      )}
+    </section>
+  );
+}
+
 export function StudentTable({ students }) {
   const { open } = useApp();
   return (
@@ -237,6 +305,7 @@ export function AdminStudents() {
       <PageTitle
         eyebrow="A LITTLE MORE CARE"
         title="学生关怀，每一次靠近都有意义"
+        help="school-care"
         description="留意变化，先理解情境，再给予合适的支持。"
       />
       <section className="panel">
@@ -428,6 +497,7 @@ export function AdminPosts() {
       <PageTitle
         eyebrow="LISTEN WITH KINDNESS"
         title="守护树洞，让善意安心抵达"
+        help="school-posts"
         description="先审核，再发布。保护匿名表达，也守护每一位读到纸条的人。"
       />
       <div className="filter-row admin-post-filters">
@@ -618,6 +688,7 @@ export function AdminServices() {
       <PageTitle
         eyebrow="SUPPORT, WITHIN REACH"
         title="把需要，连接到合适的支持"
+        help="school-services"
         description="认真了解需求，联系并完成实际跟进后，再更新处理状态。"
       />
       <section className="panel">

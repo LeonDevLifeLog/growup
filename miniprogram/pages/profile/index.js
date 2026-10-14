@@ -14,6 +14,7 @@ Page({
   },
   records() { wx.switchTab({ url: '/pages/journals/index' }); },
   service() { wx.navigateTo({ url: '/pages/service/index?tab=records' }); },
+  guide() { wx.navigateTo({ url: '/pages/article/index?id=guide' }); },
   password() { wx.navigateTo({ url: '/pages/password/index' }); },
   privacy() { wx.navigateTo({ url: '/pages/article/index?id=privacy' }); },
   about() {

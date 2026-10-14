@@ -5,7 +5,8 @@ data
 .env
 .env.*
 !*.example
-docs
+docs/*
+!docs/guide
 tests
 miniprogram
 test-results

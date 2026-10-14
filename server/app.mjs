@@ -870,10 +870,16 @@ export function createApp({
         const base = resolve(staticPath);
         if (candidate !== base && !candidate.startsWith(`${base}/`))
           throw new ApiError(404, "页面不存在");
+        const directoryIndex = resolve(candidate, "index.html");
         const file =
           existsSync(candidate) && statSync(candidate).isFile()
             ? candidate
-            : resolve(base, "index.html");
+            : candidate !== base &&
+                existsSync(candidate) &&
+                statSync(candidate).isDirectory() &&
+                existsSync(directoryIndex)
+              ? directoryIndex
+              : resolve(base, "index.html");
         if (!existsSync(file)) throw new ApiError(404, "请先构建网页端");
         res.writeHead(200, {
           "Content-Type": MIME[extname(file)] ?? "application/octet-stream",

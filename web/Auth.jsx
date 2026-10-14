@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { ArrowRight, MapPin, ShieldCheck, Eye, EyeOff } from "lucide-react";
 import { useApp } from "./context.jsx";
 import { isAdmin } from "./api.js";
-import { Mark } from "./components.jsx";
+import { HelpLink, Mark } from "./components.jsx";
 
 export default function Auth({ purpose = "student" }) {
   const { region, regions, authenticate, close, call } = useApp();
@@ -124,6 +124,13 @@ export default function Auth({ purpose = "student" }) {
               平台管理员登录
             </button>
           </div>
+        )}
+        {purpose === "admin" && (
+          <small className="auth-hint">
+            {platform
+              ? "平台管理员不需要选择大区，直接输入账号和密码。"
+              : "大区管理员和学校管理员：先选择账号所属的大区。账号由上级管理员开通。"}
+          </small>
         )}
         {!platform && (
           <label>
@@ -301,6 +308,7 @@ export default function Auth({ purpose = "student" }) {
           >
             {register ? "直接登录" : "邀请码注册"}
           </button>
+          {!register && <small>邀请码请向本校老师索取</small>}
         </p>
       )}
       <p className="privacy-note">
@@ -308,6 +316,10 @@ export default function Auth({ purpose = "student" }) {
         {platform
           ? "平台管理员负责组织与管理账号，学生个人记录保持私密"
           : "账号仅可登录所属大区，学校账号只管理本校"}
+      </p>
+      <p className="auth-help">
+        登录遇到问题？
+        <HelpLink anchor="faq" label="查看常见问题" />
       </p>
     </div>
   );

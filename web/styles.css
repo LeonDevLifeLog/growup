@@ -4913,3 +4913,143 @@ td .text-button {
   line-height: 1.8;
   color: #4f5f48;
 }
+
+/* Role orientation: help links, scope chip, pending badges */
+.help-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: #5e7854;
+  text-decoration: none;
+  white-space: nowrap;
+  border-bottom: 1px dashed #b9cba6;
+}
+.help-link:hover {
+  color: var(--green);
+  border-bottom-color: var(--green);
+}
+.scope-chip {
+  background: #eef3e6;
+  border-radius: 999px;
+  padding-left: 12px;
+  padding-right: 12px;
+}
+.nav-badge {
+  margin-left: auto;
+  min-width: 20px;
+  height: 18px;
+  padding: 0 6px;
+  border-radius: 9px;
+  background: #b4614c;
+  color: white;
+  font-size: 10px;
+  line-height: 18px;
+  text-align: center;
+  font-weight: 600;
+}
+.nav-badge.mobile {
+  position: absolute;
+  top: 4px;
+  left: 50%;
+  margin-left: 6px;
+  min-width: 16px;
+  height: 16px;
+  line-height: 16px;
+  padding: 0 4px;
+  font-size: 9px;
+}
+.mobile-nav button {
+  position: relative;
+}
+.abilities {
+  margin: 16px 0;
+  padding: 14px 16px;
+  border-radius: 10px;
+  background: #f4f7ee;
+}
+.abilities h4 {
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+.abilities ul {
+  padding-left: 18px;
+  font-size: 12px;
+  line-height: 1.9;
+  margin-bottom: 6px;
+}
+.abilities .muted {
+  font-size: 11px;
+  margin-bottom: 8px;
+}
+.nav-badge + .nav-dot {
+  margin-left: 8px;
+}
+.today-tasks {
+  margin-bottom: 18px;
+}
+.today-tasks h2 {
+  font-size: 15px;
+  font-weight: 550;
+  margin-bottom: 10px;
+}
+.today-tasks ol {
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.today-tasks li {
+  font-size: 12px;
+  color: var(--ink);
+}
+.today-tasks li > * {
+  vertical-align: middle;
+}
+.today-tasks li .text-button {
+  margin-left: 12px;
+  font-size: 11px;
+}
+.today-tasks .muted {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.welcome-card {
+  margin-top: 22px;
+}
+.welcome-card ol {
+  padding-left: 20px;
+  margin-bottom: 8px;
+}
+.welcome-card li .text-button {
+  font-size: 12px;
+  color: var(--ink);
+  white-space: normal;
+  text-align: left;
+}
+.welcome-card li.done .text-button {
+  color: #9aa58c;
+  text-decoration: line-through;
+}
+.welcome-card .muted {
+  font-size: 11px;
+}
+.auth-hint {
+  display: block;
+  font-size: 11px;
+  color: #7d8873;
+  line-height: 1.7;
+  margin-top: -4px;
+}
+.auth-switch small {
+  display: block;
+  font-size: 10px;
+  color: #9aa58c;
+}
+.auth-help {
+  text-align: center;
+  font-size: 11px;
+  color: #8a9480;
+  margin-top: 10px;
+}

@@ -41,6 +41,38 @@ export const roleNames = {
 export const isAdmin = (user) =>
   !!user &&
   ["platform_admin", "region_admin", "school_admin"].includes(user.role);
+export const isCareAdmin = (user) =>
+  !!user && ["region_admin", "school_admin"].includes(user.role);
+/** Plain-language summary of each administrator's permissions, shown in the account menu. */
+export const roleAbilities = {
+  platform_admin: {
+    guide: "platform",
+    can: [
+      "开通、更名、停用大区和学校",
+      "为工作人员建账号，任命平台、大区、学校管理员",
+      "重置任何账号的密码、停用账号，查看管理操作记录",
+    ],
+    cannot: "不查看学生的心情、关怀与支持需求",
+  },
+  region_admin: {
+    guide: "region",
+    can: [
+      "查看本区所有学校的学生关怀、树洞审核和支持需求",
+      "在本区建立工作人员账号，任命或撤销学校管理员",
+      "查看各校邀请码的使用情况",
+    ],
+    cannot: "不能任命大区或平台管理员，看不到其他大区；邀请码由学校管理员生成",
+  },
+  school_admin: {
+    guide: "school",
+    can: [
+      "生成本校学生邀请码，查看注册记录",
+      "关注本校学生状态，审核树洞，回复支持需求",
+      "为本校学生重置密码、停用账号，新建待授权工作人员",
+    ],
+    cannot: "不能任命管理员，看不到其他学校",
+  },
+};
 export const topics = ["成长烦恼", "校园日常", "家庭关系", "小小确幸"];
 export const moodNames = ["很低落", "有点低落", "还不错", "很开心", "超开心"];
 export const statusMeta = {

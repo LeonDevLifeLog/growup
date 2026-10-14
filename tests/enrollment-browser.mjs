@@ -116,6 +116,10 @@ try {
     late.getByRole("heading", { name: "欢迎使用成长健研社" }),
   ).toHaveCount(0);
   await late.close();
+  const guide = await fetch(fixture.base + "/guide/");
+  assert.equal(guide.status, 200);
+  assert.match(await guide.text(), /<title>成长健研社使用指南<\/title>/);
+  record("使用指南随应用发布，可从 /guide/ 直接打开");
   record(
     "空库首次访问自动进入网页初始化向导，校验确认密码后创建平台管理员并自动登录，完成后向导永久关闭",
   );
@@ -241,10 +245,24 @@ try {
 
   const school = await newPage();
   await login(school, "school.manager", false, true);
-  await school
-    .locator(".sidebar")
-    .getByRole("button", { name: "学校与邀请", exact: true })
-    .click();
+  await expect(school.locator(".scope-chip")).toContainText(
+    "学校管理员 · 成长试点第一学校",
+  );
+  await school.locator(".scope-chip").click();
+  const account = school.getByRole("dialog", { name: "当前管理账号" });
+  await expect(account).toContainText("我能做什么");
+  await expect(account).toContainText("不能任命管理员");
+  await expect(
+    account.getByRole("link", { name: /查看完整使用指南/ }),
+  ).toHaveAttribute("href", "/guide/#school");
+  await account.getByRole("button", { name: "关闭弹窗" }).click();
+  const todo = school.getByRole("region", { name: "今天先做这几件事" });
+  await expect(todo).toContainText("还没有学生注册");
+  await todo.getByRole("button", { name: /生成邀请码/ }).click();
+  await expect(school.getByRole("link", { name: "使用帮助" })).toHaveAttribute(
+    "href",
+    "/guide/#school-invite",
+  );
   await school.getByRole("button", { name: "生成邀请码", exact: true }).click();
   let inviteDialog = school.getByRole("dialog", {
     name: "生成学生邀请码",
@@ -274,6 +292,9 @@ try {
   assert.match(code, /^[A-F0-9]{24}$/);
   record(
     "管理员代设的初始密码在首次登录时必须改为本人新密码（不可沿用原密码），之后才能进入后台",
+  );
+  record(
+    "学校管理员右上角显示身份与范围，点击可看“我能做什么”；概览“今天先做这几件事”引导生成邀请码，各页“使用帮助”指向指南对应章节",
   );
   record("学校管理员登录后只能选择本校，生成限时限额邀请码并获得一次性完整值");
 
@@ -308,6 +329,13 @@ try {
   await expect(student.getByRole("heading", { level: 1 })).toContainText(
     "新注册同学",
   );
+  const welcome = student.getByRole("region", { name: "从这里开始" });
+  await expect(welcome).toContainText("记录今天的心情");
+  await welcome.getByRole("button", { name: "知道了，不再显示" }).click();
+  await expect(welcome).toHaveCount(0);
+  await student.reload();
+  await expect(student.getByRole("heading", { level: 1 })).toBeVisible();
+  await expect(welcome).toHaveCount(0);
   await noOverflow(student);
   await student.screenshot({
     path: resolve(artifact, "invitation-student-mobile.png"),
@@ -346,7 +374,9 @@ try {
     .getByRole("button", { name: "放弃并关闭", exact: true })
     .click();
   await expect(checkin).toHaveCount(0);
-  record("手机网页学生核对学校、确认密码后自行注册，退出重登成功且无演示入口");
+  record(
+    "手机网页学生核对学校、确认密码后自行注册，首页显示“从这里开始”且可永久关闭，退出重登成功且无演示入口",
+  );
   record("填写中的弹窗被 Esc 或关闭按钮关闭前会先确认，取消后内容保留");
   await student.goto(fixture.base + "/#profile");
   await student.getByRole("button", { name: "修改密码", exact: true }).click();

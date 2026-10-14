@@ -17,6 +17,7 @@ import {
   ChevronRight,
   RefreshCw,
   LockKeyhole,
+  CircleHelp,
 } from "lucide-react";
 import { useApp } from "./context.jsx";
 import { statusMeta, studentStatus } from "./api.js";
@@ -277,5 +278,20 @@ export function Tabs({ label, tabs, value, onChange }) {
         </button>
       ))}
     </div>
+  );
+}
+
+// Each guide section matches one page, so help opens exactly where it is needed.
+export function HelpLink({ anchor, label = "使用帮助" }) {
+  return (
+    <a
+      className="help-link"
+      href={`/guide/#${anchor}`}
+      target="_blank"
+      rel="noopener"
+    >
+      <CircleHelp size={15} />
+      {label}
+    </a>
   );
 }

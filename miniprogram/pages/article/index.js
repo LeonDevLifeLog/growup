@@ -1,10 +1,10 @@
-const { modules } = require('../../data/content');
+const { modules, helpArticles } = require('../../data/content');
 const { request, requireStudent } = require('../../utils/api');
 Page({
   data: { article: null, groups: [], loading: false, error: '' },
   async onLoad(options) {
     if (!requireStudent()) return;
-    const article = modules.find(item => item.id === options.id);
+    const article = [...modules, ...helpArticles].find(item => item.id === options.id);
     if (!article) return;
     this.setData({ article: { ...article, links: article.links || [] } });
     wx.setNavigationBarTitle({ title: article.title });

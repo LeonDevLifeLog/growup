@@ -61,6 +61,13 @@ export default function UserManagement() {
       <PageTitle
         eyebrow="PEOPLE IN OUR COMMUNITY"
         title="用户管理"
+        help={
+          {
+            platform_admin: "platform-appoint",
+            region_admin: "region-users",
+            school_admin: "school-users",
+          }[user.role]
+        }
         description={scopeText[user.role]}
       />
       <section className="panel" aria-label="用户列表">

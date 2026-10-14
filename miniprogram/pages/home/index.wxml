@@ -6,6 +6,7 @@
     <view class="hero-content"><text class="hero-tag">TODAY’S LITTLE CHECK-IN</text><view class="hero-title">今天的你，<text>{{'\n'}}</text>是什么心情？</view><view class="hero-text">{{checkin ? '已经记下「' + moodName + '」，谢谢你认真照顾自己。' : '无论晴天或下雨，这里都接得住。'}}</view><button class="hero-button" bindtap="checkin">{{checkin ? '看看 / 更新今日心情' : '记录今天的心情'}} ↗</button></view>
     <view class="plant" aria-hidden="true"><view class="sun"></view><view class="stem"></view><view class="leaf leaf-a"></view><view class="leaf leaf-b"></view><view class="leaf leaf-c"></view><view class="ground"></view></view>
   </view>
+  <view wx:if="{{welcome}}" class="card welcome spaced"><view class="row"><view class="section-title welcome-title">从这里开始</view><text class="link" bindtap="dismissWelcome">知道了</text></view><view class="welcome-step {{checkin ? 'done' : ''}}" bindtap="checkin">1　记录今天的心情 →</view><view class="welcome-step" bindtap="journals">2　写一篇星图日记，贴上生活标签 →</view><view class="welcome-step" bindtap="treehole">3　去树洞看看，用化名说说心事 →</view><view class="small spaced">日记和心情备注只有你自己能看。<text class="link" bindtap="guide">使用帮助</text></view></view>
   <view wx:if="{{loading}}" class="state">正在整理你的成长记录…</view>
   <view wx:if="{{error}}" class="error">{{error}}<button class="button-small button-outline spaced" bindtap="load">重新加载</button></view>
   <view wx:if="{{!loading && !error}}" class="stats">

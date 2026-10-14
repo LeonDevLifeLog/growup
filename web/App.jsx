@@ -22,8 +22,14 @@ import {
   X,
 } from "lucide-react";
 import { AppContext, useApp } from "./context.jsx";
-import { request, isAdmin, roleNames } from "./api.js";
-import { ConfirmDialog, Locked, Mark, Modal } from "./components.jsx";
+import {
+  request,
+  isAdmin,
+  isCareAdmin,
+  roleAbilities,
+  roleNames,
+} from "./api.js";
+import { ConfirmDialog, HelpLink, Locked, Mark, Modal } from "./components.jsx";
 import Auth from "./Auth.jsx";
 import Enrollment from "./Enrollment.jsx";
 import Platform, { ChangePassword } from "./Platform.jsx";
@@ -88,6 +94,8 @@ export default function App() {
   );
   const [modal, setModal] = useState(null);
   const [discarding, setDiscarding] = useState(false);
+  // Pending work per admin page, shown as small badges in the navigation.
+  const [counts, setCounts] = useState({});
   const dirty = useRef(false);
   const [refresh, setRefresh] = useState(0);
   const [toast, setToast] = useState(null);
@@ -184,6 +192,26 @@ export default function App() {
     window.addEventListener("hashchange", onHash);
     return () => window.removeEventListener("hashchange", onHash);
   }, []);
+  useEffect(() => {
+    let active = true;
+    if (!adminView || !isCareAdmin(user) || user.mustChangePassword) {
+      setCounts({});
+      return;
+    }
+    call("/admin/overview")
+      .then(({ stats }) => {
+        if (active)
+          setCounts({
+            "admin-students": stats.red,
+            "admin-posts": stats.pendingPosts,
+            "admin-services": stats.requests,
+          });
+      })
+      .catch(() => {});
+    return () => {
+      active = false;
+    };
+  }, [adminView, user, refresh, call]);
   useEffect(() => {
     if (!toast) return;
     const id = setTimeout(() => setToast(null), 4500);
@@ -381,9 +409,19 @@ export default function App() {
                 key={item.id}
                 onClick={() => setView(item.id)}
                 aria-current={view === item.id ? "page" : undefined}
+                title={
+                  counts[item.id]
+                    ? `${item.label}：${counts[item.id]} 项待处理`
+                    : undefined
+                }
               >
                 <item.icon size={20} strokeWidth={1.7} />
                 <span>{item.label}</span>
+                {counts[item.id] > 0 && (
+                  <span className="nav-badge" aria-hidden="true">
+                    {counts[item.id]}
+                  </span>
+                )}
                 {view === item.id && <span className="nav-dot" />}
                 {item.id === "tree" && (
                   <span className="nav-new" aria-hidden="true">
@@ -457,18 +495,34 @@ export default function App() {
               </span>
             </div>
             <div className="topbar-right">
-              <button
-                className="region-select"
-                onClick={() => open({ type: "region" })}
-              >
-                <MapPin size={15} />
-                <span>
-                  {user?.role === "platform_admin"
-                    ? "平台管理"
-                    : regions.find((r) => r.id === region)?.name || "选择大区"}
-                </span>
-                <ChevronDown size={13} />
-              </button>
+              {adminView && isAdmin(user) ? (
+                // Administrators see who they are acting as instead of a region picker.
+                <button
+                  className="region-select scope-chip"
+                  onClick={() => open({ type: "account" })}
+                  title="查看我的权限范围"
+                >
+                  <ShieldCheck size={15} />
+                  <span>
+                    {roleNames[user.role]} ·{" "}
+                    {user.schoolName || user.regionName || "全平台"}
+                  </span>
+                </button>
+              ) : (
+                <button
+                  className="region-select"
+                  onClick={() => open({ type: "region" })}
+                >
+                  <MapPin size={15} />
+                  <span>
+                    {user?.role === "platform_admin"
+                      ? "平台管理"
+                      : regions.find((r) => r.id === region)?.name ||
+                        "选择大区"}
+                  </span>
+                  <ChevronDown size={13} />
+                </button>
+              )}
               {demo && <span className="demo-pill">演示空间</span>}
               <span className="topbar-divider" />
               {user ? (
@@ -523,8 +577,18 @@ export default function App() {
               key={item.id}
               className={view === item.id ? "active" : ""}
               aria-current={view === item.id ? "page" : undefined}
+              title={
+                counts[item.id]
+                  ? `${item.label}：${counts[item.id]} 项待处理`
+                  : undefined
+              }
               onClick={() => setView(item.id)}
             >
+              {counts[item.id] > 0 && (
+                <span className="nav-badge mobile" aria-hidden="true">
+                  {counts[item.id]}
+                </span>
+              )}
               <item.icon size={20} />
               <span>
                 {item.label
@@ -792,6 +856,19 @@ function ModalBody({ modal: m }) {
           {user.schoolName ? ` · ${user.schoolName}` : ""}
         </p>
         <p>{user.account}</p>
+        <div className="abilities">
+          <h4>我能做什么</h4>
+          <ul>
+            {roleAbilities[user.role].can.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+          <p className="muted">{roleAbilities[user.role].cannot}</p>
+          <HelpLink
+            anchor={roleAbilities[user.role].guide}
+            label="查看完整使用指南"
+          />
+        </div>
         <ChangePassword />
         <button className="button secondary full" onClick={logout}>
           <LogOut size={16} />

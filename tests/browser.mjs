@@ -239,6 +239,16 @@ try {
   await dialog.getByRole("button", { name: "关闭弹窗" }).click();
   record("后台红黄提示、缺勤状态及关怀跟进通过，跟进不清除持续提示");
 
+  await admin.reload();
+  const postsNav = admin
+    .locator(".sidebar nav button")
+    .filter({ hasText: "树洞审核" });
+  await expect(postsNav.locator(".nav-badge")).toBeVisible();
+  await expect(postsNav).toHaveAttribute("title", /项待处理/);
+  await nav(admin, "关怀概览");
+  await expect(
+    admin.getByRole("region", { name: "今天先做这几件事" }),
+  ).toContainText("等待审核");
   await nav(admin, "树洞审核");
   let card = admin
     .locator(".moderation-card")
@@ -290,7 +300,9 @@ try {
     .getByRole("dialog")
     .getByRole("button", { name: "关闭弹窗" })
     .click();
-  record("后台审核发布、送温暖防重复、回复审核后可见形成完整闭环");
+  record(
+    "侧栏红色数字与概览“今天先做这几件事”提示待审内容；后台审核发布、送温暖防重复、回复审核后可见形成完整闭环",
+  );
 
   await post.getByRole("button", { name: "举报", exact: true }).click();
   dialog = student.getByRole("dialog");

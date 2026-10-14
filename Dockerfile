@@ -6,6 +6,7 @@ COPY package.json package-lock.json ./
 RUN npm ci --registry=${NPM_REGISTRY}
 COPY index.html vite.config.js ./
 COPY web ./web
+COPY docs/guide ./docs/guide
 RUN npm run build
 
 FROM ${NODE_IMAGE} AS runtime

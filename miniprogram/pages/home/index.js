@@ -1,7 +1,18 @@
 const { request, requireStudent, moods } = require('../../utils/api');
 Page({
-  data: { user: {}, loading: true, error: '', today: '', checkin: null, stats: {}, moodName: '', week: [] },
-  onShow() { if (requireStudent()) this.load(); },
+  data: { user: {}, loading: true, error: '', today: '', checkin: null, stats: {}, moodName: '', week: [], welcome: false },
+  onShow() {
+    const user = requireStudent();
+    if (!user) return;
+    // First steps for a new student; hidden once dismissed on this phone.
+    this.setData({ welcome: wx.getStorageSync('growup.welcome.' + user.id) !== 'done' });
+    this.load();
+  },
+  dismissWelcome() {
+    wx.setStorageSync('growup.welcome.' + this.data.user.id, 'done');
+    this.setData({ welcome: false });
+  },
+  guide() { wx.navigateTo({ url: '/pages/article/index?id=guide' }); },
   onPullDownRefresh() { this.load().finally(() => wx.stopPullDownRefresh()); },
   async load() {
     this.setData({ loading: true, error: '', user: wx.getStorageSync('growup.user') });

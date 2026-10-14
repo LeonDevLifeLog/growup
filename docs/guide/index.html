@@ -1,0 +1,893 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>成长健研社使用指南</title>
+    <meta
+      name="description"
+      content="按角色介绍成长健研社的使用方法：学生、学校管理员、大区管理员、平台管理员。"
+    />
+    <style>
+      :root {
+        --bg: #f7f8f2;
+        --surface: #ffffff;
+        --surface-soft: #f1f5ea;
+        --ink: #23302a;
+        --muted: #66735f;
+        --faint: #8d977f;
+        --border: #e0e6d6;
+        --green: #245c45;
+        --green-soft: #e3eedb;
+        --accent: #a8573f;
+        --red-bg: #f8e9e4;
+        --red: #a85f4c;
+        --yellow-bg: #faf2d8;
+        --yellow: #8c7633;
+        --green-bg: #ecf3e5;
+        --green-tag: #5c8247;
+        --gray-bg: #eff0eb;
+        --gray: #838b78;
+        color-scheme: light;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) {
+          --bg: #141a17;
+          --surface: #1b231f;
+          --surface-soft: #212b26;
+          --ink: #e5ebe2;
+          --muted: #a9b5a3;
+          --faint: #879382;
+          --border: #2f3a34;
+          --green: #8fc5a5;
+          --green-soft: #24362c;
+          --accent: #e09a83;
+          --red-bg: #3a2621;
+          --red: #eaa58f;
+          --yellow-bg: #3a3320;
+          --yellow: #e2cb85;
+          --green-bg: #213226;
+          --green-tag: #a9d394;
+          --gray-bg: #262c28;
+          --gray: #b3bbaa;
+          color-scheme: dark;
+        }
+      }
+      :root[data-theme="dark"] {
+        --bg: #141a17;
+        --surface: #1b231f;
+        --surface-soft: #212b26;
+        --ink: #e5ebe2;
+        --muted: #a9b5a3;
+        --faint: #879382;
+        --border: #2f3a34;
+        --green: #8fc5a5;
+        --green-soft: #24362c;
+        --accent: #e09a83;
+        --red-bg: #3a2621;
+        --red: #eaa58f;
+        --yellow-bg: #3a3320;
+        --yellow: #e2cb85;
+        --green-bg: #213226;
+        --green-tag: #a9d394;
+        --gray-bg: #262c28;
+        --gray: #b3bbaa;
+        color-scheme: dark;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+        scroll-padding-top: 76px;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font:
+          15px/1.8 -apple-system,
+          BlinkMacSystemFont,
+          "PingFang SC",
+          "Hiragino Sans GB",
+          "Microsoft YaHei",
+          "Noto Sans CJK SC",
+          sans-serif;
+      }
+      a {
+        color: var(--green);
+      }
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background: color-mix(in srgb, var(--bg) 92%, transparent);
+        backdrop-filter: blur(8px);
+        border-bottom: 1px solid var(--border);
+      }
+      .topbar-inner {
+        max-width: 1080px;
+        margin: 0 auto;
+        padding: 10px 16px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+      .brand {
+        font-weight: 650;
+        white-space: nowrap;
+        text-decoration: none;
+        color: var(--ink);
+      }
+      .brand span {
+        color: var(--green);
+      }
+      .role-nav {
+        display: flex;
+        gap: 4px;
+        overflow-x: auto;
+        scrollbar-width: none;
+        flex: 1;
+      }
+      .role-nav a {
+        padding: 6px 12px;
+        border-radius: 999px;
+        text-decoration: none;
+        color: var(--muted);
+        font-size: 14px;
+        white-space: nowrap;
+      }
+      .role-nav a:hover,
+      .role-nav a.active {
+        background: var(--green-soft);
+        color: var(--green);
+      }
+      main {
+        max-width: 1080px;
+        margin: 0 auto;
+        padding: 0 16px 80px;
+      }
+      .hero {
+        padding: 48px 0 24px;
+      }
+      .eyebrow {
+        font-size: 12px;
+        letter-spacing: 0.2em;
+        color: var(--faint);
+        text-transform: uppercase;
+      }
+      h1 {
+        font-size: clamp(26px, 4vw, 36px);
+        line-height: 1.35;
+        margin: 8px 0 12px;
+        font-weight: 650;
+      }
+      h2 {
+        font-size: 24px;
+        line-height: 1.4;
+        margin: 0 0 6px;
+        font-weight: 650;
+      }
+      h3 {
+        font-size: 18px;
+        margin: 28px 0 8px;
+        font-weight: 600;
+      }
+      h4 {
+        font-size: 15px;
+        margin: 18px 0 6px;
+        font-weight: 600;
+      }
+      p {
+        margin: 0 0 10px;
+      }
+      .lead {
+        color: var(--muted);
+        max-width: 720px;
+      }
+      .role-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 14px;
+        margin: 24px 0 8px;
+      }
+      .role-card {
+        display: block;
+        text-decoration: none;
+        color: inherit;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 18px;
+        transition:
+          border-color 0.15s,
+          transform 0.15s;
+      }
+      .role-card:hover {
+        border-color: var(--green);
+        transform: translateY(-2px);
+      }
+      .role-card strong {
+        display: block;
+        font-size: 17px;
+        margin: 6px 0 4px;
+      }
+      .role-card small {
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.7;
+        display: block;
+      }
+      .role-card .tag {
+        font-size: 12px;
+        color: var(--green);
+        background: var(--green-soft);
+        border-radius: 6px;
+        padding: 2px 8px;
+      }
+      section.role {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 28px clamp(18px, 4vw, 36px);
+        margin-top: 28px;
+      }
+      .role-head {
+        display: flex;
+        gap: 12px 24px;
+        flex-wrap: wrap;
+        align-items: baseline;
+        justify-content: space-between;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 14px;
+        margin-bottom: 8px;
+      }
+      .role-head p {
+        color: var(--muted);
+        margin: 0;
+      }
+      .scope {
+        font-size: 13px;
+        color: var(--muted);
+        background: var(--surface-soft);
+        border-radius: 8px;
+        padding: 4px 10px;
+      }
+      ol.steps {
+        counter-reset: step;
+        list-style: none;
+        padding: 0;
+        margin: 8px 0 12px;
+      }
+      ol.steps > li {
+        counter-increment: step;
+        position: relative;
+        padding: 2px 0 10px 40px;
+      }
+      ol.steps > li::before {
+        content: counter(step);
+        position: absolute;
+        left: 0;
+        top: 2px;
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: var(--green);
+        color: var(--surface);
+        font-size: 13px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      ol.steps > li:not(:last-child)::after {
+        content: "";
+        position: absolute;
+        left: 12px;
+        top: 32px;
+        bottom: 4px;
+        width: 2px;
+        background: var(--border);
+      }
+      .ui {
+        display: inline-block;
+        font-size: 13px;
+        padding: 0 7px;
+        border-radius: 6px;
+        border: 1px solid var(--border);
+        background: var(--surface-soft);
+        color: var(--ink);
+        white-space: nowrap;
+      }
+      .tasks {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 14px;
+        margin-top: 10px;
+      }
+      .task {
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 14px 16px;
+        background: var(--bg);
+      }
+      .task h4 {
+        margin-top: 0;
+      }
+      .task ol,
+      .task ul {
+        margin: 0;
+        padding-left: 20px;
+      }
+      .tip,
+      .warn {
+        border-radius: 10px;
+        padding: 10px 14px;
+        margin: 12px 0;
+        font-size: 14px;
+      }
+      .tip {
+        background: var(--green-soft);
+      }
+      .warn {
+        background: var(--red-bg);
+        color: var(--ink);
+      }
+      .tip strong,
+      .warn strong {
+        margin-right: 6px;
+      }
+      .table-wrap {
+        overflow-x: auto;
+        margin: 12px 0;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        font-size: 14px;
+        min-width: 620px;
+      }
+      th,
+      td {
+        border-bottom: 1px solid var(--border);
+        padding: 10px 12px;
+        text-align: left;
+        vertical-align: top;
+      }
+      th {
+        font-weight: 600;
+        background: var(--surface-soft);
+        white-space: nowrap;
+      }
+      td.yes {
+        color: var(--green);
+        font-weight: 600;
+      }
+      td.no {
+        color: var(--faint);
+      }
+      .hierarchy {
+        display: flex;
+        align-items: stretch;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin: 16px 0;
+      }
+      .level {
+        flex: 1 1 180px;
+        border-radius: 12px;
+        padding: 12px 14px;
+        border: 1px solid var(--border);
+        background: var(--surface);
+        position: relative;
+      }
+      .level strong {
+        display: block;
+      }
+      .level small {
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.6;
+        display: block;
+      }
+      .arrow {
+        align-self: center;
+        color: var(--faint);
+        font-size: 18px;
+      }
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        border-radius: 6px;
+        padding: 1px 8px;
+        font-size: 13px;
+        white-space: nowrap;
+      }
+      .badge::before {
+        content: "";
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: currentColor;
+      }
+      .badge.red {
+        background: var(--red-bg);
+        color: var(--red);
+      }
+      .badge.yellow {
+        background: var(--yellow-bg);
+        color: var(--yellow);
+      }
+      .badge.green {
+        background: var(--green-bg);
+        color: var(--green-tag);
+      }
+      .badge.gray {
+        background: var(--gray-bg);
+        color: var(--gray);
+      }
+      details {
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 10px 14px;
+        margin: 10px 0;
+        background: var(--surface);
+      }
+      summary {
+        cursor: pointer;
+        font-weight: 600;
+      }
+      details[open] summary {
+        margin-bottom: 6px;
+      }
+      .toc {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px 14px;
+        font-size: 14px;
+        margin: 10px 0 0;
+        padding: 0;
+        list-style: none;
+      }
+      footer {
+        color: var(--faint);
+        font-size: 13px;
+        text-align: center;
+        padding: 32px 16px;
+      }
+      @media (max-width: 640px) {
+        body {
+          font-size: 14px;
+        }
+        .brand small {
+          display: none;
+        }
+        .arrow {
+          display: none;
+        }
+      }
+      @media print {
+        .topbar {
+          display: none;
+        }
+        section.role {
+          break-inside: avoid-page;
+        }
+        body {
+          background: white;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="topbar-inner">
+        <a class="brand" href="#top">成长健研社 <span>使用指南</span></a>
+        <nav class="role-nav" aria-label="按身份查看">
+          <a href="#roles">角色与权限</a>
+          <a href="#student">学生</a>
+          <a href="#school">学校管理员</a>
+          <a href="#region">大区管理员</a>
+          <a href="#platform">平台管理员</a>
+          <a href="#rules">关怀提示</a>
+          <a href="#faq">常见问题</a>
+        </nav>
+      </div>
+    </header>
+    <main id="top">
+      <div class="hero">
+        <div class="eyebrow">GUIDE · 按你的身份阅读</div>
+        <h1>成长健研社，怎么用？</h1>
+        <p class="lead">
+          系统里有四种身份，每种身份能看到的页面和能做的事不同。先找到你的身份，只读和自己有关的部分即可。每一步都写了要点击的按钮名称，与页面上的文字一致。
+        </p>
+        <div class="role-cards">
+          <a class="role-card" href="#student">
+            <span class="tag">网页 · 小程序</span>
+            <strong>我是学生</strong>
+            <small>用学校给的邀请码注册，记录心情、写星图日记、在树洞说说心事、需要时申请支持。</small>
+          </a>
+          <a class="role-card" href="#school">
+            <span class="tag">网页后台</span>
+            <strong>我是学校管理员</strong>
+            <small>为本校开通学生注册，关注本校学生状态，审核树洞，回复学生的支持需求。</small>
+          </a>
+          <a class="role-card" href="#region">
+            <span class="tag">网页后台</span>
+            <strong>我是大区管理员</strong>
+            <small>查看本区所有学校的关怀情况，任命和调整本区的学校管理员。</small>
+          </a>
+          <a class="role-card" href="#platform">
+            <span class="tag">网页后台</span>
+            <strong>我是平台管理员</strong>
+            <small>首次安装系统，开通大区和学校，任命各级管理员。不查看学生关怀数据。</small>
+          </a>
+        </div>
+      </div>
+
+      <section class="role" id="roles" aria-labelledby="roles-title">
+        <div class="role-head">
+          <h2 id="roles-title">角色与权限</h2>
+          <p>每个管理员只能管理自己范围内、比自己低一级的人。</p>
+        </div>
+        <div class="hierarchy" aria-label="组织层级">
+          <div class="level">
+            <strong>平台管理员</strong>
+            <small>全平台：大区、学校、所有账号</small>
+          </div>
+          <span class="arrow" aria-hidden="true">→</span>
+          <div class="level">
+            <strong>大区管理员</strong>
+            <small>一个大区：区内所有学校的学生和学校管理员</small>
+          </div>
+          <span class="arrow" aria-hidden="true">→</span>
+          <div class="level">
+            <strong>学校管理员</strong>
+            <small>一所学校：本校学生</small>
+          </div>
+          <span class="arrow" aria-hidden="true">→</span>
+          <div class="level">
+            <strong>学生</strong>
+            <small>只有自己的成长空间</small>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only" style="position: absolute; left: -9999px">各角色可以做的事</caption>
+            <thead>
+              <tr>
+                <th scope="col">能做什么</th>
+                <th scope="col">学生</th>
+                <th scope="col">学校管理员</th>
+                <th scope="col">大区管理员</th>
+                <th scope="col">平台管理员</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>记录心情、日记、成长工具</td>
+                <td class="yes">本人</td>
+                <td class="no">—</td>
+                <td class="no">—</td>
+                <td class="no">—</td>
+              </tr>
+              <tr>
+                <td>查看学生心情分数与关怀提示</td>
+                <td class="no">—</td>
+                <td class="yes">本校</td>
+                <td class="yes">本区</td>
+                <td class="no">不可查看</td>
+              </tr>
+              <tr>
+                <td>阅读学生日记、心情备注</td>
+                <td class="yes">仅本人</td>
+                <td class="no">不可查看</td>
+                <td class="no">不可查看</td>
+                <td class="no">不可查看</td>
+              </tr>
+              <tr>
+                <td>审核树洞、回复支持需求</td>
+                <td class="no">—</td>
+                <td class="yes">本校</td>
+                <td class="yes">本区</td>
+                <td class="no">—</td>
+              </tr>
+              <tr>
+                <td>生成学生邀请码</td>
+                <td class="no">—</td>
+                <td class="yes">本校</td>
+                <td class="no">只能查看</td>
+                <td class="no">—</td>
+              </tr>
+              <tr>
+                <td>建账号、重置密码、停用账号</td>
+                <td class="no">—</td>
+                <td class="yes">本校学生与待授权人员</td>
+                <td class="yes">本区学生、学校管理员、待授权人员</td>
+                <td class="yes">所有账号</td>
+              </tr>
+              <tr>
+                <td>任命管理员</td>
+                <td class="no">—</td>
+                <td class="no">不能任命</td>
+                <td class="yes">本区学校管理员</td>
+                <td class="yes">三类管理员</td>
+              </tr>
+              <tr>
+                <td>新增、停用大区和学校</td>
+                <td class="no">—</td>
+                <td class="no">—</td>
+                <td class="no">—</td>
+                <td class="yes">是</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="tip">
+          <strong>小提示</strong>看不到某个人、某个按钮是灰色，通常是因为它不在你的权限范围内，并不是系统出错。按钮灰色时，把鼠标停在上面可以看到原因。管理后台右上角显示你当前的身份和范围，点击它可以查看“我能做什么”；每个页面标题旁的 <span class="ui">使用帮助</span> 会打开本指南的对应章节。
+        </div>
+      </section>
+
+      <section class="role" id="student" aria-labelledby="student-title">
+        <div class="role-head">
+          <h2 id="student-title">学生</h2>
+          <span class="scope">网页：打开学校告诉你的网址 · 小程序：搜索“成长健研社”</span>
+        </div>
+        <h3 id="student-start">第一次使用：用邀请码注册</h3>
+        <ol class="steps">
+          <li>向老师要一个<strong>学校邀请码</strong>（一串英文和数字）。</li>
+          <li>网页点右上角 <span class="ui">登录 / 注册</span>，小程序直接在首页操作；选择你学校所在的<strong>大区</strong>，切到 <span class="ui">邀请码注册</span>。</li>
+          <li>填入邀请码，点 <span class="ui">核对学校</span>，确认显示的是自己的学校。</li>
+          <li>填写称呼，自己设置<strong>账号</strong>和<strong>密码</strong>（再输入一次确认），完成注册。以后用这个账号密码登录，记得选同一个大区。</li>
+        </ol>
+        <h3>日常可以做什么</h3>
+        <p>第一次登录后，首页会显示 <span class="ui">从这里开始</span> 三个小步骤；小程序随时可以在 <span class="ui">我的</span> → <span class="ui">使用帮助</span> 再看这份说明。</p>
+        <div class="tasks">
+          <div class="task">
+            <h4>记录今天的心情</h4>
+            <p>首页点 <span class="ui">记录今天的心情</span>，选一个最接近的表情，可以加标签和几句话。一天一条，再提交会更新当天的记录。</p>
+          </div>
+          <div class="task">
+            <h4>写星图日记</h4>
+            <p>在 <span class="ui">我的星图</span> 写日记、加生活标签。经常一起出现的标签会连成你的星图。</p>
+          </div>
+          <div class="task">
+            <h4>在树洞说说心事</h4>
+            <p>用化名写纸条，老师审核后才会给同区同学看到。也可以给别人送温暖、回应。不要写真实姓名、学校、电话。</p>
+          </div>
+          <div class="task">
+            <h4>申请支持</h4>
+            <p>网页点右上角自己的名字进入个人页 → <span class="ui">提交新需求</span>；小程序 <span class="ui">我的</span> → <span class="ui">服务需求与处理状态</span>。老师跟进后，会在这里看到回复。</p>
+          </div>
+        </div>
+        <div class="tip">
+          <strong>谁能看到我的内容？</strong>日记和心情备注只有你自己能看。老师只能看到心情分数，用来及时关心你。树洞纸条显示化名。
+        </div>
+        <h3 id="student-password">修改密码 · 忘记密码</h3>
+        <p>网页点右上角自己的名字进入个人页 → <span class="ui">修改密码</span>；小程序 <span class="ui">我的</span> → <span class="ui">修改密码</span>。</p>
+        <p>忘记密码时，请联系本校老师在后台帮你重置。重置后第一次登录，系统会请你设置一个只有自己知道的新密码。</p>
+        <div class="warn">
+          <strong>需要立即帮助？</strong>树洞和支持申请需要老师人工处理，不能即时救援。遇到危险，请马上联系身边信任的大人或当地紧急服务。
+        </div>
+      </section>
+
+      <section class="role" id="school" aria-labelledby="school-title">
+        <div class="role-head">
+          <h2 id="school-title">学校管理员</h2>
+          <span class="scope">管理范围：本校</span>
+        </div>
+        <h3 id="school-start">第一次登录</h3>
+        <ol class="steps">
+          <li>在网址末尾加上 <span class="ui">/#admin</span> 打开管理后台，点 <span class="ui">登录管理后台</span>。</li>
+          <li>保持 <span class="ui">大区 / 学校登录</span>，选择学校所在大区，输入上级给你的账号和初始密码。</li>
+          <li>系统会要求你<strong>先设置自己的新密码</strong>（不能和初始密码相同），设置后进入后台。</li>
+          <li>看 <span class="ui">关怀概览</span> 顶部的 <span class="ui">今天先做这几件事</span>，按顺序完成即可。侧栏上的红色数字表示该页面还有多少待处理。</li>
+        </ol>
+        <h3 id="school-invite">为学生开通注册</h3>
+        <ol class="steps">
+          <li>左侧 <span class="ui">学校与邀请</span> → 右上角 <span class="ui">生成邀请码</span>。</li>
+          <li>填写备注（例如“高一年级”）、有效天数和注册名额，点 <span class="ui">生成邀请码</span>。</li>
+          <li><strong>完整邀请码只显示这一次</strong>：点 <span class="ui">复制邀请码</span>，通过班级群等学校渠道发给学生，再点 <span class="ui">我已记录</span>。</li>
+          <li>在邀请列表点 <span class="ui">使用记录</span> 查看哪些学生已注册。邀请码泄露或不再需要时，点 <span class="ui">停用</span>；已注册的学生不受影响。</li>
+        </ol>
+        <h3>日常工作</h3>
+        <div class="tasks">
+          <div class="task" id="school-care">
+            <h4>关注学生状态</h4>
+            <ol>
+              <li><span class="ui">学生关怀</span> 用颜色标出需要关注的学生（见<a href="#rules">关怀提示规则</a>）。</li>
+              <li>点 <span class="ui">查看</span> 打开学生详情，看近期心情。</li>
+              <li>与学生沟通后，在详情底部写 <span class="ui">添加跟进记录</span>。</li>
+            </ol>
+          </div>
+          <div class="task" id="school-posts">
+            <h4>审核树洞</h4>
+            <ol>
+              <li><span class="ui">树洞审核</span> 的 <span class="ui">待审核</span> 列出待处理的纸条和回复，侧栏会显示数量。</li>
+              <li>内容合适点 <span class="ui">审核通过</span>；不合适点 <span class="ui">驳回</span>，确认后不会公开。</li>
+              <li>已发布的纸条也可以 <span class="ui">下架纸条</span>。驳回后仍可在 <span class="ui">已驳回</span> 中重新通过。</li>
+            </ol>
+          </div>
+          <div class="task" id="school-services">
+            <h4>回复支持需求</h4>
+            <ol>
+              <li><span class="ui">支持需求</span> 默认显示 <span class="ui">待跟进</span>。</li>
+              <li>实际联系学生或家长后，点 <span class="ui">标记已跟进</span>，写一段<strong>处理说明</strong>。</li>
+              <li>学生会在“我的”里看到这段说明。标记后不能撤回，请确认已经处理。</li>
+            </ol>
+          </div>
+          <div class="task" id="school-users">
+            <h4>帮学生找回账号</h4>
+            <ol>
+              <li><span class="ui">用户管理</span> 搜索学生账号或称呼。</li>
+              <li>点 <span class="ui">重置密码</span>，设置一个临时密码并告诉学生。</li>
+              <li>学生下次登录会被要求改成自己的密码。毕业或离校可点 <span class="ui">停用</span>。</li>
+            </ol>
+          </div>
+        </div>
+        <div class="tip">
+          <strong>想增加一位老师一起管理？</strong>在 <span class="ui">用户管理</span> 点 <span class="ui">新增工作人员</span> 为他建账号，然后请大区管理员把他任命为学校管理员。学校管理员不能任命管理员。
+        </div>
+      </section>
+
+      <section class="role" id="region" aria-labelledby="region-title">
+        <div class="role-head">
+          <h2 id="region-title">大区管理员</h2>
+          <span class="scope">管理范围：本大区的所有学校</span>
+        </div>
+        <p>
+          登录方式和学校管理员相同（选择本大区）。<span class="ui">关怀概览</span>、<span class="ui">学生关怀</span>、<span class="ui">树洞审核</span>、<span class="ui">支持需求</span> 的用法与<a href="#school">学校管理员</a>一致，只是范围扩大到全区所有学校。<span class="ui">学校与邀请</span> 只能查看各校邀请的使用情况，邀请码由学校管理员生成。
+        </p>
+        <h3 id="region-users">为学校安排管理员</h3>
+        <ol class="steps">
+          <li><span class="ui">用户管理</span> → <span class="ui">新增工作人员</span>：填写称呼、账号、初始密码，可以直接选择所属学校。</li>
+          <li>在列表中找到这位工作人员，点 <span class="ui">任命为学校管理员</span>，选择要管理的学校，确认。</li>
+          <li>把账号和初始密码通过可靠渠道交给本人；对方首次登录会被要求修改密码。</li>
+          <li>人员调整时，对学校管理员点 <span class="ui">撤销管理员</span>：账号保留在原学校，变为待授权，登录状态立即失效。</li>
+        </ol>
+        <div class="tip">
+          <strong>范围说明</strong>你只能任命<strong>学校管理员</strong>，不能任命其他大区管理员或平台管理员，也看不到其他大区的人员。需要调整大区管理员，请联系平台管理员。
+        </div>
+      </section>
+
+      <section class="role" id="platform" aria-labelledby="platform-title">
+        <div class="role-head">
+          <h2 id="platform-title">平台管理员</h2>
+          <span class="scope">管理范围：全平台的组织与账号（不含学生关怀数据）</span>
+        </div>
+        <h3 id="platform-setup">首次安装：在浏览器里初始化</h3>
+        <ol class="steps">
+          <li>服务启动后，用浏览器打开站点，会自动出现 <span class="ui">首次安装初始化</span> 向导。若部署人员设置了初始化口令，在第一步输入。</li>
+          <li>创建平台管理员：称呼、登录账号、密码（输入两次）。</li>
+          <li>可以顺手填写第一个大区和学校，也可以 <span class="ui">跳过，稍后创建</span>。</li>
+          <li>完成后自动登录。向导只能使用一次，之后不再出现。</li>
+        </ol>
+        <h3 id="platform-orgs">按“开通进度”开通系统</h3>
+        <p><span class="ui">平台管理</span> 顶部的 <span class="ui">开通进度</span> 清单会告诉你下一步做什么，点当前步骤的按钮直接进入对应操作：</p>
+        <ol class="steps">
+          <li><strong>新增大区</strong>：<span class="ui">大区</span> 页签 → <span class="ui">新增大区</span>。</li>
+          <li><strong>新增学校</strong>：<span class="ui">学校</span> 页签 → <span class="ui">新增学校</span>，选择所属大区（创建后不可迁移）。</li>
+          <li><strong>建立工作人员账号</strong>：左侧 <span class="ui">用户管理</span> → <span class="ui">新增工作人员</span>。新账号是“待授权用户”，还不能登录。</li>
+          <li id="platform-appoint"><strong>任命管理员</strong>：<span class="ui">管理员</span> 页签 → <span class="ui">任命管理员</span>，搜索并选择刚建的账号，选择角色和管理范围。</li>
+          <li>之后由学校管理员生成邀请码、学生注册，清单全部完成后自动收起。</li>
+        </ol>
+        <div class="tasks">
+          <div class="task">
+            <h4>调整或撤销管理员</h4>
+            <p><span class="ui">管理员</span> 页签中点 <span class="ui">调整权限</span> 改角色或范围，点 <span class="ui">撤销权限</span> 收回。调整后对方需要重新登录。</p>
+          </div>
+          <div class="task">
+            <h4>停用大区或学校</h4>
+            <p>在对应页签点 <span class="ui">停用</span>。停用后该范围的账号立即退出、不能登录，学生也不能再注册；历史数据保留，可以重新启用。</p>
+          </div>
+          <div class="task">
+            <h4>查看操作记录</h4>
+            <p><span class="ui">操作记录</span> 页签显示最近 100 次组织和人员变更，记录不含任何密码。</p>
+          </div>
+          <div class="task">
+            <h4>备份与升级</h4>
+            <p>由运维人员按部署文档执行，备份文件包含学生个人数据，请严格控制访问。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="role" id="rules" aria-labelledby="rules-title">
+        <div class="role-head">
+          <h2 id="rules-title">关怀提示规则</h2>
+          <p>颜色是交流的线索，不是诊断。</p>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">提示</th>
+                <th scope="col">什么时候出现</th>
+                <th scope="col">建议</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="badge red">优先关怀</span></td>
+                <td>连续 5 天及以上心情为 1–2 分</td>
+                <td>尽快当面或电话了解情况，必要时联系家长和专业人员。</td>
+              </tr>
+              <tr>
+                <td><span class="badge yellow">需要关注</span></td>
+                <td>连续 3–4 天心情为 1–2 分</td>
+                <td>找合适的时机轻松聊一聊。</td>
+              </tr>
+              <tr>
+                <td><span class="badge green">状态平稳</span></td>
+                <td>最近连续 7 天心情都在 3 分及以上</td>
+                <td>保持日常关注。</td>
+              </tr>
+              <tr>
+                <td><span class="badge gray">观察中 / 待补充记录 / 样本不足</span></td>
+                <td>其他情况，或超过一天没有记录、尚未打卡</td>
+                <td>没有记录不代表状态良好，可以提醒学生记录。</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p>按北京时间的自然日计算；当天更新不增加天数，中断一天会重新计算。写了跟进记录不会消除提示，提示随学生后续的记录变化。</p>
+      </section>
+
+      <section class="role" id="faq" aria-labelledby="faq-title">
+        <div class="role-head">
+          <h2 id="faq-title">常见问题</h2>
+        </div>
+        <details>
+          <summary>登录时提示“该账号不属于所选区域”</summary>
+          <p>账号绑定在学校所在的大区。请在登录页选择正确的大区；平台管理员请切换到 <span class="ui">平台管理员登录</span>，不需要选择大区。</p>
+        </details>
+        <details>
+          <summary>提示“账号尚未分配访问权限”</summary>
+          <p>这是一个待授权的工作人员账号，需要大区管理员或平台管理员任命后才能登录。</p>
+        </details>
+        <details>
+          <summary>提示“账号或所属机构已停用”</summary>
+          <p>你的账号、学校或大区被停用了。请联系上级管理员确认。</p>
+        </details>
+        <details>
+          <summary>邀请码核对失败</summary>
+          <p>邀请码可能已过期、名额已满或被停用，也可能选错了大区。请向学校老师确认，必要时请老师重新生成。</p>
+        </details>
+        <details>
+          <summary>忘记密码怎么办？</summary>
+          <p>系统不提供自助找回，以保护账号安全。学生请找本校老师，管理员请找上级管理员，在 <span class="ui">用户管理</span> 中重置。重置后首次登录需要设置新密码。</p>
+        </details>
+        <details>
+          <summary>为什么用户管理里看不到某些人？</summary>
+          <p>你只能看到自己范围内、比自己低一级的账号。例如学校管理员看不到其他学校的学生，也看不到大区管理员。</p>
+        </details>
+        <details>
+          <summary>关闭弹窗时提示“放弃未保存的内容？”</summary>
+          <p>你填写的内容还没有保存。选 <span class="ui">取消</span> 可以回到弹窗继续填写。</p>
+        </details>
+      </section>
+    </main>
+    <footer>成长健研社 · 使用指南 · 2026 年 10 月</footer>
+    <script>
+      // Highlight the role the reader is currently looking at.
+      const links = [...document.querySelectorAll(".role-nav a")];
+      const sections = links
+        .map((link) => document.querySelector(link.getAttribute("href")))
+        .filter(Boolean);
+      const observer = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries)
+            if (entry.isIntersecting)
+              links.forEach((link) =>
+                link.classList.toggle(
+                  "active",
+                  link.getAttribute("href") === "#" + entry.target.id,
+                ),
+              );
+        },
+        { rootMargin: "-40% 0px -55% 0px" },
+      );
+      sections.forEach((section) => observer.observe(section));
+    </script>
+  </body>
+</html>

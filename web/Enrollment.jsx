@@ -39,6 +39,7 @@ export default function Enrollment() {
       <PageTitle
         eyebrow="WELCOME TO OUR GROWTH COMMUNITY"
         title="学校与邀请"
+        help={user.role === "school_admin" ? "school-invite" : "region"}
         description={`${user.regionName}${user.schoolName ? " · " + user.schoolName : ""} · 学生使用学校邀请码建立个人账号。`}
       />
       <ResourceState {...schools}>

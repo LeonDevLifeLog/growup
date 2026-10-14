@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { useApp, useDirty, useResource } from "./context.jsx";
 import {
+  HelpLink,
   Empty,
   Icon,
   Locked,
@@ -93,6 +94,7 @@ export function Home() {
         <HeroArt />
         <span className="hero-art-caption">GROW AT YOUR OWN PACE.</span>
       </section>
+      {user?.role === "student" && <Welcome user={user} checkedIn={!!today} />}
       <div className="home-columns">
         <div className="home-primary">
           <section className="panel mood-panel">
@@ -420,13 +422,92 @@ export function MoodPage() {
   );
 }
 
-export function PageTitle({ eyebrow, title, description, action, onAction }) {
+/** First steps for a new student; hidden for good once dismissed on this device. */
+function Welcome({ user, checkedIn }) {
+  const { open, setView } = useApp();
+  const key = `growup-welcome-${user.id}`;
+  const [hidden, setHidden] = useState(() => {
+    try {
+      return localStorage.getItem(key) === "done";
+    } catch {
+      return false;
+    }
+  });
+  if (hidden) return null;
+  const steps = [
+    {
+      text: "记录今天的心情：选一个最接近的表情就好",
+      done: checkedIn,
+      action: () => open({ type: "checkin" }),
+    },
+    {
+      text: "写一篇星图日记，给日常贴上生活标签",
+      action: () => setView("journal"),
+    },
+    {
+      text: "去树洞看看，用化名说说心事或送一份温暖",
+      action: () => setView("tree"),
+    },
+  ];
+  return (
+    <section className="panel welcome-card" aria-label="从这里开始">
+      <div className="list-header">
+        <h2>从这里开始</h2>
+        <div className="list-actions">
+          <HelpLink anchor="student" />
+          <button
+            className="text-button"
+            onClick={() => {
+              try {
+                localStorage.setItem(key, "done");
+              } catch {}
+              setHidden(true);
+            }}
+          >
+            知道了，不再显示
+          </button>
+        </div>
+      </div>
+      <ol>
+        {steps.map((step) => (
+          <li key={step.text} className={step.done ? "done" : ""}>
+            <button className="text-button" onClick={step.action}>
+              {step.done ? <Check size={14} /> : null}
+              {step.text}
+              <ArrowRight size={14} />
+            </button>
+          </li>
+        ))}
+      </ol>
+      <p className="muted">
+        日记和心情备注只有你自己能看；老师只能看到心情分数，用来及时关心你。
+      </p>
+    </section>
+  );
+}
+
+export function PageTitle({
+  eyebrow,
+  title,
+  description,
+  action,
+  onAction,
+  help,
+}) {
   return (
     <div className="page-intro">
       <div>
         <span className="eyebrow">{eyebrow}</span>
         <h1>{title}</h1>
-        <p>{description}</p>
+        <p>
+          {description}
+          {help && (
+            <>
+              {" "}
+              <HelpLink anchor={help} />
+            </>
+          )}
+        </p>
       </div>
       {action && (
         <button className="button primary" onClick={onAction}>

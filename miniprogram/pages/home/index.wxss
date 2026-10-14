@@ -221,3 +221,7 @@
   color:#6d7b6c;
   padding:24rpx 0;
 }
+
+.welcome-title { margin: 0; }
+.welcome-step { padding: 14rpx 0; border-bottom: 2rpx solid #eef1e8; color: #2f3b33; }
+.welcome-step.done { color: #9aa58c; text-decoration: line-through; }
