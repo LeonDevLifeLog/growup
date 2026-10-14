@@ -15,6 +15,7 @@
     "test:ui:enrollment": "node tests/enrollment-browser.mjs",
     "test:mini:enrollment": "node tests/mini-enrollment.mjs",
     "test:docker": "node tests/docker-smoke.mjs",
+    "test:docker:fresh": "node tests/fresh-install.mjs",
     "check:mini": "node miniprogram/validate.mjs",
     "check": "npm run build && npm test && npm run check:mini",
     "format": "prettier --write web server scripts tests vite.config.js package.json"

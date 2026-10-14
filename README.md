@@ -64,7 +64,7 @@ Star-Track、STARMAP、抗碎片化成长观察及需求反馈均可在应用内
 ```sh
 npm run check       # 构建、API测试、小程序结构检查与本机可用的WXML编译
 npm run test:ui     # 原有业务闭环；独立内存库
-npm run test:ui:enrollment # 正式空库、平台开通、学校发邀请、学生注册重登与使用记录
+npm run test:ui:enrollment # 空库网页初始化、平台开通、改密、学校发邀请、学生注册重登与使用记录
 npm run test:mini:enrollment # 小程序注册Page事件与真实API
 npm run test:ui:migration # 19工具/报告/星图/4表单的真实Chrome闭环
 node miniprogram/api-smoke.mjs # 原生Page事件与真实API联调，不代替微信运行
@@ -75,7 +75,7 @@ node scripts/extract-questionnaires.mjs --verify # 公开问答算法1600案例�
 
 ## 构建与运行
 
-正式容器部署使用 `docker compose up -d --build`，默认端口 `127.0.0.1:8080`，演示模式关闭，SQLite 保存在持久化命名卷。管理员初始化、域名接入与运维步骤见 [Docker 部署](docs/DEPLOYMENT.md)。镜像构建后可用 `npm run test:docker` 验证正式空库、初始化、非 root 运行和重建后的数据保留；该测试只使用并清理独立临时卷。
+正式容器部署使用 `docker compose up -d --build`，默认端口 `127.0.0.1:8080`，演示模式关闭，SQLite 保存在持久化命名卷。管理员初始化、域名接入与运维步骤见 [Docker 部署](docs/DEPLOYMENT.md)。镜像构建后可用 `npm run test:docker` 验证正式空库、初始化、非 root 运行和重建后的数据保留，用 `npm run test:docker:fresh` 在全新容器中只通过浏览器走完“初始化 → 开通 → 注册 → 求助 → 回复”全链路；两项测试只使用并清理独立临时卷。
 
 ```sh
 npm run build

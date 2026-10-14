@@ -54,7 +54,8 @@ export async function productionFixture({
       method: "POST",
       body: { account, regionId, password: secret },
     });
-  const owner = initialize === "bootstrap" ? await login("platform.owner") : null;
+  const owner =
+    initialize === "bootstrap" ? await login("platform.owner") : null;
   async function create(path, body, token = owner.token) {
     const result = await ok(path, { method: "POST", body, token }, 201);
     // Staff fixtures reuse the shared password; the forced first change has its own test.

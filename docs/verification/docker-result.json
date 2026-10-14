@@ -1,5 +1,5 @@
 {
-  "verifiedAt": "2026-10-14T13:31:30.313Z",
+  "verifiedAt": "2026-10-14T13:40:42.153Z",
   "image": "growup:local",
   "checks": [
     "正式空库无演示账号和邀请码，非 root 运行，网页与健康检查可用",
