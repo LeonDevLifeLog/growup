@@ -1,0 +1,17 @@
+{
+  "verifiedAt": "2026-10-14T11:06:02.294Z",
+  "checks": [
+    "1440px网页登录与区域弹窗均用下拉选择，区域同步且无演示凭据，无页面横向溢出",
+    "375px网页登录与区域弹窗均用下拉选择，区域同步且无演示凭据，无页面横向溢出",
+    "实际Docker验收环境健康，空大区禁用下拉，独立平台入口可登录，仅有首位平台管理员"
+  ],
+  "errors": [],
+  "acceptance": {
+    "project": "growup-acceptance-20261014",
+    "url": "http://127.0.0.1:8080",
+    "demo": false,
+    "initialRegions": 0,
+    "initialSchools": 0,
+    "initialAdmins": 1
+  }
+}

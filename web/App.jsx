@@ -574,28 +574,26 @@ function ModalBody({ modal: m }) {
         <p className="dialog-lead">
           每个大区都有独立的学校与成长空间，账号只属于注册时的大区。
         </p>
-        <div className="region-modal-options">
-          {regions.map((r) => (
-            <button
-              key={r.id}
-              className={region === r.id ? "selected" : ""}
-              disabled={!!user && user.regionId !== r.id}
-              onClick={() => {
-                setRegion(r.id);
-                close();
-              }}
+        <div className="form-stack">
+          <label>
+            选择大区
+            <select
+              aria-label="选择大区"
+              value={user?.regionId || region}
+              disabled={!!user || !regions.length}
+              onChange={(event) => setRegion(event.target.value)}
             >
-              <MapPin size={22} />
-              <strong>{r.name}</strong>
-              <small>
-                {user && user.regionId !== r.id
-                  ? "当前账号不可跨区"
-                  : region === r.id
-                    ? "当前所在区域"
-                    : "选择这个大区"}
-              </small>
-            </button>
-          ))}
+              {!regions.length && <option value="">暂未开通大区</option>}
+              {regions.map((r) => (
+                <option key={r.id} value={r.id}>
+                  {r.name}
+                </option>
+              ))}
+            </select>
+          </label>
+          <button className="button primary full" onClick={close}>
+            完成
+          </button>
         </div>
         {user && (
           <p className="muted">

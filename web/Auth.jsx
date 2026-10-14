@@ -5,7 +5,7 @@ import { isAdmin } from "./api.js";
 import { Mark } from "./components.jsx";
 
 export default function Auth({ purpose = "student" }) {
-  const { region, regions, demo, authenticate, close, call } = useApp();
+  const { region, regions, authenticate, close, call } = useApp();
   const [platform, setPlatform] = useState(false);
   const [register, setRegister] = useState(false);
   const [selected, setSelected] = useState(region);
@@ -126,33 +126,31 @@ export default function Auth({ purpose = "student" }) {
           </div>
         )}
         {!platform && (
-          <fieldset className="region-field">
-            <legend>
+          <label>
+            <span className="region-label">
               <MapPin size={15} />
               选择你的大区
-            </legend>
-            <div className="region-options">
+            </span>
+            <select
+              aria-label="选择你的大区"
+              value={selected}
+              onChange={(event) => {
+                setSelected(event.target.value);
+                setInvitation(null);
+                setError("");
+              }}
+              disabled={busy || checking || !regions.length}
+              required
+            >
+              {!regions.length && <option value="">暂未开通大区</option>}
               {regions.map((item) => (
-                <button
-                  key={item.id}
-                  type="button"
-                  className={selected === item.id ? "selected" : ""}
-                  onClick={() => {
-                    setSelected(item.id);
-                    setInvitation(null);
-                    setError("");
-                  }}
-                  disabled={busy || checking}
-                  aria-pressed={selected === item.id}
-                >
+                <option key={item.id} value={item.id}>
                   {item.name}
-                </button>
+                </option>
               ))}
-            </div>
-            {!regions.length && (
-              <p className="muted">暂未开通大区，请联系平台管理员。</p>
-            )}
-          </fieldset>
+            </select>
+            {!regions.length && <small>暂未开通大区，请联系平台管理员。</small>}
+          </label>
         )}
         {register && (
           <>
@@ -296,24 +294,6 @@ export default function Auth({ purpose = "student" }) {
             {register ? "直接登录" : "邀请码注册"}
           </button>
         </p>
-      )}
-      {demo && !register && !platform && (
-        <div className="demo-credentials">
-          <span>本地演示 · 虚构账号</span>
-          <button
-            type="button"
-            className="text-button"
-            onClick={() => {
-              setSelected("hainan");
-              setAccount(`hainan.${purpose === "admin" ? "admin" : "student"}`);
-              setPassword("Growup123!");
-            }}
-          >
-            填入{purpose === "admin" ? "管理" : "学生"}演示账号
-            <ArrowRight size={14} />
-          </button>
-          <small>密码 Growup123! · 仅在演示模式提供</small>
-        </div>
       )}
       <p className="privacy-note">
         <ShieldCheck size={15} />

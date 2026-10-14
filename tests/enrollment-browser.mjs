@@ -36,8 +36,8 @@ async function login(page, account, platform = false) {
       .click();
   else
     await dialog
-      .getByRole("button", { name: "华东试点大区", exact: true })
-      .click();
+      .getByRole("combobox", { name: "选择你的大区", exact: true })
+      .selectOption({ label: "华东试点大区" });
   await dialog.getByLabel("账号", { exact: true }).fill(account);
   await dialog.getByLabel("密码", { exact: true }).fill(fixture.password);
   await dialog
@@ -135,8 +135,8 @@ try {
   let dialog = student.getByRole("dialog");
   await dialog.getByRole("button", { name: "邀请码注册", exact: true }).click();
   await expect(
-    dialog.getByRole("button", { name: "华东试点大区", exact: true }),
-  ).toBeVisible();
+    dialog.getByRole("combobox", { name: "选择你的大区", exact: true }),
+  ).toContainText("华东试点大区");
   await dialog.getByLabel("学校邀请码", { exact: true }).fill(code);
   await dialog.getByRole("button", { name: "核对学校", exact: true }).click();
   await expect(dialog.getByRole("status")).toContainText("成长试点第一学校");

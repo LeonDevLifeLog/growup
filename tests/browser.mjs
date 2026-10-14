@@ -83,14 +83,19 @@ try {
     .getByRole("button", { name: "登录 / 注册", exact: true })
     .click();
   let dialog = student.getByRole("dialog");
-  await dialog.getByRole("button", { name: "山东大区", exact: true }).click();
+  await expect(dialog).not.toContainText(/演示|Growup123!|hainan\.student/);
+  await dialog
+    .getByRole("combobox", { name: "选择你的大区", exact: true })
+    .selectOption("shandong");
   await dialog.getByLabel("账号", { exact: true }).fill("hainan.student");
   await dialog.getByLabel("密码", { exact: true }).fill("Growup123!");
   await dialog
     .getByRole("button", { name: "进入我的成长空间", exact: true })
     .click();
   await expect(dialog.getByRole("alert")).toContainText("不属于所选区域");
-  await dialog.getByRole("button", { name: "海南大区", exact: true }).click();
+  await dialog
+    .getByRole("combobox", { name: "选择你的大区", exact: true })
+    .selectOption("hainan");
   await dialog
     .getByRole("button", { name: "进入我的成长空间", exact: true })
     .click();

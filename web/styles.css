@@ -1200,36 +1200,10 @@ textarea {
   color: #929b87;
   line-height: 1.8;
 }
-.region-field {
-  padding: 0;
-  border: 0;
-  margin: 0 0 2px;
-}
-.region-field legend {
-  font-size: 12px;
+.region-label {
   display: flex;
   align-items: center;
   gap: 5px;
-  margin-bottom: 10px;
-}
-.region-options {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 9px;
-}
-.region-options button {
-  font-size: 12px;
-  min-height: 44px;
-  padding: 10px 5px;
-  border: 1px solid #e2e6d9;
-  border-radius: 7px;
-  background: #fafbf6;
-  color: #8c957e;
-}
-.region-options button.selected {
-  color: var(--green);
-  border-color: #9eb68c;
-  background: #eef4e7;
 }
 .password-input {
   position: relative;
@@ -1251,27 +1225,6 @@ textarea {
 .auth-switch .text-button {
   font-size: 11px;
   margin-left: 9px;
-}
-.demo-credentials {
-  background: #f5f3e7;
-  border: 1px dashed #dfd9bb;
-  border-radius: 7px;
-  padding: 12px 15px;
-  margin-top: 14px;
-  font-size: 10px;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 5px;
-}
-.demo-credentials > span {
-  color: #938050;
-}
-.demo-credentials > small {
-  font-size: 9px;
-  color: #a39672;
-  width: 100%;
 }
 .privacy-note {
   display: flex;
@@ -2236,36 +2189,7 @@ textarea {
   border-radius: 50%;
   margin: 0 auto 20px;
 }
-.region-modal-options {
-  display: flex;
-  gap: 12px;
-  margin: 25px 0;
-}
-.region-modal-options > button {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-  background: #f7f9f1;
-  border: 1px solid #e3ead7;
-  border-radius: 10px;
-  padding: 22px 8px;
-  color: #8fa277;
-}
-.region-modal-options > button.selected {
-  background: #ecf3e2;
-  border-color: #adc795;
-  color: #547c3f;
-}
-.region-modal-options strong {
-  font-size: 13px;
-  font-weight: 500;
-}
-.region-modal-options small {
-  font-size: 8px;
-  color: #9bab86;
-}
+
 .region-modal > .muted {
   font-size: 11px;
 }

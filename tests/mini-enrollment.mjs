@@ -72,7 +72,8 @@ try {
   const invite = await f.invite(schoolA.id, schoolAdminA.token, { maxUses: 2 });
   const page = makePage();
   await page.onLoad();
-  assert.equal(page.data.demo, false);
+  assert.equal(page.useDemo, undefined);
+  assert.equal(page.data.regionIndex, 0);
   assert.equal(page.data.regions.length, 2);
   assert.equal(page.data.regionId, regionA.id);
   page.setData({
@@ -85,11 +86,13 @@ try {
   });
   await page.checkInvite();
   assert.equal(page.data.invitation.schoolId, schoolA.id);
-  page.selectRegion({ currentTarget: { dataset: { id: regionB.id } } });
+  page.selectRegion({ detail: { value: "1" } });
+  assert.equal(page.data.regionIndex, 1);
+  assert.equal(page.data.regionId, regionB.id);
   assert.equal(page.data.invitation, null);
   await page.checkInvite();
   assert.match(page.data.error, /邀请码/);
-  page.selectRegion({ currentTarget: { dataset: { id: regionA.id } } });
+  page.selectRegion({ detail: { value: "0" } });
   await page.checkInvite();
   page.setData({ confirmPassword: "incorrect" });
   await page.submit();
@@ -104,7 +107,7 @@ try {
   assert.equal(page.data.password, "");
   assert.equal(page.data.confirmPassword, "");
   record(
-    "原生 Page 事件读取动态大区、切区清除学校核对、确认密码后注册并进入首页",
+    "原生选择器事件读取动态大区、切区清除学校核对、确认密码后注册并进入首页",
   );
   const uses = await f.ok(`/admin/invites/${invite.id}`, {
     token: schoolAdminA.token,

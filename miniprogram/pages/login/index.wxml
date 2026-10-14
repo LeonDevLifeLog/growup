@@ -6,11 +6,9 @@
   <view class="subtitle">每一种心情，都值得被看见。<text>{{'\n'}}</text>在这里，慢慢长成自己的样子。</view>
   <view class="section-title">选择你的区域</view>
   <view wx:if="{{loading}}" class="state">正在连接成长空间…</view>
-  <view class="regions" wx:else>
-    <button wx:for="{{regions}}" wx:key="id" data-id="{{item.id}}" bindtap="selectRegion" class="region {{regionId === item.id ? 'selected' : ''}}" disabled="{{submitting || checking}}">
-      <view class="region-dot"></view><view>{{item.name}}</view><view class="region-sub">区域入口</view>
-    </button>
-  </view>
+  <picker wx:else mode="selector" range="{{regions}}" range-key="name" value="{{regionIndex}}" bindchange="selectRegion" disabled="{{submitting || checking || !regions.length}}" aria-label="选择你的大区">
+    <view class="field row region-picker"><text>{{regions.length ? regions[regionIndex].name : '暂未开通大区'}}</text><text class="small">选择 ⌄</text></view>
+  </picker>
   <view wx:if="{{!loading && !regions.length}}" class="state">暂未开通大区，请联系平台管理员。</view>
   <view class="small">账号随学校邀请码绑定区域，请选择学校所在区域。</view>
   <view class="auth-tabs spaced">
@@ -30,6 +28,5 @@
   <view wx:if="{{error}}" class="error" role="alert">{{error}}</view>
   <button class="spaced" bindtap="submit" loading="{{submitting}}" disabled="{{submitting || checking || loading || !regions.length || (mode === 'register' && !invitation)}}">{{mode === 'login' ? '进入我的成长空间' : '创建我的成长空间'}} →</button>
   <button wx:if="{{!loading && !regions.length}}" class="button-outline spaced" bindtap="load">重新连接</button>
-  <button wx:if="{{demo}}" class="button-light spaced" bindtap="useDemo" disabled="{{submitting}}">填入海南演示账号</button>
   <view class="safe-note">日记与心情备注仅本人可见；区域老师可查看心情分数用于关怀。未成年人请与监护人共同了解学校的数据使用安排。</view>
 </view>

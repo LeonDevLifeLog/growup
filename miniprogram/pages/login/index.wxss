@@ -15,41 +15,8 @@
   margin-bottom:32rpx;
 }
 
-.regions {
-  display:flex;
-  gap:16rpx;
+.region-picker {
   margin:18rpx 0;
-}
-
-.region {
-  flex:1;
-  background:#fff;
-  color:#75816e;
-  text-align:left;
-  padding:24rpx 20rpx;
-  border:2rpx solid #e2e8dc;
-  border-radius:24rpx;
-}
-
-.region.selected {
-  background:#245c45;
-  color:#fff;
-  border-color:#245c45;
-}
-
-.region-dot {
-  width:16rpx;
-  height:16rpx;
-  background:#d5e7a7;
-  border-radius:50%;
-  margin-bottom:14rpx;
-}
-
-.region-sub {
-  font-weight:400;
-  opacity:.7;
-  font-size:20rpx;
-  margin-top:8rpx;
 }
 
 .auth-tabs {

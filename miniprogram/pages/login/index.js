@@ -1,8 +1,8 @@
 const { request, saveSession, clearSession } = require('../../utils/api');
 Page({
   data: {
-    regions: [], regionId: '', mode: 'login', account: '', password: '', name: '', inviteCode: '',
-    loading: true, submitting: false, error: '', demo: false, invitation: null, checking: false, confirmPassword: ''
+    regions: [], regionIndex: 0, regionId: '', mode: 'login', account: '', password: '', name: '', inviteCode: '',
+    loading: true, submitting: false, error: '', invitation: null, checking: false, confirmPassword: ''
   },
   async onLoad() {
     const storedUser = wx.getStorageSync('growup.user');
@@ -15,13 +15,19 @@ Page({
   async load() {
     this.setData({ loading: true, error: '' });
     try {
-      const [data, health] = await Promise.all([request('/regions'), request('/health')]);
-      const regionId = data.regions.some(item => item.id === this.data.regionId) ? this.data.regionId : (data.regions[0] ? data.regions[0].id : '');
-      this.setData({ regions: data.regions, regionId, invitation: null, demo: health.demo });
+      const data = await request('/regions');
+      const regionIndex = Math.max(0, data.regions.findIndex(item => item.id === this.data.regionId));
+      const regionId = data.regions[regionIndex] ? data.regions[regionIndex].id : '';
+      this.setData({ regions: data.regions, regionIndex, regionId, invitation: null });
     } catch (error) { this.setData({ error: error.message }); }
     finally { this.setData({ loading: false }); }
   },
-  selectRegion(event) { if (!this.data.submitting && !this.data.checking) this.setData({ regionId: event.currentTarget.dataset.id, invitation: null, error: '' }); },
+  selectRegion(event) {
+    if (this.data.submitting || this.data.checking) return;
+    const regionIndex = Number(event.detail.value);
+    const region = this.data.regions[regionIndex];
+    if (region) this.setData({ regionIndex, regionId: region.id, invitation: null, error: '' });
+  },
   changeMode(event) { if (!this.data.submitting && !this.data.checking) this.setData({ mode: event.currentTarget.dataset.mode, error: '' }); },
   input(event) {
     const field = event.currentTarget.dataset.field;
@@ -36,7 +42,6 @@ Page({
     } catch (error) { this.setData({ error: error.message }); }
     finally { this.setData({ checking: false }); }
   },
-  useDemo() { this.setData({ account: 'hainan.student', password: 'Growup123!', regionId: 'hainan', mode: 'login' }); },
   async submit() {
     if (this.data.submitting || this.data.checking) return;
     const { mode, regionId, account, password, name, inviteCode } = this.data;
