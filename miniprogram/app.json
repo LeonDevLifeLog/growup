@@ -24,11 +24,11 @@
     "backgroundColor": "#ffffff",
     "borderStyle": "white",
     "list": [
-      { "pagePath": "pages/home/index", "text": "今日" },
-      { "pagePath": "pages/explore/index", "text": "探索" },
-      { "pagePath": "pages/journals/index", "text": "星图" },
-      { "pagePath": "pages/treehole/index", "text": "树洞" },
-      { "pagePath": "pages/profile/index", "text": "我的" }
+      { "pagePath": "pages/home/index", "text": "今日", "iconPath": "assets/tabbar/today.png", "selectedIconPath": "assets/tabbar/today-selected.png" },
+      { "pagePath": "pages/explore/index", "text": "探索", "iconPath": "assets/tabbar/explore.png", "selectedIconPath": "assets/tabbar/explore-selected.png" },
+      { "pagePath": "pages/journals/index", "text": "星图", "iconPath": "assets/tabbar/starmap.png", "selectedIconPath": "assets/tabbar/starmap-selected.png" },
+      { "pagePath": "pages/treehole/index", "text": "树洞", "iconPath": "assets/tabbar/treehole.png", "selectedIconPath": "assets/tabbar/treehole-selected.png" },
+      { "pagePath": "pages/profile/index", "text": "我的", "iconPath": "assets/tabbar/profile.png", "selectedIconPath": "assets/tabbar/profile-selected.png" }
     ]
   },
   "sitemapLocation": "sitemap.json",

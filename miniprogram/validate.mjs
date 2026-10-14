@@ -25,7 +25,21 @@ assert.ok(typeof project.appid === 'string' && project.appid.length > 0, '请配
 assert.ok(app.pages.length > 0);
 assert.equal(new Set(app.pages).size, app.pages.length, '页面路径重复');
 assert.ok(app.tabBar.list.length >= 2 && app.tabBar.list.length <= 5, '原生 Tab 需要 2–5 个入口');
-app.tabBar.list.forEach(tab => assert.ok(app.pages.includes(tab.pagePath), `Tab 页面不存在: ${tab.pagePath}`));
+app.tabBar.list.forEach(tab => {
+  assert.ok(app.pages.includes(tab.pagePath), `Tab 页面不存在: ${tab.pagePath}`);
+  for (const key of ['iconPath', 'selectedIconPath']) {
+    const path = tab[key];
+    assert.ok(typeof path === 'string' && path.startsWith('assets/tabbar/') && !path.includes('..'), `${tab.text} 缺少有效的本地图标: ${key}`);
+    assert.ok(existsSync(join(root, path)), `${tab.text} 图标文件不存在: ${path}`);
+    const png = readFileSync(join(root, path));
+    assert.ok(png.length < 40 * 1024, `${path} 图标必须小于 40 KiB`);
+    assert.equal(png.subarray(0, 8).toString('hex'), '89504e470d0a1a0a', `${path} 不是 PNG`);
+    assert.equal(png.readUInt32BE(16), 81, `${path} 图标宽度需为 81px`);
+    assert.equal(png.readUInt32BE(20), 81, `${path} 图标高度需为 81px`);
+  }
+  assert.notDeepEqual(readFileSync(join(root, tab.iconPath)), readFileSync(join(root, tab.selectedIconPath)), `${tab.text} 普通与选中图标需要区分`);
+});
+console.log(`原生 Tab 图标检查通过：${app.tabBar.list.length * 2} 张本地 PNG，含普通和选中状态。`);
 assert.equal(new Set(app.tabBar.list.map(tab => tab.pagePath)).size, app.tabBar.list.length);
 app.pages.forEach(page => {
   assert.ok(!page.startsWith('/') && !page.includes('..'), `非法页面路径: ${page}`);
@@ -112,4 +126,4 @@ if (existsSync(wccPath)) {
   if (process.argv.includes('--require-wcc')) throw new Error('没有找到 wcc，请通过 WCC_PATH 配置微信开发者工具内的编译器');
   console.log('没有找到 wcc：只完成结构与语法检查，未完成微信 WXML 编译。可设置 WCC_PATH 或传入 --require-wcc。');
 }
-console.log('未进行微信开发者工具运行、真机交互或上线验证。');
+console.log('本脚本不验证微信开发者工具运行、真机交互或上线。');
