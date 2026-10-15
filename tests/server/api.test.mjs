@@ -26,6 +26,7 @@ async function fixture(
     setupToken,
     now: () => current,
     staticPath: "/nonexistent-growup-static",
+    logger: () => {},
   });
   await new Promise((done) => app.listen(0, "127.0.0.1", done));
   const base = `http://127.0.0.1:${app.address().port}/api`;
