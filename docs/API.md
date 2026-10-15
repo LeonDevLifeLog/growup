@@ -2,6 +2,8 @@
 
 Base `/api`；JSON；失败 `{error: '中文原因'}`；身份为 `Authorization: Bearer <token>`。标记 * 的接口需登录，管理接口分别校验 `platform_admin`、`region_admin`、`school_admin`。令牌绑定用户，服务器从用户解析区域。时间使用 ISO 字符串；自然日字段 `YYYY-MM-DD`（Asia/Shanghai）。
 
+每个响应带 `X-Request-ID` 请求编号，API 错误响应增加同值 `requestId` 字段。500 仅返回通用错误文案和请求编号，异常类型、系统错误代码与堆栈位置由服务端日志记录；排查方式见 [服务部署](DEPLOYMENT.md#日志与错误排查)。
+
 ## 公共/账号
 
 - `GET /health` → `{ok:true,demo:boolean}`

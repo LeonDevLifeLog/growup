@@ -25,6 +25,7 @@ export async function productionFixture({
     dbPath,
     demo: false,
     now: () => current,
+    logger: () => {},
     ...(staticPath ? { staticPath } : {}),
   });
   await new Promise((resolve) => app.listen(0, "127.0.0.1", resolve));

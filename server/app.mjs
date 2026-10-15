@@ -14,6 +14,7 @@ import { createEnrollmentApi, findInvite } from "./enrollment.mjs";
 import { createManagementApi } from "./management.mjs";
 import { createSetupApi, hasPlatformAdmin } from "./setup.mjs";
 import { isCareAdmin, inCareScope, careScope } from "./permissions.mjs";
+import { createLogger, observeRequest } from "./logging.mjs";
 
 const TOPICS = ["成长烦恼", "校园日常", "家庭关系", "小小确幸"];
 const SESSION_MS = 7 * 86400000;
@@ -113,6 +114,7 @@ export function createApp({
   now = () => new Date(),
   staticPath = resolve(ROOT, "dist"),
   setupToken = "",
+  logger = createLogger(),
 } = {}) {
   const clock = () => new Date(typeof now === "function" ? now() : now);
   const db = openDatabase(dbPath, demo, clock());
@@ -861,6 +863,7 @@ export function createApp({
   }
 
   const server = createServer(async (req, res) => {
+    const requestLog = observeRequest(req, res, logger);
     try {
       const url = new URL(req.url, "http://localhost");
       if (url.pathname.startsWith("/api/")) return await api(req, res, url);
@@ -888,19 +891,23 @@ export function createApp({
         if (req.method === "HEAD") res.end();
         else
           createReadStream(file)
-            .on("error", () => res.destroy())
+            .on("error", (error) => {
+              requestLog.error(error);
+              res.destroy();
+            })
             .pipe(res);
         return;
       }
       throw new ApiError(404, "页面不存在");
     } catch (error) {
+      if (!(error instanceof ApiError)) requestLog.error(error);
       if (res.headersSent || res.destroyed) return;
-      if (!(error instanceof ApiError)) console.error("Request failed:", error);
       json(res, error instanceof ApiError ? error.status : 500, {
         error:
           error instanceof ApiError
             ? error.message
             : "服务暂时不可用，请稍后再试",
+        requestId: requestLog.requestId,
       });
     }
   });

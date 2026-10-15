@@ -36,6 +36,32 @@ curl http://127.0.0.1:8080/api/health
 
 数据库保存在 Compose 管理的 `growup-data` 命名卷中。正式服务始终关闭演示模式，不会加载本机 `data/demo.sqlite`。镜像运行用户为 `node`；应用文件只读，数据卷可写，配置了健康检查、日志轮转和 `unless-stopped` 重启策略。
 
+## 日志与错误排查
+
+后端日志采用逐行 JSON，正常请求和生命周期事件写入 stdout，4xx、5xx、连接中断和异常写入 stderr，可直接在 Sealos 控制台的应用日志查看。
+
+- 每条 HTTP 请求日志包含 `timestamp`、`level`、`event`、`requestId`、`method`、`path`、`status`、`durationMs`、`completed`。正常健康探针不记录，健康检查失败仍记录。
+- 响应头 `X-Request-ID` 返回服务端生成的请求编号；API 错误响应同时包含 `requestId`。遇到错误时，按编号关联 `request_error` 与 `http_request` 日志。
+- 意外异常记录类型、系统错误代码、SQLite 错误代码/分类和堆栈位置。原始异常消息可能包含数据库中的私人内容，因此不直接记录消息或堆栈首行。
+- 日志不记录查询参数、请求体、响应体、认证头、Cookie、账号、密码、令牌或学生记录。记录启动成功、监听失败、进程异常退出和正常停止事件。
+- 应用不向 SQLite 数据卷写日志文件；历史保留由 Docker/Sealos 的日志系统管理。增加日志之前未记录的错误无法追溯补录。
+
+查看广州服务最近一小时日志并持续跟踪：
+
+```sh
+kubectl --kubeconfig "$HOME/.sealos/kubeconfig" -n ns-jmwurx2l \
+  logs -f statefulset/growup-vjeawljd --since=1h --timestamps
+```
+
+容器发生过重启时，查看上一容器的日志：
+
+```sh
+kubectl --kubeconfig "$HOME/.sealos/kubeconfig" -n ns-jmwurx2l \
+  logs growup-vjeawljd-0 --previous --timestamps
+```
+
+Docker Compose 方式使用 `docker compose logs -f --since=1h app`。排查时记录发生时间、HTTP 状态码和请求编号，按编号在日志中筛选；完整堆栈仅保留在服务端日志，不返回给客户端。
+
 ## 首次初始化（浏览器完成）
 
 容器启动后，用浏览器打开站点地址（例如 `https://你的域名/`）。系统检测到还没有平台管理员时，会自动显示“首次安装初始化”向导：
